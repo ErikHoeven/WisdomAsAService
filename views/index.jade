@@ -1,0 +1,37 @@
+extends ../layouts/default
+
+block head
+  title Wisdom as a Service
+
+block neck
+  link(rel='stylesheet', href='/views/index.min.css?#{cacheBreaker}')
+
+block body
+  div.jumbotron
+    h2 Wisdom as a Service
+    p.lead
+      | Haal meer wijsheid uit uw informatie!
+    div
+      a.btn.btn-primary.btn-lg(href='/signup/') Create an Account
+      | &nbsp;or&nbsp;
+      a.btn.btn-warning.btn-lg(href='/login/forgot/') Reset Your Password
+    div.clearfix
+  div.row
+    div.col-sm-4
+      div.panel.panel-default
+        div.panel-body
+          h3 Over mij
+          p Wil je meer weten wat wij kunnen betekenen voor uw organisatie
+          a.btn.btn-default.btn-block(href='/about/') Details
+    div.col-sm-4
+      div.panel.panel-default
+        div.panel-body
+          h3 Log in
+          p Maak een persoonlijke account aan en koppel diensten aan je account
+          a.btn.btn-default.btn-block(href='/signup/') Aanmelden
+    div.col-sm-4
+      div.panel.panel-default
+        div.panel-body
+          h3 Contact
+          p Neem contact met ons op
+          a.btn.btn-default.btn-block(href='/contact/') Contact

@@ -1,0 +1,31 @@
+extends ../../layouts/default
+
+block head
+  title Add Event
+
+block body
+  div.row
+    div.col-sm-8
+      div.page-header
+        h1 Toevoegen BusinessRule
+        form(method='post', action='/BusinessRules')
+          div.form-group
+            label Type Business Rule:
+              select.form-control(name='lstTypeBusinessRule')
+                option Zoekwaarde
+                option Cattegorie
+                option Score
+          div.form-group
+            label Zoek waarde:
+              input.form-control(type='text', name='txtLookupValue')
+          div.form-group
+            label Categorie:
+              input.form-control(type='text', name='txtTagCattegory')
+          div.form-group
+            label Score:
+              input.form-control(type='text', name='txtTagScore')
+            button.btn.btn-primary.btn-signup(type='submit') Toevoegen aan rules
+      div.page-header
+        h1 Sidebar
+
+  div.col-s
