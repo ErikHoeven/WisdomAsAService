@@ -1,6 +1,3 @@
-$(document).ready(function(){
-
-    console.log( '#{BusinessRule.lookupValue}' );
-    });
+console.log("dataSet");
 
 

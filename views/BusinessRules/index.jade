@@ -3,21 +3,6 @@ extends ../../layouts/default
 
 block head
 	title View Events
-	link(href='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css', rel='stylesheet')
-	script(src='http://code.jquery.com/jquery-2.0.3.min.js')
-	script(src='//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js')
-	link(href='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/css/bootstrap-editable.css', rel='stylesheet')
-	script(src='//cdnjs.cloudflare.com/ajax/libs/x-editable/1.4.6/bootstrap-editable/js/bootstrap-editable.min.js')
-	//script(src='../views/BusinessRules/editablegrid.js')
-	//script(src='../views/BusinessRules/editablegrid_renderers.js')
-	//script(src='../views/BusinessRules/editablegrid_editors.js')
-	//script(src='../views/BusinessRules/editablegrid_validators.js')
-	//script(src='../views/BusinessRules/editablegrid_utils.js')
-	//script(src='../views/BusinessRules/editablegrid_charts.js')
-	script(src='../views/BusinessRules/LoadData.js')
-	//link(rel='stylesheet', href='../views/BusinessRules/editablegrid.css', type='text/css', media='screen')
-
-
 
 block body
 	div.row
@@ -26,6 +11,15 @@ block body
 				h1 Business Rules
 				if message && message.length
 					p #{message}
+
+				script.
+					//console.log("test");
+					//console.log(#{data.length})
+					var businessRuleData = [];
+					var Counter = 1;
+
+
+
 				table#my_table_id(data-url='data', data-id-field='id', data-editable-emptytext='Default empty text.', data-editable-url='/my/editable/update/path')
 					thead
 						tr
@@ -41,14 +35,42 @@ block body
 							td
 								a(href='#', id='#{BusinessRule.lookupValue}',data-type='text', data-placement='right', data-title='Opzoekwaarde') #{BusinessRule.lookupValue}
 
-			#tablecontent
+							script.
+
+								if (Counter < #{data.length}) {
+									businessRuleData.push('{"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}"},');
+								}
+								else {
+									businessRuleData.push('{"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}"}');
+								}
+
+								Counter++
+			//script(src='../../views/BusinessRules/crossfilter.js' )
+			//script(src='../../views/BusinessRules/d3.js' )
+			//script(src='../../views/BusinessRules/dc.js' )
+			//script(src='../../views/BusinessRules/queue.js' )
+
+
+
+			script.
+				var dataSet ='';
+
+				for (i in businessRuleData){
+					dataSet = dataSet + businessRuleData[i];
+				}
+
+				var strBusinessRules = '{"BusinessRules":[' + dataSet + ']}';
+				console.log(strBusinessRules);
+				jsonBusinessRules = JSON.parse(strBusinessRules);
+
+				console.log(jsonBusinessRules);
+
+			//script(src='../../views/BusinessRules/LoadData.js' )
 
 
 
 
 			div.col-sm-4
 			div.page-header
-				h1 Sidebar
-					h4 labels
-						p
-						a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
+				p
+					a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels

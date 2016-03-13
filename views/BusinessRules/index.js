@@ -1,9 +1,10 @@
 'use strict'
 exports.find = function(req, res, next){
+    console.log("find");
     req.query.lookupValue = req.query.lookupValue ? req.query.lookupValue : '';
     req.query.limit = req.query.limit ? parseInt(req.query.limit, null) : 20;
     req.query.page = req.query.page ? parseInt(req.query.page, null) : 1;
-    req.query.sort = req.query.sort ? req.query.sort : '_id';
+    //req.query.sort = req.query.sort ? req.query.sort : '_id';
 
     var filters = {};
     if (req.query.lookupValue) {
@@ -24,14 +25,41 @@ exports.find = function(req, res, next){
         if (req.xhr) {
             res.header("Cache-Control", "no-cache, no-store, must-revalidate");
             results.filters = req.query;
+            console.log("Results XHR ");
             res.send(results);
+            res.json(results);
         }
         else {
             results.filters = req.query;
+            //res.json(results);
+            console.log("Results No XHR ");
+            //console.log(results);
             res.render('BusinessRules/index', { data: results.data });
+
+
         }
+
     });
 };
+
+exports.findApiData =function (req, res, next) {
+    console.log("findAPIData");
+    var Subjects = db.models.testData;
+
+       Subjects.find({}, {'_id': 0, 'lookupValue': 1, 'tagCattegory': 1, 'tagScore': 1, 'typeBusinessRule': 1}, function(err, subjectDetails) {
+            // if there is an error retrieving, send the error.
+            // nothing after res.send(err) will execute
+            if (err)
+                res.send(err);
+
+            res.json(subjectDetails); // return all nerds in JSON format
+        });
+    };
+
+
+
+
+
 
 exports.read = function(req, res, next){
     req.app.db.models.BusinessRules.findById(req.params.id).exec(function(err, BusinessRules) {
