@@ -1,0 +1,75 @@
+extends ../../layouts/default
+
+
+block head
+    title View Events
+    link(rel='stylesheet', href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css')
+    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js')
+    script(src='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+block body
+    div.row
+        div.col-sm-8
+            div.page-header
+                h1 Business Rules
+                if message && message.length
+                    p #{message}
+
+                script.
+                    var businessRuleData = [];
+                    var metaData = [];
+                    var Counter = 1;
+
+                .table.table.table-condensed
+                    thead
+                        tr
+                            th.col-md-4(data-field='typeBusinessRule') BusinessRule
+                            th.col-md-4(data-field='tagCattegory') Categorie
+                            th.col-md-4(data-field='lookupValue') Opzoek waarde
+                    tbody
+                        each BusinessRule, i in data
+                            tr
+                                td #{BusinessRule.typeBusinessRule}
+                                td #{BusinessRule.tagCattegory}
+                                td #{BusinessRule.lookupValue}
+
+                            script.
+
+                                if (Counter < #{data.length}) {
+                                    businessRuleData.push('{"id":' + Counter + ' ,"values": {"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"}}');
+                                }
+                                else {
+                                    businessRuleData.push('{"id":' + Counter + ', "values": {"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"}}');
+                                }
+
+                                Counter++
+
+            script.
+                $("td").dblclick(function(){
+
+                    var txtOld;
+                    txtOld = $(this).text();
+
+                    $(this).addClass("celEditing");
+                    $(this).html("<input type='text' value=' " + txtOld + "' />" );;
+                    $(this).children().first().focus();
+
+                    $(this).children().first().keypress(function(e){
+                        if (e.which == 13){
+                            var txtNew =  $(this).val();
+                            $(this).parent().text(txtNew);
+                            $(this).parent().removeClass("celEditing");
+
+                        }
+
+                     });
+                    });
+                $("td").focusout(function(){
+                    $(this).parent().removeClass("celEditing");
+                });
+
+
+
+            div.col-sm-4
+            div.page-header
+                p
+                    a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels

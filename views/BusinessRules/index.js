@@ -4,7 +4,7 @@ exports.find = function(req, res, next){
     req.query.lookupValue = req.query.lookupValue ? req.query.lookupValue : '';
     req.query.limit = req.query.limit ? parseInt(req.query.limit, null) : 20;
     req.query.page = req.query.page ? parseInt(req.query.page, null) : 1;
-    //req.query.sort = req.query.sort ? req.query.sort : '_id';
+    req.query.sort = req.query.sort ? req.query.sort : '_id';
 
     var filters = {};
     if (req.query.lookupValue) {
@@ -13,7 +13,7 @@ exports.find = function(req, res, next){
 
     req.app.db.models.BusinessRules.pagedFind({
         filters: filters,
-        keys: 'lookupValue  tagCattegory  tagScore  typeBusinessRule',
+        keys: 'lookupValue  tagCattegory  tagScore  typeBusinessRule  _id',
         limit: req.query.limit,
         page: req.query.page,
         sort: req.query.sort

@@ -1,76 +1,118 @@
 extends ../../layouts/default
 
-
 block head
-	title View Events
+    title View Events
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.scrollTo.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.toc.min.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.sharrre-1.2.0.min.js')
+    link(rel='stylesheet', media='all', href='https://s3.amazonaws.com/dynatable-docs-assets/css/jquery.dynatable.css')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.dynatable.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/highcharts.js')
+    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+
+
+    script.
+        myCurentRecords   =[];
+        myUpdatedRecoreds =[];
+        Counter = 1 ;
+        var txtCurrentValue;
+        var newValue;
+        var id;
 
 block body
-	div.row
-		div.col-sm-8
-			div.page-header
-				h1 Business Rules
-				if message && message.length
-					p #{message}
+    div(id="setMyCurrentRecords")
+        each BusinessRule, i in data
+            script.
 
-				script.
-					//console.log("test");
-					//console.log(#{data.length})
-					var businessRuleData = [];
-					var Counter = 1;
+                if (Counter < #{data.length}) {
+                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"},');
+                }
+                else {
+                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"}');
+                }
+                Counter++
 
-
-
-				table#my_table_id(data-url='data', data-id-field='id', data-editable-emptytext='Default empty text.', data-editable-url='/my/editable/update/path')
-					thead
-						tr
-							th.col-md-4(data-field='typeBusinessRule') BusinessRule
-							th.col-md-4(data-field='tagCattegory') Categorie
-							th.col-md-4(data-field='lookupValue') Opzoek waarde
-							th.col-md-4(data-field='test') test
-					each BusinessRule, i in data
-						tr
-							td #{BusinessRule.typeBusinessRule}
-							td #{BusinessRule.tagCattegory}
-							td #{BusinessRule.lookupValue}
-							td
-								a(href='#', id='#{BusinessRule.lookupValue}',data-type='text', data-placement='right', data-title='Opzoekwaarde') #{BusinessRule.lookupValue}
-
-							script.
-
-								if (Counter < #{data.length}) {
-									businessRuleData.push('{"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}"},');
-								}
-								else {
-									businessRuleData.push('{"lookupValue": "#{BusinessRule.lookupValue}", "tagCattegory": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}"}');
-								}
-
-								Counter++
-			//script(src='../../views/BusinessRules/crossfilter.js' )
-			//script(src='../../views/BusinessRules/d3.js' )
-			//script(src='../../views/BusinessRules/dc.js' )
-			//script(src='../../views/BusinessRules/queue.js' )
+    div(id="getMyCurrentReccords")
+        script.
+            var strMyCurrentRecord = "";
+            for (i = 0; i < #{data.length};i++) {
+                strMyCurrentRecord = strMyCurrentRecord + myCurentRecords[i];
+            }
+            var jsonMyCurrentRecord = JSON.parse('[' +strMyCurrentRecord + ']');
+            console.info(jsonMyCurrentRecord);
 
 
+    .container-fluid
+        .row
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                h1.page-header BusinessRules
+                .row.placeholders
+                    .col-xs-6.col-sm-3.placeholder
+                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
+                        h4 Label
+                        span.text-muted Something else
+                    .col-xs-6.col-sm-3.placeholder
+                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
+                        h4 Label
+                        span.text-muted Something else
+                    .col-xs-6.col-sm-3.placeholder
+                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
+                        h4 Label
+                        span.text-muted Something else
+                    .col-xs-6.col-sm-3.placeholder
+                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
+                        h4 Label
+                        span.text-muted Something else
+        .row
+            br
+            br
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                form(method='post', action='/BusinessRules')
+                    .table-responsive
+                       table.table.table-striped(id="tblBusinessRules")
+                            thead
+                                tr
+                                    th cattegorie
+                                    th opzoekwaarde
+                                    th typeBusinessRule
+                                    th _id
+                            tbody
+                       script.
+                            $('#tblBusinessRules').dynatable({
+                                dataset: {
+                                records: jsonMyCurrentRecord
+                                }
+                                });
 
-			script.
-				var dataSet ='';
+                            $('td').on(
+                             {dblclick: function() {
+                                txtCurrentValue = $(this).text();
+                                id = $(this).closest('tr').find('td:last').text();
+                                var $th = $('table thead tr th').eq($(this).index()).text();
+                                $(this).replaceWith('<input type="text" name=" ' + id + ' " value=" ' + txtCurrentValue + ' " onkeypress="getNewValue($(this).val(),event)"/>');
+                                }}
+                            );
 
-				for (i in businessRuleData){
-					dataSet = dataSet + businessRuleData[i];
-				}
+                            function getNewValue(t,e){
 
-				var strBusinessRules = '{"BusinessRules":[' + dataSet + ']}';
-				console.log(strBusinessRules);
-				jsonBusinessRules = JSON.parse(strBusinessRules);
+                                if (e.keyCode == 13){
+                                    console.info(t);
+                                    console.info(id);
 
-				console.log(jsonBusinessRules);
+                                }
 
-			//script(src='../../views/BusinessRules/LoadData.js' )
+                            }
 
 
 
 
-			div.col-sm-4
-			div.page-header
-				p
-					a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
+.page-header
+        p
+
+
+            a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
