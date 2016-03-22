@@ -42,25 +42,6 @@ exports.find = function(req, res, next){
     });
 };
 
-exports.findApiData =function (req, res, next) {
-    console.log("findAPIData");
-    var Subjects = db.models.testData;
-
-       Subjects.find({}, {'_id': 0, 'lookupValue': 1, 'tagCattegory': 1, 'tagScore': 1, 'typeBusinessRule': 1}, function(err, subjectDetails) {
-            // if there is an error retrieving, send the error.
-            // nothing after res.send(err) will execute
-            if (err)
-                res.send(err);
-
-            res.json(subjectDetails); // return all nerds in JSON format
-        });
-    };
-
-
-
-
-
-
 exports.read = function(req, res, next){
     req.app.db.models.BusinessRules.findById(req.params.id).exec(function(err, BusinessRules) {
         if (err) {
@@ -75,10 +56,6 @@ exports.read = function(req, res, next){
         }
     });
 };
-
-
-
-
 
 exports.add = function(req, res){
     res.render('BusinessRules/add');
@@ -121,4 +98,10 @@ exports.create = function(req, res, next) {
         });
     });
     workflow.emit('validate');
+};
+
+exports.findApiData = function (req, res, next) {
+    console.log("findApiData");
+    console.log(req.body);
+
 };

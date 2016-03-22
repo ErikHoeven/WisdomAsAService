@@ -23,6 +23,12 @@ block head
         var txtCurrentValue;
         var newValue;
         var id;
+        var $th;
+
+        String.prototype.ltrim = function () {
+            return this.replace(/^\s+/,"");
+        }
+
 
 block body
     div(id="setMyCurrentRecords")
@@ -44,7 +50,6 @@ block body
                 strMyCurrentRecord = strMyCurrentRecord + myCurentRecords[i];
             }
             var jsonMyCurrentRecord = JSON.parse('[' +strMyCurrentRecord + ']');
-            console.info(jsonMyCurrentRecord);
 
 
     .container-fluid
@@ -93,20 +98,26 @@ block body
                              {dblclick: function() {
                                 txtCurrentValue = $(this).text();
                                 id = $(this).closest('tr').find('td:last').text();
-                                var $th = $('table thead tr th').eq($(this).index()).text();
+                                $th = $('table thead tr th').eq($(this).index()).text();
                                 $(this).replaceWith('<input type="text" name=" ' + id + ' " value=" ' + txtCurrentValue + ' " onkeypress="getNewValue($(this).val(),event)"/>');
                                 }}
                             );
 
                             function getNewValue(t,e){
-
+                                console.info("getNewValue()");
                                 if (e.keyCode == 13){
-                                    console.info(t);
-                                    console.info(id);
+                                   newValue =  '{"_id": "' + id + '","' + $th + '": "' + t.ltrim() + '"}';
+                                   var jsonNewValue = JSON.parse(newValue);
 
-                                }
-
+                                    $.ajax({
+                                        url:'/BusinessRules/findApiData',
+                                        type:'POST',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify(jsonNewValue) });
+                                    }
                             }
+
+
 
 
 

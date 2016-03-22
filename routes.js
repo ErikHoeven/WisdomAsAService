@@ -43,7 +43,7 @@ exports = module.exports = function(app, passport) {
 
   //BusinessRules routes
   app.get('/BusinessRules/', require('./views/BusinessRules/index').find);
-  app.get('/BusinessRules/', require('./views/BusinessRules/index').findApiData);
+  app.post('/BusinessRules/findApiData', require('./views/BusinessRules/index').findApiData);
   app.get('/BusinessRules/add', require('./views/BusinessRules/index').add);
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
