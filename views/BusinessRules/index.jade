@@ -17,18 +17,39 @@ block head
 
 
     script.
+
         myCurentRecords   =[];
         myUpdatedRecoreds =[];
         Counter = 1 ;
         var txtCurrentValue;
-        var newValue;
+        var newValue = {};
         var id;
         var $th;
+        var isLocked = 0;
 
         String.prototype.ltrim = function () {
-            return this.replace(/^\s+/,"");
-        }
+            return this.replace(/^\s+/,"");}
 
+
+            function getNewValue(t, e) {
+                console.info("getNewValue()");
+                if (e.keyCode == 13) {
+                    newValue = '{"_id": "' + id + '","' + $th + '": "' + t.ltrim() + '"}';
+                    var jsonNewValue = {}
+                    jsonNewValue = JSON.parse(newValue);
+                    jsonNewValue.updateField = $th;
+                    jsonNewValue.updateValue = t.ltrim();
+
+                    console.info(jsonNewValue);
+
+                    $.ajax({
+                        url: '/BusinessRules/findApiData',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(jsonNewValue)
+                    });
+                }
+            }
 
 block body
     div(id="setMyCurrentRecords")
@@ -56,23 +77,7 @@ block body
         .row
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
                 h1.page-header BusinessRules
-                .row.placeholders
-                    .col-xs-6.col-sm-3.placeholder
-                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
-                        h4 Label
-                        span.text-muted Something else
-                    .col-xs-6.col-sm-3.placeholder
-                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
-                        h4 Label
-                        span.text-muted Something else
-                    .col-xs-6.col-sm-3.placeholder
-                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
-                        h4 Label
-                        span.text-muted Something else
-                    .col-xs-6.col-sm-3.placeholder
-                        img.img-responsive(src='data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==', width='200', height='200', alt='Generic placeholder thumbnail')
-                        h4 Label
-                        span.text-muted Something else
+
         .row
             br
             br
@@ -88,42 +93,38 @@ block body
                                     th _id
                             tbody
                        script.
-                            $('#tblBusinessRules').dynatable({
-                                dataset: {
-                                records: jsonMyCurrentRecord
+
+                           $('#tblBusinessRules').dynatable({
+                               dataset: {
+                                    records: jsonMyCurrentRecord
+                               }});
+
+                           $('.dynatable-search').keypress(function(e){
+                                if (e.which == 13){
+                                    console.info("Reload");
+                                    location.reload();
                                 }
-                                });
+                           });
 
-                            $('td').on(
-                             {dblclick: function() {
-                                txtCurrentValue = $(this).text();
-                                id = $(this).closest('tr').find('td:last').text();
-                                $th = $('table thead tr th').eq($(this).index()).text();
-                                $(this).replaceWith('<input type="text" name=" ' + id + ' " value=" ' + txtCurrentValue + ' " onkeypress="getNewValue($(this).val(),event)"/>');
-                                }}
-                            );
+                           $('td').on({ dblclick: function () {
 
-                            function getNewValue(t,e){
-                                console.info("getNewValue()");
-                                if (e.keyCode == 13){
-                                   newValue =  '{"_id": "' + id + '","' + $th + '": "' + t.ltrim() + '"}';
-                                   var jsonNewValue = JSON.parse(newValue);
+                               isLocked = isLocked + 1;
+                               console.info(isLocked);
+                               if (isLocked == 1) {
+                                   console.info("Edit td");
+                                   txtCurrentValue = $(this).text();
+                                   id = $(this).closest('tr').find('td:last').text();
+                                   $th = $('table thead tr th').eq($(this).index()).text();
+                                   $(this).replaceWith('<input type="text"  class="form-control"  id=" ' + id + ' " value=" ' + txtCurrentValue + ' " onkeypress="getNewValue($(this).val(),event)" />');
 
-                                    $.ajax({
-                                        url:'/BusinessRules/findApiData',
-                                        type:'POST',
-                                        contentType: 'application/json',
-                                        data: JSON.stringify(jsonNewValue) });
-                                    }
-                            }
-
-
-
-
-
+                               }
+                               $(".form-control").focusout(function () {
+                                   $(this).replaceWith('<td>' + txtCurrentValue + '</td>');
+                                   isLocked = 0;
+                                   location.reload();
+                               });
+                           }});
 
 .page-header
         p
-
-
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
