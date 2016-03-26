@@ -48,6 +48,12 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
 
+  //BusinessRules routes
+  app.get('/Dashboard/', require('./views/Dashboard/index').find);
+
+
+
+
   //sign up
   app.get('/signup/', require('./views/signup/index').init);
   app.post('/signup/', require('./views/signup/index').signup);

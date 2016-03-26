@@ -1,0 +1,68 @@
+extends ../../layouts/default
+
+block head
+    title View Events
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.scrollTo.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.toc.min.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.sharrre-1.2.0.min.js')
+    link(rel='stylesheet', media='all', href='https://s3.amazonaws.com/dynatable-docs-assets/css/jquery.dynatable.css')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.dynatable.js')
+    script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/highcharts.js')
+    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+    script.
+        // Haal de Tweets op en zet het om in een array met JSON objecten
+
+        var srcTweets = [];
+        var srcTweets = !{JSON.stringify(tweets)};
+        var aantalSrcTweets = srcTweets.length;
+
+        //Loop door alle tweets heen en haal daar alleen de relevante elementen uit:
+        var stgTweet = {}
+        var stgTweets = [];
+
+        for(var i = 0; i < aantalSrcTweets; i++){
+            stgTweet.userId = srcTweets[i].user.id;
+            stgTweet.userFollowerCount = srcTweets[i].user.followers_count;
+            stgTweet.userFriendCount = srcTweets[i].user.friends_count;
+            stgTweet.userFavouritesCount = srcTweets[i].user.favourites_count;
+            stgTweet.text = srcTweets[i].text;
+            stgTweet.coordinates = srcTweets[i].coordinates;
+            stgTweet.userLocation = srcTweets[i].user.location;
+            stgTweets.push(stgTweet);
+        }
+
+block body
+    .container-fluid
+        .row
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                h1.page-header Social Dashboard
+
+        .row
+            br
+            br
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                form(method='post', action='/BusinessRules')
+                    .table-responsive
+                        table.table.table-striped(id="tblBusinessRules")
+                            thead
+                                tr
+                                    th userId
+                                    th userFollowerCount
+                                    th userFriendCount
+                                    th userFavouritesCount
+                                    th text
+                                    th coordinates
+                                    th userLocation
+                            tbody
+                                script.
+
+                                    $('#tblBusinessRules').dynatable({
+                                            dataset: {
+                                                        records: stgTweets
+                                                     }
+                                    });
