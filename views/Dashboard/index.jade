@@ -15,26 +15,29 @@ block head
     link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script.
-        // Haal de Tweets op en zet het om in een array met JSON objecten
+        // get Tweets and convert them to an array with JSON objecten
 
         var srcTweets = [];
         var srcTweets = !{JSON.stringify(tweets)};
         var aantalSrcTweets = srcTweets.length;
 
-        //Loop door alle tweets heen en haal daar alleen de relevante elementen uit:
+        //Loop throug all tweets and collect all relevant elementen from srcTweet:
         var stgTweet = {}
         var stgTweets = [];
 
         for(var i = 0; i < aantalSrcTweets; i++){
-            stgTweet.userId = srcTweets[i].user.id;
-            stgTweet.userFollowerCount = srcTweets[i].user.followers_count;
-            stgTweet.userFriendCount = srcTweets[i].user.friends_count;
-            stgTweet.userFavouritesCount = srcTweets[i].user.favourites_count;
-            stgTweet.text = srcTweets[i].text;
-            stgTweet.coordinates = srcTweets[i].coordinates;
-            stgTweet.userLocation = srcTweets[i].user.location;
-            stgTweets.push(stgTweet);
-        }
+           stgTweets[i] = {
+                userId: srcTweets[i].user.id,
+                userFollowerCount: srcTweets[i].user.followers_count,
+                userFriendCount: srcTweets[i].user.friends_count,
+                userFavouritesCount: srcTweets[i].user.favourites_count,
+                text: srcTweets[i].text,
+                coordinates: srcTweets[i].coordinates,
+                userLocation: srcTweets[i].user.location,
+                postDate: srcTweets[i].created_at
+           }
+            }
+        console.info(stgTweets);
 
 block body
     .container-fluid
@@ -58,11 +61,13 @@ block body
                                     th text
                                     th coordinates
                                     th userLocation
+                                    th postDate
                             tbody
-                                script.
+                            script.
 
-                                    $('#tblBusinessRules').dynatable({
-                                            dataset: {
-                                                        records: stgTweets
-                                                     }
-                                    });
+                                $('#tblBusinessRules').dynatable({
+                                dataset: {
+                                records: stgTweets
+                                }
+                                });
+
