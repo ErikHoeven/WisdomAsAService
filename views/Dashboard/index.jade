@@ -14,36 +14,28 @@ block head
     script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/highcharts.js')
     link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-    script.
-        // get Tweets and convert them to an array with JSON objecten
+    script(src='//d3js.org/d3.v3.min.js', charset='utf-8')
+    script(src='http://d3js.org/queue.v1.min.js')
 
+    script.
         var srcTweets = [];
         var srcTweets = !{JSON.stringify(tweets)};
-        var aantalSrcTweets = srcTweets.length;
+    script(src="../../views/Dashboard/LoadData.js")
+    //script(src="../../views/Dashboard/createLineChart.js")
 
-        //Loop throug all tweets and collect all relevant elementen from srcTweet:
-        var stgTweet = {}
-        var stgTweets = [];
 
-        for(var i = 0; i < aantalSrcTweets; i++){
-           stgTweets[i] = {
-                userId: srcTweets[i].user.id,
-                userFollowerCount: srcTweets[i].user.followers_count,
-                userFriendCount: srcTweets[i].user.friends_count,
-                userFavouritesCount: srcTweets[i].user.favourites_count,
-                text: srcTweets[i].text,
-                coordinates: srcTweets[i].coordinates,
-                userLocation: srcTweets[i].user.location,
-                postDate: srcTweets[i].created_at
-           }
-            }
-        console.info(stgTweets);
+
+
 
 block body
     .container-fluid
         .row
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
                 h1.page-header Social Dashboard
+        .row
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                #lineChart
+                    svg#lineChartSVG
 
         .row
             br
