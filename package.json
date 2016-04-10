@@ -35,7 +35,8 @@
     "underscore": "^1.x.x",
     "mongoskin": "~0.6.0",
     "mongodb" :"*",
-    "monk": "*"
+    "monk": "*",
+    "d3": "3"
 
   },
   "devDependencies": {

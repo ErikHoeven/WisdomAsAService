@@ -209,7 +209,7 @@ exports.findApiData = function(req, res, next) {
                 );
             }
         });
-    };
+      };
 
     MongoClient.connect(url, function(err, db) {
         assert.equal(null, err);
@@ -221,5 +221,5 @@ exports.findApiData = function(req, res, next) {
 
     //res.redirect('/BusinessRules');
 
-    }
+    };
 

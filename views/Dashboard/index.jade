@@ -16,32 +16,43 @@ block head
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src='//d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='http://d3js.org/queue.v1.min.js')
-
     script.
-        var srcTweets = [];
-        var srcTweets = !{JSON.stringify(tweets)};
-    script(src="../../views/Dashboard/LoadData.js")
-    //script(src="../../views/Dashboard/createLineChart.js")
+        // LOAD DATA
+        var stgTweets =  [];
+        stgTweets = !{JSON.stringify(tweets)};
+
+        var tweetsPerDay = [];
+        tweetsPerDay = !{JSON.stringify(tweetsPerDay)};
+
+        var domainValues = [];
+        domainValues = !{JSON.stringify(domainValues)};
+
+        var tweetsPerCattegorry = []
+        tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
+
+        console.info(tweetsPerCattegorry);
 
 
 
 
+    link(rel='stylesheet', href='../../views/Dashboard/graph.css')
+    script(src="../../views/Dashboard/ChartSimple.js")
 
 block body
     .container-fluid
-        .row
+        .row(id="Header")
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
                 h1.page-header Social Dashboard
-        .row
+        .row(id="Graphs")
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                #lineChart
-                    svg#lineChartSVG
+                #pieChart
+            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+                #lineChartSimple
 
-        .row
+        .row(id="Details")
             br
             br
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                form(method='post', action='/BusinessRules')
                     .table-responsive
                         table.table.table-striped(id="tblBusinessRules")
                             thead
@@ -62,4 +73,5 @@ block body
                                 records: stgTweets
                                 }
                                 });
+
 

@@ -50,13 +50,13 @@ exports = module.exports = function(app, passport) {
 
   //BusinessRules routes
   app.get('/Dashboard/', require('./views/Dashboard/index').find);
-
+  //app.get('/Dashboard/setTweetsperCattegory', require('./views/Dashboard/index').setTweetsperCattegory);
 
 
 
   //sign up
   app.get('/signup/', require('./views/signup/index').init);
-  app.post('/signup/', require('./views/signup/index').signup);
+  app.get('/signup/', require('./views/signup/index').signup);
 
   //social sign up
   app.post('/signup/social/', require('./views/signup/index').signupSocial);

@@ -1,7 +1,6 @@
 // Created by: Erik
 
 // get Tweets and convert them to an array with JSON objecten
-
 var aantalSrcTweets = srcTweets.length;
 
 // (1)Loop throug all tweets and collect all relevant elementen from srcTweet:
@@ -19,8 +18,7 @@ for(var i = 0; i < aantalSrcTweets; i++){
         text: srcTweets[i].text,
         coordinates: srcTweets[i].coordinates,
         userLocation: srcTweets[i].user.location,
-        postDate: format(new Date(srcTweets[i].created_at)),
-        rawPostDate :srcTweets[i].created_at
+        postDate: format(new Date(srcTweets[i].created_at))
     }
 }
 
@@ -31,12 +29,43 @@ var tweetsPerDay = d3.nest()
     .entries(stgTweets);
 
 
-var m = d3.map(stgTweets, function(d){
-    return d.userFollowerCount;
-});
+function getLstValuePerDate(data) {
+    var lstDate = [];
+    var jsonLength = data.length;
 
-console.info(stgTweets);
-console.info(tweetsPerDay);
+    for (var i = 0; i < jsonLength; i++) {
+        lstDate[i] = {
+            dim: format.parse(data[i].key),
+            measure: data[i].values
+        };
+    }
+    return lstDate
+}
+
+function getDomainValues(data){
+
+    lstDimensionValues = [];
+    lstMeasures = []
+    for (var i = 0; i < data.length; i++ ){
+        lstDimensionValues.push(data[i].dim);
+        lstMeasures.push(data[i].measure);
+    }
+    return { minDimensionValue: d3.min(lstDimensionValues),
+             maxDimesnionValue: d3.max(lstDimensionValues),
+             minMeasure: d3.min(lstMeasures),
+             maxMeasure: d3.max(lstMeasures)};
+
+
+}
+
+
+
+
+
+
+
+
+
 
 
 
