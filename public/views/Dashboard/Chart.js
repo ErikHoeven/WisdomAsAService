@@ -9,7 +9,7 @@ $(document).ready(function() {
 
     // prepare SVG properties
     var margin = {top: 20, right: 20, bottom: 20, left: 20},
-        width = 500 - margin.left - margin.right,
+        width = 100 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
     // Schaalverdeling X -As

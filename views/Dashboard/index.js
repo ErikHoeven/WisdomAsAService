@@ -83,13 +83,20 @@ exports.find = function(req, res, next){
    function setTweetCattegory(tweets,tweetsPerDay, domainValues, stgTweets ) {
        businessrules.distinct('tagCattegory', function (err, cattegory) {
            var tweetsPerCattegorry = [];
+           var IsCatTweet = 0;
+           console.info(tweets.length);
+           console.info(tweetsPerCattegorry);
            for (var i = 0; i < tweets.length; i++) {
-               var IsCatTweet = 0
-
+               console.info('-----' + i + '---------------------');
+               var cattegorie = 'Onbepaald';
                for (var t = 0; t < cattegory.length; t++) {
-                   if ((tweets[i].text.search(cattegory[t]) > 0) && cattegory[t] != '' && cattegory[t] != null) {
+                   if ((tweets[i].text.search(cattegory[t]) > 0) && ( cattegory[t] != '' && cattegory[t] != null)) {
+                       console.info('bepaald: ' + i);
+                       var cattegorie = cattegory[t]
 
-                       tweetsPerCattegorry.push( {
+                   }
+               }
+                          tweetsPerCattegorry.push( {
                            userId: tweets[i].userId,
                            userFollowerCount: tweets[i].userFollowerCount,
                            userFriendCount: tweets[i].userFriendCount,
@@ -98,10 +105,8 @@ exports.find = function(req, res, next){
                            coordinates: tweets[i].coordinates,
                            userLocation: tweets[i].userLocation,
                            postDate: tweets[i].postDate,
-                           cattegories: cattegory[t]
+                           cattegories: cattegorie
                        });
-                   }
-               }
            }
            var data = d3.nest()
                .key(function (d) {
@@ -112,12 +117,13 @@ exports.find = function(req, res, next){
                })
                .entries(tweetsPerCattegorry);
 
-
            var lstCatteorie = [];
            for (var i = 0; i < data.length; i++) {
                lstCatteorie[i] = {
-                   dim: data[i].key,
-                   measure: data[i].values
+                   label: data[i].key,
+                   value: data[i].values,
+                   color: getRandomColor()
+
                };
            }
 
@@ -133,8 +139,14 @@ exports.find = function(req, res, next){
 
    }
 
-
-
+    function getRandomColor() {
+        var letters = '0123456789ABCDEF'.split('');
+        var color = '#';
+        for (var i = 0; i < 6; i++ ) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 };
 
 

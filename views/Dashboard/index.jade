@@ -16,6 +16,8 @@ block head
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src='//d3js.org/d3.v3.min.js', charset='utf-8')
     script(src='http://d3js.org/queue.v1.min.js')
+    script(src='../../views/Dashboard/d3pie.js')
+
     script.
         // LOAD DATA
         var stgTweets =  [];
@@ -31,12 +33,14 @@ block head
         tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
 
         console.info(tweetsPerCattegorry);
+        console.info(stgTweets.length);
 
 
 
 
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script(src="../../views/Dashboard/ChartSimple.js")
+    script(src="../../views/Dashboard/pieChart.js")
 
 block body
     .container-fluid
@@ -44,10 +48,10 @@ block body
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
                 h1.page-header Social Dashboard
         .row(id="Graphs")
-            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                #pieChart
-            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                #lineChartSimple
+            .col-md-6
+                #pieChart(align="bottom")
+            .col-md-6
+                #lineChartSimple(align="bottom")
 
         .row(id="Details")
             br
