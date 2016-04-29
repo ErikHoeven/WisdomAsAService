@@ -1,4 +1,7 @@
 'use strict'
+var cheerio = require("cheerio");
+var request = require("request");
+
 exports.find = function(req, res, next){
     console.log("find");
     req.query.lookupValue = req.query.lookupValue ? req.query.lookupValue : '';
@@ -13,7 +16,7 @@ exports.find = function(req, res, next){
 
     req.app.db.models.BusinessRules.pagedFind({
         filters: filters,
-        keys: 'lookupValue  tagCattegory  tagScore  typeBusinessRule  _id',
+        keys: 'lookupValue  tagCattegory  tagScore  typeBusinessRule cattegorycolor  _id',
         limit: req.query.limit,
         page: req.query.page,
         sort: req.query.sort
@@ -72,32 +75,122 @@ exports.create = function(req, res, next) {
             console.log('TypeBusinessRule niet gevuld');
             return workflow.emit('response');
         }
-        workflow.emit('createBusinessRule');
+
+        if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
+            workflow.emit('createLookupValue');
+        }
+        if(req.body.lstTypeBusinessRule == 'Cattegorie'){
+            console.log('createCattegorie');
+            workflow.emit('createCattegorie');
+        }
+        if(req.body.lstTypeBusinessRule == 'Score') {
+            workflow.emit('createScore');
+        }
+
+
     });
 
-    workflow.on('createBusinessRule', function () {
-        console.log('STAR POST (3):Worflow On:');
+    workflow.on('createLookupValue', function () {
+        console.log('STAR POST (2):createLookupValue:');
         var fieldsToSet = {
             typeBusinessRule: req.body.lstTypeBusinessRule,
             lookupValue: req.body.txtLookupValue,
-            tagCattegory: req.body.txtTagCattegory,
-            tagScore: req.body.txtTagScore,
-            creationDate: Date()
         };
         console.log(fieldsToSet);
 
-        req.app.db.models.BusinessRules.create(fieldsToSet, function(err, BusinessRule) {
+        req.app.db.models.BusinessRules.create(fieldsToSet, function (err, BusinessRule) {
             if (err) {
                 return workflow.emit('exception', err);
             }
 
             workflow.outcome.record = BusinessRule;
-           // req.flash('success','BusinessRule Added');
+            // req.flash('success','BusinessRule Added');
             res.location('/BusinessRules');
             res.redirect('/BusinessRules');
 
         });
     });
+    workflow.on('createCattegorie', function () {
+            console.log('STAR POST (4):createCattegorie:');
+
+
+            if ( req.body.txtTagCattegory.toLowerCase() == 'concurentie') {
+                console.log('Scraping concurentie');
+                var url = "https://www.google.nl/search?q=autoglas+schade+bedrijven#q=autoglasschade"
+                var linkContent = [];
+                var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
+
+                request(url, function (error, res, body ) {
+                    if (!error) {
+                        var $ = cheerio.load(body),
+                        links = $('.srg').find('.g').length;
+                        console.info(lstTypeBusinessRule);
+                        console.info('---- START SEARCHING ELEMENTS ------------')
+                        $('.g').each(function(){
+                            var rawLink = $(this).find('a').attr('href');
+                            var patern = new RegExp(/(url\?q=https:\/\/www.)/);
+
+                            if (patern.test(rawLink) == true){
+                             var rawLink = $(this).find('a').attr('href');
+                             rawLink = rawLink.replace(/(url\?q=https:\/\/www.)/,'');
+                             rawLink = rawLink.substring(1,rawLink.indexOf('.'));
+                            }
+                            else{
+                                var rawLink = $(this).find('a').attr('href');
+                                rawLink = rawLink.replace(/(url\?q=http:\/\/www.)/,'');
+                                rawLink = rawLink.substring(1,rawLink.indexOf('.'));
+                            }
+                            var content = $(this).find('.st').text();
+                            linkContent.push(rawLink)
+
+                        });
+
+                        var fieldsToSet = {
+                            typeBusinessRule: req.body.lstTypeBusinessRule,
+                            tagCattegory:     req.body.txtTagCattegory,
+                            cattegoryValue:   linkContent,
+                            cattegorycolor:   req.body.kleur,
+                            creationDate:     Date()
+                        };
+                        console.log(fieldsToSet);
+                        req.app.db.models.BusinessRules.create(fieldsToSet, function(err, BusinessRule) {
+                            if (err) {
+                                return workflow.emit('exception', err);
+                            }
+                            workflow.outcome.record = BusinessRule;
+                            // req.flash('success','BusinessRule Added');
+
+                        });
+                    } else {
+                        console.log("We’ve encountered an error: " + error);
+                    }
+                });
+
+            }
+            else {
+                var fieldsToSet = {
+                    typeBusinessRule: req.body.lstTypeBusinessRule,
+                    tagCattegory: req.body.txtTagCattegory,
+                    cattegoryValue: JSON.parse(req.body.catValue),
+                    cattegorycolor: req.body.kleur,
+                    creationDate: Date()
+                };
+
+                console.log(fieldsToSet);
+
+                req.app.db.models.BusinessRules.create(fieldsToSet, function(err, BusinessRule) {
+                    if (err) {
+                        return workflow.emit('exception', err);
+                    }
+
+                    workflow.outcome.record = BusinessRule;
+                    // req.flash('success','BusinessRule Added');
+                });
+            }
+        res.location('/BusinessRules');
+        res.redirect('/BusinessRules');
+        });
+
     workflow.emit('validate');
 };
 
@@ -223,3 +316,9 @@ exports.findApiData = function(req, res, next) {
 
     };
 
+exports.updateCattValues = function(req, res, next) {
+    console.info('test');
+    console.info(req.body.lstTypeBusinessRule);
+    console.info(req.body.txtTagCattegory);
+    console.info(req.body.CatValue);
+};

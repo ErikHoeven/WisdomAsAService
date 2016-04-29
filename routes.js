@@ -47,8 +47,10 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/add', require('./views/BusinessRules/index').add);
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
+  app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
+ // app.get('/BusinessRules/Scrape',require('./views/BusinessRules/index').scrapeWebsite);
 
-  //BusinessRules routes
+  //Dashboard routes
   app.get('/Dashboard/', require('./views/Dashboard/index').find);
   //app.get('/Dashboard/setTweetsperCattegory', require('./views/Dashboard/index').setTweetsperCattegory);
 

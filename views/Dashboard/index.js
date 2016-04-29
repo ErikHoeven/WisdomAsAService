@@ -7,20 +7,19 @@ var tweets = db.get('STG_LEADS_AUTOSCHADE');
 var businessrules = db.get('businessrules');
 var format = d3.time.format("%Y-%m-%d");
 
-
-
-exports.find = function(req, res, next){
+exports.find = function(req, res, next) {
     // find Tweets in Database
     console.info('find tweets: ...');
-    tweets.find({},{},function (err,tweets){
+    tweets.find({}, {}, function (err, tweets) {
         var stgTweets = setStgTweets(tweets);
         var tweetsPerDay = setTweetsPerDay(stgTweets);
         var domainValues = setDomainValues(tweetsPerDay);
-        setTweetCattegory(stgTweets,tweetsPerDay,domainValues, stgTweets );
+        setTweetCattegory(stgTweets, tweetsPerDay, domainValues, stgTweets);
     });
 
     //
     function setStgTweets(tweets) {
+        console.log('setStgTweets');
         var aantalTweets = tweets.length;
         var stgTweets = [];
 
@@ -39,76 +38,71 @@ exports.find = function(req, res, next){
         return stgTweets;
     }
 
-     function setTweetsPerDay(stgTweets) {
-         //Count tweets per postDate
-         var tweetsPerDay = d3.nest()
-             .key(function (d) {
-                 return d.postDate;
-             })
-             .rollup(function (v) {
-                 return v.length;
-             })
-             .entries(stgTweets);
+    function setTweetsPerDay(stgTweets) {
+        //Count tweets per postDate
+        var tweetsPerDay = d3.nest()
+            .key(function (d) {
+                return d.postDate;
+            })
+            .rollup(function (v) {
+                return v.length;
+            })
+            .entries(stgTweets);
+
+        var lstDate = [];
+        var jsonLength = tweetsPerDay.length;
 
 
-         var lstDate = [];
-         var jsonLength = tweetsPerDay.length;
+        for (var i = 0; i < jsonLength; i++) {
+            lstDate[i] = {
+                dim: tweetsPerDay[i].key,
+                measure: tweetsPerDay[i].values
+            };
+        }
+        return lstDate
+    }
 
-
-
-         for (var i = 0; i < jsonLength; i++) {
-             lstDate[i] = {
-                 dim: tweetsPerDay[i].key,
-                 measure: tweetsPerDay[i].values
-             };
-         }
-         return lstDate
-     }
-
-    function setDomainValues(data){
+    function setDomainValues(data) {
 
         var lstDimensionValues = [];
         var lstMeasures = []
-        for (var i = 0; i < data.length; i++ ){
+        for (var i = 0; i < data.length; i++) {
             lstDimensionValues.push(data[i].dim);
             lstMeasures.push(data[i].measure);
         }
-        return { minDimensionValue: d3.min(lstDimensionValues),
+        return {
+            minDimensionValue: d3.min(lstDimensionValues),
             maxDimesnionValue: d3.max(lstDimensionValues),
             minMeasure: d3.min(lstMeasures),
-            maxMeasure: d3.max(lstMeasures)};
+            maxMeasure: d3.max(lstMeasures)
+        };
+    }
+
+    function setTweetCattegory(tweets, tweetsPerDay, domainValues, stgTweets) {
+        businessrules.find({"typeBusinessRule" : "Cattegorie"}, {}, function (err, cattegories) {
+
+            //console.info(stgTweets[0]);
+            for (var i = 0;  i < cattegories.length ; i++){
+                var catValues = 0;
+                console.info('catValues: ' + catValues)
+                catValues = cattegories[i].cattegoryValue.length;
+                if (catValues){
+                    console.info('Er zijn' + catValues + 'categorien beschikbaar');
+                }
+                else {
+
+                    console.info('Er zijn geen categorien beschikbaar');
+                }
+
+            }
+
+        });
+
     }
 
 
-   function setTweetCattegory(tweets,tweetsPerDay, domainValues, stgTweets ) {
-       businessrules.distinct('tagCattegory', function (err, cattegory) {
-           var tweetsPerCattegorry = [];
-           var IsCatTweet = 0;
-           console.info(tweets.length);
-           console.info(tweetsPerCattegorry);
-           for (var i = 0; i < tweets.length; i++) {
-               console.info('-----' + i + '---------------------');
-               var cattegorie = 'Onbepaald';
-               for (var t = 0; t < cattegory.length; t++) {
-                   if ((tweets[i].text.search(cattegory[t]) > 0) && ( cattegory[t] != '' && cattegory[t] != null)) {
-                       console.info('bepaald: ' + i);
-                       var cattegorie = cattegory[t]
-
-                   }
-               }
-                          tweetsPerCattegorry.push( {
-                           userId: tweets[i].userId,
-                           userFollowerCount: tweets[i].userFollowerCount,
-                           userFriendCount: tweets[i].userFriendCount,
-                           userFavouritesCount: tweets[i].userFavouritesCount,
-                           text: tweets[i].text,
-                           coordinates: tweets[i].coordinates,
-                           userLocation: tweets[i].userLocation,
-                           postDate: tweets[i].postDate,
-                           cattegories: cattegorie
-                       });
-           }
-           var data = d3.nest()
+}
+ /*          var data = d3.nest()
                .key(function (d) {
                    return d.cattegories;
                })
@@ -126,28 +120,18 @@ exports.find = function(req, res, next){
 
                };
            }
-
-
-
            res.render('Dashboard/index', {
                'tweets': stgTweets,
                'tweetsPerDay': tweetsPerDay,
                'domainValues': domainValues,
                'tweetsPerCattegorry': lstCatteorie
            });
-       });
+       });*/
 
-   }
 
-    function getRandomColor() {
-        var letters = '0123456789ABCDEF'.split('');
-        var color = '#';
-        for (var i = 0; i < 6; i++ ) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-        return color;
-    }
-};
+
+
+//};
 
 
 

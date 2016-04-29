@@ -34,10 +34,10 @@
     "serve-static": "^1.9.x",
     "underscore": "^1.x.x",
     "mongoskin": "~0.6.0",
-    "mongodb" :"*",
+    "mongodb": "*",
     "monk": "*",
-    "d3": "3"
-
+    "d3": "3",
+    "google": "~2.0.0"
   },
   "devDependencies": {
     "bootstrap": "^3.x.x",

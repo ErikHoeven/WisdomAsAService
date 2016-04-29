@@ -6,11 +6,13 @@
 
 exports = module.exports = function(app, mongoose) {
     var rulesSchema = new mongoose.Schema({
-        lookupValue: { type: String, required:true},
-        typeBusinessRule: { type: String},
+        lookupValue: { type: String},
+        typeBusinessRule: { type: String, required:true},
         tagCattegory: { type: String},
         tagScore:     { type: Number},
         creationDate: { type: Date},
+        cattegoryValue: { type: []},
+        cattegorycolor: { type: String},
         search: [String]
     });
     rulesSchema.plugin(require('./plugins/pagedFind'));
@@ -19,6 +21,7 @@ exports = module.exports = function(app, mongoose) {
     rulesSchema.index({ typeBusinessRule: 1 });
     rulesSchema.index({ tagScore: 1 });
     rulesSchema.index({ creationDate: 1 });
+    rulesSchema.index({ cattegoryValue: 1 });
     rulesSchema.index({ search: 1 });
     rulesSchema.set('autoIndex', (app.get('env') === 'development'));
     app.db.model('BusinessRules', rulesSchema);

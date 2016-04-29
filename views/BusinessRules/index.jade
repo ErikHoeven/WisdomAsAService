@@ -13,9 +13,6 @@ block head
     script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/jquery.dynatable.js')
     script(type='text/javascript', src='https://s3.amazonaws.com/dynatable-docs-assets/js/highcharts.js')
     link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
-    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-
-
     script.
 
         myCurentRecords   =[];
@@ -32,15 +29,12 @@ block head
 
 
             function getNewValue(t, e) {
-                console.info("getNewValue()");
                 if (e.keyCode == 13) {
                     newValue = '{"_id": "' + id + '","' + $th + '": "' + t.ltrim() + '"}';
                     var jsonNewValue = {}
                     jsonNewValue = JSON.parse(newValue);
                     jsonNewValue.updateField = $th;
                     jsonNewValue.updateValue = t.ltrim();
-
-                    console.info(jsonNewValue);
 
                     $.ajax({
                         url: '/BusinessRules/findApiData',
@@ -50,6 +44,22 @@ block head
                     });
                 }
             }
+            function setTdColor(){
+
+                for (var i = 1; i < jsonMyCurrentRecord.length + 1; i++) {
+
+                    var val1 = $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').text();
+                    console.info(i + ' : ' + val1);
+                    if (val1) {
+                        console.info(val1);
+                        $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').css('background-color', '#' + val1);
+                        $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').text('');
+                    }
+
+                }
+
+            }
+
 
 block body
     div(id="setMyCurrentRecords")
@@ -57,10 +67,10 @@ block body
             script.
 
                 if (Counter < #{data.length}) {
-                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"},');
+                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}","kleur": "#{BusinessRule.cattegorycolor}","_id": "#{BusinessRule._id}"},');
                 }
                 else {
-                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}", "_id": "#{BusinessRule._id}"}');
+                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}","kleur": "#{BusinessRule.cattegorycolor}","_id": "#{BusinessRule._id}"}');
                 }
                 Counter++
 
@@ -88,6 +98,7 @@ block body
                                     th cattegorie
                                     th opzoekwaarde
                                     th typeBusinessRule
+                                    th kleur
                                     th _id
                             tbody
                        script.
@@ -99,7 +110,6 @@ block body
 
                            $('.dynatable-search').keypress(function(e){
                                 if (e.which == 13){
-                                    console.info("Reload");
                                     location.reload();
                                 }
                            });
@@ -123,6 +133,23 @@ block body
                                });
                            }});
 
-.page-header
+                           $(document).ready(function(){
+                               setTdColor();
+                           });
+
+                           $("a").click(function(){
+                               console.info('click');
+                               console.info($('#tblBusinessRules >tbody >tr').length);
+                               console.info($("#tblBusinessRules").find('tr:eq(1) td:eq(1)').text());
+                               });
+
+
+
+
+
+
         p
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
+
+
+

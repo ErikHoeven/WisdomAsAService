@@ -1,101 +1,77 @@
-$(document).ready(function() {
-    var pie = new d3pie("pieChart", {
-        "header": {
-            "title": {
-                "text": "Tweets per cattegorie",
-                "fontSize": 24,
-                "font": "open sans"
+function buildPieChart(div,data, title, width, height) {
+        var pie = new d3pie(div, {
+            "header": {
+                "title": {
+                    "text": title,
+                    "fontSize": 24,
+                    "font": "open sans"
+                },
+                "subtitle": {
+                    "color": "#999999",
+                    "fontSize": 12,
+                    "font": "open sans"
+                },
+                "titleSubtitlePadding": 9
             },
-            "subtitle": {
-                "text": "Tweets per cattegorie",
+            "footer": {
                 "color": "#999999",
-                "fontSize": 12,
-                "font": "open sans"
+                "fontSize": 10,
+                "font": "open sans",
+                "location": "bottom-left"
             },
-            "titleSubtitlePadding": 9
-        },
-        "footer": {
-            "color": "#999999",
-            "fontSize": 10,
-            "font": "open sans",
-            "location": "bottom-left"
-        },
-        "size": {
-            "canvasHeight": 400,
-            "canvasWidth": 400,
-            "pieInnerRadius": "39%",
-            "pieOuterRadius": "90%"
-        },
-        "data": {
-            "sortOrder": "value-desc",
-            "smallSegmentGrouping": {
-                "enabled": true,
-                "value": 8,
-                "valueType": "value"
+            "size": {
+                "canvasHeight": height ,
+                "canvasWidth":  width,
+                "pieOuterRadius": "90%"
             },
-            //To DO JSON
-            "content": tweetsPerCattegorry
-               /* [
-                {
-                    "label": "JavaScript",
-                    "value": 264131,
-                    "color": "#2484c1"
+            "data": {
+                "sortOrder": "value-desc",
+                "content": data
+            },
+            "labels": {
+                "outer": {
+                    "format": "none",
+                    "pieDistance": 32
                 },
-                {
-                    "label": "Ruby",
-                    "value": 218812,
-                    "color": "#97910b"
+                "inner": {
+                    "format": "label-percentage1",
+                    "hideWhenLessThanPercentage": 3
                 },
-                {
-                    "label": "Java",
-                    "value": 157618,
-                    "color": "#4daa4b"
+                "mainLabel": {
+                    "color": "#e5e9e0",
+                    "fontSize": 14
                 },
-                {
-                    "label": "PHP",
-                    "value": 114384,
-                    "color": "#c46883"
+                "percentage": {
+                    "color": "#ffffff",
+                    "fontSize": 15,
+                    "decimalPlaces": 0
+                },
+                "value": {
+                    "color": "#adadad",
+                    "fontSize": 13
+                },
+                "lines": {
+                    "enabled": true
+                },
+                "truncation": {
+                    "enabled": true
                 }
-            ]*/
-        },
-        "labels": {
-            "outer": {
-                "pieDistance": 32
             },
-            "inner": {
-                "hideWhenLessThanPercentage": 7
+            "effects": {
+                "load": {
+                    "speed": 1
+                },
+                "pullOutSegmentOnClick": {
+                    "effect": "linear",
+                    "speed": 1,
+                    "size": 8
+                }
             },
-            "mainLabel": {
-                "fontSize": 11
-            },
-            "percentage": {
-                "color": "#ffffff",
-                "decimalPlaces": 0
-            },
-            "value": {
-                "color": "#adadad",
-                "fontSize": 11
-            },
-            "lines": {
-                "enabled": true
-            },
-            "truncation": {
-                "enabled": true
+            "misc": {
+                "gradient": {
+                    "enabled": true,
+                    "percentage": 100
+                }
             }
-        },
-        "effects": {
-            "pullOutSegmentOnClick": {
-                "effect": "linear",
-                "speed": 400,
-                "size": 8
-            }
-        },
-        "misc": {
-            "gradient": {
-                "enabled": true,
-                "percentage": 100
-            }
-        }
-    });
-
-});
+        });
+}
