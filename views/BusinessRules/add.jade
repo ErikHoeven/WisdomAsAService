@@ -2,30 +2,165 @@ extends ../../layouts/default
 
 block head
   title Add Event
+  //JS
+  link(href='../../views/BusinessRules/colorpicker/jquery.colorpicker.css', rel='stylesheet', type='text/css')
+  link(rel='stylesheet', href='../../views/Dashboard/graph.css')
+  link(href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css', rel='stylesheet', type='text/css')
+  script(src='../../views/jquery-2.2.3.min.js')
+  script(src='../../views/Dashboard/d3pie.js')
+  script(src='../../views/Dashboard/d3pie.js')
+  script(src="../../views/Dashboard/pieChart.js")
+  script(src='../../views/jquery-ui.min.js')
+  script(src='../../views/BusinessRules/colorpicker/jquery.colorpicker.js')
 
+
+  script.
+    var lstCatValues = [];
+
+    $(document).ready(function(){
+      // (1) Start situation
+      $('#Kleurbepaler').hide();
+      $('#zoekwaarde').show();
+      $('#score').hide();
+      $('#Cattegorie').hide();
+      $('#CattegorieValue').hide();
+      console.info('document geladen');
+
+      // (2) listbox Change hide & show input fields
+      $('#lstTypeBusinessRule').change(function(){
+
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Cattegorie') {
+          $('#zoekwaarde').hide();
+          $('#score').hide();
+          $('#Cattegorie').show();
+          $('#Kleurbepaler').show();
+          $('#CattegorieValue').show();
+        }
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Zoekwaarde') {
+          $('#Kleurbepaler').hide();
+          $('#zoekwaarde').show();
+          $('#score').hide();
+          $('#Cattegorie').hide();
+          $('#CattegorieValue').hide();
+        }
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
+          $('#Kleurbepaler').hide();
+          $('#zoekwaarde').show();
+          $('#score').show();
+          $('#Cattegorie').hide();
+          $('#CattegorieValue').hide();
+        }
+      });
+      // (3) Add value to array
+      $('#cmdAddCatValue').click(function(){
+        lstCatValues.push($('#CatValue' ).val());
+        $('#CatValue' ).val('');
+
+
+        //START TABLE
+        catValueHTML = '<p><table class="table table-sm"><th>Cattegorie waarde:</th>';
+
+        for(var i = 0; i < lstCatValues.length; i++){
+          catValueHTML = catValueHTML + '<tr><td>'+ lstCatValues[i] +'</td></tr>'
+        }
+
+
+        catValueHTML = catValueHTML + '</tabel>'
+        //END TABLE
+
+        //START HIDDEN FIELD
+        catValueHTML = catValueHTML + '<input type="hidden" id="catValue" name="catValue" value=' + JSON.stringify(lstCatValues) + '></input>'
+
+        $('#catvaluelist').html(catValueHTML)
+      });
+      // (4)Clear array from step 3
+      $('#clearCatValue').click(function(){
+        lstCatValues = [];
+        $('#catvaluelist').html('');
+        $('#CatValue' ).val('');
+
+      });
+      var teller = 0;
+      //
+      $('#kleur').focusout(function () {
+        teller = teller + 1;
+        console.info(teller)
+        if (teller == 1 ){
+          datasetvb = [];
+          datasetvb.push({
+              color: "#" + $(this).val()
+            , label: $('#txtTagCattegory').val()
+            , value: 10
+          });
+
+          datasetvb.push({
+            color: "#333333"
+            , label: "Overige"
+            , value: 100
+          });
+
+          buildPieChart('pieDemo', datasetvb, 'Voorbeeld', 250, 250);
+        }
+      });
+
+      $('#kleur').focusin(function () {
+         $('#pieDemo').html('');
+          teller = 0;
+      });
+    });
 block body
-  div.row
-    div.col-sm-8
-      div.page-header
-        h1 Toevoegen BusinessRule
-        form(method='post', action='/BusinessRules')
-          div.form-group
-            label Type Business Rule:
-              select.form-control(name='lstTypeBusinessRule')
-                option Zoekwaarde
-                option Cattegorie
-                option Score
-          div.form-group
-            label Zoek waarde:
-              input.form-control(type='text', name='txtLookupValue')
-          div.form-group
-            label Categorie:
-              input.form-control(type='text', name='txtTagCattegory')
-          div.form-group
-            label Score:
-              input.form-control(type='text', name='txtTagScore')
-            button.btn.btn-primary.btn-signup(type='submit') Toevoegen aan rules
-      div.page-header
-        h1 Sidebar
+  form(method='post', action='/BusinessRules')
+    div.row
+      div.col-sm-6
+        div.page-header
+          h1 Toevoegen BusinessRule
+    div.row
+      div.col-sm-6
+        label Type Business Rule:
+          select.form-control(name='lstTypeBusinessRule' id="lstTypeBusinessRule")
+            option Zoekwaarde
+            option Cattegorie
+            option Score
+      div.col-sm-6
+        #pieDemo
 
-  div.col-s
+    div.row
+      div.col-sm-6
+        div.form-group(id='zoekwaarde')
+          label Zoek waarde:
+            input.form-control(type='text', name='txtLookupValue')
+    div.row
+      div.col-sm-6
+        div.form-group(id='Cattegorie')
+          label Categorie:
+            input.form-control(type='text', name='txtTagCattegory' id='txtTagCattegory')
+    div.row
+      div.col-sm-6
+        div.form-group(id='CattegorieValue')
+          label Cattegorie waarde:
+            input.form-control(type='text', name='CatValueAdd' id='CatValue')
+            button.btn.btn-info(type='button' id='cmdAddCatValue') Toevoegen
+            button.btn.btn-info(type='button' id='clearCatValue') Schonen
+            #catvaluelist
+    div.row
+      div.col-sm-6
+        div.form-group(id='score')
+          label Score:
+            input.form-control(type='text', name='txtTagScore')
+    div.row
+      div.col-sm-6
+        div.form-group(id='Kleurbepaler')
+          label Kleur:
+            input.form-control(type='text', value='0fa7c2' class='cp-websafe' name="kleur" id="kleur")
+            script.
+              $(function () {
+                $('.cp-websafe').colorpicker({
+                  limit: 'websafe'
+                  });
+              });
+    div.row
+      div.col-sm-6
+        div.form-group
+          button.btn.btn-primary.btn-signup(type='submit') Toevoegen aan rules
+
+

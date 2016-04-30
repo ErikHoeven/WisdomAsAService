@@ -116,7 +116,8 @@ exports.create = function(req, res, next) {
 
             if ( req.body.txtTagCattegory.toLowerCase() == 'concurentie') {
                 console.log('Scraping concurentie');
-                var url = "https://www.google.nl/search?q=autoglas+schade+bedrijven#q=autoglasschade"
+                //var url = "https://www.google.nl/search?q=autoglas+schade+bedrijven#q=autoglasschade"
+                var url = 'https://www.google.nl/search?q=internet+service+provide'
                 var linkContent = [];
                 var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
 

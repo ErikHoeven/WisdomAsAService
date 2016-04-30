@@ -37,7 +37,6 @@ exports.find = function(req, res, next) {
         }
         return stgTweets;
     }
-
     function setTweetsPerDay(stgTweets) {
         //Count tweets per postDate
         var tweetsPerDay = d3.nest()
@@ -51,7 +50,6 @@ exports.find = function(req, res, next) {
 
         var lstDate = [];
         var jsonLength = tweetsPerDay.length;
-
 
         for (var i = 0; i < jsonLength; i++) {
             lstDate[i] = {
@@ -79,59 +77,94 @@ exports.find = function(req, res, next) {
     }
 
     function setTweetCattegory(tweets, tweetsPerDay, domainValues, stgTweets) {
-        businessrules.find({"typeBusinessRule" : "Cattegorie"}, {}, function (err, cattegories) {
+        businessrules.find({"typeBusinessRule": "Cattegorie"}, {}, function (err, cattegories) {
+            var cattegorie = {cat: 'All tweets', color: '47A947' } ;
+            var stgTweetCattegory = [];
+            var stgTweetsPerCattegory = [];
+            var dmTweetsPerCattegory = [];
 
-            //console.info(stgTweets[0]);
-            for (var i = 0;  i < cattegories.length ; i++){
-                var catValues = 0;
-                console.info('catValues: ' + catValues)
-                catValues = cattegories[i].cattegoryValue.length;
-                if (catValues){
-                    console.info('Er zijn' + catValues + 'categorien beschikbaar');
+            for (var i = 0; i < stgTweets.length; i++) {
+
+                var cattegorieMatch = findandsetCattegorie(stgTweets[i], cattegories);
+
+                if(cattegorieMatch){
+                    cattegorie = cattegorieMatch;
+                }
+                stgTweetCattegory.push({
+                    userId: stgTweets[i].userId,
+                    userFollowerCount: stgTweets[i].userFollowerCount,
+                    userFriendCount: stgTweets[i].userFriendCount,
+                    userFavouritesCount: stgTweets[i].userFavouritesCount,
+                    text: stgTweets[i].text,
+                    coordinates: stgTweets[i].coordinates,
+                    userLocation: stgTweets[i].userLocation,
+                    postDate: stgTweets[i].postDate,
+                    tweetCattegorie: cattegorie.cat,
+                    color:cattegorie.color
+
+                })
+            }
+               stgTweetsPerCattegory = d3.nest()
+                   .key(function(d) { return d.name; })
+                   .rollup(function(v) { return {
+                       count: v.length,
+                       total: d3.sum(v, function(d) { return d.amount; }),
+                       avg: d3.mean(v, function(d) { return d.amount; })
+                   }; })
+                   .entries(stgTweetCattegory);
+
+
+               for (var k = 0; k < Object.keys(stgTweetsPerCattegory).length; k++) {
+                  var catt = Object.keys(stgTweetsPerCattegory)[k];
+                  console.info(catt)
+                   console.info(stgTweetsPerCattegory.Object.keys(stgTweetsPerCattegory)[k]);
+
+               }
+
+
+
+        /*    { 'All tweets': { '47A947': 17 },
+                concurentie: { ff0000: 294 },
+                Concurentie: { '0fa7c2': 405 } }*/
+
+
+            //console.log(stgTweetsPerCattegory);
+            //console.log(stgTweetsPerCattegory);
+
+            function findandsetCattegorie(objtweet, objcattegories) {
+                //console.info('---------------findandsetCattegorie on ' +  objtweet.text   + ' -------------------------');
+                if (objcattegories) {
+                    var CountCattegories = objcattegories.length;
+                    // Loop through the cattegories
+                    for (var ct = 0; ct < CountCattegories; ct++) {
+                        var catValues = objcattegories[ct].cattegoryValue.length;
+                        if (catValues) {
+                            // Loop through catvalues
+                            for (var cv = 0; cv < catValues; cv++) {
+                                // Check if tweet.text matched with the cattegorie value
+                                var CheckValue = objtweet.text.search(objcattegories[ct].cattegoryValue[cv]);
+                                //console.info(typeof(CheckValue));
+                                if (CheckValue > 0) {
+                                    // Assign categorie to var cattegorie
+                                    //console.info('Match')
+                                    //console.log(objtweet.text.search(objcattegories[ct].cattegoryValue[cv]));
+                                    return  {cat: objcattegories[ct].tagCattegory, color: objcattegories[ct].cattegorycolor }
+                                }
+                            }
+                        }
+                        else {
+                            //console.info('Geen cattegorie waarde beschikbaar');
+                        }
+                    }
                 }
                 else {
-
-                    console.info('Er zijn geen categorien beschikbaar');
+                    //console.info('Geen cattegorieen beschikbaar');
                 }
-
             }
 
         });
-
     }
-
-
 }
- /*          var data = d3.nest()
-               .key(function (d) {
-                   return d.cattegories;
-               })
-               .rollup(function (v) {
-                   return v.length;
-               })
-               .entries(tweetsPerCattegorry);
-
-           var lstCatteorie = [];
-           for (var i = 0; i < data.length; i++) {
-               lstCatteorie[i] = {
-                   label: data[i].key,
-                   value: data[i].values,
-                   color: getRandomColor()
-
-               };
-           }
-           res.render('Dashboard/index', {
-               'tweets': stgTweets,
-               'tweetsPerDay': tweetsPerDay,
-               'domainValues': domainValues,
-               'tweetsPerCattegorry': lstCatteorie
-           });
-       });*/
-
-
-
-
-//};
 
 
 
