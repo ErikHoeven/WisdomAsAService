@@ -82,6 +82,9 @@ exports.find = function(req, res, next) {
             var stgTweetCattegory = [];
             var stgTweetsPerCattegory = [];
             var dmTweetsPerCattegory = [];
+            var dmCountUserPerDay = [];
+
+
 
             for (var i = 0; i < stgTweets.length; i++) {
 
@@ -100,36 +103,210 @@ exports.find = function(req, res, next) {
                     userLocation: stgTweets[i].userLocation,
                     postDate: stgTweets[i].postDate,
                     tweetCattegorie: cattegorie.cat,
-                    color:cattegorie.color
+                    color:cattegorie.color,
+
 
                 })
             }
-               stgTweetsPerCattegory = d3.nest()
-                   .key(function(d) { return d.name; })
-                   .rollup(function(v) { return {
-                       count: v.length,
-                       total: d3.sum(v, function(d) { return d.amount; }),
-                       avg: d3.mean(v, function(d) { return d.amount; })
-                   }; })
-                   .entries(stgTweetCattegory);
+
+            // Aggegrate an input JSON Array to a summerized JSON Array (maximum is 5 fields)
+            //input 1: array with json key's to be aggegrated
+            //input 2: aggegrate expression (sum, count, avg)
+            //input 3: outputname of expression
+            //input 4: JSON input to aggagrate
+            function agg_json_object(aggFields, jsoninput) {
+                var aggOutput =  [];
+
+                if (aggFields.length == 1) {
+                    var aggJSONData = d3.nest()
+                        .key(function (d) {
+                            return d[aggFields[0]]
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(jsoninput);
+                }
+
+                if (aggFields.length == 2) {
+                    var aggJSONData = d3.nest()
+                        .key(function (d) {
+                            return d[aggFields[0]] + '-' + d[aggFields[1]];
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(jsoninput);
+
+                    aggJSONData.forEach(function(a){
+                        if(a.key.search(/-/i) > 0){
+                            var keys = []
+                            keys.push(a.key.substring(0,a.key.search(/-/i)))
+                            keys.push(a.key.substring(a.key.search(/-/i)+1, a.key.length));
+
+                            var jsonString = {};
+                            jsonString[aggFields[0]] = keys[0];
+                            jsonString[aggFields[1]] = keys[1];
+                            jsonString['values'] = a.values;
+
+                            aggOutput.push(jsonString);
+                        }
+                    })
+
+                }
+                if (aggFields.length == 3) {
+                    var aggJSONData = d3.nest()
+                        .key(function (d) {
+                            return d[aggFields[0]] + ';' + d[aggFields[1]] + ';' + d[aggFields[2]];
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(jsoninput);
+                    console.info(aggJSONData);
+                    aggJSONData.forEach(function(a){
+                        if(a.key.search(/;/i) > 0){
+                            var keys = []
+
+                            // key 1
+                            var key1 = a.key.substring(0,a.key.search(/;/i));
+                            keys.push(key1);
+
+                            // Key 2
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 = key2.substring(0, key2.search(/;/i))
+                            keys.push(key2);
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+
+                            // Key 3
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            keys.push(key3);
+
+                            var jsonString = {};
+                            jsonString[aggFields[0]] = keys[0];
+                            jsonString[aggFields[1]] = keys[1];
+                            jsonString[aggFields[2]] = keys[2];
+                            jsonString['values' ] = a.values;
+
+                            aggOutput.push(jsonString);
+                        }
+                    })
+
+                }
+                if (aggFields.length == 4) {
+                    var aggJSONData = d3.nest()
+                        .key(function (d) {
+                            return d[aggFields[0]] + ';' + d[aggFields[1]] + ';' + d[aggFields[2]] + ';' + d[aggFields[3]];
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(jsoninput);
+
+                    aggJSONData.forEach(function(a){
+                        if(a.key.search(/;/i) > 0){
+                            var keys = []
+
+                            // key 1
+                            var key1 = a.key.substring(0,a.key.search(/;/i));
+                            keys.push(key1);
+
+                            // Key 2
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 = key2.substring(0, key2.search(/;/i))
+                            keys.push(key2);
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+
+                            // Key 3
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            key3 = key3.substring(0, key3.search(/;/i));
+                            keys.push(key3);
+                            key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+
+                            //key4
+                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length)
+                            keys.push(key4)
+
+                            var jsonString = {};
+                            jsonString[aggFields[0]] = keys[0];
+                            jsonString[aggFields[1]] = keys[1];
+                            jsonString[aggFields[2]] = keys[2];
+                            jsonString[aggFields[3]] = keys[3];
+                            jsonString['values' ] = a.values;
+
+                            aggOutput.push(jsonString);
+                        }
+                    })
+                }
+                if (aggFields.length == 5) {
+                    var aggJSONData = d3.nest()
+                        .key(function (d) {
+                            return d[aggFields[0]] + ';' + d[aggFields[1]] + ';' + d[aggFields[2]] + ';' + d[aggFields[3]] + ';' + d[aggFields[4]];
+                        })
+                        .rollup(function (v) {
+                            return v.length;
+                        })
+                        .entries(jsoninput);
+
+                    aggJSONData.forEach(function(a){
+                        if(a.key.search(/;/i) > 0){
+                            var keys = []
+
+                            // key 1
+                            var key1 = a.key.substring(0,a.key.search(/;/i));
+                            keys.push(key1);
+
+                            // Key 2
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 = key2.substring(0, key2.search(/;/i))
+                            keys.push(key2);
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+
+                            // Key 3
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            key3 = key3.substring(0, key3.search(/;/i));
+                            keys.push(key3);
+                            key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+
+                            //key4
+                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length)
+                            key4 = key4.substring(0,key4.search(/;/i))
+
+                            //Key5
+                            var key5 = key3.substring(key3.search(/;/i)+1, key3.length)
+                            key5 = key5.substring(key5.search(/;/i)+1,key5.length)
+                            keys.push(key5)
+
+                            var jsonString = {};
+                            jsonString[aggFields[0]] = keys[0];
+                            jsonString[aggFields[1]] = keys[1];
+                            jsonString[aggFields[2]] = keys[2];
+                            jsonString[aggFields[3]] = keys[3];
+                            jsonString[aggFields[4]] = keys[4];
+                            jsonString['values' ] = a.values;
+
+                            aggOutput.push(jsonString);
+                        }
+                    })
+
+                }
+            return aggOutput
+            }
+
+            var aggArray = [];
+            aggArray.push('tweetCattegorie');
+            aggArray.push('color');
+
+            var tt  = agg_json_object(tst,stgTweetCattegory);
+            console.info(tt);
+            // DM Tweets per User
+           //  tweetCattegorieCount = d3.nest()
+           //     .key(function(d) { return d.tweetCattegorie + '-' + d.postDate; })
+           //     .rollup(function(v) { return v.length; })
+           //     .entries(stgTweetCattegory);
 
 
-               for (var k = 0; k < Object.keys(stgTweetsPerCattegory).length; k++) {
-                  var catt = Object.keys(stgTweetsPerCattegory)[k];
-                  console.info(catt)
-                   console.info(stgTweetsPerCattegory.Object.keys(stgTweetsPerCattegory)[k]);
-
-               }
-
-
-
-        /*    { 'All tweets': { '47A947': 17 },
-                concurentie: { ff0000: 294 },
-                Concurentie: { '0fa7c2': 405 } }*/
-
-
-            //console.log(stgTweetsPerCattegory);
-            //console.log(stgTweetsPerCattegory);
+            //console.info(tweetCattegorieCount)
 
             function findandsetCattegorie(objtweet, objcattegories) {
                 //console.info('---------------findandsetCattegorie on ' +  objtweet.text   + ' -------------------------');
