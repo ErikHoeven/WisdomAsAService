@@ -26,9 +26,8 @@ block head
         var tweetsPerCattegorry = []
         tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
 
-        console.info(tweetsPerCattegorry);
-
-
+        var tweetsPerCattegoryPerDay = [];
+        tweetsPerCattegoryPerDay = !{JSON.stringify(tweetsPerCattegoryPerDay)}
 
         $(document).ready(function(){
             buildPieChart('pieChart',tweetsPerCattegorry, 'tweetsPerCattegorry',300,300);
@@ -37,6 +36,7 @@ block head
 
     script(src="../../views/Dashboard/pieChart.js")
     script(src="../../views/Dashboard/ChartSimple.js")
+    script(src="../../views/Dashboard/LineChartFull.js")
 
 block body
     .container-fluid
@@ -48,5 +48,7 @@ block body
                 #pieChart(align="bottom")
             .col-md-6
                 #lineChartSimple(align="bottom")
+            .col-md-6
+                #lineChartFull(align="bottom")
         .row(id="Details")
 

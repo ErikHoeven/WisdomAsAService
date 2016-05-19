@@ -112,9 +112,10 @@ exports.find = function(req, res, next) {
             // Aggegrate an input JSON Array to a summerized JSON Array (maximum is 5 fields)
             //input 1: array with json key's to be aggegrated
             //input 2: aggegrate expression (sum, count, avg)
-            //input 3: outputname of expression
+            //input 3: aggegrate preparation for pieChart ['Y'/ 'N']
             //input 4: JSON input to aggagrate
-            function agg_json_object(aggFields, jsoninput) {
+
+            function agg_json_object(aggFields, jsoninput, pieChart) {
                 var aggOutput =  [];
 
                 if (aggFields.length == 1) {
@@ -145,10 +146,17 @@ exports.find = function(req, res, next) {
                             keys.push(a.key.substring(a.key.search(/-/i)+1, a.key.length));
 
                             var jsonString = {};
-                            jsonString[aggFields[0]] = keys[0];
-                            jsonString[aggFields[1]] = keys[1];
-                            jsonString['values'] = a.values;
 
+                            if (pieChart == 'N'){
+                                jsonString[aggFields[0]] = keys[0];
+                                jsonString[aggFields[1]] = keys[1];
+                                jsonString['values'] = a.values;
+                            }
+                            else {
+                                jsonString['label'] = keys[0];
+                                jsonString['color'] = keys[1];
+                                jsonString['value'] = a.values;
+                            }
                             aggOutput.push(jsonString);
                         }
                     })
@@ -183,6 +191,7 @@ exports.find = function(req, res, next) {
                             keys.push(key3);
 
                             var jsonString = {};
+
                             jsonString[aggFields[0]] = keys[0];
                             jsonString[aggFields[1]] = keys[1];
                             jsonString[aggFields[2]] = keys[2];
@@ -297,13 +306,28 @@ exports.find = function(req, res, next) {
             aggArray.push('tweetCattegorie');
             aggArray.push('color');
 
-            var tt  = agg_json_object(tst,stgTweetCattegory);
-            console.info(tt);
-            // DM Tweets per User
-           //  tweetCattegorieCount = d3.nest()
-           //     .key(function(d) { return d.tweetCattegorie + '-' + d.postDate; })
-           //     .rollup(function(v) { return v.length; })
-           //     .entries(stgTweetCattegory);
+            //dmTweetsPerCattegory
+            dmTweetsPerCattegory = agg_json_object(aggArray,stgTweetCattegory, 'Y');
+
+
+            //dmTweetsPerCattegoriePerDay
+            var dmTweetsPerCattegoriePerDay = [];
+            aggArray = [];
+            aggArray.push('tweetCattegorie');
+            aggArray.push('color');
+            aggArray.push('postDate');
+
+            dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N')
+
+               res.render('Dashboard/index', {
+                               'tweets': stgTweets,
+                               'tweetsPerDay': tweetsPerDay,
+                               'domainValues': domainValues,
+                               'tweetsPerCattegorry': dmTweetsPerCattegory,
+                               'tweetsPerCattegoryPerDay': dmTweetsPerCattegoriePerDay
+
+                       });
+
 
 
             //console.info(tweetCattegorieCount)

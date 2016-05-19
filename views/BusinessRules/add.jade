@@ -8,7 +8,7 @@ block head
   link(href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css', rel='stylesheet', type='text/css')
   script(src='../../views/jquery-2.2.3.min.js')
   script(src='../../views/Dashboard/d3pie.js')
-  script(src='../../views/Dashboard/d3pie.js')
+  script(src='//d3js.org/d3.v3.min.js')
   script(src="../../views/Dashboard/pieChart.js")
   script(src='../../views/jquery-ui.min.js')
   script(src='../../views/BusinessRules/colorpicker/jquery.colorpicker.js')
@@ -64,7 +64,6 @@ block head
           catValueHTML = catValueHTML + '<tr><td>'+ lstCatValues[i] +'</td></tr>'
         }
 
-
         catValueHTML = catValueHTML + '</tabel>'
         //END TABLE
 
@@ -90,15 +89,15 @@ block head
           datasetvb.push({
               color: "#" + $(this).val()
             , label: $('#txtTagCattegory').val()
-            , value: 10
+            , value: 50
           });
 
           datasetvb.push({
-            color: "#333333"
+              color: "#333333"
             , label: "Overige"
             , value: 100
           });
-
+          console.info(datasetvb);
           buildPieChart('pieDemo', datasetvb, 'Voorbeeld', 250, 250);
         }
       });

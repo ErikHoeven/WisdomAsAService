@@ -1,0 +1,9 @@
+[{
+  serie: "Concurentie"
+  Data: [{ xLabel : "01-01-2016", value: 110}
+        ,{ xLabel : "02-01-2016", value: 112}]
+}, {
+serie: "Alles"
+Data: [{ xLabel : "01-01-2016", value: 110}
+,{ xLabel : "02-01-2016", value: 112}]
+}]
