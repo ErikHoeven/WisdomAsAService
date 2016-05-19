@@ -52,13 +52,9 @@ $(document).ready(function() {
 
 var data = tw;
 
-    var margin = {
-            top: 20,
-            right: 80,
-            bottom: 30,
-            left: 50
-        },
-        width = 800 - margin.left - margin.right,
+    // Prepare SVG properties
+    var margin = {top: 70, right: 70, bottom: 70, left: 70},
+        width = 500 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%Y-%m-%d").parse;
@@ -88,7 +84,7 @@ var data = tw;
         });
 
 
-    var svg = d3.select("body").append("svg")
+    var svg = d3.select("#lineChartSimple").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
@@ -106,8 +102,7 @@ var data = tw;
     data.forEach( function (a) {
 
         if (a.cattegorie){
-        console.info( a.cattegorie)
-        varNames.push(a.cattegorie)
+        varNames.push({cattegorie: a.cattegorie, kleur: a.kleur})
         }
         });
 
@@ -115,12 +110,12 @@ var data = tw;
     y.domain([0, domainValues.maxMeasure]);
 
     svg.append("g")
-        .attr("class", "x axis")
+        .attr("class", "x")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis);
 
     svg.append("g")
-        .attr("class", "y axis")
+        .attr("class", "y")
         .call(yAxis)
         .append("text")
         .attr("transform", "rotate(-90)")
@@ -158,6 +153,8 @@ var data = tw;
             showPopover.call(this, d); })
         .on("mouseout",  function (d) { removePopovers(); })
 
+
+    //Add legend to the SVG Area
     var legend = svg.selectAll(".legend")
         .data(varNames.slice().reverse())
         .enter().append("g")
@@ -167,14 +164,14 @@ var data = tw;
         .attr("x", width - 10)
         .attr("width", 10)
         .attr("height", 10)
-        .style("fill", color)
+        .style("fill", function(d) { return '#' + d.kleur})
         .style("stroke", "grey");
     legend.append("text")
         .attr("x", width - 12)
         .attr("y", 6)
         .attr("dy", ".35em")
         .style("text-anchor", "end")
-        .text(function (d) { return d; });
+        .text(function (d) { return d.cattegorie; });
 
     function removePopovers () {
         $('.popover').each(function() {
@@ -182,7 +179,6 @@ var data = tw;
         });
     }
     function showPopover (d) {
-        console.info(d);
         $(this).popover({
             title: d.name,
             placement: 'auto top',
