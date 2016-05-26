@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 var cheerio = require("cheerio");
 var request = require("request");
 
@@ -117,7 +117,7 @@ exports.create = function(req, res, next) {
             if ( req.body.txtTagCattegory.toLowerCase() == 'concurentie') {
                 console.log('Scraping concurentie');
                 //var url = "https://www.google.nl/search?q=autoglas+schade+bedrijven#q=autoglasschade"
-                var url = 'https://www.google.nl/search?q=internet+service+provide'
+                var url = 'https://www.google.nl/search?q=internet+service+provide';
                 var linkContent = [];
                 var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
 
@@ -126,7 +126,7 @@ exports.create = function(req, res, next) {
                         var $ = cheerio.load(body),
                         links = $('.srg').find('.g').length;
                         console.info(lstTypeBusinessRule);
-                        console.info('---- START SEARCHING ELEMENTS ------------')
+                        console.info('---- START SEARCHING ELEMENTS ------------');
                         $('.g').each(function(){
                             var rawLink = $(this).find('a').attr('href');
                             var patern = new RegExp(/(url\?q=https:\/\/www.)/);
@@ -169,6 +169,9 @@ exports.create = function(req, res, next) {
 
             }
             else {
+                console.info('Else Push:');
+                console.info(req.body.catValue);
+
                 var fieldsToSet = {
                     typeBusinessRule: req.body.lstTypeBusinessRule,
                     tagCattegory: req.body.txtTagCattegory,

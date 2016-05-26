@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 // Global variabele
 var d3 = require("d3");
 var mongo = require('mongodb');
@@ -6,6 +6,7 @@ var db = require('monk')('localhost/commevents');
 var tweets = db.get('STG_LEADS_AUTOSCHADE');
 var businessrules = db.get('businessrules');
 var format = d3.time.format("%Y-%m-%d");
+var fs = require('fs');
 
 exports.find = function(req, res, next) {
     // find Tweets in Database
@@ -63,7 +64,7 @@ exports.find = function(req, res, next) {
     function setDomainValues(data) {
 
         var lstDimensionValues = [];
-        var lstMeasures = []
+        var lstMeasures = [];
         for (var i = 0; i < data.length; i++) {
             lstDimensionValues.push(data[i].dim);
             lstMeasures.push(data[i].measure);
@@ -78,7 +79,7 @@ exports.find = function(req, res, next) {
 
     function setTweetCattegory(tweets, tweetsPerDay, domainValues, stgTweets) {
         businessrules.find({"typeBusinessRule": "Cattegorie"}, {}, function (err, cattegories) {
-            var cattegorie = {cat: 'All tweets', color: '47A947' } ;
+            var cattegorie = {cat: 'Overige tweets', color: '47A947' } ;
             var stgTweetCattegory = [];
             var stgTweetsPerCattegory = [];
             var dmTweetsPerCattegory = [];
@@ -130,6 +131,7 @@ exports.find = function(req, res, next) {
                 }
 
                 if (aggFields.length == 2) {
+                   console.info('Twee');
                     var aggJSONData = d3.nest()
                         .key(function (d) {
                             return d[aggFields[0]] + '-' + d[aggFields[1]];
@@ -138,11 +140,12 @@ exports.find = function(req, res, next) {
                             return v.length;
                         })
                         .entries(jsoninput);
-
+                    console.info(' aggJSONData');
+                    console.info(aggJSONData);
                     aggJSONData.forEach(function(a){
                         if(a.key.search(/-/i) > 0){
-                            var keys = []
-                            keys.push(a.key.substring(0,a.key.search(/-/i)))
+                            var keys = [];
+                            keys.push(a.key.substring(0,a.key.search(/-/i)));
                             keys.push(a.key.substring(a.key.search(/-/i)+1, a.key.length));
 
                             var jsonString = {};
@@ -151,6 +154,8 @@ exports.find = function(req, res, next) {
                                 jsonString[aggFields[0]] = keys[0];
                                 jsonString[aggFields[1]] = keys[1];
                                 jsonString['values'] = a.values;
+
+
                             }
                             else {
                                 jsonString['label'] = keys[0];
@@ -171,23 +176,23 @@ exports.find = function(req, res, next) {
                             return v.length;
                         })
                         .entries(jsoninput);
-                    console.info(aggJSONData);
+                    //console.info(aggJSONData);
                     aggJSONData.forEach(function(a){
                         if(a.key.search(/;/i) > 0){
-                            var keys = []
+                            var keys = [];
 
                             // key 1
                             var key1 = a.key.substring(0,a.key.search(/;/i));
                             keys.push(key1);
 
                             // Key 2
-                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
-                            key2 = key2.substring(0, key2.search(/;/i))
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
+                            key2 = key2.substring(0, key2.search(/;/i));
                             keys.push(key2);
-                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
 
                             // Key 3
-                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length);
                             keys.push(key3);
 
                             var jsonString = {};
@@ -214,27 +219,27 @@ exports.find = function(req, res, next) {
 
                     aggJSONData.forEach(function(a){
                         if(a.key.search(/;/i) > 0){
-                            var keys = []
+                            var keys = [];
 
                             // key 1
                             var key1 = a.key.substring(0,a.key.search(/;/i));
                             keys.push(key1);
 
                             // Key 2
-                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
-                            key2 = key2.substring(0, key2.search(/;/i))
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
+                            key2 = key2.substring(0, key2.search(/;/i));
                             keys.push(key2);
-                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
 
                             // Key 3
-                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length);
                             key3 = key3.substring(0, key3.search(/;/i));
                             keys.push(key3);
-                            key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            key3 = key2.substring(key2.search(/;/i)+1,key2.length);
 
                             //key4
-                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length)
-                            keys.push(key4)
+                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length);
+                            keys.push(key4);
 
                             var jsonString = {};
                             jsonString[aggFields[0]] = keys[0];
@@ -259,32 +264,32 @@ exports.find = function(req, res, next) {
 
                     aggJSONData.forEach(function(a){
                         if(a.key.search(/;/i) > 0){
-                            var keys = []
+                            var keys = [];
 
                             // key 1
                             var key1 = a.key.substring(0,a.key.search(/;/i));
                             keys.push(key1);
 
                             // Key 2
-                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
-                            key2 = key2.substring(0, key2.search(/;/i))
+                            var key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
+                            key2 = key2.substring(0, key2.search(/;/i));
                             keys.push(key2);
-                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length)
+                            key2 =  a.key.substring(a.key.search(/;/i)+1, a.key.length);
 
                             // Key 3
-                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            var key3 = key2.substring(key2.search(/;/i)+1,key2.length);
                             key3 = key3.substring(0, key3.search(/;/i));
                             keys.push(key3);
-                            key3 = key2.substring(key2.search(/;/i)+1,key2.length)
+                            key3 = key2.substring(key2.search(/;/i)+1,key2.length);
 
                             //key4
-                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length)
-                            key4 = key4.substring(0,key4.search(/;/i))
+                            var key4 = key3.substring(key3.search(/;/i)+1, key3.length);
+                            key4 = key4.substring(0,key4.search(/;/i));
 
                             //Key5
-                            var key5 = key3.substring(key3.search(/;/i)+1, key3.length)
-                            key5 = key5.substring(key5.search(/;/i)+1,key5.length)
-                            keys.push(key5)
+                            var key5 = key3.substring(key3.search(/;/i)+1, key3.length);
+                            key5 = key5.substring(key5.search(/;/i)+1,key5.length);
+                            keys.push(key5);
 
                             var jsonString = {};
                             jsonString[aggFields[0]] = keys[0];
@@ -307,6 +312,8 @@ exports.find = function(req, res, next) {
             aggArray.push('color');
 
             //dmTweetsPerCattegory
+            var dd = JSON.stringify(stgTweetCattegory);
+            fs.writeFile('test.json', dd);
             dmTweetsPerCattegory = agg_json_object(aggArray,stgTweetCattegory, 'Y');
 
 
@@ -317,7 +324,7 @@ exports.find = function(req, res, next) {
             aggArray.push('color');
             aggArray.push('postDate');
 
-            dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N')
+            dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N');
 
                res.render('Dashboard/index', {
                                'tweets': stgTweets,
@@ -330,9 +337,7 @@ exports.find = function(req, res, next) {
 
 
 
-            //console.info(tweetCattegorieCount)
-
-            function findandsetCattegorie(objtweet, objcattegories) {
+             function findandsetCattegorie(objtweet, objcattegories) {
                 //console.info('---------------findandsetCattegorie on ' +  objtweet.text   + ' -------------------------');
                 if (objcattegories) {
                     var CountCattegories = objcattegories.length;
@@ -365,7 +370,7 @@ exports.find = function(req, res, next) {
 
         });
     }
-}
+};
 
 
 

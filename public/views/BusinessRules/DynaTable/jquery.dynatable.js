@@ -619,7 +619,6 @@
         }
         return comparison;
       };
-
       return sort.call(settings.dataset.records, sortFunction);
     };
 
@@ -755,7 +754,7 @@
       $processing
         .offset({left: offset.left, top: offset.top})
         .width(width)
-        .height(height);
+          .height(height);
       $span
         .offset({left: offset.left + ( (width - spanWidth) / 2 ), top: offset.top + ( (height - spanHeight) / 2 )});
 

@@ -2,23 +2,35 @@ $(document).ready(function() {
     $('#tblBusinessRules').hide();
 
 // DataPreparation for multiple serie
-    var tw = [];
-    var twd = [];
     var format = d3.time.format("%Y-%m-%d");
 
-    tweetsPerCattegoryPerDay.forEach(function (a) {
+   function setTweetsPerCattegoryPerDay(jsonInput, tweetsPerDay){
+       var tw = [];
+       var twd = [];
+       jsonInput.forEach(function (a) {
         var cat = {};
-        cat.cattegorie = a.tweetCattegorie
-        cat.kleur = a.color
+        cat.cattegorie = a.tweetCattegorie;
+        cat.kleur = a.color;
         twd.push({
             dim: a.postDate,
             measure: a.values
-        })
-        cat.Data = twd
+        });
+        cat.Data = twd;
         tw.push(cat);
         twd = [];
     });
-
+       tweetsPerDay.forEach(function (a) {
+           var cat = {};
+           cat.cattegorie = "All tweets";
+           cat.kleur = "#63AC38";
+           twd.push({
+               dim: a.dim,
+               measure: a.measure
+           });
+           cat.Data = twd;
+           tw.push(cat);
+           twd = [];
+       });
 // Group by Cattegorie
     for (var i = 0; i < tw.length; i++) {
         var Counter = 0;
@@ -29,7 +41,7 @@ $(document).ready(function() {
         });
 
         tw.forEach(function (a) {
-            var newValue = {}
+            var newValue = {};
             if (Counter == i) {
                 oldData = a
             }
@@ -37,9 +49,9 @@ $(document).ready(function() {
             if (Counter > i ){
                 if (a.cattegorie == oldData.cattegorie) {
                 newValue.dim = tw[Counter].Data[0].dim;
-                newValue.measure = tw[Counter].Data[0].measure
-                newValue.kleur =  tw[Counter].kleur
-                newValue.Cattegorie = tw[Counter].cattegorie
+                newValue.measure = tw[Counter].Data[0].measure;
+                newValue.kleur =  tw[Counter].kleur;
+                newValue.Cattegorie = tw[Counter].cattegorie;
 
                tw[i].Data.push(newValue);
                 //Delete OldData from Tweet
@@ -49,8 +61,14 @@ $(document).ready(function() {
             Counter++
         });
     }
+       return tw
+   }
 
-var data = tw;
+    var data = [];
+    var data = setTweetsPerCattegoryPerDay(tweetsPerCattegoryPerDay, tweetsPerDay);
+    console.info(data);
+
+
 
     // Prepare SVG properties
     var margin = {top: 70, right: 70, bottom: 70, left: 70},
@@ -67,7 +85,8 @@ var data = tw;
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom");
+        .orient("bottom")
+        .tickFormat(d3.time.format("%d-%m"));
 
     var yAxis = d3.svg.axis()
         .scale(y)
@@ -96,8 +115,9 @@ var data = tw;
         });
     });
 
+
     var serieData = data;
-    var varNames = []
+    var varNames = [];
 
     data.forEach( function (a) {
 
@@ -106,13 +126,17 @@ var data = tw;
         }
         });
 
+    console.info(serieData);
+
     x.domain([format.parse(domainValues.minDimensionValue), format.parse(domainValues.maxDimesnionValue)]);
     y.domain([0, domainValues.maxMeasure]);
 
     svg.append("g")
         .attr("class", "x")
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis);
+        .call(xAxis)
+        .append("text")
+        .attr("transform", "rotate(45)");
 
     svg.append("g")
         .attr("class", "y")
@@ -121,7 +145,7 @@ var data = tw;
         .attr("transform", "rotate(-90)")
         .attr("y", 6)
         .attr("dy", ".71em")
-        .style("text-anchor", "end")
+        .style("text-anchor", "end");
 
     var serie = svg.selectAll(".cattegorie")
         .data(serieData)
@@ -151,7 +175,7 @@ var data = tw;
         .style("stroke-width", "2px")
         .on("mouseover", function (d) {
             showPopover.call(this, d); })
-        .on("mouseout",  function (d) { removePopovers(); })
+        .on("mouseout",  function (d) { removePopovers(); });
 
 
     //Add legend to the SVG Area

@@ -16,7 +16,6 @@ block head
         // LOAD DATA
         var stgTweets =  [];
         stgTweets = !{JSON.stringify(tweets)};
-
         var tweetsPerDay = [];
         tweetsPerDay = !{JSON.stringify(tweetsPerDay)};
 
@@ -33,7 +32,6 @@ block head
             buildPieChart('pieChart',tweetsPerCattegorry, 'tweetsPerCattegorry',300,300);
 
         });
-
     script(src="../../views/Dashboard/pieChart.js")
     //script(src="../../views/Dashboard/ChartSimple.js")
     script(src="../../views/Dashboard/LineChartFull.js")
@@ -45,7 +43,7 @@ block body
                 h1.page-header Social Dashboard
         .row(id="Graphs")
             .col-md-6
-                #pieChart(align="bottom")
+                #pieChart(align="bottom" width=300 heigth=300)
             .col-md-6
                 #lineChartSimple(align="bottom")
             .col-md-6
