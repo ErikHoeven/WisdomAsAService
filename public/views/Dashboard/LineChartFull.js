@@ -1,6 +1,25 @@
 $(document).ready(function() {
     $('#tblBusinessRules').hide();
 
+// Modules
+    if (!Array.prototype.filter) {
+        Array.prototype.filter = function(fun /*, thisp*/) {
+            var len = this.length >>> 0;
+            if (typeof fun != "function")
+                throw new TypeError();
+
+            var res = [];
+            var thisp = arguments[1];
+            for (var i = 0; i < len; i++) {
+                if (i in this) {
+                    var val = this[i]; // in case fun mutates this
+                    if (fun.call(thisp, val, i, this))
+                        res.push(val);
+                }
+            }
+            return res;
+        }
+    }
 // DataPreparation for multiple serie
     var format = d3.time.format("%Y-%m-%d");
 
@@ -13,24 +32,30 @@ $(document).ready(function() {
         cat.kleur = a.color;
         twd.push({
             dim: a.postDate,
-            measure: a.values
+            measure: a.values,
+            Cattegorie: a.tweetCattegorie,
+            kleur: a.color
         });
         cat.Data = twd;
         tw.push(cat);
         twd = [];
     });
+
        tweetsPerDay.forEach(function (a) {
            var cat = {};
            cat.cattegorie = "All tweets";
            cat.kleur = "#63AC38";
            twd.push({
                dim: a.dim,
-               measure: a.measure
-           });
+               measure: a.measure,
+               kleur : "#63AC38",
+               Cattegorie: "All tweets"
+            });
            cat.Data = twd;
            tw.push(cat);
            twd = [];
        });
+
 // Group by Cattegorie
     for (var i = 0; i < tw.length; i++) {
         var Counter = 0;
@@ -52,24 +77,26 @@ $(document).ready(function() {
                 newValue.measure = tw[Counter].Data[0].measure;
                 newValue.kleur =  tw[Counter].kleur;
                 newValue.Cattegorie = tw[Counter].cattegorie;
-
-               tw[i].Data.push(newValue);
-                //Delete OldData from Tweet
+                tw[i].Data.push(newValue);
+                //Delete OldData from Twee
                 delete tw[Counter]
                 }
             }
             Counter++
         });
     }
+
+    tw.forEach(function(a){
+        a.Data = a.Data.sort(function(a,b){ return format.parse(a.dim) > format.parse(b.dim)})
+    });
+
+
+
        return tw
    }
-
     var data = [];
     var data = setTweetsPerCattegoryPerDay(tweetsPerCattegoryPerDay, tweetsPerDay);
-    console.info(data);
-
-
-
+    console.info('DATA:');
     // Prepare SVG properties
     var margin = {top: 70, right: 70, bottom: 70, left: 70},
         width = 500 - margin.left - margin.right,
@@ -170,12 +197,13 @@ $(document).ready(function() {
         .attr("cy", function (d) { return y(d.measure); })
         .attr("r", "5px")
         .style("fill", function (d) {
-            return '#' + d.kleur; })
+           return '#' + d.kleur; })
         .style("stroke", "grey")
         .style("stroke-width", "2px")
         .on("mouseover", function (d) {
             showPopover.call(this, d); })
-        .on("mouseout",  function (d) { removePopovers(); });
+        .on("mouseout",  function (d) { removePopovers(); })
+        .on("click", function (d) { showTable(d); });
 
 
     //Add legend to the SVG Area
@@ -216,5 +244,22 @@ $(document).ready(function() {
         });
         $(this).popover('show')
     }
+
+    function showTable (d){
+
+        console.info(d);
+        var invalidEntries = 0;
+        var tblTweets = stgTweets.filter(function (el) {
+            return el.tweetCattegorie == d.Cattegorie &&
+                format.parse(el.postDate) == d.dim;
+        });
+        console.info(tblTweets)
+    }
+
+
+
+
+
+
 
 });

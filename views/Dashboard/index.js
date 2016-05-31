@@ -327,7 +327,7 @@ exports.find = function(req, res, next) {
             dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N');
 
                res.render('Dashboard/index', {
-                               'tweets': stgTweets,
+                               'tweets': stgTweetCattegory,
                                'tweetsPerDay': tweetsPerDay,
                                'domainValues': domainValues,
                                'tweetsPerCattegorry': dmTweetsPerCattegory,
