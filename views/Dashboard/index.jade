@@ -9,15 +9,14 @@ block head
     script(src='../../views/jquery-2.2.3.min.js')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src='//d3js.org/d3.v3.min.js')
-    script(src='http://d3js.org/queue.v1.min.js')
     script(src='../../views/Dashboard/d3pie.js')
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script.
         // LOAD DATA
         var stgTweets =  [];
         stgTweets = !{JSON.stringify(tweets)};
-        var tweetsPerDay = [];
 
+        var tweetsPerDay = [];
         tweetsPerDay = !{JSON.stringify(tweetsPerDay)};
 
         var domainValues = [];
@@ -34,7 +33,6 @@ block head
 
         });
     script(src="../../views/Dashboard/pieChart.js")
-    //script(src="../../views/Dashboard/ChartSimple.js")
     script(src="../../views/Dashboard/LineChartFull.js")
 
 block body
@@ -50,7 +48,8 @@ block body
                 #lineChartSimple(align="bottom" width=300 heigth=300)
             .col-md-4
         .row(id="Details")
-            .col-md-6
+            .col-md-9
                 #tableDetails
+                    table.table.table-hover
 
 

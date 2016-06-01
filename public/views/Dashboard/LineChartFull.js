@@ -2,24 +2,7 @@ $(document).ready(function() {
     $('#tblBusinessRules').hide();
 
 // Modules
-    if (!Array.prototype.filter) {
-        Array.prototype.filter = function(fun /*, thisp*/) {
-            var len = this.length >>> 0;
-            if (typeof fun != "function")
-                throw new TypeError();
 
-            var res = [];
-            var thisp = arguments[1];
-            for (var i = 0; i < len; i++) {
-                if (i in this) {
-                    var val = this[i]; // in case fun mutates this
-                    if (fun.call(thisp, val, i, this))
-                        res.push(val);
-                }
-            }
-            return res;
-        }
-    }
 // DataPreparation for multiple serie
     var format = d3.time.format("%Y-%m-%d");
 
@@ -247,13 +230,26 @@ $(document).ready(function() {
 
     function showTable (d){
 
-        console.info(d);
-        var invalidEntries = 0;
-        var tblTweets = stgTweets.filter(function (el) {
-            return el.tweetCattegorie == d.Cattegorie &&
-                format.parse(el.postDate) == d.dim;
+         var tblTweets  = [];
+         var tblHeaders = [];
+         var tblBodyHTML = "";
+         var tblHeadersHTML = "";
+          $(".table-hover").empty();
+        stgTweets.forEach(function(a){
+
+          if(format(d.dim) == a.postDate && d.Cattegorie == a.tweetCattegorie) {
+              tblTweets.push(a)
+          }
+    });
+
+        var tblBodyHTML = "<tbody>";
+
+        tblTweets.forEach(function(a){
+            tblBodyHTML =  tblBodyHTML + "<tr><td>"+ a.postDate +"</td><td>"+ a.text +"</td><td>" + a.userFollowerCount + "</td></tr>"
         });
-        console.info(tblTweets)
+        tblBodyHTML = tblBodyHTML + "</tbody>";
+        tblHeadersHTML = " <thead> <tr><th>postDate</th><th>tweetbody</th><th>followerCount</th> </tr></thead>";
+        $(".table-hover").append(tblHeadersHTML + tblBodyHTML)
     }
 
 
