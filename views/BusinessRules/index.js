@@ -79,7 +79,7 @@ exports.create = function(req, res, next) {
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
             workflow.emit('createLookupValue');
         }
-        if(req.body.lstTypeBusinessRule == 'Cattegorie'){
+        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' ){
             console.log('createCattegorie');
             workflow.emit('createCattegorie');
         }
@@ -114,10 +114,8 @@ exports.create = function(req, res, next) {
             console.log('STAR POST (4):createCattegorie:');
 
 
-            if ( req.body.txtTagCattegory.toLowerCase() == 'concurentie') {
-                console.log('Scraping concurentie');
-                //var url = "https://www.google.nl/search?q=autoglas+schade+bedrijven#q=autoglasschade"
-                var url = 'https://www.google.nl/search?q=internet+service+provide';
+            if ( req.body.lstTypeBusinessRule == 'Google zoekwaarde') {
+                var url = 'https://www.google.nl/search?q=' + req.body.txtLookupValue ;
                 var linkContent = [];
                 var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
 
@@ -127,6 +125,7 @@ exports.create = function(req, res, next) {
                         links = $('.srg').find('.g').length;
                         console.info(lstTypeBusinessRule);
                         console.info('---- START SEARCHING ELEMENTS ------------');
+                        var rank = 0;
                         $('.g').each(function(){
                             var rawLink = $(this).find('a').attr('href');
                             var patern = new RegExp(/(url\?q=https:\/\/www.)/);
@@ -142,19 +141,18 @@ exports.create = function(req, res, next) {
                                 rawLink = rawLink.substring(1,rawLink.indexOf('.'));
                             }
                             var content = $(this).find('.st').text();
-                            linkContent.push(rawLink)
+                            linkContent.push({Link: rawLink, Content: content})
+
 
                         });
 
                         var fieldsToSet = {
-                            typeBusinessRule: req.body.lstTypeBusinessRule,
-                            tagCattegory:     req.body.txtTagCattegory,
-                            cattegoryValue:   linkContent,
-                            cattegorycolor:   req.body.kleur,
-                            creationDate:     Date()
+                            searchValue: req.body.txtLookupValue,
+                            resultValue: linkContent,
+                           creationDate: Date()
                         };
                         console.log(fieldsToSet);
-                        req.app.db.models.BusinessRules.create(fieldsToSet, function(err, BusinessRule) {
+                        req.app.db.models.googlesearch.create(fieldsToSet, function(err, BusinessRule) {
                             if (err) {
                                 return workflow.emit('exception', err);
                             }

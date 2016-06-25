@@ -7,12 +7,12 @@ block head
   link(rel='stylesheet', href='../../views/Dashboard/graph.css')
   link(href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css', rel='stylesheet', type='text/css')
   script(src='../../views/jquery-2.2.3.min.js')
-  script(src='../../views/Dashboard/d3pie.js')
-  script(src='//d3js.org/d3.v3.min.js')
-  script(src="../../views/Dashboard/pieChart.js")
   script(src='../../views/jquery-ui.min.js')
   script(src='../../views/BusinessRules/colorpicker/jquery.colorpicker.js')
-
+  script(src='../../views/BusinessRules/Simulatie.js')
+  //Do an example pie
+  script(src="../../views/Dashboard/pieChart.js")
+  script(src='../../views/Dashboard/d3pie.js')
 
   script.
     var lstCatValues = [];
@@ -24,7 +24,9 @@ block head
       $('#score').hide();
       $('#Cattegorie').hide();
       $('#CattegorieValue').hide();
+      $('#Simulatie').hide();
       console.info('document geladen');
+
 
       // (2) listbox Change hide & show input fields
       $('#lstTypeBusinessRule').change(function(){
@@ -35,6 +37,9 @@ block head
           $('#Cattegorie').show();
           $('#Kleurbepaler').show();
           $('#CattegorieValue').show();
+          $('#Simulatie').hide();
+
+
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Zoekwaarde') {
           $('#Kleurbepaler').hide();
@@ -42,6 +47,8 @@ block head
           $('#score').hide();
           $('#Cattegorie').hide();
           $('#CattegorieValue').hide();
+          $('#Simulatie').hide();
+          $('#lstSimAantalFormulieren').hide();
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
           $('#Kleurbepaler').hide();
@@ -49,6 +56,29 @@ block head
           $('#score').show();
           $('#Cattegorie').hide();
           $('#CattegorieValue').hide();
+          $('#Simulatie').hide();
+          $('#lstSimAantalFormulieren').hide();
+        }
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
+          $('#Kleurbepaler').hide();
+          $('#zoekwaarde').show();
+          $('#score').hide();
+          $('#Cattegorie').hide();
+          $('#CattegorieValue').hide();
+          $('#Simulatie').hide();
+          $('#lstSimAantalFormulieren').hide();
+        }
+
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Simulatie') {
+          $('#Kleurbepaler').hide();
+          $('#zoekwaarde').hide();
+          $('#score').hide();
+          $('#Cattegorie').hide();
+          $('#CattegorieValue').hide();
+          $('#Simulatie').show();
+
+          var formFields = getSimFormFields()
+
         }
       });
       // (3) Add value to array
@@ -120,6 +150,8 @@ block body
             option Zoekwaarde
             option Cattegorie
             option Score
+            option Google zoekwaarde
+            option Simulatie
       div.col-sm-6
         #pieDemo
 
@@ -157,6 +189,27 @@ block body
                   limit: 'websafe'
                   });
               });
+    div.form-group(id='Simulatie')
+      div.row
+          div.col-sm-6
+            label URL:
+            input.form-control(type='text', name="txtSimURL" id="txtSimURL")
+
+      div.row
+          div.col-sm-6
+            label Aantal formulieren:
+            select.form-control(name='lstSimAantalFormulieren' id="lstSimAantalFormulieren")
+              option 1
+              option 2
+              option 3
+              option 4
+
+    script.
+            $(function () {
+              $('.cp-websafe').colorpicker({
+                limit: 'websafe'
+              });
+            });
     div.row
       div.col-sm-6
         div.form-group

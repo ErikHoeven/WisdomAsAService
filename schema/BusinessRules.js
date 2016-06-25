@@ -13,6 +13,7 @@ exports = module.exports = function(app, mongoose) {
         creationDate: { type: Date},
         cattegoryValue: { type: []},
         cattegorycolor: { type: String},
+        searchReturnValue: {type: []},
         search: [String]
     });
     rulesSchema.plugin(require('./plugins/pagedFind'));

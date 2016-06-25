@@ -145,8 +145,12 @@ $(document).ready(function() {
         .attr("class", "x")
         .attr("transform", "translate(0," + height + ")")
         .call(xAxis)
-        .append("text")
-        .attr("transform", "rotate(45)");
+//        .append("text")
+        .selectAll("text")
+        .attr("transform", "rotate(45)")
+        .attr("y", 15)
+        .attr("x", 9)
+        .attr("dy", ".35em");
 
     svg.append("g")
         .attr("class", "y")
