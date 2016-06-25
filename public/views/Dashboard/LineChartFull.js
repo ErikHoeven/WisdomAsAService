@@ -82,7 +82,7 @@ $(document).ready(function() {
     console.info('DATA:');
     // Prepare SVG properties
     var margin = {top: 70, right: 70, bottom: 70, left: 70},
-        width = 500 - margin.left - margin.right,
+        width = 800 - margin.left - margin.right,
         height = 300 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%Y-%m-%d").parse;
