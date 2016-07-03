@@ -24,16 +24,16 @@ block head
 
         var tweetsPerCattegorry = []
         tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
+        console.info('tweetsPerCattegorry')
+        console.info(tweetsPerCattegorry)
 
         var tweetsPerCattegoryPerDay = [];
         tweetsPerCattegoryPerDay = !{JSON.stringify(tweetsPerCattegoryPerDay)}
 
-        $(document).ready(function(){
-            buildPieChart('pieChart',tweetsPerCattegorry, 'tweetsPerCattegorry',300,300);
 
-        });
     script(src="../../views/Dashboard/pieChart.js")
     script(src="../../views/Dashboard/LineChartFull.js")
+    script(src="../../views/Dashboard/Barchart.js")
 
 block body
     .container-fluid
