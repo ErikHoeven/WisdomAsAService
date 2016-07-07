@@ -39,11 +39,22 @@ block body
     .container-fluid
         .row(id="Header")
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                h1.page-header Social Dashboard
+                h1(align="Left").page-header Social Dashboard
+        .row(id="Navigatie")
+            .col-md-4
+            .col-md-4
+                label Detail niveau:
+                    select.form-control(name='lstDetailNiveauLineGraph' id="lstDetailNiveauLineGraph")
+                        option ActualDay
+                        option ActualWeek
+                        option ActualMonth
+                        option ActualYear
+
         .row(id="Graphs")
             .col-md-4
+                h4 Total tweets per Cattegory
                 #pieChart(align="bottom" width=300 heigth=300)
-            .col-md-4(align="center")
+            .col-md-4
                 h4 Daily Tweets per cattegorie
                 #lineChartSimple(align="bottom" width=300 heigth=300)
             .col-md-4
