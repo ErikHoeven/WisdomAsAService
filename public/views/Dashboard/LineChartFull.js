@@ -6,6 +6,62 @@ $(document).ready(function() {
 // DataPreparation for multiple serie
     var format = d3.time.format("%Y-%m-%d");
 
+    Date.prototype.yyyymmdd = function() {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+
+        return [this.getFullYear(), !mm[1] && '0', mm, !dd[1] && '0', dd].join(''); // padding
+    };
+
+    function actualWeek(){
+        var d =  new Date();
+        var nlWeekStartNumber = 1;
+        var nlWeekEndNumber =  6;
+        var DayCounter = d.getDay();
+        var startWeekDay = d.getDate();
+        var endWeekDay = d.getDate();
+        var startWeekDate = new Date();
+        var endWeekDate = new Date();
+
+        for(DayCounter; DayCounter > nlWeekStartNumber; DayCounter--){
+            startWeekDay--;  }
+
+        for(DayCounter = d.getDay(); DayCounter < nlWeekEndNumber; DayCounter++){
+            endWeekDay++;  }
+
+        startWeekDate =  new Date(startWeekDate.setDate(startWeekDay));
+        endWeekDate =    new Date(endWeekDate.setDate(endWeekDay +1));
+
+
+        return {'startWeekDay': startWeekDate
+               , 'endWeekDay':  endWeekDate
+               }
+    }
+
+
+    function actualMonth(){
+     //Is het aantal weken in een maand (met begin en eind datum)
+     var currentDate = new Date();
+     var currentMonth = currentDate.getMonth();
+     var dayStartMonth = 1;
+     var currentDay = currentDate.getDay();
+     var lastMonthDate;
+        console.info('currentDay: ' +  currentDay + ' currentMonth: ' + currentMonth);
+
+
+     for(var currentDay; currentMonth == 6 & currentDay <= 31; currentDay++){
+
+         currentDate = new Date(currentDate.setDate(currentDate));
+
+         console.info(currentDate)
+
+
+    }
+    }
+
+    console.info(actualMonth());
+
+
    function setTweetsPerCattegoryPerDay(jsonInput, tweetsPerDay){
        var tw = [];
        var twd = [];
@@ -82,7 +138,7 @@ $(document).ready(function() {
     console.info('DATA:');
     // Prepare SVG properties
     var margin = {top: 70, right: 70, bottom: 70, left: 70},
-        width = 800 - margin.left - margin.right,
+        width = 600 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
     var parseDate = d3.time.format("%Y-%m-%d").parse;
