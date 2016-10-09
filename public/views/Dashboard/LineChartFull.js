@@ -1,9 +1,11 @@
-$(document).ready(function() {
-    $('#tblBusinessRules').hide();
+//$(document).ready(function() {
+$('#tblBusinessRules').hide();
 
 // Modules
 
-   //function loadLineGraph(data){
+  function loadLineGraph(data, filter){
+    console.info('loadLineGraph');
+    console.info(isNaN(data[0].Data[0].dim));
 
 // DataPreparation for multiple serie
     // Prepare SVG properties
@@ -11,27 +13,37 @@ $(document).ready(function() {
         width = 600 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
-    var parseDate = d3.time.format("%Y-%m-%d").parse;
 
-    var x = d3.time.scale()
-        .range([0, width]);
+
+    if(isNaN(data[0].Data[0].dim) == true){
+        var parseDate = d3.time.format("%Y-%m-%d").parse;
+        var x = d3.time.scale()
+            .range([0, width]);
+    }
+    if(isNaN(data[0].Data[0].dim) == false) {
+        var x = d3.scale.ordinal()
+            .range([0, width]);
+
+      }
+
 
     var y = d3.scale.linear()
         .range([height, 0]);
 
     var xAxis = d3.svg.axis()
         .scale(x)
-        .orient("bottom")
-        .tickFormat(d3.time.format("%d-%m"));
+        .orient("bottom");
+        //.tickFormat(d3.time.format("%d-%m"));
 
     var yAxis = d3.svg.axis()
         .scale(y)
         .orient("left");
 
+
     var line = d3.svg.line()
         //.interpolate("basis")
         .x(function (d) {
-
+            console.info(d.dim);
             return x(d.dim);
         })
         .y(function (d) {
@@ -45,11 +57,24 @@ $(document).ready(function() {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    data.forEach(function (kv) {
-        kv.Data.forEach(function (d) {
-            d.dim = parseDate(d.dim);
-        });
-    });
+      console.info('Loop Through data');
+      console.info(data);
+
+      if(filter ==  'ActualMonth' || filter ==  'ActualWeek' ){
+        console.info(filter)
+
+      }
+      else {
+
+         // data.forEach(function (kv) {
+         //     kv.Data.forEach(function (d) {
+         //         d.dim = parseDate(d.dim);
+         //     });
+         // });
+
+      }
+
+
 
 
     var serieData = data;
@@ -182,8 +207,8 @@ $(document).ready(function() {
 
 
 
-   //     }
+        }
 
 
 
-});
+//});

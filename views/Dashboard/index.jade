@@ -50,7 +50,7 @@ block body
                 script.
                     $(document).ready(function () {
 
-                        loadLineGraph(data)
+                        //loadLineGraph(data)
                         $("#lstDetailNiveauLineGraph").change(function () {
                             var strValue = ""
                             var strValue = $(this).val();
@@ -59,18 +59,18 @@ block body
                                 console.info('ds')
                                 console.info(data)
                                 console.info('ActualMonth')
-                                console.info(filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth'))
+                                //console.info(filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth'))
                                 var dataSet = filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth')
-                                loadLineGraph(dataSet)
+                                loadLineGraph(dataSet,'ActualMonth')
 
 
                             }
 
                             if (strValue == 'ActualWeek') {
-                                console.info('ds')
-                                console.info(data)
-                                console.info('ActualWeek')
-                                console.info(filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek'))
+                                //console.info('ds')
+                               // console.info(data)
+                               // console.info('ActualWeek')
+                               // console.info(filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek'))
                                 //data = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
                                 //loadLineGraph(data)
                             }

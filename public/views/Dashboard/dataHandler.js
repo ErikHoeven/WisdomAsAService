@@ -135,17 +135,25 @@
         var oldDate;
         var data = [];
 
+        console.info('------------ START FILTERING DATA---------------------------------');
+        console.info(startDate);
+        console.info(endDate);
+        console.info(dataSet);
+        console.info(type);
+        console.info('-------------------------------------------------------------------');
+
 
         for (var i = 0; i < dataSet.length; i++) {
             var newData = [];
             var oldData = dataSet[i].Data;
             var insertData = 0;
 
-
             oldData.forEach(function (a) {
                 var counter = 0;
 
-                if (a.dim >= startDate && a.dim <= endDate) {
+                if (format.parse(a.dim) >= startDate && format.parse(a.dim) <= endDate) {
+
+
                     weekNumber = new Date(a.dim).getWeek();
                     monthNumber = new Date(a.dim).getMonth() + 1;
                     insertData = 1;
@@ -180,6 +188,13 @@
             }
 
         }
+
+        console.info('------------ SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
+        console.info(data);
+        console.info('-------------SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
+
+
+
         var catteorieValue = "";
         var dim = "";
         var kleur = "";
@@ -215,16 +230,23 @@
 
                     // Einde loop JSON row wordt toegeovegod
                     if (c + 1 == ds.length) {
-                        dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure});
-                        td.push({'Data': dl, 'cattegorie': dataSet[c].cattegorie, 'kleur': dataSet[c].kleur})
+                        dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure, 'dim': dim});
+                        td.push({'Data': dl, 'cattegorie': dataSet[c].cattegorie, 'kleur': dataSet[c].kleur});
+
+                        dl = [];
+                        catteorieValue = "";
+                        dim = "";
+                        kleur = "";
+                        measure = 0;
+
                     }
 
                 }
             }
         }
-        console.info('td');
+        console.info('------------ EINDE FILTERING DATA---------------------------------');
         console.info(td);
-        console.info('----------');
+        console.info('------------------------------------------------------------------');
         return td
     }
 
