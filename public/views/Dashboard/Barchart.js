@@ -58,6 +58,4 @@ $(document).ready(function(){
         .style("fill", function(d) { return '#' + d.color});
 
 
-    console.info(domainValues.maxMeasure)
-
 });

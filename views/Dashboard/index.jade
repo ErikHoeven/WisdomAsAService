@@ -24,15 +24,13 @@ block head
 
         var tweetsPerCattegorry = []
         tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
-        console.info('tweetsPerCattegorry')
-        console.info(tweetsPerCattegorry)
 
         var tweetsPerCattegoryPerDay = [];
         tweetsPerCattegoryPerDay = !{JSON.stringify(tweetsPerCattegoryPerDay)}
 
-
-    script(src="../../views/Dashboard/pieChart.js")
+    script(src="../../views/Dashboard/dataHandler.js")
     script(src="../../views/Dashboard/LineChartFull.js")
+    script(src="../../views/Dashboard/pieChart.js")
     script(src="../../views/Dashboard/Barchart.js")
 
 block body
@@ -48,6 +46,37 @@ block body
                         option ActualWeek
                         option ActualMonth
                         option ActualYear
+
+                script.
+                    $(document).ready(function () {
+
+                        loadLineGraph(data)
+                        $("#lstDetailNiveauLineGraph").change(function () {
+                            var strValue = ""
+                            var strValue = $(this).val();
+
+                            if (strValue == 'ActualMonth') {
+                                console.info('ds')
+                                console.info(data)
+                                console.info('ActualMonth')
+                                console.info(filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth'))
+                                var dataSet = filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth')
+                                loadLineGraph(dataSet)
+
+
+                            }
+
+                            if (strValue == 'ActualWeek') {
+                                console.info('ds')
+                                console.info(data)
+                                console.info('ActualWeek')
+                                console.info(filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek'))
+                                //data = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
+                                //loadLineGraph(data)
+                            }
+
+                        })
+                    })
 
         .row(id="Graphs")
             .col-md-4
