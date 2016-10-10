@@ -152,7 +152,8 @@
                 var counter = 0;
 
                 if (format.parse(a.dim) >= startDate && format.parse(a.dim) <= endDate) {
-
+                    //console.info(a)
+                    //console.info(a.dim)
 
                     weekNumber = new Date(a.dim).getWeek();
                     monthNumber = new Date(a.dim).getMonth() + 1;
@@ -214,6 +215,9 @@
 
                     // Count == 0;  Start save JSON content in global variables
                     if (c == 0) {
+
+                        //console.info(ds[c].Cattegorie)
+
                         catteorieValue = ds[c].Cattegorie;
                         dim = ds[c].dim;
                         kleur = ds[c].kleur;
@@ -224,20 +228,26 @@
                     }
 
                     // Count > 0; Compare JSON with globale variable and count the measure
-                    if (c > 0 && dim == ds[c].dim) {
+                    if (c > 0 && dim != ds[c].dim && c + 1 != ds.length){
+
+                        dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure, 'dim': dim});
+
+                        dim = ds[c].dim;
+                        measure = ds[c].measure;
+
+                    }
+
+
+                    if (c > 0 && dim == ds[c].dim && c + 1 != ds.length && measure != ds[c].measure ) {
                         measure = measure + ds[c].measure
                     }
 
                     // Einde loop JSON row wordt toegeovegod
                     if (c + 1 == ds.length) {
+                        measure = measure + ds[c].measure;
                         dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure, 'dim': dim});
-                        td.push({'Data': dl, 'cattegorie': dataSet[c].cattegorie, 'kleur': dataSet[c].kleur});
-
-                        dl = [];
-                        catteorieValue = "";
-                        dim = "";
-                        kleur = "";
-                        measure = 0;
+                        //console.info(dl)
+                        td.push({'cattegorie': catteorieValue , 'kleur': dataSet[c].kleur,'Data': dl,});
 
                     }
 
