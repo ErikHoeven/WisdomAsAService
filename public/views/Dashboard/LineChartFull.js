@@ -3,24 +3,34 @@ $('#tblBusinessRules').hide();
 
 // Modules
 
-  function loadLineGraph(data, filter){
+  function loadLineGraph(data, filter, minmax ){
     console.info('loadLineGraph');
     console.info(isNaN(data[0].Data[0].dim));
 
 // DataPreparation for multiple serie
     // Prepare SVG properties
-    var margin = {top: 70, right: 70, bottom: 70, left: 70},
+    var margin = {top: 70, right: 70, bottom: 70, left: 100},
+
         width = 600 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
+      if (filter ==  'ActualMonth' || filter ==  'ActualWeek' ){
+          width = 400 - margin.left - margin.right
 
 
+      }
+
+
+
+    // Determine if it must be a Time scale or Ordinal scale
     if(isNaN(data[0].Data[0].dim) == true){
+        console.info('TimeScale');
         var parseDate = d3.time.format("%Y-%m-%d").parse;
         var x = d3.time.scale()
             .range([0, width]);
     }
     if(isNaN(data[0].Data[0].dim) == false) {
+        console.info('OrdinalScale');
         var x = d3.scale.ordinal()
             .range([0, width]);
 
@@ -43,7 +53,7 @@ $('#tblBusinessRules').hide();
     var line = d3.svg.line()
         //.interpolate("basis")
         .x(function (d) {
-            console.info(d.dim);
+            console.info(d);
             return x(d.dim);
         })
         .y(function (d) {
@@ -60,17 +70,17 @@ $('#tblBusinessRules').hide();
       console.info('Loop Through data');
       console.info(data);
 
-      if(filter ==  'ActualMonth' || filter ==  'ActualWeek' ){
+      if(filter ==  'ActualMonth' ){
         console.info(filter)
 
       }
       else {
-
-         // data.forEach(function (kv) {
-         //     kv.Data.forEach(function (d) {
-         //         d.dim = parseDate(d.dim);
-         //     });
-         // });
+         console.info('Adjust data to be fit on timescale');
+         data.forEach(function (kv) {
+             kv.Data.forEach(function (d) {
+                 d.dim = parseDate(d.dim);
+             });
+          });
 
       }
 
@@ -86,9 +96,23 @@ $('#tblBusinessRules').hide();
         varNames.push({cattegorie: a.cattegorie, kleur: a.kleur})
         }
         });
+      console.info(minmax);
+    if (filter ==  'ActualMonth' ) {
+        x.domain([minmax.min_dim, minmax.max_dim]);
+        y.domain([0, minmax.max_measure]);
+    }
 
-    x.domain([format.parse(domainValues.minDimensionValue), format.parse(domainValues.maxDimesnionValue)]);
-    y.domain([0, domainValues.maxMeasure]);
+    else if(filter ==  'ActualWeek' ){
+        x.domain([format.parse(minmax.min_dim), format.parse(minmax.max_dim)]);
+        y.domain([0, minmax.max_measure])
+
+      }
+    else {
+        x.domain([format.parse(domainValues.minDimensionValue), format.parse(domainValues.maxDimesnionValue)]);
+        y.domain([0, domainValues.maxMeasure]);
+
+    }
+
 
     svg.append("g")
         .attr("class", "x")
@@ -121,7 +145,8 @@ $('#tblBusinessRules').hide();
             return line(d.Data);
         })
         .style("stroke", function (d) {
-             return '#' + d.kleur;
+            console.info(d);
+            return '#' + d.kleur;
         });
 
     // Add the scatterplot

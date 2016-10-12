@@ -260,6 +260,80 @@
         return td
     }
 
+    function min_max_filterDates(dataset, filtertype){
+
+        min_measure = 99999999;
+        max_measure = 0;
+        min_dim  =  '9999999';
+        max_dim = '0';
+
+        if (filtertype == 'ActualMonth'){
+
+        min_dim = 99999999;
+        max_dim = 0
+
+        }
+        else if (filtertype == 'ActualWeek'){
+
+            console.info('min_dim');
+            max_dim = '1900-01-01';
+            min_dim = '9999-12-31';
+            console.info(min_dim)
+        }
+
+
+        dataset.forEach(function(a){
+         format = d3.time.format("%Y-%m-%d");
+         ds = a.Data;
+         ds.forEach(function(b){
+
+             if (b.measure < min_measure){
+                 min_measure = b.measure
+
+             }
+             if (filtertype == 'ActualWeek'){
+                 if (format.parse(b.dim) < format.parse(min_dim)){
+                     min_dim = b.dim
+                 }
+             }
+             else {
+             if (b.dim < min_dim){
+               min_dim = b.dim
+           }}
+        })
+        });
+
+
+        dataset.forEach(function(a) {
+            ds = a.Data;
+            ds.forEach(function (b) {
+
+                if (b.measure > max_measure) {
+                    max_measure = b.measure
+                }
+
+                if (filtertype == 'ActualWeek') {
+                    if (format.parse(b.dim) > format.parse(max_dim)) {
+                        max_dim = b.dim
+                    }
+                }
+                else {
+                    if (b.dim > max_dim) {
+                        max_dim = b.dim
+                    }
+
+                }
+            })
+        });
+
+
+        return ({'min_dim': min_dim, 'max_dim': max_dim, 'min_measure': min_measure, 'max_measure': max_measure })
+    }
+
+
+
+
+
     var startMonth = actualMonth().startMonth;
     var endMonth = actualMonth().endMonth;
 

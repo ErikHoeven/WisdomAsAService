@@ -61,19 +61,19 @@ block body
                                 console.info('ActualMonth')
                                 //console.info(filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth'))
                                 var dataSet = filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth')
-                                loadLineGraph(dataSet,'ActualMonth')
+                                loadLineGraph(dataSet,'ActualMonth',min_max_filterDates(dataSet))
 
 
                             }
 
                             if (strValue == 'ActualWeek') {
-                                //console.info('ds')
-                               // console.info(data)
-                               // console.info('ActualWeek')
-                               // console.info(filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek'))
-                                //data = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
-                                //loadLineGraph(data)
+                                console.info('ds')
+                                console.info(data)
+                                console.info('ActualWeek')
+                                dataSet = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
+                                loadLineGraph(dataSet,'ActualWeek',min_max_filterDates(dataSet))
                             }
+
 
                         })
                     })
