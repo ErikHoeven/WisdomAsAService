@@ -152,22 +152,19 @@
                 var counter = 0;
 
                 if (format.parse(a.dim) >= startDate && format.parse(a.dim) <= endDate) {
-                    //console.info(a)
-                    //console.info(a.dim)
-
                     weekNumber = new Date(a.dim).getWeek();
                     monthNumber = new Date(a.dim).getMonth() + 1;
                     insertData = 1;
 
 
                     if (type == 'ActualWeek') {
-                        newData.push({'Cattegorie': a.Cattegorie, 'dim': a.dim, 'kleur': a.kleur, 'measure': a.measure});
+                        newData.push({'cattegorie': a.Cattegorie, 'dim': a.dim, 'kleur': a.kleur, 'measure': a.measure});
                         oldDim = a.dim
                     }
 
                     if (type == 'ActualMonth') {
                         newData.push({
-                            'Cattegorie': a.Cattegorie,
+                            'cattegorie': a.Cattegorie,
                             'dim': weekNumber,
                             'kleur': a.kleur,
                             'measure': a.measure
@@ -176,7 +173,7 @@
 
                     if (type == 'ActualYear') {
                         newData.push({
-                            'Cattegorie': a.Cattegorie,
+                            'cattegorie': a.Cattegorie,
                             'dim': monthNumber,
                             'kleur': a.kleur,
                             'measure': a.measure
@@ -190,9 +187,9 @@
 
         }
 
-        console.info('------------ SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
+/*        console.info('------------ SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
         console.info(data);
-        console.info('-------------SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
+        console.info('-------------SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');*/
 
 
 
@@ -203,38 +200,41 @@
         var dl = [];
 
         var td = [];
+
+        // H:  Loop through json array data
         for (var i = 0; i < data.length; i++) {
             ds = data[i].Data;
 
-
+        // H.1 If hhe array has no values of the same dimension (if array ds has a length of 1) then
+        // push the element to a new array(td) element
             if (ds.length == 1) {
                 td.push(data[i])
             }
+
+        // H.2 Check if the array has new values of the same dimension (if array ds has a greater length of 1) then
+        // check if there are more measures with the same dimension.
+        // Loop trhoug the Data elements, initialize the variable cattegorie and kleur
             else {
+                catteorieValue = data[i].cattegorie;
+                kleur = data[i].kleur;
+
                 for (var c = 0; c < ds.length; c++) {
+                   if (c == 0) {
 
-                    // Count == 0;  Start save JSON content in global variables
-                    if (c == 0) {
-
-                        //console.info(ds[c].Cattegorie)
-
-                        catteorieValue = ds[c].Cattegorie;
                         dim = ds[c].dim;
-                        kleur = ds[c].kleur;
                         measure = ds[c].measure;
-
                         dl = []
 
                     }
 
-                    // Count > 0; Compare JSON with globale variable and count the measure
+                    // If the array has a greater length then 0 elements and the dimension value of the first array element dimension
+                    // is not equal to current element dimension and the current element is not equal to the last element
                     if (c > 0 && dim != ds[c].dim && c + 1 != ds.length){
 
                         dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure, 'dim': dim});
 
                         dim = ds[c].dim;
                         measure = ds[c].measure;
-
                     }
 
 
@@ -247,7 +247,7 @@
                         measure = measure + ds[c].measure;
                         dl.push({'cattegorie': catteorieValue, 'kleur': kleur, 'measure': measure, 'dim': dim});
                         //console.info(dl)
-                        td.push({'cattegorie': catteorieValue , 'kleur': dataSet[c].kleur,'Data': dl,});
+                        td.push({'cattegorie': catteorieValue , 'kleur':kleur,'Data': dl,});
 
                     }
 
@@ -274,11 +274,8 @@
 
         }
         else if (filtertype == 'ActualWeek'){
-
-            console.info('min_dim');
             max_dim = '1900-01-01';
             min_dim = '9999-12-31';
-            console.info(min_dim)
         }
 
 

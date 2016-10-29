@@ -3,9 +3,9 @@ $('#tblBusinessRules').hide();
 
 // Modules
 
-  function loadLineGraph(data, filter, minmax ){
+  function loadLineGraph(data, filter, minmax, emptyDiv ){
     console.info('loadLineGraph');
-    console.info(isNaN(data[0].Data[0].dim));
+    //console.info(isNaN(data[0].Data[0].dim));
 
 // DataPreparation for multiple serie
     // Prepare SVG properties
@@ -53,19 +53,32 @@ $('#tblBusinessRules').hide();
     var line = d3.svg.line()
         //.interpolate("basis")
         .x(function (d) {
-            console.info(d);
             return x(d.dim);
         })
         .y(function (d) {
             return y(d.measure);
         });
 
-
+    if (emptyDiv = 1){
     var svg = d3.select("#lineChartSimple").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+    }
+    else if(emptyDiv > 1) {
+
+    var svg = d3.select("#lineChartSimple").selectAll("*").remove();
+
+    svg = d3.select("#lineChartSimple").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+    }
+
 
       console.info('Loop Through data');
       console.info(data);
@@ -83,8 +96,6 @@ $('#tblBusinessRules').hide();
           });
 
       }
-
-
 
 
     var serieData = data;
@@ -145,7 +156,6 @@ $('#tblBusinessRules').hide();
             return line(d.Data);
         })
         .style("stroke", function (d) {
-            console.info(d);
             return '#' + d.kleur;
         });
 
@@ -162,6 +172,7 @@ $('#tblBusinessRules').hide();
         .style("stroke", "grey")
         .style("stroke-width", "2px")
         .on("mouseover", function (d) {
+            console.info(d);
             showPopover.call(this, d); })
         .on("mouseout",  function (d) { removePopovers(); })
         .on("click", function (d) { showTable(d); });
@@ -199,7 +210,7 @@ $('#tblBusinessRules').hide();
             trigger: 'manual',
             html: true,
             content: function () {
-                return "Cattegorie: " + d.Cattegorie +
+                return "Cattegorie: " + d.cattegorie +
                     "<br/>Waarde: " + d.measure
             }
         });
@@ -215,8 +226,16 @@ $('#tblBusinessRules').hide();
           $(".table-hover").empty();
         stgTweets.forEach(function(a){
 
-          if(format(d.dim) == a.postDate && d.Cattegorie == a.tweetCattegorie) {
+            if(filter ==  'ActualMonth' ){
+                if ()
+
+
+            }
+
+            if(format(d.dim) == a.postDate && d.Cattegorie == a.tweetCattegorie) {
               tblTweets.push(a)
+
+
           }
     });
 
@@ -232,7 +251,7 @@ $('#tblBusinessRules').hide();
 
 
 
-        }
+   }
 
 
 

@@ -12,6 +12,7 @@ block head
     script(src='../../views/Dashboard/d3pie.js')
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script.
+
         // LOAD DATA
         var stgTweets =  [];
         stgTweets = !{JSON.stringify(tweets)};
@@ -49,29 +50,29 @@ block body
 
                 script.
                     $(document).ready(function () {
+                        var graphCount = 0
 
                         //loadLineGraph(data)
                         $("#lstDetailNiveauLineGraph").change(function () {
                             var strValue = ""
                             var strValue = $(this).val();
+                            graphCount++
+
 
                             if (strValue == 'ActualMonth') {
-                                console.info('ds')
-                                console.info(data)
-                                console.info('ActualMonth')
-                                //console.info(filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth'))
+
+                                console.info('graphOnMonth')
+                                console.info(graphCount)
                                 var dataSet = filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth')
-                                loadLineGraph(dataSet,'ActualMonth',min_max_filterDates(dataSet))
-
-
-                            }
+                                loadLineGraph(dataSet,'ActualMonth',min_max_filterDates(dataSet),graphCount)
+                               }
 
                             if (strValue == 'ActualWeek') {
-                                console.info('ds')
-                                console.info(data)
-                                console.info('ActualWeek')
+
+                                console.info('graphOnWeek')
+                                console.info(graphCount)
                                 dataSet = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
-                                loadLineGraph(dataSet,'ActualWeek',min_max_filterDates(dataSet))
+                                loadLineGraph(dataSet,'ActualWeek',min_max_filterDates(dataSet),graphCount)
                             }
 
 
