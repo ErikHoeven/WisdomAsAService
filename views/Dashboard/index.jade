@@ -77,7 +77,15 @@ block body
 
 
                         })
+                        $("#clearGraph").click(function () {
+                            var svg = d3.select("#lineChartSimple").selectAll("*").remove();
+                        })
                     })
+            .col-md-4
+                .btn-group(role='group', aria-label='...')
+                    #clearGraph.btn.btn-default(type='button') Clear
+
+
 
         .row(id="Graphs")
             .col-md-4

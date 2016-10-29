@@ -227,16 +227,18 @@ $('#tblBusinessRules').hide();
         stgTweets.forEach(function(a){
 
             if(filter ==  'ActualMonth' ){
-                if ()
+                postWeekNumber = new Date(a.postDate).getWeek();
 
-
+                if (postWeekNumber == d.dim && d.cattegorie == a.tweetCattegorie){
+                    tblTweets.push(a)
+                }
             }
 
-            if(format(d.dim) == a.postDate && d.Cattegorie == a.tweetCattegorie) {
-              tblTweets.push(a)
-
-
-          }
+            if(filter ==  'ActualWeek' ){
+                if(format(d.dim) == a.postDate && d.cattegorie == a.tweetCattegorie) {
+                    tblTweets.push(a)
+                }
+            }
     });
 
         var tblBodyHTML = "<tbody>";
