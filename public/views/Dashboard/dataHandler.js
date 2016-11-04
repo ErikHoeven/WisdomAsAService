@@ -151,11 +151,25 @@
             oldData.forEach(function (a) {
                 var counter = 0;
 
-                if (format.parse(a.dim) >= startDate && format.parse(a.dim) <= endDate) {
+                if (type == 'ActualWeek'){
+                    console.info('erik02 Week');
                     weekNumber = new Date(a.dim).getWeek();
                     monthNumber = new Date(a.dim).getMonth() + 1;
                     insertData = 1;
+                }
 
+
+                if (format.parse(a.dim) >= startDate && format.parse(a.dim) <= endDate) {
+
+
+
+                    if (type == 'ActualMonth'){
+
+                    console.info('erik02 Month');
+                    weekNumber = new Date(a.dim).getWeek();
+                    monthNumber = new Date(a.dim).getMonth() + 1;
+                    insertData = 1;
+                    }
 
                     if (type == 'ActualWeek') {
                         newData.push({'cattegorie': a.Cattegorie, 'dim': a.dim, 'kleur': a.kleur, 'measure': a.measure});
@@ -187,9 +201,9 @@
 
         }
 
-/*        console.info('------------ SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
+        console.info('------------ SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
         console.info(data);
-        console.info('-------------SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');*/
+        console.info('-------------SET WEEKNUMBERS/MONTHNUMBERS/DAYS TO data arrray-------------------------');
 
 
 

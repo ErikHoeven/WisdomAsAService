@@ -211,7 +211,8 @@ $('#tblBusinessRules').hide();
             html: true,
             content: function () {
                 return "Cattegorie: " + d.cattegorie +
-                    "<br/>Waarde: " + d.measure
+                       "<br/>Dimensie: " + d.dim +
+                       "<br/>Waarde: " + d.measure
             }
         });
         $(this).popover('show')

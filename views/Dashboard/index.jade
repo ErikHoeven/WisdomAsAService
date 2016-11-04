@@ -79,6 +79,7 @@ block body
                         })
                         $("#clearGraph").click(function () {
                             var svg = d3.select("#lineChartSimple").selectAll("*").remove();
+                            var table = d3.select("tbody").selectAll("*").remove();
                         })
                     })
             .col-md-4
