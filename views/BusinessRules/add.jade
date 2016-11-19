@@ -16,6 +16,7 @@ block head
 
   script.
     var lstCatValues = [];
+    var lstParValues = [];
 
     $(document).ready(function(){
       // (1) Start situation
@@ -112,20 +113,23 @@ block head
         $('#CatValue' ).val('');
 
 
-        //START TABLE
+      //START TABLE
         catValueHTML = '<p><table class="table table-sm"><th>Cattegorie waarde:</th>';
+
 
         for(var i = 0; i < lstCatValues.length; i++){
           catValueHTML = catValueHTML + '<tr><td>'+ lstCatValues[i] +'</td></tr>'
         }
 
         catValueHTML = catValueHTML + '</tabel>'
+
         //END TABLE
 
         //START HIDDEN FIELD
         catValueHTML = catValueHTML + '<input type="hidden" id="catValue" name="catValue" value=' + JSON.stringify(lstCatValues) + '></input>'
 
-        $('#catvaluelist').html(catValueHTML)
+
+          $('#catvaluelist').html(catValueHTML)
       });
       // (4)Clear array from step 3
       $('#clearCatValue').click(function(){
@@ -239,6 +243,44 @@ block body
           input.form-control(type='text', name="txtScrapeSite" id="txtScrapeSite")
           label 3 SCRAPE SEARCH SITE PARAMETER
           input.form-control(type='text', name="txtScrapeSitePar" id="txtScrapeSitePar")
+          button.btn.btn-info(type='button' id='cmdAddParValue') Toevoegen
+          button.btn.btn-info(type='button' id='clearParValue') Schonen
+          #scrapeParValueList
+
+          script.
+
+              $('#cmdAddParValue').click(function () {
+                  lstParValues.push($('#txtScrapeSitePar').val());
+                  console.info($('#txtScrapeSitePar').val())
+                  $('#txtScrapeSitePar').val('');
+
+                  scrapeParValueHTML = '<p><table class="table table-sm"><th>Parameter waarde:</th>';
+
+
+                  for (var i = 0; i < lstParValues.length; i++) {
+                      scrapeParValueHTML = scrapeParValueHTML + '<tr><td>' + lstParValues[i] + '</td></tr>'
+                  }
+
+
+                  scrapeParValueHTML = scrapeParValueHTML + '</tabel>';
+
+                  //START HIDDEN FIELD
+                  scrapeParValueHTML = scrapeParValueHTML + '<input type="hidden" id="scrapeParValue" name="scrapeParValue" value=' + JSON.stringify(lstParValues) + '></input>'
+
+
+                  $('#scrapeParValueList').html(scrapeParValueHTML)
+              });
+
+              $('#clearParValue').click(function () {
+                  lstParValues = [];
+                  $('#scrapeParValueList').html('');
+                  $('#txtScrapeSitePar').val('');
+
+              });
+
+
+
+
 
     script.
             $(function () {

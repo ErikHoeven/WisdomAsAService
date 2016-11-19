@@ -66,6 +66,7 @@ exports.add = function(req, res){
 
 exports.create = function(req, res, next) {
     console.log('START POST: ');
+
     var workflow = req.app.utility.workflow(req, res);
 
     workflow.on('validate', function() {
@@ -79,8 +80,8 @@ exports.create = function(req, res, next) {
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
             workflow.emit('createLookupValue');
         }
-        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' ){
-            console.log('createCattegorie -- Google Zoekwaarde');
+        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' ){
+            console.log('createCattegorie -- Google Zoekwaarde or Scrape Strategy');
             workflow.emit('createCattegorie');
         }
         if(req.body.lstTypeBusinessRule == 'Score') {
@@ -112,6 +113,7 @@ exports.create = function(req, res, next) {
     });
     workflow.on('createCattegorie', function () {
             console.log('STAR POST (4):createCattegorie:');
+
 
 
             if ( req.body.lstTypeBusinessRule == 'Google zoekwaarde') {
@@ -168,8 +170,29 @@ exports.create = function(req, res, next) {
             }
 
         if ( req.body.lstTypeBusinessRule == 'Scrape Strategy') {
-                console.info('(1) start scrapestrategy')
+            console.info('(1) start scrapestrategy');
+            console.info(req.body.txtScrapeName);
 
+            var scrapeName = req.body.txtScrapeName;
+            var scrapeSite = req.body.txtScrapeSite;
+            var scrapeSiteParameter = JSON.parse(req.body.scrapeParValue);
+
+            var URLS = [];
+
+            for (var i = 0 ; i < scrapeSiteParameter.length; i++){
+                var URL =  scrapeSite + scrapeSiteParameter[i];
+                URLS.push(URL);
+            }
+
+            request(url, function (error, res, body ) {
+                if (!error) {
+
+
+                }
+
+
+
+            });
 
         }
 
