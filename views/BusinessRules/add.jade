@@ -25,6 +25,7 @@ block head
       $('#Cattegorie').hide();
       $('#CattegorieValue').hide();
       $('#Simulatie').hide();
+      $('#Scraping').hide();
       console.info('document geladen');
 
 
@@ -38,6 +39,7 @@ block head
           $('#Kleurbepaler').show();
           $('#CattegorieValue').show();
           $('#Simulatie').hide();
+          $('#Scraping').hide();
 
 
         }
@@ -49,6 +51,8 @@ block head
           $('#CattegorieValue').hide();
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
+          $('#Scraping').hide();
+
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
           $('#Kleurbepaler').hide();
@@ -58,6 +62,8 @@ block head
           $('#CattegorieValue').hide();
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
+          $('#Scraping').hide();
+
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
           $('#Kleurbepaler').hide();
@@ -67,6 +73,8 @@ block head
           $('#CattegorieValue').hide();
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
+          $('#Scraping').hide();
+
         }
 
         if ($('#lstTypeBusinessRule option:selected').text() == 'Simulatie') {
@@ -76,10 +84,27 @@ block head
           $('#Cattegorie').hide();
           $('#CattegorieValue').hide();
           $('#Simulatie').show();
+          $('#Scraping').hide();
 
           var formFields = getSimFormFields()
 
         }
+
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Scrape Strategy') {
+         $('#Kleurbepaler').hide();
+         $('#zoekwaarde').hide();
+         $('#score').hide();
+         $('#Cattegorie').hide();
+         $('#CattegorieValue').hide();
+         $('#Simulatie').hide();
+         $('#lstSimAantalFormulieren').hide();
+         $('#Scraping').show();
+
+          }
+
+
+
+
       });
       // (3) Add value to array
       $('#cmdAddCatValue').click(function(){
@@ -152,6 +177,7 @@ block body
             option Score
             option Google zoekwaarde
             option Simulatie
+            option Scrape Strategy
       div.col-sm-6
         #pieDemo
 
@@ -204,12 +230,25 @@ block body
               option 3
               option 4
 
+    div.form-group(id='Scraping')
+      div.row
+        div.col-sm-6
+          label 1 SCRAPE STRATEGY NAME
+          input.form-control(type='text', name="txtScrapeName" id="txtScrapeName")
+          label 2 SCRAPE FROM SITE (EXCLUDE SEARCH PAR )
+          input.form-control(type='text', name="txtScrapeSite" id="txtScrapeSite")
+          label 3 SCRAPE SEARCH SITE PARAMETER
+          input.form-control(type='text', name="txtScrapeSitePar" id="txtScrapeSitePar")
+
     script.
             $(function () {
               $('.cp-websafe').colorpicker({
                 limit: 'websafe'
               });
             });
+
+
+
     div.row
       div.col-sm-6
         div.form-group

@@ -12,6 +12,7 @@ exports = module.exports = function(app, mongoose) {
   require('./schema/Event')(app, mongoose);
   require('./schema/BusinessRules')(app, mongoose);
   require('./schema/GoogleSearchResults')(app, mongoose);
+  require('./schema/ScrapeStrategy')(app, mongoose);
   require('./schema/Testdata')(app, mongoose);
   require('./schema/Admin')(app, mongoose);
   require('./schema/AdminGroup')(app, mongoose);

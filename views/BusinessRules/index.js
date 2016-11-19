@@ -80,7 +80,7 @@ exports.create = function(req, res, next) {
             workflow.emit('createLookupValue');
         }
         if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' ){
-            console.log('createCattegorie');
+            console.log('createCattegorie -- Google Zoekwaarde');
             workflow.emit('createCattegorie');
         }
         if(req.body.lstTypeBusinessRule == 'Score') {
@@ -166,6 +166,14 @@ exports.create = function(req, res, next) {
                 });
 
             }
+
+        if ( req.body.lstTypeBusinessRule == 'Scrape Strategy') {
+                console.info('(1) start scrapestrategy')
+
+
+        }
+
+
             else {
                 console.info('Else Push:');
                 console.info(req.body.catValue);
