@@ -27,6 +27,7 @@ block head
       $('#CattegorieValue').hide();
       $('#Simulatie').hide();
       $('#Scraping').hide();
+        $('#KamervanKoophandel').hide();
       console.info('document geladen');
 
 
@@ -41,6 +42,7 @@ block head
           $('#CattegorieValue').show();
           $('#Simulatie').hide();
           $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
 
 
         }
@@ -53,6 +55,7 @@ block head
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
           $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
 
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
@@ -64,6 +67,7 @@ block head
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
           $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
 
         }
         if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
@@ -75,6 +79,7 @@ block head
           $('#Simulatie').hide();
           $('#lstSimAantalFormulieren').hide();
           $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
 
         }
 
@@ -86,6 +91,7 @@ block head
           $('#CattegorieValue').hide();
           $('#Simulatie').show();
           $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
 
           var formFields = getSimFormFields()
 
@@ -100,10 +106,20 @@ block head
          $('#Simulatie').hide();
          $('#lstSimAantalFormulieren').hide();
          $('#Scraping').show();
+         $('#KamervanKoophandel').hide();
+        }
 
-          }
-
-
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Kamer van Koophandel') {
+         $('#Kleurbepaler').hide();
+         $('#zoekwaarde').hide();
+         $('#score').hide();
+         $('#Cattegorie').hide();
+         $('#CattegorieValue').hide();
+         $('#Simulatie').hide();
+         $('#lstSimAantalFormulieren').hide();
+         $('#Scraping').hide();
+         $('#KamervanKoophandel').show();
+        }
 
 
       });
@@ -182,6 +198,7 @@ block body
             option Google zoekwaarde
             option Simulatie
             option Scrape Strategy
+            option Kamer van Koophandel
       div.col-sm-6
         #pieDemo
 
@@ -277,6 +294,13 @@ block body
                   $('#txtScrapeSitePar').val('');
 
               });
+    div.form-group(id='KamervanKoophandel')
+      div.row
+        div.col-sm-3
+          label Zoeken op
+          input.form-control(type='text', name="txtZoekBedrijf" id="txtZoekBedrijf")
+          label Aantal Paginas
+          input.form-control(type='text', name="txtAantalPaginas" id="txtAantalPaginas")
 
 
 
@@ -294,6 +318,7 @@ block body
     div.row
       div.col-sm-6
         div.form-group
-          button.btn.btn-primary.btn-signup(type='submit') Toevoegen aan rules
+          button.btn.btn-primary.btn-signup(type='submit' id='cmdToevoegenBusinessRules') Toevoegen aan rules
+
 
 

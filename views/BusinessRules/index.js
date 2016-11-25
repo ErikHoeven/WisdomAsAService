@@ -1,6 +1,9 @@
 'use strict';
 var cheerio = require("cheerio");
 var request = require("request");
+var openkvk = require ('openkvk') ({
+    apikey: '5b140874e1a7b22794b68bfa3464036bc8ad371fa2f50cf5396137ab0fb3ac19'
+});
 
 exports.find = function(req, res, next){
     console.log("find");
@@ -80,7 +83,7 @@ exports.create = function(req, res, next) {
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
             workflow.emit('createLookupValue');
         }
-        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' ){
+        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' || req.body.lstTypeBusinessRule == 'Kamer van Koophandel' ){
             console.log('createCattegorie -- Google Zoekwaarde or Scrape Strategy');
             workflow.emit('createCattegorie');
         }
@@ -124,8 +127,8 @@ exports.create = function(req, res, next) {
                 request(url, function (error, res, body ) {
                     if (!error) {
                         var $ = cheerio.load(body),
-                        links = $('.srg').find('.g').length;
-                        console.info(lstTypeBusinessRule);
+                            links = $('.srg').find('.g').length;
+                            console.info(lstTypeBusinessRule);
                         console.info('---- START SEARCHING ELEMENTS ------------');
                         var rank = 0;
                         $('.g').each(function(){
@@ -151,7 +154,7 @@ exports.create = function(req, res, next) {
                         var fieldsToSet = {
                             searchValue: req.body.txtLookupValue,
                             resultValue: linkContent,
-                           creationDate: Date()
+                            creationDate: Date()
                         };
                         console.log(fieldsToSet);
                         req.app.db.models.googlesearch.create(fieldsToSet, function(err, BusinessRule) {
@@ -177,26 +180,129 @@ exports.create = function(req, res, next) {
             var scrapeSite = req.body.txtScrapeSite;
             var scrapeSiteParameter = JSON.parse(req.body.scrapeParValue);
 
-            var URLS = [];
+            var fieldsToSet = {
+                scrapeName: scrapeName,
+                scrapeSite: scrapeSite,
+                scrapeSiteParameter: scrapeSiteParameter,
+                creationDate: Date()
+            };
 
-            for (var i = 0 ; i < scrapeSiteParameter.length; i++){
-                var URL =  scrapeSite + scrapeSiteParameter[i];
-                URLS.push(URL);
-            }
+            console.log(fieldsToSet);
 
-            request(url, function (error, res, body ) {
-                if (!error) {
-
-
+            // INSERT RESULT IN DATABASE
+            req.app.db.models.scrapeStategy.create(fieldsToSet, function (err, BusinessRule) {
+                if (err) {
+                    return workflow.emit('exception', err);
                 }
-
+                workflow.outcome.record = BusinessRule;
+                // req.flash('success','BusinessRule Added');
 
 
             });
 
+
+            // START SCRAPING
+            var URLS = [];
+            var content;
+
+
+
+
+
+            // for (var i = 0 ; i < scrapeSiteParameter.length; i++){
+            //      var site =  scrapeSite + scrapeSiteParameter[i];
+            //      URLS.push(site);
+            // }
+            // console.info('URLS LENGTE')
+            // console.info(URLS.length)
+            //
+            // for (var i = 0;  i < URLS.length; i++) {
+            //     var url = URLS[i]
+            //     console.info(url)
+            //       request(url, function (error, response, html) {
+            //         if (!error && response.statusCode == 200) {
+            //             console.info('url is approved')
+            //             var $ = cheerio.load(html);
+            //                 $('.handelsnaamHeader').each(function(){
+            //
+            //                 };
+            //
+            //         }
+            //         else {
+            //             console.log("We’ve encountered an error: " + error);
+            //         }
+            //
+            //     });
+            // }
+
         }
+        if ( req.body.lstTypeBusinessRule == 'Kamer van Koophandel') {
+             console.info('Kamer van Koophandel')
+            var  zoekBedrijf = req.body.txtZoekBedrijf
+            console.info(zoekBedrijf)
+
+            // openkvk( 'ahold', function( err, data ) {
+            //     if( err ) { return console.log( err )}
+            //     data.forEach( function( rec ) {
+            //         console.log( rec )
+            //     })
+            // })
+
+            var site = 'https://openkvk.nl/zoeken/'
+            var SiteParemeter =  zoekBedrijf
+            var maxPages  = req.body.txtAantalPaginas
+            var actPage   = 0
+
+            //var url = ''///
 
 
+            for(actPage = 0; actPage < maxPages; actPage++) {
+
+                var url = site + SiteParemeter + '?page=' + actPage
+
+
+
+                    request(url, function (error, response, html) {
+                        if (!error && response.statusCode == 200) {
+                            console.info('url is approved for page ' + actPage)
+                            var $ = cheerio.load(html);
+                            $('ul#kvkResults.list-group a').each(function (index, value) {
+                                var naam = $('.list-group-item-heading', this).text(), adres = $('.address', this).text(), postcode = $('.zipCode', this).text(), plaats = $('.city', this).text(), companyNumber = $('.companyNumber', this).text()
+
+                                var fieldsToSet = {}
+
+                                fieldsToSet = {
+                                    companyNumber: companyNumber,
+                                    naam: naam,
+                                    adres: adres,
+                                    postcode: postcode,
+                                    plaats: plaats,
+                                    creationDate: Date()
+                                };
+
+                                setTimeout(function() {
+
+                                    req.app.db.models.companyResults.create(fieldsToSet, function (err, BusinessRule) {
+                                        if (err) {
+                                            return workflow.emit('exception', err);
+                                        }
+                                        workflow.outcome.record = BusinessRule;
+                                    })
+
+                                },600000 )
+                            })
+                        }
+
+                        else {
+                            console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode )
+                        }
+
+
+                    })
+
+            }
+
+        }
             else {
                 console.info('Else Push:');
                 console.info(req.body.catValue);
