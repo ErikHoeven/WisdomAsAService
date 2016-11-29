@@ -13,6 +13,8 @@ exports = module.exports = function(app, mongoose) {
         adres: { type: String},
         postcode: { type: String},
         plaats: { type: String},
+        pageNumber:   { type: Number},
+        categorie:   { type: String},
         creationDate: { type: Date},
         search: [String]
     });
@@ -21,7 +23,9 @@ exports = module.exports = function(app, mongoose) {
     companyResults.index({ adres: 1 });
     companyResults.index({ postcode: 1 });
     companyResults.index({ plaats: 1 });
-    companyResults.index({ creationDate: 1 });
+    companyResults.index({ pageNumber: 1 });
+    companyResults.index({ categorie: 1 });
+    companyResults.index({ plaats: 1 });
     companyResults.index({ search: 1 });
     companyResults.set('autoIndex', (app.get('env') === 'development'));
     app.db.model('companyResults', companyResults)};

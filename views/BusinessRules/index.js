@@ -1,9 +1,14 @@
 'use strict';
 var cheerio = require("cheerio");
 var request = require("request");
-var openkvk = require ('openkvk') ({
-    apikey: '5b140874e1a7b22794b68bfa3464036bc8ad371fa2f50cf5396137ab0fb3ac19'
+var openkvk = require ('overheid.io') ({
+    apikey: '5b140874e1a7b22794b68bfa3464036bc8ad371fa2f50cf5396137ab0fb3ac19',
+    dataset: 'kvk'
 });
+var mongo = require('mongodb');
+var db = require('monk')('localhost/commevents');
+var companies =  db.get('companyresults');
+
 
 exports.find = function(req, res, next){
     console.log("find");
@@ -114,6 +119,7 @@ exports.create = function(req, res, next) {
 
         });
     });
+
     workflow.on('createCattegorie', function () {
             console.log('STAR POST (4):createCattegorie:');
 
@@ -172,138 +178,80 @@ exports.create = function(req, res, next) {
 
             }
 
-        if ( req.body.lstTypeBusinessRule == 'Scrape Strategy') {
-            console.info('(1) start scrapestrategy');
-            console.info(req.body.txtScrapeName);
-
-            var scrapeName = req.body.txtScrapeName;
-            var scrapeSite = req.body.txtScrapeSite;
-            var scrapeSiteParameter = JSON.parse(req.body.scrapeParValue);
-
-            var fieldsToSet = {
-                scrapeName: scrapeName,
-                scrapeSite: scrapeSite,
-                scrapeSiteParameter: scrapeSiteParameter,
-                creationDate: Date()
-            };
-
-            console.log(fieldsToSet);
-
-            // INSERT RESULT IN DATABASE
-            req.app.db.models.scrapeStategy.create(fieldsToSet, function (err, BusinessRule) {
-                if (err) {
-                    return workflow.emit('exception', err);
-                }
-                workflow.outcome.record = BusinessRule;
-                // req.flash('success','BusinessRule Added');
-
-
-            });
-
-
-            // START SCRAPING
-            var URLS = [];
-            var content;
-
-
-
-
-
-            // for (var i = 0 ; i < scrapeSiteParameter.length; i++){
-            //      var site =  scrapeSite + scrapeSiteParameter[i];
-            //      URLS.push(site);
-            // }
-            // console.info('URLS LENGTE')
-            // console.info(URLS.length)
-            //
-            // for (var i = 0;  i < URLS.length; i++) {
-            //     var url = URLS[i]
-            //     console.info(url)
-            //       request(url, function (error, response, html) {
-            //         if (!error && response.statusCode == 200) {
-            //             console.info('url is approved')
-            //             var $ = cheerio.load(html);
-            //                 $('.handelsnaamHeader').each(function(){
-            //
-            //                 };
-            //
-            //         }
-            //         else {
-            //             console.log("We’ve encountered an error: " + error);
-            //         }
-            //
-            //     });
-            // }
-
-        }
         if ( req.body.lstTypeBusinessRule == 'Kamer van Koophandel') {
-             console.info('Kamer van Koophandel')
-            var  zoekBedrijf = req.body.txtZoekBedrijf
+            console.info('Kamer van Koophandel')
+
+            var zoekBedrijf = req.body.txtZoekBedrijf
             console.info(zoekBedrijf)
 
-            // openkvk( 'ahold', function( err, data ) {
-            //     if( err ) { return console.log( err )}
-            //     data.forEach( function( rec ) {
-            //         console.log( rec )
-            //     })
-            // })
 
             var site = 'https://openkvk.nl/zoeken/'
-            var SiteParemeter =  zoekBedrijf
-            var maxPages  = req.body.txtAantalPaginas
-            var actPage   = 0
+            var SiteParemeter = zoekBedrijf
+            var maxPages = req.body.txtAantalPaginas
 
-            //var url = ''///
+            for (var actPage = 0 ;actPage < maxPages; actPage++) {
 
-
-            for(actPage = 0; actPage < maxPages; actPage++) {
+                //  setTimeout(function () {
 
                 var url = site + SiteParemeter + '?page=' + actPage
 
+                request(url, function (error, response, html) {
+                    if (!error) {
 
 
-                    request(url, function (error, response, html) {
-                        if (!error && response.statusCode == 200) {
-                            console.info('url is approved for page ' + actPage)
-                            var $ = cheerio.load(html);
-                            $('ul#kvkResults.list-group a').each(function (index, value) {
-                                var naam = $('.list-group-item-heading', this).text(), adres = $('.address', this).text(), postcode = $('.zipCode', this).text(), plaats = $('.city', this).text(), companyNumber = $('.companyNumber', this).text()
+                        console.info('url: '  +  url +  ' is approved ')
+                        var $ = cheerio.load(html);
 
-                                var fieldsToSet = {}
+                        $('ul#kvkResults.list-group a').each(function (index, value) {
 
-                                fieldsToSet = {
-                                    companyNumber: companyNumber,
-                                    naam: naam,
-                                    adres: adres,
-                                    postcode: postcode,
-                                    plaats: plaats,
-                                    creationDate: Date()
-                                };
+                            var naam = $('.list-group-item-heading', this).text()
+                            var adres = $('.address', this).text()
+                            var postcode = $('.zipCode', this).text()
+                            var plaats = $('.city', this).text()
+                            var companyNumber = $('.companyNumber', this).text()
 
-                                setTimeout(function() {
-
-                                    req.app.db.models.companyResults.create(fieldsToSet, function (err, BusinessRule) {
-                                        if (err) {
-                                            return workflow.emit('exception', err);
-                                        }
-                                        workflow.outcome.record = BusinessRule;
-                                    })
-
-                                },600000 )
-                            })
-                        }
-
-                        else {
-                            console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode )
-                        }
+                            var fieldsToSet = {}
 
 
-                    })
+                            fieldsToSet = {
+                                companyNumber: companyNumber,
+                                naam: naam,
+                                adres: adres,
+                                postcode: postcode,
+                                plaats: plaats,
+                                pageNumber: actPage -1,
+                                categorie : SiteParemeter,
+                                creationDate: Date()
+                            };
 
+                            console.info('')
+                            console.info('--------------- start fieldsToSet---------------------------')
+                            console.info(fieldsToSet)
+                            console.info('--------------- einde fieldsToSet---------------------------')
+                            console.info('')
+
+
+
+                            console.info('--------------- INSERT OBJECT TO MONGO ---------------------------')
+                             req.app.db.models.companyResults.create(fieldsToSet, function (err, companyResults) {
+                                if (err) {
+                                    console.info(err)
+                                }
+                                workflow.outcome.record = companyResults;
+                             })
+
+                        })
+                        console.info('--------------- INSERT OBJECT TO MONGO ---------------------------')
+                    }
+                    else {
+                        console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                    }
+                })
             }
+              //  }, 6000)
 
         }
-            else {
+        else {
                 console.info('Else Push:');
                 console.info(req.body.catValue);
 

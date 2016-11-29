@@ -97,18 +97,6 @@ block head
 
         }
 
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Scrape Strategy') {
-         $('#Kleurbepaler').hide();
-         $('#zoekwaarde').hide();
-         $('#score').hide();
-         $('#Cattegorie').hide();
-         $('#CattegorieValue').hide();
-         $('#Simulatie').hide();
-         $('#lstSimAantalFormulieren').hide();
-         $('#Scraping').show();
-         $('#KamervanKoophandel').hide();
-        }
-
         if ($('#lstTypeBusinessRule option:selected').text() == 'Kamer van Koophandel') {
          $('#Kleurbepaler').hide();
          $('#zoekwaarde').hide();
@@ -197,7 +185,6 @@ block body
             option Score
             option Google zoekwaarde
             option Simulatie
-            option Scrape Strategy
             option Kamer van Koophandel
       div.col-sm-6
         #pieDemo
@@ -251,49 +238,7 @@ block body
               option 3
               option 4
 
-    div.form-group(id='Scraping')
-      div.row
-        div.col-sm-6
-          label 1 SCRAPE STRATEGY NAME
-          input.form-control(type='text', name="txtScrapeName" id="txtScrapeName")
-          label 2 SCRAPE FROM SITE (EXCLUDE SEARCH PAR )
-          input.form-control(type='text', name="txtScrapeSite" id="txtScrapeSite")
-          label 3 SCRAPE SEARCH SITE PARAMETER
-          input.form-control(type='text', name="txtScrapeSitePar" id="txtScrapeSitePar")
-          button.btn.btn-info(type='button' id='cmdAddParValue') Toevoegen
-          button.btn.btn-info(type='button' id='clearParValue') Schonen
-          #scrapeParValueList
 
-          script.
-
-              $('#cmdAddParValue').click(function () {
-                  lstParValues.push($('#txtScrapeSitePar').val());
-                  console.info($('#txtScrapeSitePar').val())
-                  $('#txtScrapeSitePar').val('');
-
-                  scrapeParValueHTML = '<p><table class="table table-sm"><th>Parameter waarde:</th>';
-
-
-                  for (var i = 0; i < lstParValues.length; i++) {
-                      scrapeParValueHTML = scrapeParValueHTML + '<tr><td>' + lstParValues[i] + '</td></tr>'
-                  }
-
-
-                  scrapeParValueHTML = scrapeParValueHTML + '</tabel>';
-
-                  //START HIDDEN FIELD
-                  scrapeParValueHTML = scrapeParValueHTML + '<input type="hidden" id="scrapeParValue" name="scrapeParValue" value=' + JSON.stringify(lstParValues) + '></input>'
-
-
-                  $('#scrapeParValueList').html(scrapeParValueHTML)
-              });
-
-              $('#clearParValue').click(function () {
-                  lstParValues = [];
-                  $('#scrapeParValueList').html('');
-                  $('#txtScrapeSitePar').val('');
-
-              });
     div.form-group(id='KamervanKoophandel')
       div.row
         div.col-sm-3
@@ -301,10 +246,6 @@ block body
           input.form-control(type='text', name="txtZoekBedrijf" id="txtZoekBedrijf")
           label Aantal Paginas
           input.form-control(type='text', name="txtAantalPaginas" id="txtAantalPaginas")
-
-
-
-
 
     script.
             $(function () {
