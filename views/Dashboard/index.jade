@@ -47,7 +47,18 @@ block body
                         option ActualWeek
                         option ActualMonth
                         option ActualYear
-
+            .col-md-4
+                label Kalender:
+                    select.form-control(name='lstKalender' id="lstKalender")
+                        option Week
+                        option Month
+                        option Year
+            .col-md-4
+                label Kalender:
+                    select.form-control(name='lstDetailNiveauLineGraph' id="lstDetailNiveauLineGraph")
+                        option Week
+                        option Month
+                        option Year
                 script.
                     $(document).ready(function () {
                         var graphCount = 0

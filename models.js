@@ -14,6 +14,7 @@ exports = module.exports = function(app, mongoose) {
   require('./schema/GoogleSearchResults')(app, mongoose);
   require('./schema/ScrapeStrategy')(app, mongoose);
   require('./schema/ScrapeResults')(app, mongoose);
+  require('./schema/Corpus')(app, mongoose);
   require('./schema/Companies')(app, mongoose);
   require('./schema/Testdata')(app, mongoose);
   require('./schema/Admin')(app, mongoose);

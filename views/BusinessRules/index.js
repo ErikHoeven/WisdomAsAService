@@ -8,6 +8,8 @@ var openkvk = require ('overheid.io') ({
 var mongo = require('mongodb');
 var db = require('monk')('localhost/commevents');
 var companies =  db.get('companyresults');
+var corpus = db.get('corpus');
+var tweets = db.get('STG_LEADS_AUTOSCHADE');
 
 
 exports.find = function(req, res, next){
@@ -88,7 +90,7 @@ exports.create = function(req, res, next) {
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
             workflow.emit('createLookupValue');
         }
-        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' || req.body.lstTypeBusinessRule == 'Kamer van Koophandel' ){
+        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' || req.body.lstTypeBusinessRule == 'Kamer van Koophandel' || req.body.lstTypeBusinessRule == 'Dictionary'){
             console.log('createCattegorie -- Google Zoekwaarde or Scrape Strategy');
             workflow.emit('createCattegorie');
         }
@@ -251,6 +253,80 @@ exports.create = function(req, res, next) {
               //  }, 6000)
 
         }
+
+        if ( req.body.lstTypeBusinessRule == 'Dictionary') {
+            console.info('---------------------- Dictionary Werkwoorden ----------------------------------------')
+
+
+            var site = 'http://www.fourlangwebprogram.com/fourlang/nl/ww_nl_'
+            var SiteParemeter = ['A.htm','B.htm','C.htm','D.htm','E.htm','F.htm','G.htm','H.htm','I.htm','J.htm','K.htm','L.htm','M.htm','N.htm','O.htm','P.htm','Q.htm','R.htm','S.htm','T.htm','U.htm','V.htm','W.htm','X.htm','Y.htm','Z.htm']
+
+            for (var i = 0 ; i < SiteParemeter.length; i++){
+
+                var url = site  + SiteParemeter[i]
+                console.info(url)
+                    request(url, function (error, response, html) {
+                        if (!error) {
+
+                            console.info('url: ' + url + ' is approved ')
+                            var $ = cheerio.load(html);
+
+                            $('tbody tr').each(function (index, value) {
+                                var voledigWerkwoord = $('a', this).text()
+                                tokenizeWerkwoord(voledigWerkwoord)
+                            })
+                            corpus.remove({ volledigWerkwoord: ''})
+                        }
+                        else {
+                            console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                        }
+                })
+            }
+
+            console.info('---------------------- Zelfstandig naamwoorden ----------------------------------------')
+            site = 'https://nl.wiktionary.org/wiki/Categorie:Zelfstandig-naamwoordsvorm_in_het_Nederlands'
+            url = site
+
+            request(url, function (error, response, html) {
+                if (!error) {
+                    var $ = cheerio.load(html);
+                    $('.tbody .external text').each(function (index, value) {
+                        console.info($(this).text())
+                        //var lstIndexZNW = $(this).text()
+
+                    })
+
+                    //    corpus.insert(fieldsToSet)
+
+
+                    //     request(url, function (error, response, html) {
+                    // if (!error) {
+                    //     var $ = cheerio.load(html);
+                    //     $('.mw-content-ltr li').each(function (index, value){
+                    //         console.info($(this).text())
+                    //         var zelfstandigNaamWoord = $(this).text()
+                    //
+                    //         var fieldsToSet =  {
+                    //             volledigWerkwoord: '',
+                    //             werkwoordInVerledentijd: '',
+                    //             voltooiddeelwoord: '',
+                    //             typeWerkwoord: '',
+                    //             zelfstandignaamwoord: zelfstandigNaamWoord,
+                    //             volgLetter: zelfstandigNaamWoord.substring(0,1)
+                    //         }
+                    //
+                    //         corpus.insert(fieldsToSet)
+                    //
+                    //     })
+
+                    }
+                    else {
+                        console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                    }
+                })
+            }
+
+
         else {
                 console.info('Else Push:');
                 console.info(req.body.catValue);
@@ -409,3 +485,117 @@ exports.updateCattValues = function(req, res, next) {
     console.info(req.body.txtTagCattegory);
     console.info(req.body.CatValue);
 };
+
+
+function tokenizeWerkwoord(sentence) {
+    var sentenceNumber = 0
+    var volledigWerkwoord = ''
+    var werkwoordInVerledentijd = ''
+    var voltooiddeelwoord = ''
+    var sentenceJSON = {}
+    var typeWerkwoord = ''
+
+    sentence = sentence.replace('ALLE betekenissen van dit woord:(', '')
+
+
+    if (sentence.indexOf('overgankelijk')){
+        typeWerkwoord = 'overgankelijk werkwoord'
+        sentence = sentence.replace('overgankelijk werkwoord;', '')
+
+    }
+    if (sentence.indexOf('(werkwoord;')){
+        typeWerkwoord = 'werkwoord'
+        sentence = sentence.replace('(werkwoord;', '')
+
+    }
+
+
+    else {
+        typeWerkwoord = 'onovergankelijk werkwoord'
+        sentence = sentence.replace('onovergankelijk werkwoord', '')
+
+    }
+
+    sentence = sentence.replace(':(;', '')
+    sentence = sentence.replace(':(werkwoord;', '')
+    sentence = sentence.replace(':(werkwoord;', '')
+    sentence = sentence.replace(')1', '')
+    sentence = sentence.replace(':(on', '')
+    sentence = sentence.replace('werkwoord', '')
+    sentence = sentence.replace(';', '')
+    sentence = sentence.replace(',', '')
+
+    var tokenSentence =  sentence.split(' ')
+    var isVolWerkwoord = 0
+    var isverLededenWoord1 = 0
+    var isVerledenWoord2 = 0
+    var isVolDeelWoord = 2
+    var volDeelWoordCount = 0
+
+
+
+
+    for(var i = 0; i < tokenSentence.length; i++){
+        // Voledig werkwoord
+        if (i == 0 ){
+
+            if (tokenSentence[i].substring(tokenSentence[i].length -2, tokenSentence[i].length) == 'on'){
+                volledigWerkwoord = tokenSentence[i].substring(0, tokenSentence[i].length-2)
+                isVolWerkwoord = i
+            }
+            else {
+                volledigWerkwoord = tokenSentence[i]
+                isVolWerkwoord = i
+            }
+
+        }
+        // Verledentijd met 1 woord
+        if ( i > isVolWerkwoord &&  (i == 1 &&  (tokenSentence[i] != 'heeft' && tokenSentence[i] != 'is' && tokenSentence[i] != 'reed')) ){
+            werkwoordInVerledentijd = tokenSentence[i]
+            isverLededenWoord1 = i
+        }
+
+        // Verledentijd met 2 woorden
+        if ( isverLededenWoord1 == 0 &&  (i > isVolWerkwoord &&   (tokenSentence[i] == 'heeft' || tokenSentence[i] == 'is' || tokenSentence[i] == 'reed') )&& i < 3){
+            werkwoordInVerledentijd = werkwoordInVerledentijd + ' ' + tokenSentence[i]
+            isVerledenWoord2 = i
+        }
+
+        // Voltooiddeelwoord
+        if(i >= isVolDeelWoord && volDeelWoordCount  < 2 && (i > isverLededenWoord1|| i > isVerledenWoord2 ) && ( i < isverLededenWoord1|+ 2 || i < isVerledenWoord2 + 2 )){
+            volDeelWoordCount++
+            voltooiddeelwoord = voltooiddeelwoord + ' ' + tokenSentence[i]
+          isVolDeelWoord = i
+         }
+
+    }
+
+    var fieldsToSet =  {
+                          volledigWerkwoord: volledigWerkwoord,
+                          werkwoordInVerledentijd: werkwoordInVerledentijd,
+                          voltooiddeelwoord: voltooiddeelwoord,
+                          typeWerkwoord: typeWerkwoord,
+                          zelfstandignaamwoord: '',
+                          volgLetter: volledigWerkwoord.substring(0,1)
+                       }
+
+
+    corpus.insert(fieldsToSet)
+
+
+    return  {  volledigWerkwoord: volledigWerkwoord,
+                werkwoordInVerledentijd: werkwoordInVerledentijd,
+                voltooiddeelwoord: voltooiddeelwoord,
+                typeWerkwoord: typeWerkwoord,
+                zelfstandignaamwoord: '',
+                volgLetter: volledigWerkwoord.substring(0,1)
+
+              }
+
+
+
+
+
+
+
+}

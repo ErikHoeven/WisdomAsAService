@@ -109,6 +109,17 @@ block head
          $('#KamervanKoophandel').show();
         }
 
+        if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
+          $('#Kleurbepaler').hide();
+          $('#zoekwaarde').hide();
+          $('#score').hide();
+          $('#Cattegorie').hide();
+          $('#CattegorieValue').hide();
+          $('#Simulatie').hide();
+          $('#lstSimAantalFormulieren').hide();
+          $('#Scraping').hide();
+          $('#KamervanKoophandel').hide();
+        }
 
       });
       // (3) Add value to array
@@ -186,6 +197,7 @@ block body
             option Google zoekwaarde
             option Simulatie
             option Kamer van Koophandel
+            option Dictionary
       div.col-sm-6
         #pieDemo
 
