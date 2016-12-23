@@ -5,6 +5,7 @@ var openkvk = require ('overheid.io') ({
     apikey: '5b140874e1a7b22794b68bfa3464036bc8ad371fa2f50cf5396137ab0fb3ac19',
     dataset: 'kvk'
 });
+var async = require('async');
 var mongo = require('mongodb');
 var db = require('monk')('localhost/commevents');
 var companies =  db.get('companyresults');
@@ -299,7 +300,17 @@ exports.create = function(req, res, next) {
                         var insURL = $(this).attr('href')
                         insURL = insURL.substring(2)
                         insURL =  'https://' + insURL
-                        corpus.insert({URL: insURL})
+                        var fieldsToSet =  {
+                            volledigWerkwoord: '',
+                            werkwoordInVerledentijd: '',
+                            voltooiddeelwoord: '',
+                            typeWoord: '',
+                            zelfstandignaamwoord: '',
+                            volgLetter: '',
+                            URL: insURL
+                        }
+
+                        corpus.insert(fieldsToSet)
                         //console.info(znArray)
                     })
                 }
@@ -314,29 +325,77 @@ exports.create = function(req, res, next) {
 
             //A.1.1 LOOP THROUGH URL
             for (var i = 0; i < docs.length; i++) {
-                //console.info(docs[i].URL)
+                //console.info('URL: ' + docs[i].URL + 'is loading ....')
+                var znwURL = docs[i].URL
 
-                request(docURL, function (error, response, html) {
+                request(znwURL, function (error, response, html) {
                     if (!error) {
                         var $ = cheerio.load(html)
-                        console.info(docURL + ': is aproved')
-                        //console.info($('.mw-content-ltr li a').html())
+                        //console.info(znwURL + ': is aproved')
                         $('.mw-content-ltr li a').each(function (i, el) {
                             var zelfstandNaamWoord = $(this).text()
-                            console.info(zelfstandNaamWoord)
-                            //corpus.insert({URL: insURL.substring(2)})
-                            //console.info(znArray)
+                            //console.info(zelfstandNaamWoord)
+                            var fieldsToSet =  {
+                                volledigWerkwoord: '',
+                                werkwoordInVerledentijd: '',
+                                voltooiddeelwoord: '',
+                                typeWoord: 'ZelfstandNaamWoord',
+                                zelfstandignaamwoord: zelfstandNaamWoord,
+                                volgLetter: zelfstandNaamWoord.substring(0,1),
+                                URL: znwURL
+                            }
+                            corpus.insert(fieldsToSet)
                         })
+                        corpus.remove({'typeWoord':""})
                     }
                     else {
                         console.log("We’ve encountered an error: " + error + ': statuscode: ')
 
                     }
                 })
+
+
             }
+
+            })
+
+
+            console.info('--------------------------  START ASYNC ------------------------------------')
+
+            mongo.connect('localhost/commevents',function (err, db) {
+                var tasks = []
+                var locals = {}
+
+                task.push(function (callback) { db.collectio('STG_LEADS_AUTOSCHADE').find({}).toArray(function(err,tweets){
+                    if(err){ return callback(err)  }
+                    else {
+                            return locals.tweets = tweets
+                            callback()
+                         }
+
+                }))
+
+                task.push(function (callback) { db.collectio('corpus').find({}).toArray(function(err,corpus){
+                    if(err){ return callback(err)  }
+                    else {
+                        return locals.corpus = corpus
+                        callback()
+                    }
+
+                })
+
+
+                console.info(tasks)
+
+
+
+
+                })
+            })
+            console.info('-----------------------------   EINDE DICTIONARY -----------------------------------------------------------')
+
         })
 
-          console.info('-----------------------------   EINDE DICTIONARY -----------------------------------------------------------')
 
 
 
@@ -590,9 +649,10 @@ function tokenizeWerkwoord(sentence) {
                           volledigWerkwoord: volledigWerkwoord,
                           werkwoordInVerledentijd: werkwoordInVerledentijd,
                           voltooiddeelwoord: voltooiddeelwoord,
-                          typeWerkwoord: typeWerkwoord,
+                          typeWoord: typeWerkwoord,
                           zelfstandignaamwoord: '',
-                          volgLetter: volledigWerkwoord.substring(0,1)
+                          volgLetter: volledigWerkwoord.substring(0,1),
+                          URL: ''
                        }
 
 
@@ -602,9 +662,10 @@ function tokenizeWerkwoord(sentence) {
     return  {  volledigWerkwoord: volledigWerkwoord,
                 werkwoordInVerledentijd: werkwoordInVerledentijd,
                 voltooiddeelwoord: voltooiddeelwoord,
-                typeWerkwoord: typeWerkwoord,
+                typeWoord: typeWerkwoord,
                 zelfstandignaamwoord: '',
-                volgLetter: volledigWerkwoord.substring(0,1)
+                volgLetter: volledigWerkwoord.substring(0,1),
+                URL: ''
 
               }
 
