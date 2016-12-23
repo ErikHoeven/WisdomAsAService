@@ -255,76 +255,92 @@ exports.create = function(req, res, next) {
         }
 
         if ( req.body.lstTypeBusinessRule == 'Dictionary') {
-            console.info('---------------------- Dictionary Werkwoorden ----------------------------------------')
+            console.info('---------------------- Dictionary ----------------------------------------')
 
 
             var site = 'http://www.fourlangwebprogram.com/fourlang/nl/ww_nl_'
-            var SiteParemeter = ['A.htm','B.htm','C.htm','D.htm','E.htm','F.htm','G.htm','H.htm','I.htm','J.htm','K.htm','L.htm','M.htm','N.htm','O.htm','P.htm','Q.htm','R.htm','S.htm','T.htm','U.htm','V.htm','W.htm','X.htm','Y.htm','Z.htm']
+            var SiteParemeter = ['A.htm', 'B.htm', 'C.htm', 'D.htm', 'E.htm', 'F.htm', 'G.htm', 'H.htm', 'I.htm', 'J.htm', 'K.htm', 'L.htm', 'M.htm', 'N.htm', 'O.htm', 'P.htm', 'Q.htm', 'R.htm', 'S.htm', 'T.htm', 'U.htm', 'V.htm', 'W.htm', 'X.htm', 'Y.htm', 'Z.htm']
 
-            for (var i = 0 ; i < SiteParemeter.length; i++){
+            /*            for (var i = 0 ; i < SiteParemeter.length; i++){
 
-                var url = site  + SiteParemeter[i]
-                console.info(url)
-                    request(url, function (error, response, html) {
-                        if (!error) {
+             var url = site  + SiteParemeter[i]
+             console.info(url)
+             request(url, function (error, response, html) {
+             if (!error) {
 
-                            console.info('url: ' + url + ' is approved ')
-                            var $ = cheerio.load(html);
+             console.info('url: ' + url + ' is approved ')
+             var $ = cheerio.load(html);
 
-                            $('tbody tr').each(function (index, value) {
-                                var voledigWerkwoord = $('a', this).text()
-                                tokenizeWerkwoord(voledigWerkwoord)
-                            })
-                            corpus.remove({ volledigWerkwoord: ''})
-                        }
-                        else {
-                            console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
-                        }
-                })
-            }
+             $('tbody tr').each(function (index, value) {
+             var voledigWerkwoord = $('a', this).text()
+             tokenizeWerkwoord(voledigWerkwoord)
+             })
+             corpus.remove({ volledigWerkwoord: ''})
+             }
+             else {
+             console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+             }
+             })
+             }*/
 
             console.info('---------------------- Zelfstandig naamwoorden ----------------------------------------')
-            site = 'https://nl.wiktionary.org/wiki/Categorie:Zelfstandig-naamwoordsvorm_in_het_Nederlands'
-            url = site
+            var znsite = 'https://nl.wiktionary.org/wiki/Categorie:Zelfstandig-naamwoordsvorm_in_het_Nederlands'
+            var znurl = znsite
+            var znArray = []
 
-            request(url, function (error, response, html) {
+            request(znurl, function (error, response, html) {
                 if (!error) {
+                    console.info(znsite + ': is aproved')
                     var $ = cheerio.load(html);
-                    $('.tbody .external text').each(function (index, value) {
-                        console.info($(this).text())
-                        //var lstIndexZNW = $(this).text()
 
+                    //A. CATCH URLS FROM MAIN URL
+                    $('table a').each(function (i, el) {
+                        //console.info($(this).attr('href').text())
+                        var insURL = $(this).attr('href')
+                        insURL = insURL.substring(2)
+                        insURL =  'https://' + insURL
+                        corpus.insert({URL: insURL})
+                        //console.info(znArray)
                     })
+                }
 
-                    //    corpus.insert(fieldsToSet)
+                else {
+                    console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                }
+            })
+            // A.1 Find URLS in MongoDb
+            corpus.find({}, {fields: {URL: 1}}).then((docs) => {
+                console.info('Aantal URLS is: ' + docs.length)
 
+            //A.1.1 LOOP THROUGH URL
+            for (var i = 0; i < docs.length; i++) {
+                //console.info(docs[i].URL)
 
-                    //     request(url, function (error, response, html) {
-                    // if (!error) {
-                    //     var $ = cheerio.load(html);
-                    //     $('.mw-content-ltr li').each(function (index, value){
-                    //         console.info($(this).text())
-                    //         var zelfstandigNaamWoord = $(this).text()
-                    //
-                    //         var fieldsToSet =  {
-                    //             volledigWerkwoord: '',
-                    //             werkwoordInVerledentijd: '',
-                    //             voltooiddeelwoord: '',
-                    //             typeWerkwoord: '',
-                    //             zelfstandignaamwoord: zelfstandigNaamWoord,
-                    //             volgLetter: zelfstandigNaamWoord.substring(0,1)
-                    //         }
-                    //
-                    //         corpus.insert(fieldsToSet)
-                    //
-                    //     })
-
+                request(docURL, function (error, response, html) {
+                    if (!error) {
+                        var $ = cheerio.load(html)
+                        console.info(docURL + ': is aproved')
+                        //console.info($('.mw-content-ltr li a').html())
+                        $('.mw-content-ltr li a').each(function (i, el) {
+                            var zelfstandNaamWoord = $(this).text()
+                            console.info(zelfstandNaamWoord)
+                            //corpus.insert({URL: insURL.substring(2)})
+                            //console.info(znArray)
+                        })
                     }
                     else {
-                        console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                        console.log("We’ve encountered an error: " + error + ': statuscode: ')
+
                     }
                 })
             }
+        })
+
+          console.info('-----------------------------   EINDE DICTIONARY -----------------------------------------------------------')
+
+
+
+        }
 
 
         else {
