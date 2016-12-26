@@ -755,18 +755,20 @@ function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
 
     }
 
-    //jsonGraphStructure.nodes = jsonNodeStructure
 
 
     for(var index = 0; jsonNodeStructure.length; index++) {
         // Tweet plaatsen bij een groep
         var link = {}
         tweetArray = tweet.split(' ')
+
         for(var i = 0; i < tweetArray.length; i++){
-            if(tweetArray[i] == jsonNodeStructure[index].id){
+            if(tweetArray[i] == jsonNodeStructure[index].id && tweetArray[i] != tweetArray[i]){
+                console.info(jsonNodeStructure[index].id)
                 link.source = jsonNodeStructure[index].id
                 link.value = jsonNodeStructure[index].groep
             }
+
         }
 
         for(var i = 0; i < tweetArray.length;i++){
@@ -780,7 +782,7 @@ function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
             for(var c = 0; c < corpus.length; c++){
             // Als het een woord een znw is voeg dan een link en een satelite toe
                 if(woord == corpus[c].zelfstandignaamwoord){
-                    jsonNodeStructure.push({id:corpus[c].zelfstandignaamwoord, value: value.groep })
+                    jsonNodeStructure.push({id:corpus[c].zelfstandignaamwoord, value: jsonNodeStructure[index].groep })
                     link.target = corpus[c].zelfstandignaamwoord
 
                     jsonLinkStructure.push(link)
@@ -790,6 +792,8 @@ function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
         }
 
     }
+
+    console.info(jsonNodeStructure)
 
     jsonGraphStructure.nodes = jsonNodeStructure
     jsonGraphStructure.links = jsonLinkStructure
