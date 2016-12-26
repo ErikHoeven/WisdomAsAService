@@ -123,64 +123,63 @@ exports.create = function(req, res, next) {
     });
 
     workflow.on('createCattegorie', function () {
-            console.log('STAR POST (4):createCattegorie:');
+        console.log('STAR POST (4):createCattegorie:');
 
 
+        if (req.body.lstTypeBusinessRule == 'Google zoekwaarde') {
+            var url = 'https://www.google.nl/search?q=' + req.body.txtLookupValue;
+            var linkContent = [];
+            var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
 
-            if ( req.body.lstTypeBusinessRule == 'Google zoekwaarde') {
-                var url = 'https://www.google.nl/search?q=' + req.body.txtLookupValue ;
-                var linkContent = [];
-                var lstTypeBusinessRule = req.body.lstTypeBusinessRule;
+            request(url, function (error, res, body) {
+                if (!error) {
+                    var $ = cheerio.load(body),
+                        links = $('.srg').find('.g').length;
+                    console.info(lstTypeBusinessRule);
+                    console.info('---- START SEARCHING ELEMENTS ------------');
+                    var rank = 0;
+                    $('.g').each(function () {
+                        var rawLink = $(this).find('a').attr('href');
+                        var patern = new RegExp(/(url\?q=https:\/\/www.)/);
 
-                request(url, function (error, res, body ) {
-                    if (!error) {
-                        var $ = cheerio.load(body),
-                            links = $('.srg').find('.g').length;
-                            console.info(lstTypeBusinessRule);
-                        console.info('---- START SEARCHING ELEMENTS ------------');
-                        var rank = 0;
-                        $('.g').each(function(){
+                        if (patern.test(rawLink) == true) {
                             var rawLink = $(this).find('a').attr('href');
-                            var patern = new RegExp(/(url\?q=https:\/\/www.)/);
-
-                            if (patern.test(rawLink) == true){
-                             var rawLink = $(this).find('a').attr('href');
-                             rawLink = rawLink.replace(/(url\?q=https:\/\/www.)/,'');
-                             rawLink = rawLink.substring(1,rawLink.indexOf('.'));
-                            }
-                            else{
-                                var rawLink = $(this).find('a').attr('href');
-                                rawLink = rawLink.replace(/(url\?q=http:\/\/www.)/,'');
-                                rawLink = rawLink.substring(1,rawLink.indexOf('.'));
-                            }
-                            var content = $(this).find('.st').text();
-                            linkContent.push({Link: rawLink, Content: content})
+                            rawLink = rawLink.replace(/(url\?q=https:\/\/www.)/, '');
+                            rawLink = rawLink.substring(1, rawLink.indexOf('.'));
+                        }
+                        else {
+                            var rawLink = $(this).find('a').attr('href');
+                            rawLink = rawLink.replace(/(url\?q=http:\/\/www.)/, '');
+                            rawLink = rawLink.substring(1, rawLink.indexOf('.'));
+                        }
+                        var content = $(this).find('.st').text();
+                        linkContent.push({Link: rawLink, Content: content})
 
 
-                        });
+                    });
 
-                        var fieldsToSet = {
-                            searchValue: req.body.txtLookupValue,
-                            resultValue: linkContent,
-                            creationDate: Date()
-                        };
-                        console.log(fieldsToSet);
-                        req.app.db.models.googlesearch.create(fieldsToSet, function(err, BusinessRule) {
-                            if (err) {
-                                return workflow.emit('exception', err);
-                            }
-                            workflow.outcome.record = BusinessRule;
-                            // req.flash('success','BusinessRule Added');
+                    var fieldsToSet = {
+                        searchValue: req.body.txtLookupValue,
+                        resultValue: linkContent,
+                        creationDate: Date()
+                    };
+                    console.log(fieldsToSet);
+                    req.app.db.models.googlesearch.create(fieldsToSet, function (err, BusinessRule) {
+                        if (err) {
+                            return workflow.emit('exception', err);
+                        }
+                        workflow.outcome.record = BusinessRule;
+                        // req.flash('success','BusinessRule Added');
 
-                        });
-                    } else {
-                        console.log("We’ve encountered an error: " + error);
-                    }
-                });
+                    });
+                } else {
+                    console.log("We’ve encountered an error: " + error);
+                }
+            });
 
-            }
+        }
 
-        if ( req.body.lstTypeBusinessRule == 'Kamer van Koophandel') {
+        if (req.body.lstTypeBusinessRule == 'Kamer van Koophandel') {
             console.info('Kamer van Koophandel');
 
             var zoekBedrijf = req.body.txtZoekBedrijf;
@@ -191,7 +190,7 @@ exports.create = function(req, res, next) {
             var SiteParemeter = zoekBedrijf;
             var maxPages = req.body.txtAantalPaginas;
 
-            for (var actPage = 0 ;actPage < maxPages; actPage++) {
+            for (var actPage = 0; actPage < maxPages; actPage++) {
 
                 //  setTimeout(function () {
 
@@ -201,7 +200,7 @@ exports.create = function(req, res, next) {
                     if (!error) {
 
 
-                        console.info('url: '  +  url +  ' is approved ');
+                        console.info('url: ' + url + ' is approved ');
                         var $ = cheerio.load(html);
 
                         $('ul#kvkResults.list-group a').each(function (index, value) {
@@ -221,8 +220,8 @@ exports.create = function(req, res, next) {
                                 adres: adres,
                                 postcode: postcode,
                                 plaats: plaats,
-                                pageNumber: actPage -1,
-                                categorie : SiteParemeter,
+                                pageNumber: actPage - 1,
+                                categorie: SiteParemeter,
                                 creationDate: Date()
                             };
 
@@ -233,14 +232,13 @@ exports.create = function(req, res, next) {
                             console.info('');
 
 
-
                             console.info('--------------- INSERT OBJECT TO MONGO ---------------------------');
-                             req.app.db.models.companyResults.create(fieldsToSet, function (err, companyResults) {
+                            req.app.db.models.companyResults.create(fieldsToSet, function (err, companyResults) {
                                 if (err) {
                                     console.info(err)
                                 }
                                 workflow.outcome.record = companyResults;
-                             })
+                            })
 
                         });
                         console.info('--------------- INSERT OBJECT TO MONGO ---------------------------')
@@ -252,110 +250,177 @@ exports.create = function(req, res, next) {
             }
         }
 
-        if (req.body.lstTypeBusinessRule=='Dictionary') {
-             console.info('---------------------- ' +  req.body.lstTypeBusinessRule   +' ----------------------------------------');
+        if (req.body.lstTypeBusinessRule == 'Dictionary') {
+            console.info('---------------------- ' + req.body.lstTypeBusinessRule + ' ----------------------------------------');
 
+            //A. Automatisch zoeken
+            if (req.body.lstActie == 'Zoeken') {
 
-            //var site = 'http://www.fourlangwebprogram.com/fourlang/nl/ww_nl_';
-            //var SiteParemeter = ['A.htm', 'B.htm', 'C.htm', 'D.htm', 'E.htm', 'F.htm', 'G.htm', 'H.htm', 'I.htm', 'J.htm', 'K.htm', 'L.htm', 'M.htm', 'N.htm', 'O.htm', 'P.htm', 'Q.htm', 'R.htm', 'S.htm', 'T.htm', 'U.htm', 'V.htm', 'W.htm', 'X.htm', 'Y.htm', 'Z.htm'];
+                // A.1 Set the time out to give the database time tot store the URL in the database
+                setTimeout(function () {
+                    console.info('---------------------- Zelfstandig naamwoorden ----------------------------------------');
+                    var znsite = 'https://nl.wiktionary.org/wiki/Categorie:Zelfstandig-naamwoordsvorm_in_het_Nederlands';
+                    var znurl = znsite;
 
-            /*            for (var i = 0 ; i < SiteParemeter.length; i++){
+                    // A.1.1 Request for the website and fetch URL to the function
+                    request(znurl, function (error, response, html) {
+                        if (!error) {
+                            console.info(znsite + ': is aproved');
+                            var $ = cheerio.load(html);
 
-             var url = site  + SiteParemeter[i]
-             console.info(url)
-             request(url, function (error, response, html) {
-             if (!error) {
+                            //A.1.1.1 CATCH URLS CONTENT
+                            $('table a').each(function (i, el) {
+                                var insURL = $(this).attr('href')
+                                insURL = insURL.substring(2)
+                                insURL = 'https://' + insURL
 
-             console.info('url: ' + url + ' is approved ')
-             var $ = cheerio.load(html);
+                                //A.1.1.2 Write content to JSON
+                                var fieldsToSet = {
+                                    volledigWerkwoord: '',
+                                    werkwoordInVerledentijd: '',
+                                    voltooiddeelwoord: '',
+                                    typeWoord: '',
+                                    zelfstandignaamwoord: '',
+                                    volgLetter: '',
+                                    URL: insURL
+                                };
 
-             $('tbody tr').each(function (index, value) {
-             var voledigWerkwoord = $('a', this).text()
-             tokenizeWerkwoord(voledigWerkwoord)
-             })
-             corpus.remove({ volledigWerkwoord: ''})
-             }
-             else {
-             console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
-             }
-             })
-             }*/
-            setTimeout(function () {
-            console.info('---------------------- Zelfstandig naamwoorden ----------------------------------------');
-            var znsite = 'https://nl.wiktionary.org/wiki/Categorie:Zelfstandig-naamwoordsvorm_in_het_Nederlands';
-            var znurl = znsite;
+                                // A.1.1.3 Write JSON to MongoDB
+                                corpus.insert(fieldsToSet);
+                            })
 
+                        }
 
-            request(znurl, function (error, response, html) {
-                if (!error) {
-                    console.info(znsite + ': is aproved');
-                    var $ = cheerio.load(html);
-
-                    //A. CATCH URLS FROM MAIN URL
-                    $('table a').each(function (i, el) {
-                        var insURL = $(this).attr('href')
-                        insURL = insURL.substring(2)
-                        insURL = 'https://' + insURL
-
-                        var fieldsToSet = {
-                            volledigWerkwoord: '',
-                            werkwoordInVerledentijd: '',
-                            voltooiddeelwoord: '',
-                            typeWoord: '',
-                            zelfstandignaamwoord: '',
-                            volgLetter: '',
-                            URL: insURL
-                        };
-                            corpus.insert(fieldsToSet);
+                        else {
+                            console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
+                        }
                     })
+                }, 5000);
 
-                }
+                // B SET TIMEOUT TO GIVE THE DATABASE TIME TO STORE DATA
+                setTimeout(function () {
+                    // B.1 Find URLS in MongoDb
+                    corpus.find({}, {fields: {URL: 1}}).then((docs) => {
+                        console.info('Aantal URLS is: ' + docs.length);
 
-                else {
-                    console.log("We’ve encountered an error: " + error + ': statuscode: ' + response.statusCode)
-                }
-            })
-            }, 5000);
+                    //B.1.1 LOOP THROUGH URL
+                    for (var i = 0; i < docs.length; i++) {
+                        var znwURL = docs[i].URL;
 
-            setTimeout(function () {
-            // A.1 Find URLS in MongoDb
-            corpus.find({}, {fields: {URL: 1}}).then((docs) => {
-                console.info('Aantal URLS is: ' + docs.length);
+                        //B.1.1 GET WEBPAGE FROM URL
+                        request(znwURL, function (error, response, html) {
+                            if (!error) {
+                                // B.1.1.1 GET CONTENT FROM URL
+                                var $ = cheerio.load(html);
+                                $('.mw-content-ltr li a').each(function (i, el) {
+                                    var zelfstandNaamWoord = $(this).text();
 
-            //A.1.1 LOOP THROUGH URL
-            for (var i = 0; i < docs.length; i++) {
-                 var znwURL = docs[i].URL;
+                                    // B.1.1.2 WRITE CONTENT TO JSON
 
-                 request(znwURL, function (error, response, html) {
-                    if (!error) {
-                        var $ = cheerio.load(html);
-                        $('.mw-content-ltr li a').each(function (i, el) {
-                            var zelfstandNaamWoord = $(this).text();
-                            var fieldsToSet = {
-                                volledigWerkwoord: '',
-                                werkwoordInVerledentijd: '',
-                                voltooiddeelwoord: '',
-                                typeWoord: 'ZelfstandNaamWoord',
-                                zelfstandignaamwoord: zelfstandNaamWoord,
-                                volgLetter: zelfstandNaamWoord.substring(0, 1),
-                                URL: znwURL
-                            };
+                                    var fieldsToSet = {
+                                        volledigWerkwoord: '',
+                                        werkwoordInVerledentijd: '',
+                                        voltooiddeelwoord: '',
+                                        typeWoord: 'ZelfstandNaamWoord',
+                                        zelfstandignaamwoord: zelfstandNaamWoord,
+                                        volgLetter: zelfstandNaamWoord.substring(0, 1),
+                                        URL: znwURL
+                                    };
 
-                                corpus.insert(fieldsToSet)
+                                    // B.1.1.2 WRITE CONTENT TO JSON
+                                    corpus.insert(fieldsToSet)
 
+                                })
+                                //B.1.2 REMOVE URLS from the Corpus
+                                corpus.remove({'typeWoord': ""})
+                            }
+                            else {
+                                console.log("We’ve encountered an error: " + error + ': statuscode: ')
+
+                            }
                         })
-                        corpus.remove({'typeWoord': ""})
-                    }
-                    else {
-                        console.log("We’ve encountered an error: " + error + ': statuscode: ')
-
                     }
                 })
+                }, 10000)
             }
-        })
-            }, 10000)
+            // C HANDMATIG TOEVOEGEN VAN WOORDVORMEN
+            if (req.body.lstActie == 'handmatig toevoegen') {
+                var txtWoord = req.body.txtWoord
+                var lstWoordvorm = req.body.lstWoordvorm
+                var fieldToSet = {}
+
+
+                if (lstWoordvorm == 'ZelfstandigNaamWoord') {
+                    var fieldsToSet = {
+                        volledigWerkwoord: '',
+                        werkwoordInVerledentijd: '',
+                        voltooiddeelwoord: '',
+                        typeWoord: 'ZelfstandNaamWoord',
+                        zelfstandignaamwoord: txtWoord,
+                        bijvoegelijknaamwoord: '',
+                        volgLetter: txtWoord.substring(0, 1),
+                        URL: 'handmatig'
+                    }
+                }
+
+                if (lstWoordvorm == 'BijvoegelijkNaamWoord') {
+                    var fieldsToSet = {
+                        volledigWerkwoord: '',
+                        werkwoordInVerledentijd: '',
+                        voltooiddeelwoord: '',
+                        typeWoord: 'BijvoegelijkNaamWoord',
+                        zelfstandignaamwoord: '',
+                        bijvoegelijknaamwoord: txtWoord,
+                        volgLetter: txtWoord.substring(0, 1),
+                        URL: 'handmatig'
+                    }
+                }
+
+                if (lstWoordvorm == 'Volledig werkwoord') {
+                    var fieldsToSet = {
+                        volledigWerkwoord: txtWoord,
+                        werkwoordInVerledentijd: '',
+                        voltooiddeelwoord: '',
+                        typeWoord: 'Volledig werkwoord',
+                        zelfstandignaamwoord: '',
+                        bijvoegelijknaamwoord: '',
+                        volgLetter: txtWoord.substring(0, 1),
+                        URL: 'handmatig'
+                    }
+                }
+
+                if (lstWoordvorm == 'Verledentijd') {
+                    var fieldsToSet = {
+                        volledigWerkwoord: '',
+                        werkwoordInVerledentijd: txtWoord,
+                        voltooiddeelwoord: '',
+                        typeWoord: 'Verledentijd',
+                        zelfstandignaamwoord: '',
+                        bijvoegelijknaamwoord: '',
+                        volgLetter: txtWoord.substring(0, 1),
+                        URL: 'handmatig'
+                    }
+                }
+
+                if (lstWoordvorm == 'VoltooidDeelWoord') {
+                    var fieldsToSet = {
+                        volledigWerkwoord: '',
+                        werkwoordInVerledentijd: txtWoord,
+                        voltooiddeelwoord: '',
+                        typeWoord: 'VoltooidDeelWoord',
+                        zelfstandignaamwoord: '',
+                        bijvoegelijknaamwoord: '',
+                        volgLetter: txtWoord.substring(0, 1),
+                        URL: 'handmatig'
+                    }
+                }
+
+                corpus.insert(fieldsToSet)
+            }
         }
 
+
+        // BuildGraph
         if (req.body.lstTypeBusinessRule == 'BuildGraph') {
 
             console.info('--------------------------  START ASYNC ------------------------------------');
@@ -381,14 +446,25 @@ exports.create = function(req, res, next) {
                             callback();
                         });
                     },
+                    // Load business rules
+                    function (callback) {
+                        db.collection('businessrules').find({ typeBusinessRule: "Cattegorie"}).toArray(function (err, businessrules) {
+                            if (err) return callback(err);
+                            locals.businessrules = businessrules;
+                            callback();
+                        });
+                    },
 
                 ];
                 console.info('--------------- async.parallel ------------------------')
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
-                    console.info(locals.tweets[0])
-
+                    console.info('tweet')
+                    //console.info(locals.tweets[0].text)
+                    //console.info('corpus')
+                    //console.info(locals.corpus[0])
+                    tokenizeZelfstandNaamWoorden(locals.tweets[0].text, locals.corpus, locals.businessrules)
                 })
 
 
@@ -396,33 +472,42 @@ exports.create = function(req, res, next) {
 
         }
 
-        else {
-                console.info('Else Push:');
-                console.info(req.body.catValue);
+        if(req.body.lstTypeBusinessRule != 'Dictionary'
+            && req.body.lstTypeBusinessRule != 'BuildGraph'
+            && req.body.lstTypeBusinessRule != 'Kamer van Koophandel'
+            && req.body.lstTypeBusinessRule != 'Google zoekwaarde') {
+            console.info('Else Push:');
+            console.info(req.body.catValue);
 
-                var fieldsToSet = {
+            var fieldsToSet = {
                     typeBusinessRule: req.body.lstTypeBusinessRule,
                     tagCattegory: req.body.txtTagCattegory,
                     cattegoryValue: JSON.parse(req.body.catValue),
                     cattegorycolor: req.body.kleur,
                     creationDate: Date()
-                };
+                }
 
 
-                req.app.db.models.BusinessRules.create(fieldsToSet, function(err, BusinessRule) {
-                    if (err) {
-                        return workflow.emit('exception', err);
-                    }
+            req.app.db.models.BusinessRules.create(fieldsToSet, function (err, BusinessRule) {
+                if (err) {
+                    return workflow.emit('exception', err);
+                }
 
-                    workflow.outcome.record = BusinessRule;
-                    // req.flash('success','BusinessRule Added');
-                });
-            }
-        res.location('/BusinessRules');
-        res.redirect('/BusinessRules');
-})
+                workflow.outcome.record = BusinessRule;
+                // req.flash('success','BusinessRule Added');
+            });
+        }
+
+
+
+    res.location('/BusinessRules');
+    res.redirect('/BusinessRules');
+
+    })
+
 workflow.emit('validate');
 }
+
 exports.findApiData = function(req, res, next) {
     console.log('Start findAPIData: ');
     console.info(req.body._id);
@@ -564,12 +649,12 @@ function tokenizeWerkwoord(sentence) {
     sentence = sentence.replace('ALLE betekenissen van dit woord:(', '');
 
 
-    if (sentence.indexOf('overgankelijk')){
+    if (sentence.indexOf('overgankelijk')) {
         typeWerkwoord = 'overgankelijk werkwoord';
         sentence = sentence.replace('overgankelijk werkwoord;', '')
 
     }
-    if (sentence.indexOf('(werkwoord;')){
+    if (sentence.indexOf('(werkwoord;')) {
         typeWerkwoord = 'werkwoord';
         sentence = sentence.replace('(werkwoord;', '')
 
@@ -591,7 +676,7 @@ function tokenizeWerkwoord(sentence) {
     sentence = sentence.replace(';', '');
     sentence = sentence.replace(',', '');
 
-    var tokenSentence =  sentence.split(' ');
+    var tokenSentence = sentence.split(' ');
     var isVolWerkwoord = 0;
     var isverLededenWoord1 = 0;
     var isVerledenWoord2 = 0;
@@ -599,14 +684,12 @@ function tokenizeWerkwoord(sentence) {
     var volDeelWoordCount = 0;
 
 
-
-
-    for(var i = 0; i < tokenSentence.length; i++){
+    for (var i = 0; i < tokenSentence.length; i++) {
         // Voledig werkwoord
-        if (i == 0 ){
+        if (i == 0) {
 
-            if (tokenSentence[i].substring(tokenSentence[i].length -2, tokenSentence[i].length) == 'on'){
-                volledigWerkwoord = tokenSentence[i].substring(0, tokenSentence[i].length-2);
+            if (tokenSentence[i].substring(tokenSentence[i].length - 2, tokenSentence[i].length) == 'on') {
+                volledigWerkwoord = tokenSentence[i].substring(0, tokenSentence[i].length - 2);
                 isVolWerkwoord = i
             }
             else {
@@ -616,54 +699,100 @@ function tokenizeWerkwoord(sentence) {
 
         }
         // Verledentijd met 1 woord
-        if ( i > isVolWerkwoord &&  (i == 1 &&  (tokenSentence[i] != 'heeft' && tokenSentence[i] != 'is' && tokenSentence[i] != 'reed')) ){
+        if (i > isVolWerkwoord && (i == 1 && (tokenSentence[i] != 'heeft' && tokenSentence[i] != 'is' && tokenSentence[i] != 'reed'))) {
             werkwoordInVerledentijd = tokenSentence[i];
             isverLededenWoord1 = i
         }
 
         // Verledentijd met 2 woorden
-        if ( isverLededenWoord1 == 0 &&  (i > isVolWerkwoord &&   (tokenSentence[i] == 'heeft' || tokenSentence[i] == 'is' || tokenSentence[i] == 'reed') )&& i < 3){
+        if (isverLededenWoord1 == 0 && (i > isVolWerkwoord && (tokenSentence[i] == 'heeft' || tokenSentence[i] == 'is' || tokenSentence[i] == 'reed') ) && i < 3) {
             werkwoordInVerledentijd = werkwoordInVerledentijd + ' ' + tokenSentence[i];
             isVerledenWoord2 = i
         }
 
         // Voltooiddeelwoord
-        if(i >= isVolDeelWoord && volDeelWoordCount  < 2 && (i > isverLededenWoord1|| i > isVerledenWoord2 ) && ( i < isverLededenWoord1|+ 2 || i < isVerledenWoord2 + 2 )){
+        if (i >= isVolDeelWoord && volDeelWoordCount < 2 && (i > isverLededenWoord1 || i > isVerledenWoord2 ) && ( i < isverLededenWoord1 | +2 || i < isVerledenWoord2 + 2 )) {
             volDeelWoordCount++;
             voltooiddeelwoord = voltooiddeelwoord + ' ' + tokenSentence[i];
-          isVolDeelWoord = i
-         }
+            isVolDeelWoord = i
+        }
 
     }
 
-    var fieldsToSet =  {
-                          volledigWerkwoord: volledigWerkwoord,
-                          werkwoordInVerledentijd: werkwoordInVerledentijd,
-                          voltooiddeelwoord: voltooiddeelwoord,
-                          typeWoord: typeWerkwoord,
-                          zelfstandignaamwoord: '',
-                          volgLetter: volledigWerkwoord.substring(0,1),
-                          URL: ''
-                       };
-
+    var fieldsToSet = {
+        volledigWerkwoord: volledigWerkwoord,
+        werkwoordInVerledentijd: werkwoordInVerledentijd,
+        voltooiddeelwoord: voltooiddeelwoord,
+        typeWoord: typeWerkwoord,
+        zelfstandignaamwoord: '',
+        volgLetter: volledigWerkwoord.substring(0, 1),
+        URL: ''
+    };
 
     corpus.insert(fieldsToSet);
 
+    return {
+        volledigWerkwoord: volledigWerkwoord,
+        werkwoordInVerledentijd: werkwoordInVerledentijd,
+        voltooiddeelwoord: voltooiddeelwoord,
+        typeWoord: typeWerkwoord,
+        zelfstandignaamwoord: '',
+        volgLetter: volledigWerkwoord.substring(0, 1),
+        URL: ''
 
-    return  {  volledigWerkwoord: volledigWerkwoord,
-                werkwoordInVerledentijd: werkwoordInVerledentijd,
-                voltooiddeelwoord: voltooiddeelwoord,
-                typeWoord: typeWerkwoord,
-                zelfstandignaamwoord: '',
-                volgLetter: volledigWerkwoord.substring(0,1),
-                URL: ''
+    }
+}
 
-              }
-
+function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
+    var tweetArray  = []
+    var jsonGraphStructure = {}
+    var jsonNodeStructure = []
+    var jsonLinkStructure = []
 
 
+    for(var b = 0; b < businessrules.length ; b++){
+        jsonNodeStructure.push({id : businessrules[b].tagCattegory, group: b+1})
+
+    }
+
+    //jsonGraphStructure.nodes = jsonNodeStructure
 
 
+    for(var index = 0; jsonNodeStructure.length; index++) {
+        // Tweet plaatsen bij een groep
+        var link = {}
+        tweetArray = tweet.split(' ')
+        for(var i = 0; i < tweetArray.length; i++){
+            if(tweetArray[i] == jsonNodeStructure[index].id){
+                link.source = jsonNodeStructure[index].id
+                link.value = jsonNodeStructure[index].groep
+            }
+        }
 
+        for(var i = 0; i < tweetArray.length;i++){
+         // Loop door de woorden van de tweet heen om te kijken of er een znw in voorkomt
+            var woord = tweetArray[i].replace('?','')
+            woord = woord.replace(',','')
+            woord = woord.replace(':','')
+            woord = woord.replace('!','')
+            woord = woord.replace(';','')
+
+            for(var c = 0; c < corpus.length; c++){
+            // Als het een woord een znw is voeg dan een link en een satelite toe
+                if(woord == corpus[c].zelfstandignaamwoord){
+                    jsonNodeStructure.push({id:corpus[c].zelfstandignaamwoord, value: value.groep })
+                    link.target = corpus[c].zelfstandignaamwoord
+
+                    jsonLinkStructure.push(link)
+                }
+            }
+
+        }
+
+    }
+
+    jsonGraphStructure.nodes = jsonNodeStructure
+    jsonGraphStructure.links = jsonLinkStructure
+    console.info(jsonGraphStructure)
 
 }
