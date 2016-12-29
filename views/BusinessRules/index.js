@@ -440,7 +440,7 @@ exports.create = function(req, res, next) {
                     },
                     // Load corpus
                     function (callback) {
-                        db.collection('corpus').find({}).toArray(function (err, corpus) {
+                        db.collection('corpus').find({$and: [{typeWoord: "ZelfstandNaamWoord" },{URL:"handmatig"}]}).toArray(function (err, corpus) {
                             if (err) return callback(err);
                             locals.corpus = corpus;
                             callback();
@@ -460,7 +460,6 @@ exports.create = function(req, res, next) {
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
-                    console.info('tweet')
                     //console.info(locals.tweets[0].text)
                     //console.info('corpus')
                     //console.info(locals.corpus[0])
@@ -744,59 +743,47 @@ function tokenizeWerkwoord(sentence) {
 }
 
 function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
-    var tweetArray  = []
-    var jsonGraphStructure = {}
+    var tweetArray = tweet.split(' ')
+    var zelfstandigNaamwoord
     var jsonNodeStructure = []
-    var jsonLinkStructure = []
+    var countCattegories = 0
+    var countZelfstandigNaamwoord = 0
 
+    console.info('tokenizeZelfstandNaamWoorden: ')
 
-    for(var b = 0; b < businessrules.length ; b++){
-        jsonNodeStructure.push({id : businessrules[b].tagCattegory, group: b+1})
-
+    // Nodestructure based on the BusinessRules
+    for (var b = 0; b < businessrules.length; b++) {
+        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, businessruleId: b + 1 })
     }
 
+    //console.info(jsonNodeStructure)
 
+    tweetArray.forEach(function (item) {
+        var patt1 = /[,!:]/g
+        var inputItem = item.replace(patt1,'')
 
-    for(var index = 0; jsonNodeStructure.length; index++) {
-        // Tweet plaatsen bij een groep
-        var link = {}
-        tweetArray = tweet.split(' ')
+        console.info('----------------' + inputItem + '------------------------')
+        var zelfstandigNaamwoord = wordInCorpus(inputItem,corpus)
+        console.info(zelfstandigNaamwoord)
+    })
+}
 
-        for(var i = 0; i < tweetArray.length; i++){
-            if(tweetArray[i] == jsonNodeStructure[index].id && tweetArray[i] != tweetArray[i]){
-                console.info(jsonNodeStructure[index].id)
-                link.source = jsonNodeStructure[index].id
-                link.value = jsonNodeStructure[index].groep
-            }
+function wordInCorpus(word,corpus, group) {
+    var output = []
+    corpus.forEach(function (item) {
+        // console.info(word + ' == ' + item.zelfstandignaamwoord)
+        if(word == item.zelfstandignaamwoord){
+          var output =  { id: item.zelfstandignaamwoord, group: group }
+      }
+    })
+}
 
+function wordInCattegory(word, cattegory) {
+    var output
+    cattegory.forEach(function (item) {
+        if (word == cattegory.id){
+            output =  cattegory.group
         }
-
-        for(var i = 0; i < tweetArray.length;i++){
-         // Loop door de woorden van de tweet heen om te kijken of er een znw in voorkomt
-            var woord = tweetArray[i].replace('?','')
-            woord = woord.replace(',','')
-            woord = woord.replace(':','')
-            woord = woord.replace('!','')
-            woord = woord.replace(';','')
-
-            for(var c = 0; c < corpus.length; c++){
-            // Als het een woord een znw is voeg dan een link en een satelite toe
-                if(woord == corpus[c].zelfstandignaamwoord){
-                    jsonNodeStructure.push({id:corpus[c].zelfstandignaamwoord, value: jsonNodeStructure[index].groep })
-                    link.target = corpus[c].zelfstandignaamwoord
-
-                    jsonLinkStructure.push(link)
-                }
-            }
-
-        }
-
-    }
-
-    console.info(jsonNodeStructure)
-
-    jsonGraphStructure.nodes = jsonNodeStructure
-    jsonGraphStructure.links = jsonLinkStructure
-    console.info(jsonGraphStructure)
+    })
 
 }
