@@ -7,16 +7,48 @@ var tweets = db.get('STG_LEADS_AUTOSCHADE');
 var businessrules = db.get('businessrules');
 var format = d3.time.format("%Y-%m-%d");
 var fs = require('fs');
+var graph = db.get('graph')
+var async = require('async');
 
 exports.find = function(req, res, next) {
     // find Tweets in Database
     console.info('find tweets: ...');
-    tweets.find({}, {}, function (err, tweets) {
-        var stgTweets = setStgTweets(tweets);
-        var tweetsPerDay = setTweetsPerDay(stgTweets);
-        var domainValues = setDomainValues(tweetsPerDay);
-        setTweetCattegory(stgTweets, tweetsPerDay, domainValues, stgTweets);
-    });
+
+    var url = 'mongodb://localhost:27017/commevents'
+    mongo.connect(url, function (err, db) {
+        var locals = {};
+        var tasks = [   // Load tweets
+            function (callback) {
+                db.collection('STG_LEADS_AUTOSCHADE').find({}).toArray(function (err, tweets) {
+                    if (err) return callback(err);
+                    locals.tweets = tweets;
+                    callback();
+                });
+            },
+            // Load corpus
+            function (callback) {
+                db.collection('graph').find({}).toArray(function (err, graph) {
+                    if (err) return callback(err);
+                    locals.graph = graph;
+                    callback();
+                });
+            }]
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var graph = locals.graph
+            var stgTweets = setStgTweets(locals.tweets);
+            var tweetsPerDay = setTweetsPerDay(stgTweets);
+            var domainValues = setDomainValues(tweetsPerDay);
+
+            setTweetCattegory(stgTweets, tweetsPerDay, domainValues, stgTweets, graph);
+
+
+        })
+
+
+    })
 
     //
     function setStgTweets(tweets) {
@@ -77,13 +109,15 @@ exports.find = function(req, res, next) {
         };
     }
 
-    function setTweetCattegory(tweets, tweetsPerDay, domainValues, stgTweets) {
+    function setTweetCattegory(tweets, tweetsPerDay, domainValues, stgTweets, graph) {
         businessrules.find({"typeBusinessRule": "Cattegorie"}, {}, function (err, cattegories) {
             var cattegorie = {cat: 'Overige tweets', color: '47A947' } ;
             var stgTweetCattegory = [];
             var stgTweetsPerCattegory = [];
             var dmTweetsPerCattegory = [];
             var dmCountUserPerDay = [];
+
+
 
 
 
@@ -325,13 +359,16 @@ exports.find = function(req, res, next) {
             aggArray.push('postDate');
 
             dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N');
-
+            console.info('TEST TEST')
+            console.info(graph[0])
                res.render('Dashboard/index', {
                                'tweets': stgTweetCattegory,
                                'tweetsPerDay': tweetsPerDay,
                                'domainValues': domainValues,
                                'tweetsPerCattegorry': dmTweetsPerCattegory,
-                               'tweetsPerCattegoryPerDay': dmTweetsPerCattegoriePerDay
+                               'tweetsPerCattegoryPerDay': dmTweetsPerCattegoriePerDay,
+                               'graphStructure': graph[0]
+
 
                        });
 

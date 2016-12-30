@@ -10,6 +10,7 @@ var mongo = require('mongodb');
 var db = require('monk')('localhost/commevents');
 var companies =  db.get('companyresults');
 var corpus = db.get('corpus');
+var dbGraph = db.get('graph')
 
 
 exports.find = function(req, res, next){
@@ -460,10 +461,13 @@ exports.create = function(req, res, next) {
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
-                    //console.info(locals.tweets[0].text)
+                    console.info(locals.tweets[0].text)
                     //console.info('corpus')
-                    //console.info(locals.corpus[0])
-                    tokenizeZelfstandNaamWoorden(locals.tweets[0].text, locals.corpus, locals.businessrules)
+                    //console.info(locals.tweets[0])
+                    var Graph = tokenizeTekst(locals.tweets[0].text, locals.corpus, locals.businessrules)
+                    dbGraph.insert(Graph)
+                    console.info(Graph)
+
                 })
 
 
@@ -499,8 +503,9 @@ exports.create = function(req, res, next) {
 
 
 
-    res.location('/BusinessRules');
-    res.redirect('/BusinessRules');
+        res.location('/BusinessRules');
+        res.redirect('/BusinessRules');
+
 
     })
 
@@ -742,48 +747,116 @@ function tokenizeWerkwoord(sentence) {
     }
 }
 
-function tokenizeZelfstandNaamWoorden(tweet, corpus, businessrules) {
+function tokenizeTekst(tweet, corpus, businessrules) {
     var tweetArray = tweet.split(' ')
     var zelfstandigNaamwoord
     var jsonNodeStructure = []
+    var jsonLinkStructure = []
     var countCattegories = 0
     var countZelfstandigNaamwoord = 0
+    var matchZNW = []
+    var matchZNWFILTER = []
+    var masterGroup
+    var masterGroupValue
+    var masterColor
+    var countGroups = 0
+    var invalidEntries = 0
+    var output
+
 
     console.info('tokenizeZelfstandNaamWoorden: ')
 
-    // Nodestructure based on the BusinessRules
+    // A. Nodestructure based on the BusinessRules
     for (var b = 0; b < businessrules.length; b++) {
-        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, businessruleId: b + 1 })
+        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, businessruleId: b + 1, color: businessrules[b].cattegorycolor })
     }
 
     //console.info(jsonNodeStructure)
 
+    //B. vullen van matchZNW
     tweetArray.forEach(function (item) {
         var patt1 = /[,!:]/g
         var inputItem = item.replace(patt1,'')
 
-        console.info('----------------' + inputItem + '------------------------')
-        var zelfstandigNaamwoord = wordInCorpus(inputItem,corpus)
-        console.info(zelfstandigNaamwoord)
+        matchZNW.push(wordInCorpus(inputItem,corpus))
     })
-}
 
-function wordInCorpus(word,corpus, group) {
-    var output = []
-    corpus.forEach(function (item) {
-        // console.info(word + ' == ' + item.zelfstandignaamwoord)
-        if(word == item.zelfstandignaamwoord){
-          var output =  { id: item.zelfstandignaamwoord, group: group }
-      }
-    })
-}
+    //B.1 Filter ZNW
+    console.info('FILTER')
+    var filterZNW = matchZNW.filter(filterById)
+    //console.info(filterZNW)
 
-function wordInCattegory(word, cattegory) {
-    var output
-    cattegory.forEach(function (item) {
-        if (word == cattegory.id){
-            output =  cattegory.group
+    //C.1 Bepalen van aantal matchende groepen
+    filterZNW.forEach(function (item) {
+        var check = wordInCattegory(item.id,jsonNodeStructure )
+        if (check != null && masterGroup == null){
+            countCattegories++
+            masterGroup = check.group
+            masterGroupValue = check.id
+            masterColor = check.color
         }
     })
 
+    // C.2 MASTER GROUP toevoegen aan de filter group
+    var maxBusinessRuleId  =  jsonNodeStructure.length
+
+    filterZNW.forEach(function (item) {
+        maxBusinessRuleId++
+        item.group =  masterGroup
+        item.businessruleId =  maxBusinessRuleId
+        item.color = masterColor
+    })
+
+    jsonNodeStructure = jsonNodeStructure.concat(filterZNW)
+
+    //console.info(jsonNodeStructure)
+
+    //D CREER LINK STRUCTUUR
+    filterZNW.forEach(function (item) {
+        jsonLinkStructure.push({source: item.id, target: masterGroupValue, value: masterGroup})
+    })
+
+    //console.info(jsonLinkStructure)
+
+    output = {nodes : jsonNodeStructure, links: jsonLinkStructure}
+
+    function filterById(obj) {
+        if ('id' in obj) {
+            return true
+        }
+        else {
+            invalidEntries++
+            return false
+        }
+    }
+
+
+    return output
+
 }
+
+function wordInCorpus(word,corpus) {
+    var output = {}
+
+    corpus.forEach(function (item){
+        //console.info(word + ' == ' + item.zelfstandignaamwoord)
+        if(word == item.zelfstandignaamwoord){
+            //console.info(word + ' == ' + item.zelfstandignaamwoord)
+            output = { id: item.zelfstandignaamwoord}
+
+        }
+    })
+   return output
+}
+
+function wordInCattegory(word, cattegory ) {
+    var output = {}
+    var cleanWord = word.replace('@','')
+    cattegory.forEach(function (item) {
+        if (cleanWord == item.id){
+            output = {id: item.id, group: item.group, color: item.color}
+        }
+    })
+    return output
+}
+
