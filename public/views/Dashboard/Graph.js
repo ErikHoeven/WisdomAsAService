@@ -3,7 +3,7 @@ $(document).ready(function(){
 /**
  * Created by erik on 12/30/16.
  */
-var svg = d3.select("#directedGraph").append("svg"),
+var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
 
@@ -14,8 +14,9 @@ var svg = d3.select("#directedGraph").append("svg"),
         .force("charge", d3.forceManyBody())
         .force("center", d3.forceCenter(width / 2, height / 2));
 
-    d3.json("../test.json", function(error, graph) {
-        if (error) throw error;
+
+    var graph = graphStructure
+    console.info(graph)
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -29,8 +30,10 @@ var svg = d3.select("#directedGraph").append("svg"),
             .selectAll("circle")
             .data(graph.nodes)
             .enter().append("circle")
-            .attr("r", 5)
-            .attr("fill", function(d) { return color(d.group); })
+            .attr("r", function (d)  {
+                return groupRadius(d.type)
+            } )
+            .attr("fill", function(d) { return  '#'+d.color  })
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -57,12 +60,22 @@ var svg = d3.select("#directedGraph").append("svg"),
                 .attr("cx", function(d) { return d.x; })
                 .attr("cy", function(d) { return d.y; });
         }
-    });
+
 
     function dragstarted(d) {
         if (!d3.event.active) simulation.alphaTarget(0.3).restart();
         d.fx = d.x;
         d.fy = d.y;
+    }
+
+
+    function groupRadius (d) {
+        var output
+            if (d == 'parent'){
+                output = 10 }
+            else {
+                output = 5 }
+        return output
     }
 
     function dragged(d) {
@@ -75,5 +88,6 @@ var svg = d3.select("#directedGraph").append("svg"),
         d.fx = null;
         d.fy = null;
     }
+
 
 })

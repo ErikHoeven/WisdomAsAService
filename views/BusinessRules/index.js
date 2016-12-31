@@ -461,12 +461,23 @@ exports.create = function(req, res, next) {
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
-                    console.info(locals.tweets[0].text)
+                    //console.info(locals.tweets[0].text)
                     //console.info('corpus')
                     //console.info(locals.tweets[0])
-                    var Graph = tokenizeTekst(locals.tweets[0].text, locals.corpus, locals.businessrules)
-                    dbGraph.insert(Graph)
-                    console.info(Graph)
+
+                    var stgGraph = []
+                    var max_tweet  = 4
+                    //var txtTweet = locals.tweets[0].text
+                    for (var i = 0; i < max_tweet; i++ ){
+                        console.info('-------------- ' + locals.tweets[i].text + '------------------------------------------')
+                        console.info(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
+                        //stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
+                    }
+
+
+                    //tokenizeTekst(locals.tweets[0].text, locals.corpus, locals.businessrules)
+                    //dbGraph.insert(stgGraph)
+                    //console.info(Graph)
 
                 })
 
@@ -768,9 +779,9 @@ function tokenizeTekst(tweet, corpus, businessrules) {
 
     // A. Nodestructure based on the BusinessRules
     for (var b = 0; b < businessrules.length; b++) {
-        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, businessruleId: b + 1, color: businessrules[b].cattegorycolor })
+        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, type: 'parent', color: businessrules[b].cattegorycolor })
     }
-
+    //console.info('--- PARENTS -----')
     //console.info(jsonNodeStructure)
 
     //B. vullen van matchZNW
@@ -782,13 +793,15 @@ function tokenizeTekst(tweet, corpus, businessrules) {
     })
 
     //B.1 Filter ZNW
-    console.info('FILTER')
+    //console.info('FILTER ZNW')
     var filterZNW = matchZNW.filter(filterById)
+
+
     //console.info(filterZNW)
 
     //C.1 Bepalen van aantal matchende groepen
-    filterZNW.forEach(function (item) {
-        var check = wordInCattegory(item.id,jsonNodeStructure )
+    tweetArray.forEach(function (item) {
+        var check = wordInCattegory(item, jsonNodeStructure )
         if (check != null && masterGroup == null){
             countCattegories++
             masterGroup = check.group
@@ -803,10 +816,12 @@ function tokenizeTekst(tweet, corpus, businessrules) {
     filterZNW.forEach(function (item) {
         maxBusinessRuleId++
         item.group =  masterGroup
-        item.businessruleId =  maxBusinessRuleId
+        item.type =  'child'
         item.color = masterColor
     })
 
+    //console.info(filterZNW)
+    //console.info('------------------------')
     jsonNodeStructure = jsonNodeStructure.concat(filterZNW)
 
     //console.info(jsonNodeStructure)
@@ -840,7 +855,8 @@ function wordInCorpus(word,corpus) {
 
     corpus.forEach(function (item){
         //console.info(word + ' == ' + item.zelfstandignaamwoord)
-        if(word == item.zelfstandignaamwoord){
+        //console.info(word.toLowerCase())
+        if(word.toLowerCase().replace('@','') == item.zelfstandignaamwoord.toLowerCase()){
             //console.info(word + ' == ' + item.zelfstandignaamwoord)
             output = { id: item.zelfstandignaamwoord}
 
@@ -853,7 +869,8 @@ function wordInCattegory(word, cattegory ) {
     var output = {}
     var cleanWord = word.replace('@','')
     cattegory.forEach(function (item) {
-        if (cleanWord == item.id){
+        //console.info( cleanWord.toLowerCase() + ' == ' + item.id.toLowerCase() )
+        if (cleanWord.toLowerCase() == item.id.toLowerCase()){
             output = {id: item.id, group: item.group, color: item.color}
         }
     })

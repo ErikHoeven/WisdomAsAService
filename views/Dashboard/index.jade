@@ -12,15 +12,15 @@ block head
     script(src="https://d3js.org/d3.v4.min.js")
     //script(src='../../views/Dashboard/d3pie.js')
 
-    style.
-      .links line {
-      stroke: #999;
-      stroke-opacity: 0.6;
-      }
-      .nodes circle {
-      stroke: #fff;
-      stroke-width: 1.5px;
-      }
+    //style.
+    //  .links line {
+    //  stroke: #999;
+    //  stroke-opacity: 0.6;
+    //  }
+    //  .nodes circle {
+    //  stroke: #fff;
+    //  stroke-width: 1.5px;
+    //  }
 
 
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
@@ -127,9 +127,9 @@ block body
         //    .col-md-4
 
         .row(id="DirectedGraphs")
-            .col-md-4
-                h4 Directed Graph
-                #directedGraph(align="bottom" width=900 heigth=900)
+            h4 Directed Graph
+            #directedGraph(align="bottom" width=1000 heigth=1000)
+                svg(width='960', height='500')
 
         .row(id="Details")
             .col-md-9
