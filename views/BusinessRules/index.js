@@ -467,17 +467,21 @@ exports.create = function(req, res, next) {
 
                     var stgGraph = []
                     var max_tweet  = 4
+                    var dmGraph = []
                     //var txtTweet = locals.tweets[0].text
                     for (var i = 0; i < max_tweet; i++ ){
-                        console.info('-------------- ' + locals.tweets[i].text + '------------------------------------------')
-                        console.info(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
-                        //stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
+                        //console.info('-------------- ' + locals.tweets[i].text + '-------------------------------')
+                        //console.info(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
+                        stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
                     }
 
+                    stgGraph.forEach(function (item) {
+                        console.info()
+                    })
 
                     //tokenizeTekst(locals.tweets[0].text, locals.corpus, locals.businessrules)
                     //dbGraph.insert(stgGraph)
-                    //console.info(Graph)
+
 
                 })
 
@@ -767,20 +771,46 @@ function tokenizeTekst(tweet, corpus, businessrules) {
     var countZelfstandigNaamwoord = 0
     var matchZNW = []
     var matchZNWFILTER = []
+    var parentGroup
+    var parentGroupValue
+    var parentColor
     var masterGroup
-    var masterGroupValue
     var masterColor
+    var masterGroupValue
     var countGroups = 0
     var invalidEntries = 0
     var output
 
 
-    console.info('tokenizeZelfstandNaamWoorden: ')
+    //console.info('tokenizeZelfstandNaamWoorden: ')
 
-    // A. Nodestructure based on the BusinessRules
+    // A. Nodestructure based on the BusinessRules cattegories
     for (var b = 0; b < businessrules.length; b++) {
-        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, type: 'parent', color: businessrules[b].cattegorycolor })
+        var patt = /[,!:@;.#]/g
+        //MASTER
+        jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, type: 'master', color: businessrules[b].cattegorycolor })
+
+        // A.1 CattegorieValues in NodeStructure and LinkStructure
+        //console.info('id: ' +  businessrules[b].tagCattegory +   ' Length: ' + businessrules[b].cattegoryValue.length)
+        var id =  businessrules[b].tagCattegory.toLowerCase().replace(patt,'')
+        if (businessrules[b].cattegoryValue.length > 0){
+
+            businessrules[b].cattegoryValue.forEach(function (item) {
+                var catValue = item.toLowerCase().replace(patt,'')
+                if (catValue != id){
+                    //PARENT
+                    jsonNodeStructure.push({id: catValue, group: b + 1, type: 'parent', color: businessrules[b].cattegorycolor })
+                    //LINK
+                    jsonLinkStructure.push({source: catValue, target: businessrules[b].tagCattegory, value: b + 1})
+                }
+            })
+
+
+        }
     }
+
+
+
     //console.info('--- PARENTS -----')
     //console.info(jsonNodeStructure)
 
@@ -802,11 +832,11 @@ function tokenizeTekst(tweet, corpus, businessrules) {
     //C.1 Bepalen van aantal matchende groepen
     tweetArray.forEach(function (item) {
         var check = wordInCattegory(item, jsonNodeStructure )
-        if (check != null && masterGroup == null){
+        if (check.group != null && masterGroup == null){
             countCattegories++
-            masterGroup = check.group
-            masterGroupValue = check.id
-            masterColor = check.color
+            parentGroup = check.group
+            parentGroupValue = check.id
+            parentColor = check.color
         }
     })
 
@@ -815,9 +845,9 @@ function tokenizeTekst(tweet, corpus, businessrules) {
 
     filterZNW.forEach(function (item) {
         maxBusinessRuleId++
-        item.group =  masterGroup
+        item.group =  parentGroup
         item.type =  'child'
-        item.color = masterColor
+        item.color = parentColor
     })
 
     //console.info(filterZNW)
@@ -828,7 +858,7 @@ function tokenizeTekst(tweet, corpus, businessrules) {
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
-        jsonLinkStructure.push({source: item.id, target: masterGroupValue, value: masterGroup})
+        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup})
     })
 
     //console.info(jsonLinkStructure)
@@ -854,8 +884,6 @@ function wordInCorpus(word,corpus) {
     var output = {}
 
     corpus.forEach(function (item){
-        //console.info(word + ' == ' + item.zelfstandignaamwoord)
-        //console.info(word.toLowerCase())
         if(word.toLowerCase().replace('@','') == item.zelfstandignaamwoord.toLowerCase()){
             //console.info(word + ' == ' + item.zelfstandignaamwoord)
             output = { id: item.zelfstandignaamwoord}
