@@ -441,7 +441,7 @@ exports.create = function(req, res, next) {
                     },
                     // Load corpus
                     function (callback) {
-                        db.collection('corpus').find({$and: [{typeWoord: "ZelfstandNaamWoord" },{URL:"handmatig"}]}).toArray(function (err, corpus) {
+                        db.collection('corpus').find({typeWoord: "ZelfstandNaamWoord" }).toArray(function (err, corpus) {
                             if (err) return callback(err);
                             locals.corpus = corpus;
                             callback();
@@ -461,26 +461,60 @@ exports.create = function(req, res, next) {
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
-                    //console.info(locals.tweets[0].text)
-                    //console.info('corpus')
-                    //console.info(locals.tweets[0])
 
                     var stgGraph = []
-                    var max_tweet  = 4
-                    var dmGraph = []
-                    //var txtTweet = locals.tweets[0].text
+                    var max_tweet  = 40
+                    var dmNodeGraph = []
+                    var dmLinkGraph = []
+                    var dmGraph = {}
+
+                    // 1. Loopt throug tweets and tokenize text
                     for (var i = 0; i < max_tweet; i++ ){
-                        //console.info('-------------- ' + locals.tweets[i].text + '-------------------------------')
-                        //console.info(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
-                        stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules))
+                        stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules, i))
+
                     }
 
-                    stgGraph.forEach(function (item) {
-                        console.info()
+                    // 2. Add Master and parents Node to dmNodeGraph
+                    var stgNodeGraph = stgGraph[0].nodes
+                    stgNodeGraph.forEach(function (item) {
+                            dmNodeGraph.push(item)
+
+
                     })
 
-                    //tokenizeTekst(locals.tweets[0].text, locals.corpus, locals.businessrules)
-                    //dbGraph.insert(stgGraph)
+                    // 3. Add Children Nodes
+                    for (var i = 1 ; i < stgGraph.length; i++){
+                        var nodes =stgGraph[i].nodes
+                        nodes.forEach(function (item) {
+                            if (item.type == 'child'){
+                                dmNodeGraph.push(item)
+                            }
+                        })
+                    }
+
+                    // 4. Add Master and parents links to dmLinkGraph
+                    var stgLinksGraph = stgGraph[0].links
+                    stgLinksGraph.forEach(function (item) {
+                        dmLinkGraph.push(item)
+
+                    })
+
+                    // 3. Add Children links to dmLinkGraph
+                    for (var i = 1 ; i < stgGraph.length; i++){
+                        var links = stgGraph[i].links
+                        links.forEach(function (item) {
+                            if (item.type == 'child'){
+                                dmLinkGraph.push(item)
+                            }
+                        })
+                    }
+
+                    dmGraph.nodes = dmNodeGraph
+                    dmGraph.links = dmLinkGraph
+
+                    console.info(locals.tweets[29].text)
+
+                    dbGraph.insert(dmGraph)
 
 
                 })
@@ -515,8 +549,6 @@ exports.create = function(req, res, next) {
                 // req.flash('success','BusinessRule Added');
             });
         }
-
-
 
         res.location('/BusinessRules');
         res.redirect('/BusinessRules');
@@ -645,8 +677,6 @@ exports.findApiData = function(req, res, next) {
         });
     });
 
-    //res.redirect('/BusinessRules');
-
     };
 
 exports.updateCattValues = function(req, res, next) {
@@ -762,7 +792,7 @@ function tokenizeWerkwoord(sentence) {
     }
 }
 
-function tokenizeTekst(tweet, corpus, businessrules) {
+function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
     var tweetArray = tweet.split(' ')
     var zelfstandigNaamwoord
     var jsonNodeStructure = []
@@ -780,6 +810,7 @@ function tokenizeTekst(tweet, corpus, businessrules) {
     var countGroups = 0
     var invalidEntries = 0
     var output
+
 
 
     //console.info('tokenizeZelfstandNaamWoorden: ')
@@ -801,16 +832,13 @@ function tokenizeTekst(tweet, corpus, businessrules) {
                     //PARENT
                     jsonNodeStructure.push({id: catValue, group: b + 1, type: 'parent', color: businessrules[b].cattegorycolor })
                     //LINK
-                    jsonLinkStructure.push({source: catValue, target: businessrules[b].tagCattegory, value: b + 1})
+                    jsonLinkStructure.push({source: catValue, target: businessrules[b].tagCattegory, value: b + 1, type: 'parent'})
                 }
             })
 
 
         }
     }
-
-
-
     //console.info('--- PARENTS -----')
     //console.info(jsonNodeStructure)
 
@@ -848,6 +876,7 @@ function tokenizeTekst(tweet, corpus, businessrules) {
         item.group =  parentGroup
         item.type =  'child'
         item.color = parentColor
+        item.tweetID = tweetid
     })
 
     //console.info(filterZNW)
@@ -858,7 +887,7 @@ function tokenizeTekst(tweet, corpus, businessrules) {
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
-        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup})
+        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid})
     })
 
     //console.info(jsonLinkStructure)
