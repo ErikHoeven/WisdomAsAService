@@ -924,7 +924,8 @@ function wordInCorpus(word,corpus) {
 
 function wordInCattegory(word, cattegory ) {
     var output = {}
-    var cleanWord = word.replace('@','')
+    var patt = /[,!:@;.#]/g
+    var cleanWord = word.replace(patt,'')
     cattegory.forEach(function (item) {
         //console.info( cleanWord.toLowerCase() + ' == ' + item.id.toLowerCase() )
         if (cleanWord.toLowerCase() == item.id.toLowerCase()){
