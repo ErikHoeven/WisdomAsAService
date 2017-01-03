@@ -3,6 +3,7 @@ $(document).ready(function(){
 /**
  * Created by erik on 12/30/16.
  */
+var invalidEntries = 0
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
     height = +svg.attr("height");
@@ -15,8 +16,14 @@ var svg = d3.select("svg"),
         .force("center", d3.forceCenter(width / 2, height / 2));
 
 
+
     var graph = graphStructure
-    console.info(graph)
+
+
+    var legendaNames =
+        graphStructure.nodes.filter(filterLegendaNames)
+    console.info(legendaNames)
+    //console.info(graph)
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -39,12 +46,42 @@ var svg = d3.select("svg"),
                 .on("drag", dragged)
                 .on("end", dragended));
 
+
+
+    //Add legend to the SVG Area
+    var legend = svg.selectAll(".legend")
+        .data(legendaNames)
+        .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function (d, i) { return "translate(55," + i * 20 + ")"; });
+    legend.append("rect")
+        .attr("x", width - 150)
+        .attr("width", 10)
+        .attr("height", 10)
+        .style("fill", function(d) { return '#' + d.color})
+        .style("stroke", "grey");
+    legend.append("text")
+        .attr("x", width - 70)
+        .attr("y", 6)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function (d) { return d.id; });
+
+
         node.append("title")
             .text(function(d) { return d.id; });
 
         simulation
             .nodes(graph.nodes)
             .on("tick", ticked);
+
+
+
+
+
+        //console.info(graph.links)
+
+
 
         simulation.force("link")
             .links(graph.links);
@@ -73,6 +110,9 @@ var svg = d3.select("svg"),
         var output
             if (d == 'parent'){
                 output = 10 }
+            if (d == 'master'){
+                output = 15
+            }
             else {
                 output = 5 }
         return output
@@ -88,6 +128,16 @@ var svg = d3.select("svg"),
         d.fx = null;
         d.fy = null;
     }
+
+function filterLegendaNames (obj) {
+    if ('type' in obj && obj.type == 'master'){
+        return true
+    }
+    else {
+        return false
+        invalidEntries++
+    }
+}
 
 
 })

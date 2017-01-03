@@ -359,8 +359,9 @@ exports.find = function(req, res, next) {
             aggArray.push('postDate');
 
             dmTweetsPerCattegoriePerDay = agg_json_object(aggArray,stgTweetCattegory, 'N');
-            console.info('TEST TEST')
-            console.info(graph[0])
+            console.info('----------------- TEST GRAPH --------------------------------------')
+            // console.info(graph[0])
+            console.info('----------------- EINDE TEST GRAPH --------------------------------------')
                res.render('Dashboard/index', {
                                'tweets': stgTweetCattegory,
                                'tweetsPerDay': tweetsPerDay,

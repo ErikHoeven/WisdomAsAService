@@ -11,6 +11,7 @@ var db = require('monk')('localhost/commevents');
 var companies =  db.get('companyresults');
 var corpus = db.get('corpus');
 var dbGraph = db.get('graph')
+var d3 = require('d3')
 
 
 exports.find = function(req, res, next){
@@ -442,7 +443,7 @@ exports.create = function(req, res, next) {
                     // Load corpus
                     function (callback) {
                         db.collection('corpus').find({typeWoord: "ZelfstandNaamWoord" }).toArray(function (err, corpus) {
-                            if (err) return callback(err);
+                            if (err) return callback(err);20
                             locals.corpus = corpus;
                             callback();
                         });
@@ -457,16 +458,21 @@ exports.create = function(req, res, next) {
                     },
 
                 ];
-                console.info('--------------- async.parallel ------------------------')
+                console.info('--------------- EINDE ASYNC ------------------------')
                 async.parallel(tasks, function (err) {
                     if (err) return next(err);
                     db.close();
 
                     var stgGraph = []
-                    var max_tweet  = 40
+                    var max_tweet  = 400     //locals.tweets.length
                     var dmNodeGraph = []
                     var dmLinkGraph = []
                     var dmGraph = {}
+                    var pFilterZNW = []
+                    //var dmNodeChildCount = []
+                    var dmLinkChildCount = []
+
+                    //stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules, 0 ))
 
                     // 1. Loopt throug tweets and tokenize text
                     for (var i = 0; i < max_tweet; i++ ){
@@ -483,11 +489,13 @@ exports.create = function(req, res, next) {
                     })
 
                     // 3. Add Children Nodes
+                    var AantalNodes
                     for (var i = 1 ; i < stgGraph.length; i++){
                         var nodes =stgGraph[i].nodes
                         nodes.forEach(function (item) {
                             if (item.type == 'child'){
                                 dmNodeGraph.push(item)
+                                //dmNodeChildCount.push(item)
                             }
                         })
                     }
@@ -505,6 +513,7 @@ exports.create = function(req, res, next) {
                         links.forEach(function (item) {
                             if (item.type == 'child'){
                                 dmLinkGraph.push(item)
+                                dmLinkChildCount.push(item)
                             }
                         })
                     }
@@ -512,15 +521,34 @@ exports.create = function(req, res, next) {
                     dmGraph.nodes = dmNodeGraph
                     dmGraph.links = dmLinkGraph
 
-                    console.info(locals.tweets[29].text)
-
+                    //console.info(locals.tweets[7].text)
+                    dbGraph.remove({})
                     dbGraph.insert(dmGraph)
 
+                    var keys = ['id',  'group']
+                    var nestTest =  d3.nest()
+                        .key(function(d) { return d.source + '-' + d.target; })
+                        .rollup(function(v) { return v.length; })
+                        .entries(dmLinkChildCount);
 
+                    //= nest(keys,dmNodeChildCount)
+
+                    console.info('--------------nestTest ----------------------')
+                    for (var i = 0; i < dmNodeGraph.length)
+
+
+                    console.info(nestTest)
+
+
+
+
+                    //dbGraph.insert(nestTest)
+                    console.info('--------------einde nestTest ----------------------')
                 })
 
 
             })
+
 
         }
 
@@ -879,23 +907,46 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
         item.tweetID = tweetid
     })
 
-    //console.info(filterZNW)
-    //console.info('------------------------')
+
+
     jsonNodeStructure = jsonNodeStructure.concat(filterZNW)
 
     //console.info(jsonNodeStructure)
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
-        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid})
+        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid, Aantal:1})
     })
 
     //console.info(jsonLinkStructure)
+    // FILTEREN VAN TWEETS ZONDER CATTEGORIE
+    jsonNodeStructure = jsonNodeStructure.filter(filterByGroup)
+    jsonLinkStructure = jsonLinkStructure.filter(filterByTarget)
 
-    output = {nodes : jsonNodeStructure, links: jsonLinkStructure}
+    output = {nodes : jsonNodeStructure, links: jsonLinkStructure, lstZNW: filterZNW  }
 
     function filterById(obj) {
-        if ('id' in obj) {
+        if ('id' in obj ) {
+            return true
+        }
+        else {
+            invalidEntries++
+            return false
+        }
+    }
+
+    function filterByTarget(obj) {
+        if ('target' in obj && obj.target != null) {
+            return true
+        }
+        else {
+            invalidEntries++
+            return false
+        }
+    }
+
+    function filterByGroup(obj) {
+        if ('group' in obj && obj.group != null) {
             return true
         }
         else {
@@ -934,4 +985,17 @@ function wordInCattegory(word, cattegory ) {
     })
     return output
 }
+
+
+function nest(keys, data, rollupFunc) {
+    var nst = d3.nest();
+    keys.forEach(function(key) {
+        nst.key(function(d) { return d[key]; });
+    });
+    if (rollupFunc) {
+        nst.rollup(rollupFunc);
+    }
+    return nst.entries(data);
+}
+
 
