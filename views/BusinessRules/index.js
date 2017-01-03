@@ -484,11 +484,9 @@ exports.create = function(req, res, next) {
                     var stgNodeGraph = stgGraph[0].nodes
                     stgNodeGraph.forEach(function (item) {
                             dmNodeGraph.push(item)
-
-
                     })
 
-                    // 3. Add Children Nodes
+                    // 3.A Add Children Nodes
                     var AantalNodes
                     for (var i = 1 ; i < stgGraph.length; i++){
                         var nodes =stgGraph[i].nodes
@@ -500,6 +498,31 @@ exports.create = function(req, res, next) {
                         })
                     }
 
+                    // 3.B Group by Id and Value and count appereance
+                    var groupByNode =  d3.nest()
+                        .key(function(d) { return d.id + '-' + d.group  + '-' + d.type + '-' + d.color})
+                        .rollup(function(v) { return v.length; })
+                        .entries(dmNodeGraph);
+
+
+                    // 3.C Clear origninal node structure
+                    dmNodeGraph = []
+
+                    // 3.D loop through Node and recreate Nodestructure
+                    var index = 0
+                    groupByNode.forEach(function (item) {
+
+                       var groupKeys = item.key.split('-')
+                       var id = groupKeys[0]
+                       var group = groupKeys[1]
+                       var type = groupKeys[2]
+                       var color = groupKeys[3]
+
+                       dmNodeGraph.push({id: id, group: group, type: type, color: color})
+
+                    })
+
+                    //console.info(dmNodeGraph)
                     // 4. Add Master and parents links to dmLinkGraph
                     var stgLinksGraph = stgGraph[0].links
                     stgLinksGraph.forEach(function (item) {
@@ -518,26 +541,44 @@ exports.create = function(req, res, next) {
                         })
                     }
 
-                    dmGraph.nodes = dmNodeGraph
-                    dmGraph.links = dmLinkGraph
-
-                    //console.info(locals.tweets[7].text)
-                    dbGraph.remove({})
-                    dbGraph.insert(dmGraph)
-
-                    var keys = ['id',  'group']
-                    var nestTest =  d3.nest()
-                        .key(function(d) { return d.source + '-' + d.target; })
+                    //4 Group on id and group count the prevents
+                    var groupByLink =  d3.nest()
+                        .key(function(d) { return d.source + '-' + d.target + '-' + d.value; })
                         .rollup(function(v) { return v.length; })
                         .entries(dmLinkChildCount);
 
-                    //= nest(keys,dmNodeChildCount)
+                    //4. A Join group on
 
                     console.info('--------------nestTest ----------------------')
-                    for (var i = 0; i < dmNodeGraph.length)
+                    //console.info(groupByLink)
 
 
-                    console.info(nestTest)
+                    for (var i = 0; i < dmNodeGraph.length; i++){
+                        var id  = dmNodeGraph[i].id
+                        var group = dmNodeGraph[i].group
+                        var value =  1
+
+                        groupByLink.forEach(function (item) {
+                            var keys = item.key.split('-')
+
+                            if (keys[1] == id && keys[2] == group){
+                                value = item.values
+                                dmNodeGraph[i].aantal = value
+                            }
+
+                        })
+
+                        console.info(dmNodeGraph[i])
+                    }
+
+
+                    //dmGraph.nodes = dmNodeGraph
+                    //dmGraph.links = dmLinkGraph
+
+                    //console.info(nestTest)
+                    //console.info(locals.tweets[7].text)
+                    //dbGraph.remove({})
+                    //dbGraph.insert(dmGraph)
 
 
 
@@ -839,10 +880,6 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
     var invalidEntries = 0
     var output
 
-
-
-    //console.info('tokenizeZelfstandNaamWoorden: ')
-
     // A. Nodestructure based on the BusinessRules cattegories
     for (var b = 0; b < businessrules.length; b++) {
         var patt = /[,!:@;.#]/g
@@ -867,8 +904,6 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
 
         }
     }
-    //console.info('--- PARENTS -----')
-    //console.info(jsonNodeStructure)
 
     //B. vullen van matchZNW
     tweetArray.forEach(function (item) {
@@ -905,6 +940,7 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
         item.type =  'child'
         item.color = parentColor
         item.tweetID = tweetid
+        item.filter = 1
     })
 
 
@@ -915,7 +951,7 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
-        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid, Aantal:1})
+        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid, aantal:1})
     })
 
     //console.info(jsonLinkStructure)
@@ -985,17 +1021,3 @@ function wordInCattegory(word, cattegory ) {
     })
     return output
 }
-
-
-function nest(keys, data, rollupFunc) {
-    var nst = d3.nest();
-    keys.forEach(function(key) {
-        nst.key(function(d) { return d[key]; });
-    });
-    if (rollupFunc) {
-        nst.rollup(rollupFunc);
-    }
-    return nst.entries(data);
-}
-
-
