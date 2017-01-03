@@ -943,18 +943,13 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
         item.filter = 1
     })
 
-
-
     jsonNodeStructure = jsonNodeStructure.concat(filterZNW)
-
-    //console.info(jsonNodeStructure)
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
         jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid, aantal:1})
     })
 
-    //console.info(jsonLinkStructure)
     // FILTEREN VAN TWEETS ZONDER CATTEGORIE
     jsonNodeStructure = jsonNodeStructure.filter(filterByGroup)
     jsonLinkStructure = jsonLinkStructure.filter(filterByTarget)
