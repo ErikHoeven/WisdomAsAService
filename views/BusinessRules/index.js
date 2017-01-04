@@ -464,7 +464,7 @@ exports.create = function(req, res, next) {
                     db.close();
 
                     var stgGraph = []
-                    var max_tweet  = 400     //locals.tweets.length
+                    var max_tweet  = 1000     //locals.tweets.length
                     var dmNodeGraph = []
                     var dmLinkGraph = []
                     var dmGraph = {}
@@ -549,42 +549,36 @@ exports.create = function(req, res, next) {
 
                     //4. A Join group on
 
-                    console.info('--------------nestTest ----------------------')
+                    console.info('--------------Group and Count ----------------------')
                     //console.info(groupByLink)
-
+                    //4.A.1 Loop through nodes
 
                     for (var i = 0; i < dmNodeGraph.length; i++){
                         var id  = dmNodeGraph[i].id
                         var group = dmNodeGraph[i].group
-                        var value =  1
-
-                        groupByLink.forEach(function (item) {
-                            var keys = item.key.split('-')
-
-                            if (keys[1] == id && keys[2] == group){
-                                value = item.values
-                                dmNodeGraph[i].aantal = value
+                        var value=0;
+                        // 4.A.1.A Loop per Node through the grouped links
+                        for (var gl = 0 ; gl < groupByLink.length ; gl++){
+                            var keys = groupByLink[gl].key.split('-');
+                            if (keys[0] == id && keys[2] == group){
+                                value = groupByLink[gl].values
                             }
-
-                        })
-
-                        console.info(dmNodeGraph[i])
+                        }
+                        // Location B
+                        dmNodeGraph[i].aantal = value
+                        //$('#test').append('<br> id: ' + id + ' group: ' + group + ' values: ' + value );
                     }
 
 
-                    //dmGraph.nodes = dmNodeGraph
-                    //dmGraph.links = dmLinkGraph
 
-                    //console.info(nestTest)
-                    //console.info(locals.tweets[7].text)
-                    //dbGraph.remove({})
-                    //dbGraph.insert(dmGraph)
+                    dmGraph.nodes = dmNodeGraph
+                    dmGraph.links = dmLinkGraph
 
+                    dbGraph.remove({})
+                    dbGraph.insert(dmGraph)
 
 
-
-                    //dbGraph.insert(nestTest)
-                    console.info('--------------einde nestTest ----------------------')
+                    console.info('--------------Group and count ----------------------')
                 })
 
 
@@ -1016,3 +1010,4 @@ function wordInCattegory(word, cattegory ) {
     })
     return output
 }
+

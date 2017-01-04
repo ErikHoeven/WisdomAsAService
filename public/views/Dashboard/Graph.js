@@ -3,6 +3,21 @@ $(document).ready(function(){
 /**
  * Created by erik on 12/30/16.
  */
+
+var graph = graphStructure
+var nodes = graph.nodes
+var aantallen = []
+
+nodes.forEach(function (item) {
+    aantallen.push(item.aantal)
+})
+
+
+
+
+
+
+
 var invalidEntries = 0
 var svg = d3.select("svg"),
     width = +svg.attr("width"),
@@ -16,8 +31,12 @@ var svg = d3.select("svg"),
         .force("center", d3.forceCenter(width / 2, height / 2));
 
 
+    var RadiusScale = d3.scaleLinear()
+        .domain([0,d3.max(aantallen)])
+        .range([0,18]);
 
-    var graph = graphStructure
+
+
 
 
     var legendaNames =
@@ -38,9 +57,13 @@ var svg = d3.select("svg"),
             .data(graph.nodes)
             .enter().append("circle")
             .attr("r", function (d)  {
-                return groupRadius(d.type)
+                return groupRadius(d)
             } )
             .attr("fill", function(d) { return  '#'+d.color  })
+            .style("stroke-width", "2px")
+            .on("mouseover", function (d) {
+                showPopover.call(this, d); })
+            .on("mouseout",  function (d) { removePopovers(); })
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -108,13 +131,17 @@ var svg = d3.select("svg"),
 
     function groupRadius (d) {
         var output
-            if (d == 'parent'){
-                output = 10 }
-            if (d == 'master'){
-                output = 15
+        //console.info(d)
+            if (d.type == 'parent' ){
+                output = 18 }
+            if (d.type == 'master'){
+                output = 20
             }
             else {
-                output = 5 }
+                output = 5
+
+                console.info('RadiusScale(0): ' + Math.floor(RadiusScale(d.aantal))
+            }
         return output
     }
 
@@ -139,5 +166,25 @@ function filterLegendaNames (obj) {
     }
 }
 
+    function showPopover (d) {
+        $(this).popover({
+            title: d.id,
+            placement: 'auto top',
+            container: 'body',
+            trigger: 'manual',
+            html: true,
+            content: function () {
+                return "Naam: " + d.id +
+                    "<br/>Aantal: " + d.aantal
+            }
+        });
+        $(this).popover('show')
+        }
+
+        function removePopovers() {
+            $('.popover').each(function () {
+                $(this).remove();
+            });
+        }
 
 })
