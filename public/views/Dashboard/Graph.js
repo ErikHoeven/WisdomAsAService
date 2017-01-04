@@ -1,8 +1,11 @@
-$(document).ready(function(){
-
 /**
  * Created by erik on 12/30/16.
  */
+
+
+$(document).ready(function(){
+
+
 
 var graph = graphStructure
 var nodes = graph.nodes
@@ -11,11 +14,6 @@ var aantallen = []
 nodes.forEach(function (item) {
     aantallen.push(item.aantal)
 })
-
-
-
-
-
 
 
 var invalidEntries = 0
@@ -35,14 +33,9 @@ var svg = d3.select("svg"),
         .domain([0,d3.max(aantallen)])
         .range([0,18]);
 
-
-
-
-
     var legendaNames =
         graphStructure.nodes.filter(filterLegendaNames)
     console.info(legendaNames)
-    //console.info(graph)
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -98,14 +91,6 @@ var svg = d3.select("svg"),
             .nodes(graph.nodes)
             .on("tick", ticked);
 
-
-
-
-
-        //console.info(graph.links)
-
-
-
         simulation.force("link")
             .links(graph.links);
 
@@ -138,9 +123,9 @@ var svg = d3.select("svg"),
                 output = 20
             }
             else {
-                output = 5
+                output = Math.floor(RadiusScale(d.aantal)) + 3 //5
 
-                console.info('RadiusScale(0): ' + Math.floor(RadiusScale(d.aantal))
+                console.info('RadiusScale(0): ' + Math.floor(RadiusScale(d.aantal)))
             }
         return output
     }
@@ -174,8 +159,7 @@ function filterLegendaNames (obj) {
             trigger: 'manual',
             html: true,
             content: function () {
-                return "Naam: " + d.id +
-                    "<br/>Aantal: " + d.aantal
+                return  "Aantal tweets: " + d.aantal
             }
         });
         $(this).popover('show')

@@ -547,6 +547,12 @@ exports.create = function(req, res, next) {
                         .rollup(function(v) { return v.length; })
                         .entries(dmLinkChildCount);
 
+                    var groupByParentLink =  d3.nest()
+                        .key(function(d) { return d.target + '-' + d.value; })
+                        .rollup(function(v) { return v.length; })
+                        .entries(dmLinkChildCount);
+
+
                     //4. A Join group on
 
                     console.info('--------------Group and Count ----------------------')
@@ -557,6 +563,7 @@ exports.create = function(req, res, next) {
                         var id  = dmNodeGraph[i].id
                         var group = dmNodeGraph[i].group
                         var value=0;
+
                         // 4.A.1.A Loop per Node through the grouped links
                         for (var gl = 0 ; gl < groupByLink.length ; gl++){
                             var keys = groupByLink[gl].key.split('-');
@@ -566,8 +573,27 @@ exports.create = function(req, res, next) {
                         }
                         // Location B
                         dmNodeGraph[i].aantal = value
-                        //$('#test').append('<br> id: ' + id + ' group: ' + group + ' values: ' + value );
                     }
+
+                    for (var i = 0; i < dmNodeGraph.length; i++){
+                        var id  = dmNodeGraph[i].id
+                        var group = dmNodeGraph[i].group
+                        var value=0;
+
+                        // 4.A.1.A Loop per Node through the grouped links
+                        for (var gl = 0 ; gl < groupByParentLink.length ; gl++){
+                            var keys = groupByParentLink[gl].key.split('-');
+                            if (keys[0] == id && keys[1] == group && dmNodeGraph == 0){
+                                value = groupByLink[gl].values
+                            }
+                            else {
+
+                            }
+                        }
+                        }
+                        // Location B
+                        dmNodeGraph[i].aantal = value
+
 
 
 
@@ -576,6 +602,8 @@ exports.create = function(req, res, next) {
 
                     dbGraph.remove({})
                     dbGraph.insert(dmGraph)
+
+                    console.info(groupByParentLink)
 
 
                     console.info('--------------Group and count ----------------------')
