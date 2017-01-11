@@ -3,11 +3,10 @@
  */
 
 
-$(document).ready(function(){
+function plotSocialGrah(jsonGraph,Tweets){
 
 
-
-var graph = graphStructure
+var graph = jsonGraph
 var nodes = graph.nodes
 var aantallen = []
 
@@ -57,6 +56,7 @@ var svg = d3.select("svg"),
             .on("mouseover", function (d) {
                 showPopover.call(this, d); })
             .on("mouseout",  function (d) { removePopovers(); })
+            .on("click", function (d) {  filterTweetsOnWord(Tweets,{cattegorie: d.id, corpus: null  }); })
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -116,7 +116,6 @@ var svg = d3.select("svg"),
 
     function groupRadius (d) {
         var output
-        //console.info(d)
             if (d.type == 'parent' ){
                 output = 18 }
             if (d.type == 'master'){
@@ -124,8 +123,6 @@ var svg = d3.select("svg"),
             }
             else {
                 output = Math.floor(RadiusScale(d.aantal)) + 3 //5
-
-                console.info('RadiusScale(0): ' + Math.floor(RadiusScale(d.aantal)))
             }
         return output
     }
@@ -171,4 +168,6 @@ function filterLegendaNames (obj) {
             });
         }
 
-})
+}
+
+

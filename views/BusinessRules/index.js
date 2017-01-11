@@ -464,7 +464,7 @@ exports.create = function(req, res, next) {
                     db.close();
 
                     var stgGraph = []
-                    var max_tweet  = 1000     //locals.tweets.length
+                    var max_tweet  =  1000    //locals.tweets.length
                     var dmNodeGraph = []
                     var dmLinkGraph = []
                     var dmGraph = {}
@@ -472,6 +472,7 @@ exports.create = function(req, res, next) {
                     //var dmNodeChildCount = []
                     var dmLinkChildCount = []
 
+                    dbGraph.remove({})
                     //stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules, 0 ))
 
                     // 1. Loopt throug tweets and tokenize text
@@ -522,7 +523,6 @@ exports.create = function(req, res, next) {
 
                     })
 
-                    //console.info(dmNodeGraph)
                     // 4. Add Master and parents links to dmLinkGraph
                     var stgLinksGraph = stgGraph[0].links
                     stgLinksGraph.forEach(function (item) {
@@ -541,7 +541,8 @@ exports.create = function(req, res, next) {
                         })
                     }
 
-                    //4 Group on id and group count the prevents
+                    // 4 Group and count the prevents
+
                     var groupByLink =  d3.nest()
                         .key(function(d) { return d.source + '-' + d.target + '-' + d.value; })
                         .rollup(function(v) { return v.length; })
@@ -553,12 +554,14 @@ exports.create = function(req, res, next) {
                         .entries(dmLinkChildCount);
 
 
-                    //4. A Join group on
+
+
+                    //5. Loop trough groupsets and set value to aantal
 
                     console.info('--------------Group and Count ----------------------')
-                    //console.info(groupByLink)
                     //4.A.1 Loop through nodes
 
+                    // 5.A Per Child
                     for (var i = 0; i < dmNodeGraph.length; i++){
                         var id  = dmNodeGraph[i].id
                         var group = dmNodeGraph[i].group
@@ -571,39 +574,71 @@ exports.create = function(req, res, next) {
                                 value = groupByLink[gl].values
                             }
                         }
-                        // Location B
                         dmNodeGraph[i].aantal = value
                     }
 
+                    // 5.B  Per Parent
                     for (var i = 0; i < dmNodeGraph.length; i++){
                         var id  = dmNodeGraph[i].id
                         var group = dmNodeGraph[i].group
-                        var value=0;
-
-                        // 4.A.1.A Loop per Node through the grouped links
+                        var value= dmNodeGraph[i].aantal
+                         // 5.B.1 Loop per Node through the grouped links
                         for (var gl = 0 ; gl < groupByParentLink.length ; gl++){
                             var keys = groupByParentLink[gl].key.split('-');
-                            if (keys[0] == id && keys[1] == group && dmNodeGraph == 0){
-                                value = groupByLink[gl].values
+                            if (keys[0] == id && keys[1] == group && dmNodeGraph[i].aantal == 0){
+                                value = groupByParentLink[gl].values
                             }
-                            else {
 
-                            }
                         }
-                        }
-                        // Location B
                         dmNodeGraph[i].aantal = value
+                    }
 
+                    // 5.C  Per master
+                    var masterSet = []
 
+                    groupByParentLink.forEach(function (group) {
+                        var keys = group.key.split('-')
+                        var target = keys[1]
 
+                        masterSet.push({target: target, value: group.values})
+                    })
+
+                   var groupbyMaster = d3.nest()
+                        .key(function(d) { return d.target  })
+                        .rollup(function(v) { return d3.sum(v, function(d) { return d.value; }) })
+                        .entries(masterSet);
+
+                    console.info('groupbyMaster:')
+                    console.info(groupbyMaster)
+
+                    for (var i = 0; i < dmNodeGraph.length; i++){
+                        var group = dmNodeGraph[i].group
+                        var value = dmNodeGraph[i].aantal
+                        var type  = dmNodeGraph[i].type
+                        // 5.B.1 Loop per Node through the grouped links
+                        for (var gl = 0 ; gl < groupbyMaster.length ; gl++){
+                            var keys = groupbyMaster[gl].key
+
+                            if (keys == group && type == 'master'){
+                                value = groupbyMaster[gl].values
+                            }
+
+                        }
+                        dmNodeGraph[i].aantal = value
+                    }
 
                     dmGraph.nodes = dmNodeGraph
                     dmGraph.links = dmLinkGraph
 
-                    dbGraph.remove({})
-                    dbGraph.insert(dmGraph)
 
-                    console.info(groupByParentLink)
+                    
+                    
+                    setTimeout(function () {
+                        dbGraph.insert(dmGraph)
+                    },10000)
+
+
+
 
 
                     console.info('--------------Group and count ----------------------')

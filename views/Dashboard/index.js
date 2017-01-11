@@ -165,7 +165,6 @@ exports.find = function(req, res, next) {
                 }
 
                 if (aggFields.length == 2) {
-                   console.info('Twee');
                     var aggJSONData = d3.nest()
                         .key(function (d) {
                             return d[aggFields[0]] + '-' + d[aggFields[1]];
@@ -174,8 +173,6 @@ exports.find = function(req, res, next) {
                             return v.length;
                         })
                         .entries(jsoninput);
-                    console.info(' aggJSONData');
-                    console.info(aggJSONData);
                     aggJSONData.forEach(function(a){
                         if(a.key.search(/-/i) > 0){
                             var keys = [];

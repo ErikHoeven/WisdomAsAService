@@ -46,7 +46,7 @@ block head
         graphStructure = !{JSON.stringify(graphStructure)}
         //console.info(graphStructure)
 
-    //script(src="../../views/Dashboard/dataHandler.js")
+    script(src="../../views/Dashboard/dataHandler.js")
     //script(src="../../views/Dashboard/LineChartFull.js")
     //script(src="../../views/Dashboard/pieChart.js")
     //script(src="../../views/Dashboard/Barchart.js")
@@ -127,9 +127,11 @@ block body
         //    .col-md-4
 
         .row(id="DirectedGraphs")
-            h4 Directed Graph
-            #directedGraph(align="bottom" width=1500 heigth=1500)
-                svg(width='960', height='500')
+            .col-md-9
+                #directedGraph(align="bottom" width=1500 heigth=1500)
+                    svg(width='960', height='500')
+                    script.
+                        plotSocialGrah(graphStructure,stgTweets)
 
         .row(id="Details")
             .col-md-9

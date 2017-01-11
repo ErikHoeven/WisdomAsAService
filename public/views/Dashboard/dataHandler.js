@@ -1,5 +1,5 @@
 //$(document).ready(function() {
-    var format = d3.time.format("%Y-%m-%d");
+    var format = d3.timeFormat("%Y-%m-%d");
 
     Date.prototype.getWeek = function () {
         var onejan = new Date(this.getFullYear(), 0, 1);
@@ -72,7 +72,7 @@
 
         tw.forEach(function (a) {
             a.Data = a.Data.sort(function (a, b) {
-                return format.parse(a.dim) > format.parse(b.dim)
+                return format.parseTime(a.dim) > format.parseTime(b.dim)
             })
         });
 
@@ -342,11 +342,71 @@
     }
 
 
-
-
-
     var startMonth = actualMonth().startMonth;
     var endMonth = actualMonth().endMonth;
 
+// -------------------------------------------------------------------------------------------------------------------------
+// PARAMETER 1 Tweets: from API
+// PARAMETER 2 filterSet:  {cattegorie: [Catttegory], corpus: [word] ] }
+// Scenario 1:  Tweet is not empty and corpus is also not empty:
+//   1. Token nize tweet text
+//   2. filter tokens on special characters
+//   3. loop throug tokens and identify if the tokens are hit by cattegory or corpus
+//   4. filter all tweets wich does not match on cattegory and word
+//---------------------------------------------------------------------------------------------------------------------------
+function filterTweetsOnWord(Tweets, filterSet) {
+     var outputTweets = []
+         , isCorpusHit = 0
+         , isCattegoryHit = 0
+         , isOutPutTweet = []
+         , tweetText = []
+         , tokens = []
+         , token
+         , cleanToken = ''
+         , patt = /[,!:@;.#]/g
+         , corpusExist = 0
 
-//})
+    console.info('filterTweetsOnWord:')
+
+    Tweets.forEach(function (tw) {
+        tweetText.push(tw.text)
+    })
+
+    //console.info(tweetText)
+
+        if(filterSet.corpus != null){
+            corpusExist = 1
+        }
+
+        console.info(corpusExist)
+        console.info(filterSet)
+
+        tweetText.forEach(function (text) {
+            isCorpusHit = 0
+            isCattegoryHit = 0
+
+            tokens = text.split(' ')
+
+            tokens.forEach(function (tk) {
+                token = tk
+                cleanToken = token.replace(patt,'')
+
+                if (cleanToken ==  filterSet.cattegorie ){
+                    isCattegoryHit = 1
+                }
+                if (cleanToken == filterSet.corpus && corpusExist == 1){
+                    isCorpusHit =  1
+                }
+
+            })
+
+          if (isCorpusHit == 1 || isCattegoryHit == 1){
+                outputTweets.push(text)
+          }
+
+        })
+
+    console.info(outputTweets)
+
+}
+
