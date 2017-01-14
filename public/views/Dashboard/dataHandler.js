@@ -347,14 +347,15 @@
 
 // -------------------------------------------------------------------------------------------------------------------------
 // PARAMETER 1 Tweets: from API
-// PARAMETER 2 filterSet:  {cattegorie: [Catttegory], corpus: [word] ] }
+// PARAMETER 2 filterSet:  {cattegorie: [Catttegory], corpus: [word], type: [master/parent/child] }
+// PARAMETER 3 linkStructure:  json array for lookingup the parentgroup name from the parent group
 // Scenario 1:  Tweet is not empty and corpus is also not empty:
 //   1. Token nize tweet text
 //   2. filter tokens on special characters
 //   3. loop throug tokens and identify if the tokens are hit by cattegory or corpus
 //   4. filter all tweets wich does not match on cattegory and word
 //---------------------------------------------------------------------------------------------------------------------------
-function filterTweetsOnWord(Tweets, filterSet) {
+function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
      var outputTweets = []
          , isCorpusHit = 0
          , isCattegoryHit = 0
@@ -368,45 +369,125 @@ function filterTweetsOnWord(Tweets, filterSet) {
 
     console.info('filterTweetsOnWord:')
 
+    // Loop throug all tweets and add only the text object to the array
     Tweets.forEach(function (tw) {
         tweetText.push(tw.text)
     })
 
-    //console.info(tweetText)
+    // Get only the text of a tweet
+    tweetText.forEach(function (text) {
 
-        if(filterSet.corpus != null){
-            corpusExist = 1
-        }
+        // If the corpus is exist (only with child node)
+        if (filterSet.corpus != null) {
+            console.info('corpusExist: ')
 
-        console.info(corpusExist)
-        console.info(filterSet)
-
-        tweetText.forEach(function (text) {
-            isCorpusHit = 0
-            isCattegoryHit = 0
-
+            // Split the text of a tweet in tokens of word
             tokens = text.split(' ')
 
+            // Loop through tokens
             tokens.forEach(function (tk) {
                 token = tk
-                cleanToken = token.replace(patt,'')
+                cleanToken = token.replace(patt, '')
 
-                if (cleanToken ==  filterSet.cattegorie ){
+                // Look per token for the cattegory using the links and overwrite the cattegorie with the value of the attribute source of the link object
+                linkstructure.forEach(function (link) {
+
+                    if (link.target == cleanToken && link.value == filterSet.cattegorie) {
+                        filterSet.cattegorie = link.source
+                    }
+
+                })
+
+                if (cleanToken == filterSet.cattegorie) {
                     isCattegoryHit = 1
                 }
-                if (cleanToken == filterSet.corpus && corpusExist == 1){
-                    isCorpusHit =  1
-                }
 
+                if (cleanToken == filterSet.corpus) {
+                    isCorpusHit = 1
+                }
             })
 
-          if (isCorpusHit == 1 || isCattegoryHit == 1){
+            if (isCorpusHit == 1 && isCattegoryHit == 1) {
                 outputTweets.push(text)
-          }
+            }
+        }
 
-        })
+        // If the corpus does not exist and type is parent
+        if (filterSet.corpus == null && filterSet.type  ==  'parent') {
+            console.info('corpusExist: ')
 
-    console.info(outputTweets)
+            // Split the text of a tweet in tokens of word
+            tokens = text.split(' ')
+
+            // Loop through tokens
+            tokens.forEach(function (tk) {
+                token = tk
+                cleanToken = token.replace(patt, '')
+
+                if (cleanToken == filterSet.cattegorie) {
+                    isCattegoryHit = 1
+                }
+            })
+
+            if (isCattegoryHit == 1) {
+                outputTweets.push(text)
+            }
+        }
+
+        // If the corpus does not exist and node type is master
+        if (filterSet.corpus == null &&  filterSet.type == 'master') {
+            console.info('corpusExist: ')
+
+            // Split the text of a tweet in tokens of word
+            tokens = text.split(' ')
+
+            // Loop through tokens
+            tokens.forEach(function (tk) {
+                token = tk
+                cleanToken = token.replace(patt, '')
+
+                // Look per token for the cattegory using the links and overwrite the cattegorie with the value of the attribute source of the link object
+                linkstructure.forEach(function (link) {
+
+                    if (link.target == cleanToken && link.value == filterSet.cattegorie) {
+                        filterSet.cattegorie = link.source
+                    }
+
+                })
+
+                if (cleanToken == filterSet.cattegorie) {
+                    isCattegoryHit = 1
+                }
+
+                if (cleanToken == filterSet.corpus) {
+                    isCorpusHit = 1
+                }
+            })
+
+            if (isCorpusHit == 1 || isCattegoryHit == 1) {
+                outputTweets.push(text)
+            }
+        }
+
+
+
+
+
+    })
+
+
+
+
+
+
+
+    $('#filteredTweets').html('')
+    outputTweets.forEach(function (tw) {
+        $('#filteredTweets').append('--------------------------------------- <br>' +  tw + '<br> ----------------------------------------------------------------')
+
+    })
+
+    return 1
 
 }
 

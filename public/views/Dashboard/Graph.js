@@ -9,6 +9,9 @@ function plotSocialGrah(jsonGraph,Tweets){
 var graph = jsonGraph
 var nodes = graph.nodes
 var aantallen = []
+var filter = 0
+
+
 
 nodes.forEach(function (item) {
     aantallen.push(item.aantal)
@@ -56,7 +59,16 @@ var svg = d3.select("svg"),
             .on("mouseover", function (d) {
                 showPopover.call(this, d); })
             .on("mouseout",  function (d) { removePopovers(); })
-            .on("click", function (d) {  filterTweetsOnWord(Tweets,{cattegorie: d.id, corpus: null  }); })
+            .on("click", function (d) {  console.info(d)
+                                            if (d.type == 'child'){
+                                                filter = filterTweetsOnWord(Tweets,{cattegorie: d.group, corpus: d.id}, jsonGraph.links)
+                                            }
+                                            if (d.type == 'parent'){
+                                                filter = filterTweetsOnWord(Tweets,{cattegorie: d.id, corpus: null  })
+                                            }
+                                            if (d.type == 'master') {
+                                                filter = filterTweetsOnWord(Tweets, {cattegorie: d.id, corpus: null})
+                                            }})
             .call(d3.drag()
                 .on("start", dragstarted)
                 .on("drag", dragged)
@@ -167,6 +179,19 @@ function filterLegendaNames (obj) {
                 $(this).remove();
             });
         }
+
+        function filter(data){
+            var corpus, cattegorie
+
+
+            if (data.type == 'child'){
+                corpus = data.id
+            }
+
+
+        }
+
+
 
 }
 
