@@ -52,6 +52,7 @@ exports = module.exports = function(app, passport) {
 
   //Dashboard routes
   app.get('/Dashboard/', require('./views/Dashboard/index').find);
+  app.post('/Dashboard/findTweetPerNode',require('./views/Dashboard/graphActions').findTweetPerNode);
   //app.get('/Dashboard/setTweetsperCattegory', require('./views/Dashboard/index').setTweetsperCattegory);
 
 

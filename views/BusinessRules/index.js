@@ -443,7 +443,7 @@ exports.create = function(req, res, next) {
                     // Load corpus
                     function (callback) {
                         db.collection('corpus').find({typeWoord: "ZelfstandNaamWoord" }).toArray(function (err, corpus) {
-                            if (err) return callback(err);20
+                            if (err) return callback(err);
                             locals.corpus = corpus;
                             callback();
                         });
@@ -696,7 +696,6 @@ exports.findApiData = function(req, res, next) {
     var url = 'mongodb://localhost:27017/commevents';
     var businesRule = {};
 
-
     //function updateBusinessRule(updateField, updateValue){
     var lookupValue;
     var typeBusinessRule;
@@ -781,7 +780,7 @@ exports.findApiData = function(req, res, next) {
                     {$set: {lookupValue: updBusinessRule.lookupValue
                           , typeBusinessRule: updBusinessRule.typeBusinessRule
                           , tagCattegory: updBusinessRule.tagCattegory
-                    }}, // replacement, replaces only the field "hi"
+                    }}, // replacement, replaces only the field
                     {}, // options
                     function (err, object) {
                         if (err) {

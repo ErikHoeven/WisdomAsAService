@@ -37,7 +37,6 @@ var svg = d3.select("svg"),
 
     var legendaNames =
         graphStructure.nodes.filter(filterLegendaNames)
-    console.info(legendaNames)
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -59,15 +58,14 @@ var svg = d3.select("svg"),
             .on("mouseover", function (d) {
                 showPopover.call(this, d); })
             .on("mouseout",  function (d) { removePopovers(); })
-            .on("click", function (d) {  console.info(d)
-                                            if (d.type == 'child'){
-                                                filter = filterTweetsOnWord(Tweets,{cattegorie: d.group, corpus: d.id}, jsonGraph.links)
+            .on("click", function (d) {   if (d.type == 'child'){
+                                                filter = filterTweetsOnWord({cattegorie: d.group, corpus: d.id, type: d.type})
                                             }
                                             if (d.type == 'parent'){
-                                                filter = filterTweetsOnWord(Tweets,{cattegorie: d.id, corpus: null  })
+                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type, group: d.group  })
                                             }
                                             if (d.type == 'master') {
-                                                filter = filterTweetsOnWord(Tweets, {cattegorie: d.id, corpus: null})
+                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type})
                                             }})
             .call(d3.drag()
                 .on("start", dragstarted)
@@ -191,6 +189,17 @@ function filterLegendaNames (obj) {
 
         }
 
+    var childInvalidEntries = 0
+    function  filterLinkChildStructure (links){
+        if (links.source.type == 'child') {
+            return true
+        }
+        else {
+            childInvalidEntries++
+            return false
+        }
+
+    }
 
 
 }
