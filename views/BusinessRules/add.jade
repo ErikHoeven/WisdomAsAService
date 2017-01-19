@@ -101,6 +101,7 @@ block head
           $('#Scraping').hide();
           $('#KamervanKoophandel').hide();
           $('#Dictionary').hide();
+          $('#Upload').hide();
 
           var formFields = getSimFormFields()
 
@@ -117,6 +118,7 @@ block head
          $('#Scraping').hide();
          $('#KamervanKoophandel').show();
          $('#Dictionary').hide();
+         $('#Upload').hide();
         }
 
         if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
@@ -130,6 +132,7 @@ block head
           $('#Scraping').hide();
           $('#KamervanKoophandel').hide();
           $('#Dictionary').show();
+          $('#Upload').hide();
         }
 
         if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
@@ -143,7 +146,22 @@ block head
             $('#Scraping').hide();
             $('#KamervanKoophandel').hide();
             $('#Dictionary').hide();
+            $('#Upload').hide();
         }
+
+          if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
+              $('#Kleurbepaler').hide();
+              $('#zoekwaarde').hide();
+              $('#score').hide();
+              $('#Cattegorie').hide();
+              $('#CattegorieValue').hide();
+              $('#Simulatie').hide();
+              $('#lstSimAantalFormulieren').hide();
+              $('#Scraping').hide();
+              $('#KamervanKoophandel').hide();
+              $('#Dictionary').hide();
+              $('#Upload').show();
+          }
 
       });
 
@@ -240,6 +258,7 @@ block body
             option Kamer van Koophandel
             option Dictionary
             option BuildGraph
+            option Upload
       div.col-sm-6
         #pieDemo
 
@@ -317,6 +336,14 @@ block body
             option VoltooidDeelWoord
           label Woord
           input.form-control(type='text', name="txtWoord" id="txtWoord")
+
+
+    div.form-group(id='Dictionary')
+        div.row
+            div.col-sm-3
+              label.btn.btn-default.btn-file
+                | Browse
+                input.hidden(type='file')
 
     script.
             $(function () {

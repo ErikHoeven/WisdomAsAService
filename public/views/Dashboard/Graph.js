@@ -132,7 +132,7 @@ var svg = d3.select("svg"),
                 output = 20
             }
             else {
-                output = Math.floor(RadiusScale(d.aantal)) + 3 //5
+                output = Math.floor(RadiusScale(d.aantal)) + 4 //5
             }
         return output
     }

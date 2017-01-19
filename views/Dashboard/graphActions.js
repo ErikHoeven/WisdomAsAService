@@ -84,7 +84,19 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
 
     // Loop throug all tweets and add only the text object to the array
     Tweets.forEach(function (tw) {
-        tweetText.push({text: tw.text, created_at: tw.created_at})
+        var profile_banner_url = tw.user.profile_banner_ur
+
+        if (profile_banner_url = null || !profile_banner_url){
+            var profile_banner_url = '/avatar.png'
+        }
+
+        tweetText.push({text: tw.text,
+                        created_at: tw.created_at,
+                        userProfileURL: tw.user.profile_image_url_https,
+                        profile_banner_url: profile_banner_url
+                        //screenname : tw.entities.user_mentions[0].screen_name
+                        //username : tw.entities.user_mentions[tw.entities.user_mentions.length].screen_name
+        })
     })
 
     // Get only the text of a tweet

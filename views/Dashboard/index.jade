@@ -127,17 +127,17 @@ block body
         //    .col-md-4
 
         .row(id="DirectedGraphs")
-            .col-md-9
-                #directedGraph(align="bottom" width=960 heigth=500)
-                    svg(width='960', height='500')
+            .col-md-4
+                #filteredTweets(align="bottom")
+
+
+            .col-md-8
+                #directedGraph(align="bottom" width=600 heigth=600)
+                    svg(width='600', height='600')
                     script.
                          plotSocialGrah(graphStructure,stgTweets)
 
 
-
-
-            .col-md-6
-                #filteredTweets
 
         .row(id="Details")
             .col-md-9
