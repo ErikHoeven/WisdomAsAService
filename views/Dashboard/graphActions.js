@@ -90,12 +90,15 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
             var profile_banner_url = '/avatar.png'
         }
 
-        tweetText.push({text: tw.text,
-                        created_at: tw.created_at,
-                        userProfileURL: tw.user.profile_image_url_https,
-                        profile_banner_url: profile_banner_url
-                        //screenname : tw.entities.user_mentions[0].screen_name
-                        //username : tw.entities.user_mentions[tw.entities.user_mentions.length].screen_name
+
+
+        tweetText.push({ id : tw.id,
+                         text: tw.text,
+                         created_at: tw.created_at,
+                         userProfileURL: tw.user.profile_image_url_https,
+                         profile_banner_url: profile_banner_url,
+                         screenname : tw.user.screen_name,
+                         username : tw.user.name
         })
     })
 

@@ -368,45 +368,31 @@ function filterTweetsOnWord(filterSet ) {
 function addTweetsToSocialBoard(tweets) {
     console.info('START')
     $('#filteredTweets').html('')
+    var formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S")
+
 
 
     tweets.forEach(function (tw) {
+        var created_at  = new Date(tw.created_at.replace('+0000','')+ ' UTC')
+        created_at =  formatTime(created_at)
+
+
         $('#filteredTweets').append('<link rel=\"stylesheet\" href=\"https:\/\/abs.twimg.com\/a\/1483667001\/css\/t1\/twitter_core.bundle.css\">')
-        $('#filteredTweets').append('<div has-content\" data-screen-name=\"OG3NE\" data-name=\"O\'G3NE\" data-user-id=\"2608128439\" ')
+        $('#filteredTweets').append('<div has-content\" data-screen-name=\"'+ tw.screen_name   +'\" data-name=\"'+ tw.username  +'" data-user-id=\"2608128439\" ')
         $('#filteredTweets').append('<div class=\"context\"> <\/div><div class=\"content\"><div class=\"stream-item-header\">')
         $('#filteredTweets').append('<a class=\"account-group js-account-group js-action-profile js-user-profile-link js-nav\" href=\"\/OG3NE\" data-user-id=\"2608128439\">')
         $('#filteredTweets').append('<img class=\"avatar js-action-profile-avatar\" src=\"' + tw.userProfileURL + '\">')
-        $('#filteredTweets').append('<strong class=\"fullname js-action-profile-name show-popup-with-id\" data-aria-label-part=\"\">O\'G3NE<\/strong><span>&rlm;<\/span>')
-        $('#filteredTweets').append('<span class=\"username js-action-profile-name\" data-aria-label-part=\"\"><s>@<\/s><b>OG3NE<\/b><\/span><\/a><small class=\"time\">')
-        $('#filteredTweets').append('<a href=\"\/OG3NE\/status\/815219431957823489\" class=\"tweet-timestamp js-permalink js-nav js-tooltip\" title=\"07:33 - 31 dec. 2016\">')
+        $('#filteredTweets').append('<strong class=\"fullname js-action-profile-name show-popup-with-id\" data-aria-label-part=\"\">'+ tw.username   +'<\/strong><span>&rlm;<\/span><br>')
+        $('#filteredTweets').append('<span class=\"username js-action-profile-name\" data-aria-label-part=\"\"><s>@<\/s><b>'+ tw.username   +'<\/b><\/span><\/a><small class=\"time\">')
+        $('#filteredTweets').append('<a class=\"tweet-timestamp js-permalink js-nav js-tooltip\">')
         $('#filteredTweets').append('<span class=\"_timestamp js-short-timestamp \" data-aria-label-part=\"last\" data-time=\"1483198433\" data-time-ms=\"1483198433000\"')
-        $('#filteredTweets').append('<data-long-form=\"true\">31 dec. 2016<\/span><\/a><\/small><\/div><div class=\"js-tweet-text-container\">')
-        $('#filteredTweets').append('<p class=\"TweetTextSize  js-tweet-text tweet-text\" lang=\"nl\" data-aria-label-part=\"0\">')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/2728.png\"' +
-                                       ' draggable=\"false\" alt=\"\u2728\" title=\"Vonken\" aria-label=\"Emoji: Vonken\" data-pin-nopin=\"true\"> ')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/1f4a5.png\" ' +
-                                         'draggable=\"false\" alt=\"\uD83D\uDCA5\" title=\"Botsing\" aria-label=\"Emoji: Botsing\" ' +
-                                         'data-pin-nopin=\"true\"> Het aftellen is begonnen... We kijken straks terug op 2016 en vooruit naar 2017 ! ')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/2728.png\" ' +
-                                         'draggable=\"false\" alt=\"\u2728\" title=\"Vonken\" aria-label=\"Emoji: Vonken\">')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/1f4a5.png\" ' +
-                                         'draggable=\"false\" alt=\"\uD83D\uDCA5\" title=\"Botsing\" ' +
-                                         'aria-label=\"Emoji: Botsing\"> Tijd Voor Max | 16:50 (Lisa weer aan de drank ')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/1f602.png\" ' +
-                                         'draggable=\"false\" alt=\"\uD83D\uDE02\" title=\"Gezicht met tranen van geluk\" aria-label=\"Emoji: Gezicht met tranen van geluk\">')
-        $('#filteredTweets').append('<img class=\"Emoji Emoji--forText\" src=\"https:\/\/abs.twimg.com\/emoji\/v2\/72x72\/1f37e.png\" ' +
-                                         'draggable=\"false\" alt=\"\uD83C\uDF7E\" title=\"Fles met ploppende kurk\" aria-label=\"Emoji: Fles met ploppende kurk\">')
+        $('#filteredTweets').append('<data-long-form=\"true\"> '+  created_at   +'<\/span><\/a><\/small><\/div><div class=\"js-tweet-text-container\">')
+        $('#filteredTweets').append('<p class=\"TweetTextSize js-tweet-text tweet-text\" lang=\"nl\" data-aria-label-part=\"0\">')
+        $('#filteredTweets').append('<img>'  + tw.text)
         $('#filteredTweets').append('<a href=\"https:\/\/t.co\/F6nRcCGXlv\" class=\"twitter-timeline-link u-hidden\" data-pre-embedded=\"true\" dir=\"ltr\">pic.twitter.com\/F6nRcCGXlv<\/a>')
         $('#filteredTweets').append('<\/p><\/div><div class=\"AdaptiveMedia is-squar\"><div class=\"AdaptiveMedia-container js-adaptive-media-container\">')
-         $('#filteredTweets').append('<div class=\"AdaptiveMedia-singlePhoto\"><div class=\"AdaptiveMedia-photoContainer js-adaptive-photo \" ' +
-                                          'data-image-url=\"https:\/\/pbs.twimg.com\/media\/C1A9vvdXAAAtQOL.jpg\" ' +
-                                          'data-element-context=\"platform_photo_card\">' +
-                                          '<img src=\"'+    + '\" ' +
-                                          'style=\"width: 100%; top: -0px;\"><\/div><\/div><\/div><\/div><div class=\"stream-item-footer\"><br>')
 
-        console.info(tw.userProfileURL)
     })
-
 }
 
 

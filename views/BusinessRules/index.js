@@ -464,7 +464,7 @@ exports.create = function(req, res, next) {
                     db.close();
 
                     var stgGraph = []
-                    var max_tweet  =  1000    //locals.tweets.length
+                    var max_tweet  =  1700    //locals.tweets.length
                     var dmNodeGraph = []
                     var dmLinkGraph = []
                     var dmGraph = {}
