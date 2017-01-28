@@ -1,37 +1,117 @@
 extends ../layouts/default
 
 block head
-  title Wisdom as a Service
+    title Wisdom as a Service
 
 block neck
-  link(rel='stylesheet', href='/views/index.min.css?#{cacheBreaker}')
+    link(rel='stylesheet', href='/views/index.min.css?#{cacheBreaker}')
 
 block body
-  div.jumbotron
-    h2 Wisdom as a Service
-    p.lead
-      | Haal meer wijsheid uit uw informatie!
-    div
-      a.btn.btn-primary.btn-lg(href='/signup/') Create an Account
-      | &nbsp;or&nbsp;
-      a.btn.btn-warning.btn-lg(href='/login/forgot/') Reset Your Password
-    div.clearfix
-  div.row
-    div.col-sm-4
-      div.panel.panel-default
-        div.panel-body
-          h3 Over mij
-          p Wil je meer weten wat wij kunnen betekenen voor uw organisatie
-          a.btn.btn-default.btn-block(href='/about/') Details
-    div.col-sm-4
-      div.panel.panel-default
-        div.panel-body
-          h3 Log in
-          p Maak een persoonlijke account aan en koppel diensten aan je account
-          a.btn.btn-default.btn-block(href='/signup/') Aanmelden
-    div.col-sm-4
-      div.panel.panel-default
-        div.panel-body
-          h3 Contact
-          p Neem contact met ons op
-          a.btn.btn-default.btn-block(href='/contact/') Contact
+    // Carousel
+    // ==================================================
+    #carousel-myCarousel.carousel.slide(data-ride='carousel')
+        ol.carousel-indicators
+            li.active(data-target='#carousel-myCarousel', data-slide-to='0')
+            li(data-target='#carousel-myCarousel', data-slide-to='1')
+            li(data-target='#carousel-myCarousel', data-slide-to='2')
+        .carousel-inner(role='listbox')
+            .item.active
+                img(src='../images/carousel1.jpg')
+                .carousel-caption
+                    h1 Advocaten matching
+                    p
+                        | Zoek je een advocaat maar weet welke, of waar je moet zoeken. Wij helpen jou te koppelen aan de juiste advocaat.
+                    p
+                        a.btn.btn-lg.btn-primary(href='#', role='button') Sign up today
+            .item
+                img(src='../images/productReview02.jpg')
+                .carousel-caption
+                    h1 Advocaten reviews
+                    p
+                        | Op basis van reviews kunnen wij bepalen wat de beste prijs kwaliteit is welke past in jouw vraag.
+                    p
+                        a.btn.btn-lg.btn-primary(href='#', role='button') Learn more
+            .item
+                img(src='../images/Uurtarief02.jpg')
+                .carousel-caption
+                    h1 Uur tarieven
+                    p
+                        | Vind de advocaat welke past in jouw budget
+                    p
+                        a.btn.btn-lg.btn-primary(href='#', role='button') Browse gallery
+        a.left.carousel-control(href='#carousel-myCarousel', role='button', data-slide='prev')
+            span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
+            span.sr-only Previous
+        a.right.carousel-control(href='#carousel-myCarousel', role='button', data-slide='next')
+            span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
+            span.sr-only Next
+    // Marketing messaging and featurettes
+    // ==================================================
+    // Wrap the rest of the page in another container to center all the content.
+    .container.marketing
+        // Three columns of text below the carousel
+        .row
+            .col-lg-4
+                img.img-circle(src='../images/carousel2.jpg', alt='Generic placeholder image', width='140', height='140')
+                h2 Heading
+                p
+                    | Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.
+                p
+                    a.btn.btn-default(href='#', role='button') View details »
+            .col-lg-4
+                img.img-circle(src='../images/productReview.jpg', alt='Generic placeholder image', width='140', height='140')
+                h2 Heading
+                p
+                    | Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.
+                p
+                    a.btn.btn-default(href='#', role='button') View details »
+            .col-lg-4
+                img.img-circle(src='../images/Uurtarief02.png', alt='Generic placeholder image', width='140', height='140')
+                h2 Heading
+                p
+                    | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                p
+                    a.btn.btn-default(href='#', role='button') View details »
+        // START THE FEATURETTES
+        hr.featurette-divider
+        .row.featurette
+            .col-md-7
+                h2.featurette-heading
+                    | First featurette heading.
+                    span.text-muted It'll blow your mind.
+                p.lead
+                    | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
+            .col-md-5
+                img.featurette-image.img-responsive.center-block(src='../images/featurette1.jpg', alt='Generic placeholder image')
+        hr.featurette-divider
+        .row.featurette
+            .col-md-7.col-md-push-5
+                h2.featurette-heading
+                    | Oh yeah, it's that good.
+                    span.text-muted See for yourself.
+                p.lead
+                    | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
+            .col-md-5.col-md-pull-7
+                img.featurette-image.img-responsive.center-block(src='../images/featurette2.jpg', alt='Generic placeholder image')
+        hr.featurette-divider
+        .row.featurette
+            .col-md-7
+                h2.featurette-heading
+                    | And lastly, this one.
+                    span.text-muted Checkmate.
+                p.lead
+                    | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
+            .col-md-5
+                img.featurette-image.img-responsive.center-block(src='../images/featurette3.jpg', alt='Generic placeholder image')
+        hr.featurette-divider
+        // /END THE FEATURETTES
+        // FOOTER
+        footer
+            p.pull-right
+                a(href='#') Back to top
+            p
+                | © 2014 Company, Inc. ·
+                a(href='#') Privacy
+                |  ·
+                a(href='#') Terms
+

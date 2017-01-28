@@ -48,11 +48,12 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
   app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
- // app.get('/BusinessRules/Scrape',require('./views/BusinessRules/index').scrapeWebsite);
+   // app.get('/BusinessRules/Scrape',require('./views/BusinessRules/index').scrapeWebsite);
 
   //Dashboard routes
   app.get('/Dashboard/', require('./views/Dashboard/index').find);
   app.post('/Dashboard/findTweetPerNode',require('./views/Dashboard/graphActions').findTweetPerNode);
+  app.post('/Dashboard/filterNodesOnAantalTweets',require('./views/Dashboard/graphActions').filterNodesOnAantalTweets);
   //app.get('/Dashboard/setTweetsperCattegory', require('./views/Dashboard/index').setTweetsperCattegory);
 
 

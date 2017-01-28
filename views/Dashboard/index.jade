@@ -132,8 +132,25 @@ block body
 
 
             .col-md-8
-                #directedGraph(align="bottom" width=600 heigth=600)
-                    svg(width='600', height='600')
+                #aantalTweetsPerNode
+                    label Aantal tweets:
+                    input(type='text'  id='aantalTweets' maxlength="4" size="4")
+                    script.
+                        $("#aantalTweets").keypress(function (e) {
+                            if (e.which == 13) {
+                                var aantalTweets = $("#aantalTweets").val()
+                                $('#directedGraph').html('')
+                                $('#directedGraph').html('<svg width="700" height="600"> align="right"</svg>')
+
+                                filterGraphOnAantalTweets(aantalTweets,stgTweets)
+                            }
+                        });
+
+
+
+
+                #directedGraph(align="center" width=700 heigth=600)
+                    svg(width='700', height='600')
                     script.
                          plotSocialGrah(graphStructure,stgTweets)
 

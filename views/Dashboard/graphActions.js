@@ -3,6 +3,7 @@
 var async = require('async');
 var mongo = require('mongodb');
 var d3 = require('d3')
+var url = 'mongodb://localhost:27017/commevents'
 
 exports.findTweetPerNode = function(req, res, next) {
     console.info('findTweetPerNode:')
@@ -14,7 +15,7 @@ exports.findTweetPerNode = function(req, res, next) {
 
     console.info('--------------------------  START ASYNC ------------------------------------');
 
-    var url = 'mongodb://localhost:27017/commevents'
+
     mongo.connect(url, function (err, db) {
 
     var locals = {};
@@ -135,6 +136,90 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
     return outputTweets
 
 }
+exports.filterNodesOnAantalTweets = function(req, res, next) {
+    console.info('filterNodesOnAantalTweets: ' + req.body.aantalTweets)
+
+    if (req.body.aantalTweets)
+        var filterAantalNode = req.body.aantalTweets
+    else
+        var filterAantalNode = 0
+
+
+
+    var filter = 0
+    mongo.connect(url, function (err, db) {
+
+        var locals = {};
+
+        var tasks = [
+            // Load graph
+            function (callback) {
+                db.collection('graph').find({}).toArray(function (err, graph) {
+                    if (err) return callback(err);
+                    locals.graph = graph;
+                    callback();
+                });
+            }
+        ];
+        console.info('--------------- EINDE ASYNC ------------------------')
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var graph = locals.graph[0]
+            //console.info(graph[0].nodes)
+            var nodes = graph.nodes
+            var links = graph.links
+            var filterNodes = []
+            var filterLinks = []
+
+            if (filterAantalNode > 0 ){
+
+                nodes.forEach(function(node){
+                    if ((node.type == 'child' && node.aantal >= filterAantalNode) || node.type == 'master' || node.type == 'parent' ){
+                         filterNodes.push(node)
+                    }
+                })
+
+                filterNodes.forEach(function (node) {
+                    var linkSource
+                    links.forEach(function (link) {
+
+                        if ((link.type == 'master' || link.source.type == 'parent') || ( node.id == link.source && linkSource != link.source )){
+                            linkSource = link.source
+                            filterLinks.push(link)
+                        }
+                    })
+
+                })
+
+
+                // empty variable
+                graph = []
+                nodes = []
+                links = []
+
+                // initialize variable
+
+                nodes = filterNodes
+                links = filterLinks
+                graph.nodes = filterNodes
+                graph.links = filterLinks
+
+
+            }
+
+            //console.info(graph)
+
+            res.status(201).json({nodes:filterNodes, links: filterLinks})
+        })
+    })
+
+
+}
+
+
+
 
 
 

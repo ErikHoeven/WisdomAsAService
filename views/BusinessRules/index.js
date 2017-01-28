@@ -464,13 +464,14 @@ exports.create = function(req, res, next) {
                     db.close();
 
                     var stgGraph = []
-                    var max_tweet  =  1700    //locals.tweets.length
+                    var max_tweet  =  locals.tweets.length
                     var dmNodeGraph = []
                     var dmLinkGraph = []
                     var dmGraph = {}
                     var pFilterZNW = []
                     //var dmNodeChildCount = []
                     var dmLinkChildCount = []
+                    var invalidEntriesChild = 0
 
                     dbGraph.remove({})
                     //stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules, 0 ))
@@ -478,7 +479,6 @@ exports.create = function(req, res, next) {
                     // 1. Loopt throug tweets and tokenize text
                     for (var i = 0; i < max_tweet; i++ ){
                         stgGraph.push(tokenizeTekst(locals.tweets[i].text, locals.corpus, locals.businessrules, i))
-
                     }
 
                     // 2. Add Master and parents Node to dmNodeGraph
@@ -501,7 +501,7 @@ exports.create = function(req, res, next) {
 
                     // 3.B Group by Id and Value and count appereance
                     var groupByNode =  d3.nest()
-                        .key(function(d) { return d.id + '-' + d.group  + '-' + d.type + '-' + d.color})
+                        .key(function(d) { return d.id + '|' + d.group  + '|' + d.type + '|' + d.color})
                         .rollup(function(v) { return v.length; })
                         .entries(dmNodeGraph);
 
@@ -509,17 +509,20 @@ exports.create = function(req, res, next) {
                     // 3.C Clear origninal node structure
                     dmNodeGraph = []
 
+                    console.info(groupByNode)
+
                     // 3.D loop through Node and recreate Nodestructure
                     var index = 0
                     groupByNode.forEach(function (item) {
-
-                       var groupKeys = item.key.split('-')
+                       var groupKeys = item.key.split('|')
                        var id = groupKeys[0]
                        var group = groupKeys[1]
                        var type = groupKeys[2]
                        var color = groupKeys[3]
+                       var aantal = item.values
 
-                       dmNodeGraph.push({id: id, group: group, type: type, color: color})
+                        dmNodeGraph.push({id: id, group: group, type: type, color: color})
+                       //}
 
                     })
 
@@ -542,18 +545,15 @@ exports.create = function(req, res, next) {
                     }
 
                     // 4 Group and count the prevents
-
                     var groupByLink =  d3.nest()
-                        .key(function(d) { return d.source + '-' + d.target + '-' + d.value; })
+                        .key(function(d) { return d.source + '|' + d.target + '|' + d.value; })
                         .rollup(function(v) { return v.length; })
                         .entries(dmLinkChildCount);
 
                     var groupByParentLink =  d3.nest()
-                        .key(function(d) { return d.target + '-' + d.value; })
+                        .key(function(d) { return d.target + '|' + d.value; })
                         .rollup(function(v) { return v.length; })
                         .entries(dmLinkChildCount);
-
-
 
 
                     //5. Loop trough groupsets and set value to aantal
@@ -565,11 +565,11 @@ exports.create = function(req, res, next) {
                     for (var i = 0; i < dmNodeGraph.length; i++){
                         var id  = dmNodeGraph[i].id
                         var group = dmNodeGraph[i].group
-                        var value=0;
+                        var value = 0;
 
                         // 4.A.1.A Loop per Node through the grouped links
                         for (var gl = 0 ; gl < groupByLink.length ; gl++){
-                            var keys = groupByLink[gl].key.split('-');
+                            var keys = groupByLink[gl].key.split('|');
                             if (keys[0] == id && keys[2] == group){
                                 value = groupByLink[gl].values
                             }
@@ -584,7 +584,7 @@ exports.create = function(req, res, next) {
                         var value= dmNodeGraph[i].aantal
                          // 5.B.1 Loop per Node through the grouped links
                         for (var gl = 0 ; gl < groupByParentLink.length ; gl++){
-                            var keys = groupByParentLink[gl].key.split('-');
+                            var keys = groupByParentLink[gl].key.split('|');
                             if (keys[0] == id && keys[1] == group && dmNodeGraph[i].aantal == 0){
                                 value = groupByParentLink[gl].values
                             }
@@ -597,7 +597,7 @@ exports.create = function(req, res, next) {
                     var masterSet = []
 
                     groupByParentLink.forEach(function (group) {
-                        var keys = group.key.split('-')
+                        var keys = group.key.split('|')
                         var target = keys[1]
 
                         masterSet.push({target: target, value: group.values})
@@ -629,25 +629,15 @@ exports.create = function(req, res, next) {
 
                     dmGraph.nodes = dmNodeGraph
                     dmGraph.links = dmLinkGraph
-
-
-                    
                     
                     setTimeout(function () {
                         dbGraph.insert(dmGraph)
                     },10000)
 
-
-
-
-
                     console.info('--------------Group and count ----------------------')
                 })
 
-
             })
-
-
         }
 
         if(req.body.lstTypeBusinessRule != 'Dictionary'
@@ -936,14 +926,13 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
     var invalidEntries = 0
     var output
 
-    // A. Nodestructure based on the BusinessRules cattegories
+    // A. Nodestructure based on the BusinessRules cattegories (Master and Parent)
     for (var b = 0; b < businessrules.length; b++) {
         var patt = /[,!:@;.#]/g
         //MASTER
         jsonNodeStructure.push({id: businessrules[b].tagCattegory, group: b + 1, type: 'master', color: businessrules[b].cattegorycolor })
 
         // A.1 CattegorieValues in NodeStructure and LinkStructure
-        //console.info('id: ' +  businessrules[b].tagCattegory +   ' Length: ' + businessrules[b].cattegoryValue.length)
         var id =  businessrules[b].tagCattegory.toLowerCase().replace(patt,'')
         if (businessrules[b].cattegoryValue.length > 0){
 
@@ -960,6 +949,7 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
 
         }
     }
+    // CHILD DETERMINING --> TweetArray is the tokenized tweet text
 
     //B. vullen van matchZNW
     tweetArray.forEach(function (item) {
@@ -970,11 +960,8 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
     })
 
     //B.1 Filter ZNW
-    //console.info('FILTER ZNW')
     var filterZNW = matchZNW.filter(filterById)
 
-
-    //console.info(filterZNW)
 
     //C.1 Bepalen van aantal matchende groepen
     tweetArray.forEach(function (item) {
@@ -1003,7 +990,7 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
 
     //D CREER LINK STRUCTUUR
     filterZNW.forEach(function (item) {
-        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child', tweetID: tweetid, aantal:1})
+        jsonLinkStructure.push({source: item.id, target: parentGroupValue, value: parentGroup, type: 'child',  aantal:1})
     })
 
     // FILTEREN VAN TWEETS ZONDER CATTEGORIE
@@ -1015,6 +1002,15 @@ function tokenizeTekst(tweet, corpus, businessrules, tweetid) {
     function filterById(obj) {
         if ('id' in obj ) {
             return true
+
+            if (obj.id.length == 1 ){
+                return false
+            }
+
+            if (obj.id.length > 1 ){
+                return true
+            }
+
         }
         else {
             invalidEntries++
@@ -1073,3 +1069,12 @@ function wordInCattegory(word, cattegory ) {
     return output
 }
 
+function filterByChildNode(obj) {
+    if (obj.type == 'child' && obj.aantal >= 3) {
+        return true
+    }
+    else {
+        invalidEntriesChild++
+        return false
+    }
+}

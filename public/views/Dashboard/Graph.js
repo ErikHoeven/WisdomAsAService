@@ -5,18 +5,18 @@
 
 function plotSocialGrah(jsonGraph,Tweets){
 
-
-var graph = jsonGraph
-var nodes = graph.nodes
-var aantallen = []
-var filter = 0
+    console.info('jsonGraph:')
+    console.info(jsonGraph)
 
 
+    var graph = jsonGraph
+    var nodes = graph.nodes
+    var links = graph.links
+    var aantallen = []
 
-nodes.forEach(function (item) {
-    aantallen.push(item.aantal)
-})
-
+    nodes.forEach(function (item) {
+        aantallen.push(item.aantal)
+    })
 
 var invalidEntries = 0
 var svg = d3.select("svg"),
@@ -35,8 +35,7 @@ var svg = d3.select("svg"),
         .domain([0,d3.max(aantallen)])
         .range([0,18]);
 
-    var legendaNames =
-        graphStructure.nodes.filter(filterLegendaNames)
+    var legendaNames = nodes.filter(filterLegendaNames)
 
         var link = svg.append("g")
             .attr("class", "links")
@@ -149,7 +148,7 @@ var svg = d3.select("svg"),
     }
 
 function filterLegendaNames (obj) {
-    if ('type' in obj && obj.type == 'master'){
+    if ( obj.type == 'master'){
         return true
     }
     else {
@@ -196,6 +195,20 @@ function filterLegendaNames (obj) {
         }
         else {
             childInvalidEntries++
+            return false
+        }
+
+    }
+
+
+
+    var chilInvalidNode = 0
+    function  filterNodeChildStructure (node, filter){
+        if (node.type == 'child' && node.aantal >= filter) {
+            return true
+        }
+        else {
+            chilInvalidNode++
             return false
         }
 

@@ -358,7 +358,7 @@ function filterTweetsOnWord(filterSet ) {
         contentType: 'application/json',
         data: JSON.stringify(filterSet),
         success: function (response) {
-
+            console.info(response)
             addTweetsToSocialBoard(response)
         }
     });
@@ -394,5 +394,28 @@ function addTweetsToSocialBoard(tweets) {
 
     })
 }
+
+
+function filterGraphOnAantalTweets(AantalTweets, tweets) {
+
+    var filterSet = {aantalTweets : AantalTweets}
+    var graph = []
+
+    $.ajax({
+        url: '/Dashboard/filterNodesOnAantalTweets',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(filterSet),
+        success: function (response) {
+            plotSocialGrah(response,tweets)
+
+        }
+    });
+
+}
+
+
+
+
 
 
