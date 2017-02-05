@@ -41,6 +41,11 @@ exports = module.exports = function(app, passport) {
   app.get('/events/add', require('./views/events/index').add);
   app.post('/events/', require('./views/events/index').create);
 
+  //upload
+    app.get('/upload/', require('./views/upload/index').init);
+    app.post('/upload/', require('./views/upload/index').fileupload);
+    app.post('/upload/readFile', require('./views/upload/index').readFile);
+
   //BusinessRules routes
   app.get('/BusinessRules/', require('./views/BusinessRules/index').find);
   app.post('/BusinessRules/findApiData', require('./views/BusinessRules/index').findApiData);
@@ -48,6 +53,8 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
   app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
+  app.post('/BusinessRules/upload', require('./views/BusinessRules/uploadFile').uploadFile)
+
    // app.get('/BusinessRules/Scrape',require('./views/BusinessRules/index').scrapeWebsite);
 
   //Dashboard routes

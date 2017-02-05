@@ -9,237 +9,235 @@ block head
   script(src='../../views/jquery-2.2.3.min.js')
   script(src='../../views/jquery-ui.min.js')
   script(src='../../views/BusinessRules/colorpicker/jquery.colorpicker.js')
-  script(src='../../views/BusinessRules/Simulatie.js')
-  //Do an example pie
   script(src="../../views/Dashboard/pieChart.js")
   script(src='../../views/Dashboard/d3pie.js')
-
+  //script(src='../../views/BusinessRules/Simulatie.js')
   script.
-    var lstCatValues = [];
-    var lstParValues = [];
+      var lstCatValues = [];
+      var lstParValues = [];
 
-    $(document).ready(function(){
-      // (1) Start situation
-      $('#Kleurbepaler').hide();
-      $('#zoekwaarde').show();
-      $('#score').hide();
-      $('#Cattegorie').hide();
-      $('#CattegorieValue').hide();
-      $('#Simulatie').hide();
-      $('#Scraping').hide();
-      $('#KamervanKoophandel').hide();
-      $('#Dictionary').hide();
-      $('#txtWoord').hide();
-      $('#lstWoordvorm').hide()
-
-      console.info('document geladen');
-
-
-      // (2) listbox Change hide & show input fields
-      $('#lstTypeBusinessRule').change(function(){
-
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Cattegorie') {
-          $('#zoekwaarde').hide();
-          $('#score').hide();
-          $('#Cattegorie').show();
-          $('#Kleurbepaler').show();
-          $('#CattegorieValue').show();
-          $('#Simulatie').hide();
-          $('#Scraping').hide();
-          $('#KamervanKoophandel').hide();
-          $('#Dictionary').hide();
-
-
-        }
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Zoekwaarde') {
+      $(document).ready(function(){
+          // (1) Start situation
           $('#Kleurbepaler').hide();
           $('#zoekwaarde').show();
           $('#score').hide();
           $('#Cattegorie').hide();
           $('#CattegorieValue').hide();
           $('#Simulatie').hide();
-          $('#lstSimAantalFormulieren').hide();
           $('#Scraping').hide();
           $('#KamervanKoophandel').hide();
           $('#Dictionary').hide();
+          $('#txtWoord').hide();
+          $('#lstWoordvorm').hide()
 
-        }
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
-          $('#Kleurbepaler').hide();
-          $('#zoekwaarde').show();
-          $('#score').show();
-          $('#Cattegorie').hide();
-          $('#CattegorieValue').hide();
-          $('#Simulatie').hide();
-          $('#lstSimAantalFormulieren').hide();
-          $('#Scraping').hide();
-          $('#KamervanKoophandel').hide();
-          $('#Dictionary').hide();
-
-        }
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
-          $('#Kleurbepaler').hide();
-          $('#zoekwaarde').show();
-          $('#score').hide();
-          $('#Cattegorie').hide();
-          $('#CattegorieValue').hide();
-          $('#Simulatie').hide();
-          $('#lstSimAantalFormulieren').hide();
-          $('#Scraping').hide();
-          $('#KamervanKoophandel').hide();
-          $('#Dictionary').hide();
-
-        }
-
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Simulatie') {
-          $('#Kleurbepaler').hide();
-          $('#zoekwaarde').hide();
-          $('#score').hide();
-          $('#Cattegorie').hide();
-          $('#CattegorieValue').hide();
-          $('#Simulatie').show();
-          $('#Scraping').hide();
-          $('#KamervanKoophandel').hide();
-          $('#Dictionary').hide();
-          $('#Upload').hide();
-
-          var formFields = getSimFormFields()
-
-        }
-
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Kamer van Koophandel') {
-         $('#Kleurbepaler').hide();
-         $('#zoekwaarde').hide();
-         $('#score').hide();
-         $('#Cattegorie').hide();
-         $('#CattegorieValue').hide();
-         $('#Simulatie').hide();
-         $('#lstSimAantalFormulieren').hide();
-         $('#Scraping').hide();
-         $('#KamervanKoophandel').show();
-         $('#Dictionary').hide();
-         $('#Upload').hide();
-        }
-
-        if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
-          $('#Kleurbepaler').hide();
-          $('#zoekwaarde').hide();
-          $('#score').hide();
-          $('#Cattegorie').hide();
-          $('#CattegorieValue').hide();
-          $('#Simulatie').hide();
-          $('#lstSimAantalFormulieren').hide();
-          $('#Scraping').hide();
-          $('#KamervanKoophandel').hide();
-          $('#Dictionary').show();
-          $('#Upload').hide();
-        }
-
-        if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
-            $('#Kleurbepaler').hide();
-            $('#zoekwaarde').hide();
-            $('#score').hide();
-            $('#Cattegorie').hide();
-            $('#CattegorieValue').hide();
-            $('#Simulatie').hide();
-            $('#lstSimAantalFormulieren').hide();
-            $('#Scraping').hide();
-            $('#KamervanKoophandel').hide();
-            $('#Dictionary').hide();
-            $('#Upload').hide();
-        }
-
-          if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
-              $('#Kleurbepaler').hide();
-              $('#zoekwaarde').hide();
-              $('#score').hide();
-              $('#Cattegorie').hide();
-              $('#CattegorieValue').hide();
-              $('#Simulatie').hide();
-              $('#lstSimAantalFormulieren').hide();
-              $('#Scraping').hide();
-              $('#KamervanKoophandel').hide();
-              $('#Dictionary').hide();
-              $('#Upload').show();
-          }
-
-      });
-
-        $('#lstActie').change(function(){
-            if ($('#lstActie option:selected').text() == 'Zoeken') {
-                $('#txtWoord').hide();
-                $('#lstWoordvorm').hide()
-            }
-
-            if ($('#lstActie option:selected').text() == 'handmatig toevoegen') {
-                $('#txtWoord').show();
-                $('#lstWoordvorm').show();
-            }
-        })
+          console.info('document geladen');
 
 
-      // (3) Add value to array
-      $('#cmdAddCatValue').click(function(){
-        lstCatValues.push($('#CatValue' ).val());
-        $('#CatValue' ).val('');
+          // (2) listbox Change hide & show input fields
+          $('#lstTypeBusinessRule').change(function(){
+
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Cattegorie') {
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').show();
+                  $('#Kleurbepaler').show();
+                  $('#CattegorieValue').show();
+                  $('#Simulatie').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
 
 
-      //START TABLE
-        catValueHTML = '<p><table class="table table-sm"><th>Cattegorie waarde:</th>';
+              }
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Zoekwaarde') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').show();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
 
+              }
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').show();
+                  $('#score').show();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
 
-        for(var i = 0; i < lstCatValues.length; i++){
-          catValueHTML = catValueHTML + '<tr><td>'+ lstCatValues[i] +'</td></tr>'
-        }
+              }
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').show();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
 
-        catValueHTML = catValueHTML + '</tabel>'
+              }
 
-        //END TABLE
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Simulatie') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').show();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
+                  $('#Upload').hide();
 
-        //START HIDDEN FIELD
-        catValueHTML = catValueHTML + '<input type="hidden" id="catValue" name="catValue" value=' + JSON.stringify(lstCatValues) + '></input>'
+                  var formFields = getSimFormFields()
 
+              }
 
-          $('#catvaluelist').html(catValueHTML)
-      });
-      // (4)Clear array from step 3
-      $('#clearCatValue').click(function(){
-        lstCatValues = [];
-        $('#catvaluelist').html('');
-        $('#CatValue' ).val('');
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Kamer van Koophandel') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').show();
+                  $('#Dictionary').hide();
+                  $('#Upload').hide();
+              }
 
-      });
-      var teller = 0;
-      //
-      $('#kleur').focusout(function () {
-        teller = teller + 1;
-        console.info(teller)
-        if (teller == 1 ){
-          datasetvb = [];
-          datasetvb.push({
-              color: "#" + $(this).val()
-            , label: $('#txtTagCattegory').val()
-            , value: 50
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').show();
+                  $('#Upload').hide();
+              }
+
+              if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
+                  $('#Upload').hide();
+              }
+
+              if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
+                  $('#Upload').show();
+              }
+
           });
 
-          datasetvb.push({
-              color: "#333333"
-            , label: "Overige"
-            , value: 100
+          $('#lstActie').change(function(){
+              if ($('#lstActie option:selected').text() == 'Zoeken') {
+                  $('#txtWoord').hide();
+                  $('#lstWoordvorm').hide()
+              }
+
+              if ($('#lstActie option:selected').text() == 'handmatig toevoegen') {
+                  $('#txtWoord').show();
+                  $('#lstWoordvorm').show();
+              }
+          })
+
+
+          // (3) Add value to array
+          $('#cmdAddCatValue').click(function(){
+              lstCatValues.push($('#CatValue' ).val());
+              $('#CatValue' ).val('');
+
+
+              //START TABLE
+              catValueHTML = '<p><table class="table table-sm"><th>Cattegorie waarde:</th>';
+
+
+              for(var i = 0; i < lstCatValues.length; i++){
+                  catValueHTML = catValueHTML + '<tr><td>'+ lstCatValues[i] +'</td></tr>'
+              }
+
+              catValueHTML = catValueHTML + '</tabel>'
+
+              //END TABLE
+
+              //START HIDDEN FIELD
+              catValueHTML = catValueHTML + '<input type="hidden" id="catValue" name="catValue" value=' + JSON.stringify(lstCatValues) + '></input>'
+
+
+              $('#catvaluelist').html(catValueHTML)
           });
-          console.info(datasetvb);
-          buildPieChart('pieDemo', datasetvb, 'Voorbeeld', 250, 250);
-        }
+          // (4)Clear array from step 3
+          $('#clearCatValue').click(function(){
+              lstCatValues = [];
+              $('#catvaluelist').html('');
+              $('#CatValue' ).val('');
+
+          });
+          var teller = 0;
+          //
+          $('#kleur').focusout(function () {
+              teller = teller + 1;
+              console.info(teller)
+              if (teller == 1 ){
+                  datasetvb = [];
+                  datasetvb.push({
+                      color: "#" + $(this).val()
+                      , label: $('#txtTagCattegory').val()
+                      , value: 50
+                  });
+
+                  datasetvb.push({
+                      color: "#333333"
+                      , label: "Overige"
+                      , value: 100
+                  });
+                  console.info(datasetvb);
+                  buildPieChart('pieDemo', datasetvb, 'Voorbeeld', 250, 250);
+              }
+          });
+
+          $('#kleur').focusin(function () {
+              $('#pieDemo').html('');
+              teller = 0;
+          });
+
+
+
       });
-
-      $('#kleur').focusin(function () {
-         $('#pieDemo').html('');
-          teller = 0;
-      });
-
-
-
-    });
 block body
   form(method='post', action='/BusinessRules')
     div.row
@@ -291,26 +289,11 @@ block body
           label Kleur:
             input.form-control(type='text', value='0fa7c2' class='cp-websafe' name="kleur" id="kleur")
             script.
-              $(function () {
-                $('.cp-websafe').colorpicker({
-                  limit: 'websafe'
-                  });
-              });
-    div.form-group(id='Simulatie')
-      div.row
-          div.col-sm-6
-            label URL:
-            input.form-control(type='text', name="txtSimURL" id="txtSimURL")
-
-      div.row
-          div.col-sm-6
-            label Aantal formulieren:
-            select.form-control(name='lstSimAantalFormulieren' id="lstSimAantalFormulieren")
-              option 1
-              option 2
-              option 3
-              option 4
-
+                $(function () {
+                    $('.cp-websafe').colorpicker({
+                        limit: 'websafe'
+                    });
+                });
 
     div.form-group(id='KamervanKoophandel')
       div.row
@@ -337,27 +320,8 @@ block body
           label Woord
           input.form-control(type='text', name="txtWoord" id="txtWoord")
 
-
-    div.form-group(id='Dictionary')
-        div.row
-            div.col-sm-3
-              label.btn.btn-default.btn-file
-                | Browse
-                input.hidden(type='file')
-
-    script.
-            $(function () {
-              $('.cp-websafe').colorpicker({
-                limit: 'websafe'
-              });
-            });
-
-
-
     div.row
       div.col-sm-6
         div.form-group
           button.btn.btn-primary.btn-signup(type='submit' id='cmdToevoegenBusinessRules') Toevoegen aan rules
-
-
 

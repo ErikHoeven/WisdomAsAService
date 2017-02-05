@@ -349,14 +349,15 @@
 
 
 
-function filterTweetsOnWord(filterSet ) {
+function filterTweetsOnWord(filterSet, links ) {
     var outputTweets
-
+    console.info('START')
+    console.info({filterSet : filterSet, links : links})
     $.ajax({
         url: '/Dashboard/findTweetPerNode',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify(filterSet),
+        data: JSON.stringify({filterSet : filterSet, links : links}),
         success: function (response) {
             console.info(response)
             addTweetsToSocialBoard(response)
@@ -366,7 +367,7 @@ function filterTweetsOnWord(filterSet ) {
 
 
 function addTweetsToSocialBoard(tweets) {
-    console.info('START')
+
     $('#filteredTweets').html('')
     var formatTime = d3.timeFormat("%Y-%m-%d %H:%M:%S")
 

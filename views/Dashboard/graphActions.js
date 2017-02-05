@@ -7,9 +7,10 @@ var url = 'mongodb://localhost:27017/commevents'
 
 exports.findTweetPerNode = function(req, res, next) {
     console.info('findTweetPerNode:')
-    var cattegorie = req.body.cattegorie
-    var corpus = req.body.corpus
-    var type = req.body.type
+    var cattegorie = req.body.filterSet.cattegorie
+    var corpus = req.body.filterSet.corpus
+    var type = req.body.filterSet.type
+    var links = req.body.links
     var filterSet = {cattegorie: cattegorie, corpus: corpus, type: type}
     var locals = {}
 
@@ -18,46 +19,35 @@ exports.findTweetPerNode = function(req, res, next) {
 
     mongo.connect(url, function (err, db) {
 
-    var locals = {};
+        var locals = {};
 
-    var tasks = [
-        function (callback) {
-            db.collection('STG_LEADS_AUTOSCHADE').find({}).toArray(function (err, tweets) {
-                if (err) return callback(err);
-                locals.tweets = tweets;
-                callback();
-            });
-        },
-        // Load corpus
-        function (callback) {
-            db.collection('graph').find({}).toArray(function (err, links) {
-                if (err) return callback(err);
-                locals.links = links;
-                callback();
-            });
-        }
-    ];
-    console.info('--------------- EINDE ASYNC ------------------------')
+        var tasks = [
+            function (callback) {
+                db.collection('STG_LEADS_AUTOSCHADE').find({}).toArray(function (err, tweets) {
+                    if (err) return callback(err);
+                    locals.tweets = tweets;
+                    callback();
+                });
+           }
+        ]
 
-    async.parallel(tasks, function (err) {
-        if (err) return next(err);
-        db.close();
-        var tweets = locals.tweets
-        var links = locals.links[0].links
-        db.close()
+        console.info('--------------- EINDE ASYNC ------------------------')
 
-        var graphTweets = filterTweetsOnWord(tweets, filterSet, links)
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var tweets = locals.tweets
+            db.close()
 
-        res.status(201).json(graphTweets)
+            var graphTweets = filterTweetsOnWord(tweets, filterSet, links)
+
+            res.status(201).json(graphTweets)
 
 
 
-    })
+        })
     })
 }
-
-// Generik functions
-
 
 
 // -------------------------------------------------------------------------------------------------------------------------
@@ -71,6 +61,8 @@ exports.findTweetPerNode = function(req, res, next) {
 //   4. filter all tweets wich does not match on cattegory and word
 //---------------------------------------------------------------------------------------------------------------------------
 function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
+    console.info('filterTweetsOnWord')
+    //console.info(linkstructure)
     var outputTweets = []
         , isCorpusHit = 0
         , isCattegoryHit = 0
@@ -81,7 +73,6 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
         , cleanToken = ''
         , patt = /[,!:@;.#]/g
         , corpusExist = 0
-        , BreakException = {}
 
     // Loop throug all tweets and add only the text object to the array
     Tweets.forEach(function (tw) {
@@ -90,8 +81,6 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
         if (profile_banner_url = null || !profile_banner_url){
             var profile_banner_url = '/avatar.png'
         }
-
-
 
         tweetText.push({ id : tw.id,
                          text: tw.text,
@@ -114,7 +103,7 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
             token = tk
             cleanToken = token.replace(patt, '')
 
-            //Scenario: Child -> If the corpus is exist (only with child node)
+            //Scenario: Child -> If the corpus exist (only with child node)
             if (filterSet.corpus != null && cleanToken == filterSet.corpus ) {
                 var linkResult =  findLink(cleanToken,filterSet.corpus, linkstructure)
                 isCattegoryHit = linkResult.isCattegoryHit
@@ -134,8 +123,9 @@ function filterTweetsOnWord(Tweets, filterSet, linkstructure) {
     })
 
     return outputTweets
-
 }
+
+
 exports.filterNodesOnAantalTweets = function(req, res, next) {
     console.info('filterNodesOnAantalTweets: ' + req.body.aantalTweets)
 
@@ -224,16 +214,16 @@ exports.filterNodesOnAantalTweets = function(req, res, next) {
 
 
 function findLink (cleanToken, corpus, linkstructure ) {
-
+    var BreakException = {}
     // Look per token for the cattegory using the links and overwrite the cattegorie with the value of the attribute source of the link object
 
         var cattegorie
         try {
-            linkstructure.forEach(function (link) {
-                cattegorie = ""
-                if (link.source.id == cleanToken) {
-                    cattegorie = link.target.id
-                    throw BreakException
+                linkstructure.forEach(function (link) {
+                    cattegorie = ""
+                    if (link.source.id == cleanToken) {
+                        cattegorie = link.target.id
+                        throw BreakException
                 }
             })
         }

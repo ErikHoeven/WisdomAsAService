@@ -58,13 +58,13 @@ var svg = d3.select("svg"),
                 showPopover.call(this, d); })
             .on("mouseout",  function (d) { removePopovers(); })
             .on("click", function (d) {   if (d.type == 'child'){
-                                                filter = filterTweetsOnWord({cattegorie: d.group, corpus: d.id, type: d.type})
+                                                filter = filterTweetsOnWord({cattegorie: d.group, corpus: d.id, type: d.type}, jsonGraph.links)
                                             }
                                             if (d.type == 'parent'){
-                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type, group: d.group  })
+                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type, group: d.group  }, jsonGraph.links)
                                             }
                                             if (d.type == 'master') {
-                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type})
+                                                filter = filterTweetsOnWord({cattegorie: d.id, corpus: null, type: d.type}, jsonGraph.links)
                                             }})
             .call(d3.drag()
                 .on("start", dragstarted)

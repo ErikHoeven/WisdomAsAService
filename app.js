@@ -9,9 +9,22 @@ var config = require('./config'),
     mongoStore = require('connect-mongo')(session),
     http = require('http'),
     path = require('path'),
+    multer  =   require('multer'),
     passport = require('passport'),
     mongoose = require('mongoose'),
     helmet = require('helmet');
+
+
+var storage =   multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './uploads');
+    },
+    filename: function (req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now());
+    }
+});
+
+var upload = multer({ storage : storage}).single('userPhoto');
 
  //   csrf = require('csurf');
 

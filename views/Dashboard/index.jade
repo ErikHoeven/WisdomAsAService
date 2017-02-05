@@ -56,7 +56,7 @@ block body
     .container-fluid
         .row(id="Header")
             .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                h1(align="Left").page-header Social Dashboard
+                h1(align="Left").page-header Tweet subjects about Telecom
         //.row(id="Navigatie")
         //    .col-md-4
         //    .col-md-4
@@ -133,8 +133,8 @@ block body
 
             .col-md-8
                 #aantalTweetsPerNode
-                    label Aantal tweets:
-                    input(type='text'  id='aantalTweets' maxlength="4" size="4")
+                    label min tweets per subject:
+                    input(type='text'  id='aantalTweets' maxlength="2" size="2")
                     script.
                         $("#aantalTweets").keypress(function (e) {
                             if (e.which == 13) {

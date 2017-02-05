@@ -83,6 +83,7 @@ exports.create = function(req, res, next) {
 
     workflow.on('validate', function() {
         console.log('START POST(1) IF FORM CHECK: ');
+        console.info(req.body.lstTypeBusinessRule)
         if (!req.body.lstTypeBusinessRule) {
             workflow.outcome.errors.push('Please enter a TypeBusinessRule.');
             console.log('TypeBusinessRule niet gevuld');
@@ -92,7 +93,16 @@ exports.create = function(req, res, next) {
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
             workflow.emit('createLookupValue');
         }
-        if(req.body.lstTypeBusinessRule == 'Cattegorie' || req.body.lstTypeBusinessRule == 'Google zoekwaarde' || req.body.lstTypeBusinessRule == 'Scrape Strategy' || req.body.lstTypeBusinessRule == 'Kamer van Koophandel' || req.body.lstTypeBusinessRule == 'Dictionary' || req.body.lstTypeBusinessRule == 'BuildGraph'){
+        if(req.body.lstTypeBusinessRule == 'Cattegorie' ||
+           req.body.lstTypeBusinessRule == 'Google zoekwaarde' ||
+           req.body.lstTypeBusinessRule == 'Scrape Strategy' ||
+           req.body.lstTypeBusinessRule == 'Kamer van Koophandel' ||
+           req.body.lstTypeBusinessRule == 'Dictionary' ||
+           req.body.lstTypeBusinessRule == 'BuildGraph' ||
+           req.body.lstTypeBusinessRule == 'Upload'
+
+        )
+        {
             console.log('createCattegorie -- Google Zoekwaarde or Scrape Strategy');
             workflow.emit('createCattegorie');
         }
@@ -640,10 +650,20 @@ exports.create = function(req, res, next) {
             })
         }
 
+        //Upload file
+        if(req.body.lstTypeBusinessRule == 'Upload'){
+            console.info('Upload!!!')
+            var router = express.Router()
+
+        }
+
+
         if(req.body.lstTypeBusinessRule != 'Dictionary'
             && req.body.lstTypeBusinessRule != 'BuildGraph'
             && req.body.lstTypeBusinessRule != 'Kamer van Koophandel'
-            && req.body.lstTypeBusinessRule != 'Google zoekwaarde') {
+            && req.body.lstTypeBusinessRule != 'Google zoekwaarde'
+            && req.body.lstTypeBusinessRule != 'Upload'
+        ) {
             console.info('Else Push:');
             console.info(req.body.catValue);
 
