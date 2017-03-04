@@ -53,7 +53,7 @@ block body
                         $('input[name="chb_FileName"]:checked').each(function () {
                             selectedFiles.push(this.value);
                         });
-                        console.info(selectedFiles)
+                        //console.info(selectedFiles)
 
                         $.ajax({
                             url: '/upload/readFile',
@@ -61,6 +61,7 @@ block body
                             contentType: 'application/json',
                             data: JSON.stringify({selectedFiles: selectedFiles} ),
                             success: function (response) {
+                            //console.info(response)
                             readFile = searchData(readFile, response)
                             }
                         });
@@ -68,6 +69,8 @@ block body
 
                     })
         .row
-            #displayReadedDataSectie
+            #displayReadedDataSection
+        .row
+            #translate
 
 

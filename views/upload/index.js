@@ -28,7 +28,11 @@ var multer  =   require('multer'),
      br = db.get('businessrules'),
      url = 'mongodb://localhost:27017/commevents',
      translate = require('translate'),
-     sys = require('sys');
+     sys = require('sys'),
+     db = require('monk')('localhost/commevents'),
+     csvdb = db.get('csv'),
+     businessRules = db.get('businessrules');
+
 
 
 // START PROGRAM
@@ -75,29 +79,9 @@ exports.fileupload = function (req, res, next){
 exports.readFile =  function (req, res, next) {
     console.info('readFile:')
     var files = req.body.selectedFiles
-    var locals = {};
-    var businessrules = []
-    var scoreWoorden = []
+        , score = []
+    csvdb.remove({})
 
-    mongo.connect(url, function (err, db) {
-
-
-        var tasks = [   // Load tweets
-            // Load business rules
-            function (callback) {
-                db.collection('businessrules').find({ typeBusinessRule: "score"}).toArray(function (err, businessrules) {
-                    if (err) return callback(err);
-                    locals.businessrules = businessrules;
-                    callback();
-                });
-            }
-
-        ];
-        console.info('--------------- EINDE ASYNC ------------------------')
-        async.parallel(tasks, function (err) {
-            if (err) return next(err);
-            db.close();
-            businessrules = locals.businessrules
 
             fs.createReadStream('./uploads/' + files[0])
                 .pipe(csv())
@@ -106,22 +90,209 @@ exports.readFile =  function (req, res, next) {
                     var scoreword = data[0].replace('\t','')
                     scoreword = scoreword.replace(new RegExp("[0-9]"),'')
                     scoreword = scoreword.replace('-','')
-                    scoreWoorden.push(scoreword)
+
+                    var scoreNumbers = data[0].split("\t")
+                    score.push({scoreword: scoreword, scoreNumber: scoreNumbers[1], files: files})
+                    csvdb.insert({scoreword: scoreword, scoreNumber: scoreNumbers[1] })
                 })
                 .on('end', function (data) {
                     console.log('Finsish reading')
-                    console.info(scoreWoorden)
-                    res.status(201).json(scoreWoorden)
+                    //console.info(score)
+                    res.status(201).json(score)
                 })
-            console.info(scoreWoorden)
+}
+
+
+
+exports.tranlateWords =  function (req, res, next) {
+    console.info('-----------------------  tranlateWords ---------------------------------------')
+    var selectedText = req.body.selectedText
+        , file = req.body.files
+        , locals = {}
+        , businessrules = []
+        , scoreWoorden = []
+        , searchWords = []
+        //, lstWoorden = req.body.lstWoorden
+        , restult = []
+    console.info(selectedText)
+
+
+
+    mongo.connect(url, function (err, db) {
+
+
+        var tasks = [
+            // Load business rules
+            function (callback) {
+                db.collection('businessrules').find({typeBusinessRule: "score"}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                })
+            },
+           // Load CSV from table
+            function (callback) {
+                db.collection('csv').find({}).toArray(function (err, csv) {
+                    if (err) return callback(err);
+                    locals.csv = csv;
+                    callback();
+                });
+            },
+        ];
+        console.info('--------------- EINDE ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            businessrules = locals.businessrules
+            console.info(businessrules)
+            console.info('CSV')
+            //console.info(locals.csv)
+            searchWords = translateSearchResult(selectedText, locals.csv)
+            console.info('searchWords:')
+            //console.info(searchWords)
+            restult = matchWordWithBusinessRules(searchWords,businessrules)
+            console.info('-------------start restult:------------------')
+            console.info(restult)
+            console.info('-------------einde restult:------------------')
+            res.status(201).json(restult)
 
         })
     })
+
+
+    function translateSearchResult(searchWord, lstSearchWord) {
+        var relativePosition, setPosition, set, searchWords = [], selectedPosition, isPlusOne = 0, i = 0
+        console.info(searchWord)
+
+
+        for (var i = 0; i < lstSearchWord.length; i++) {
+            if (lstSearchWord[i].scoreword == searchWord) {
+                relativePosition = i
+            }
+        }
+
+
+        set = Math.floor((relativePosition / 3))
+        if (set == 0) {
+            set = 1
+            isPlusOne = 1
+        }
+
+
+        console.info('relativePosition: ' + relativePosition)
+        console.info('set: ' + set)
+
+        if (set == 1 && isPlusOne == 1) {
+            setPosition = relativePosition
+        }
+
+        if (set > 1 || set == 1 && isPlusOne == 0) {
+            // relativePosition = 13, set = 3 , 13 - 12 = 1 -> setPosition
+            setPosition = relativePosition - (set * 3)
+        }
+
+        console.info('setPosition: ' + setPosition)
+        if (setPosition == 0) {
+            selectedPosition = [relativePosition, relativePosition + 1, relativePosition + 2]
+        }
+
+        if (setPosition == 1) {
+            selectedPosition = [relativePosition - 1, relativePosition, relativePosition + 1]
+        }
+
+        if (setPosition == 2) {
+            selectedPosition = [relativePosition - 2, relativePosition - 1, relativePosition]
+        }
+
+        selectedPosition.forEach(function (pos) {
+            searchWords.push(lstSearchWord[pos])
+        })
+
+        return searchWords
+    }
+
+    function matchWordWithBusinessRules(searchWords, BusinessRules) {
+           var  ruleResult = []
+               ,br = {}
+               ,foundWord = 0
+               ,previousWord = ''
+
+        console.info(searchWords)
+
+
+        if (BusinessRules.length > 0){
+            console.info('-------  br exist !! -----')
+            searchWords.forEach(function (word) {
+                foundWord = 0
+                br = {}
+                BusinessRules.forEach(function (rule) {
+
+                    if (rule.lookupValue == word.scoreword){
+                        console.info(rule.lookupValue + ' ==  ' + word.scoreword)
+                         foundWord = 1
+                         br.typeBusinessRule = rule.typeBusinessRule
+                         br.ScoreWord = rule.lookupValue
+                         br.score = rule.tagScore
+                         br.translation = rule.tranlatedWord
+                         br.IsUpdated = 1
+                     }
+
+                     if (rule.lookupValue != word.scoreword && foundWord == 0 ) {
+                         console.info(word.scoreword + ' not found')
+
+                         br.typeBusinessRule = 'score'
+                         br.ScoreWord = word.scoreword
+                         br.score = word.scoreNumber
+                         br.translation = ''
+                         br.IsUpdated = 0
+                         foundWord = 1
+                     }
+                })
+                if (foundWord == 1 ){
+                    ruleResult.push(br)
+                    previousWord = word.scoreword
+                    foundWord = 0
+                }
+             })
+        }
+        else {
+            console.info('ELSE ...')
+            console.info(searchWords)
+            searchWords.forEach(function (word) {
+                console.info(word + ' not found')
+                br = {}
+
+                br.typeBusinessRule = 'score'
+                br.ScoreWord = word.scoreword
+                br.score = word.scoreNumber
+                br.translation = ''
+                br.IsTranslated = 0
+
+                console.info(br)
+                ruleResult.push(br)
+            })
+
+
+        }
+
+        return ruleResult
+    }
+
 }
+exports.saveTranlateWords =  function (req, res, next) {
+    console.info('saveTranlateWords')
+    var scores = req.body.updateValue
+    console.info(scores)
+    scores.forEach(function (sc) {
+      if (sc.IsAlreadyTranslated == 0){
+          businessRules.insert({ typeBusinessRule: 'score'
+                                ,lookupValue: sc.lookupWord
+                                ,tranlatedWord: sc.TranlatedWord
+                                ,tagScore: sc.score  })
+      }
 
+    })
 
-
-function scoreWoordenLijst(scoreWoord) {
-
+    //businessRules.insert({})
+    res.status(201).json('saveTranlateWords')
 }
-

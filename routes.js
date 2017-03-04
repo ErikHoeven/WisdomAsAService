@@ -45,6 +45,9 @@ exports = module.exports = function(app, passport) {
     app.get('/upload/', require('./views/upload/index').init);
     app.post('/upload/', require('./views/upload/index').fileupload);
     app.post('/upload/readFile', require('./views/upload/index').readFile);
+    app.post('/upload/tranlateWords', require('./views/upload/index').tranlateWords);
+    app.post('/upload/saveTranlateWords', require('./views/upload/index').saveTranlateWords);
+
 
   //BusinessRules routes
   app.get('/BusinessRules/', require('./views/BusinessRules/index').find);
