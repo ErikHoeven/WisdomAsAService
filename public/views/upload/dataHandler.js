@@ -80,7 +80,7 @@ function translateSearchResult(searchWords){
 
                 translatedValue.push({lookupWord: searchWords[i].ScoreWord
                                     , TranlatedWord: this.value
-                                    , IsAlreadyTranslated: searchWords[i].IsTranslated
+                                    , IsAlreadyTranslated: searchWords[i].IsTranslated||0
                                     , score: searchWords[i].score
                                     })
                 i++

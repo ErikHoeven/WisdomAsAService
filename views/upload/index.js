@@ -266,7 +266,7 @@ exports.tranlateWords =  function (req, res, next) {
                 br.ScoreWord = word.scoreword
                 br.score = word.scoreNumber
                 br.translation = ''
-                br.IsTranslated = 0
+                br.IsUpdated = 0
 
                 console.info(br)
                 ruleResult.push(br)
