@@ -293,7 +293,6 @@ exports.create = function(req, res, next) {
                                     voltooiddeelwoord: '',
                                     typeWoord: '',
                                     zelfstandignaamwoord: '',
-                                    volgLetter: '',
                                     URL: insURL
                                 };
 

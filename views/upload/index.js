@@ -29,7 +29,6 @@ var multer  =   require('multer'),
      url = 'mongodb://localhost:27017/commevents',
      translate = require('translate'),
      sys = require('sys'),
-     db = require('monk')('localhost/commevents'),
      csvdb = db.get('csv'),
      businessRules = db.get('businessrules');
 
@@ -119,8 +118,6 @@ exports.tranlateWords =  function (req, res, next) {
 
 
     mongo.connect(url, function (err, db) {
-
-
         var tasks = [
             // Load business rules
             function (callback) {

@@ -48,6 +48,10 @@ exports = module.exports = function(app, passport) {
     app.post('/upload/tranlateWords', require('./views/upload/index').tranlateWords);
     app.post('/upload/saveTranlateWords', require('./views/upload/index').saveTranlateWords);
 
+  //Sentiment
+    app.post('/BusinessRules/sentiment', require('./views/BusinessRules/sentiment').saveBijvoegelijkeNaamwoorden);
+
+
 
   //BusinessRules routes
   app.get('/BusinessRules/', require('./views/BusinessRules/index').find);
@@ -57,6 +61,8 @@ exports = module.exports = function(app, passport) {
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
   app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
   app.post('/BusinessRules/upload', require('./views/BusinessRules/uploadFile').uploadFile)
+
+
 
    // app.get('/BusinessRules/Scrape',require('./views/BusinessRules/index').scrapeWebsite);
 

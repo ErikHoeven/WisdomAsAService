@@ -102,37 +102,6 @@ block body
                                     th _id
                             tbody
                        script.
-
-                           $('#tblBusinessRules').dynatable({
-                               dataset: {
-                                    records: jsonMyCurrentRecord
-                               }});
-
-                           $('.dynatable-search').keypress(function(e){
-                                if (e.which == 13){
-                                    location.reload();
-                                }
-                           });
-
-                           $('td').on({ dblclick: function () {
-
-                               isLocked = isLocked + 1;
-                               console.info(isLocked);
-                               if (isLocked == 1) {
-                                   console.info("Edit td");
-                                   txtCurrentValue = $(this).text();
-                                   id = $(this).closest('tr').find('td:last').text();
-                                   $th = $('table thead tr th').eq($(this).index()).text();
-                                   $(this).replaceWith('<input type="text"  class="form-control"  id=" ' + id + ' " value=" ' + txtCurrentValue + ' " onkeypress="getNewValue($(this).val(),event)" />');
-
-                               }
-                               $(".form-control").focusout(function () {
-                                   $(this).replaceWith('<td>' + txtCurrentValue + '</td>');
-                                   isLocked = 0;
-                                   location.reload();
-                               });
-                           }});
-
                            $(document).ready(function(){
                                setTdColor();
                            });
@@ -150,6 +119,21 @@ block body
 
         p
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
+        p
+            button.btn.btn-primary(type='button' id='sentiment') add Sentiment
+            script.
+                $('#sentiment').click(function () {
+                    $.ajax({
+                        url: '/BusinessRules/sentiment',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({message: 'Maak sentiment'}),
+                        success: function (response) {
+                            console.info(response)
+                            //translateSearchResult(response)
+                        }
+                    });
+                })
 
 
 
