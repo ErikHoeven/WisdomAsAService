@@ -333,7 +333,7 @@ exports.create = function(req, res, next) {
                                         werkwoordInVerledentijd: '',
                                         voltooiddeelwoord: '',
                                         typeWoord: 'ZelfstandNaamWoord',
-                                        zelfstandignaamwoord: zelfstandNaamWoord,
+                                        woord: zelfstandNaamWoord,
                                         volgLetter: zelfstandNaamWoord.substring(0, 1),
                                         URL: znwURL
                                     };
@@ -367,8 +367,7 @@ exports.create = function(req, res, next) {
                         werkwoordInVerledentijd: '',
                         voltooiddeelwoord: '',
                         typeWoord: 'ZelfstandNaamWoord',
-                        zelfstandignaamwoord: txtWoord,
-                        bijvoegelijknaamwoord: '',
+                        woord: txtWoord,
                         volgLetter: txtWoord.substring(0, 1),
                         URL: 'handmatig'
                     }
@@ -379,9 +378,8 @@ exports.create = function(req, res, next) {
                         volledigWerkwoord: '',
                         werkwoordInVerledentijd: '',
                         voltooiddeelwoord: '',
-                        typeWoord: 'BijvoegelijkNaamWoord',
-                        zelfstandignaamwoord: '',
-                        bijvoegelijknaamwoord: txtWoord,
+                        typeWoord: 'Bijvoegelijknaamwoord',
+                        woord: txtWoord,
                         volgLetter: txtWoord.substring(0, 1),
                         URL: 'handmatig'
                     }
@@ -393,9 +391,8 @@ exports.create = function(req, res, next) {
                         werkwoordInVerledentijd: '',
                         voltooiddeelwoord: '',
                         typeWoord: 'Volledig werkwoord',
-                        zelfstandignaamwoord: '',
-                        bijvoegelijknaamwoord: '',
                         volgLetter: txtWoord.substring(0, 1),
+                        woord: '',
                         URL: 'handmatig'
                     }
                 }
@@ -406,8 +403,7 @@ exports.create = function(req, res, next) {
                         werkwoordInVerledentijd: txtWoord,
                         voltooiddeelwoord: '',
                         typeWoord: 'Verledentijd',
-                        zelfstandignaamwoord: '',
-                        bijvoegelijknaamwoord: '',
+                        woord: '',
                         volgLetter: txtWoord.substring(0, 1),
                         URL: 'handmatig'
                     }
@@ -419,8 +415,7 @@ exports.create = function(req, res, next) {
                         werkwoordInVerledentijd: txtWoord,
                         voltooiddeelwoord: '',
                         typeWoord: 'VoltooidDeelWoord',
-                        zelfstandignaamwoord: '',
-                        bijvoegelijknaamwoord: '',
+                        woord: '',
                         volgLetter: txtWoord.substring(0, 1),
                         URL: 'handmatig'
                     }
@@ -1066,9 +1061,8 @@ function wordInCorpus(word,corpus) {
     var output = {}
 
     corpus.forEach(function (item){
-        if(word.toLowerCase().replace('@','') == item.zelfstandignaamwoord.toLowerCase()){
-            //console.info(word + ' == ' + item.zelfstandignaamwoord)
-            output = { id: item.zelfstandignaamwoord}
+        if(word.toLowerCase().replace('@','') == item.woord.toLowerCase()){
+            output = { id: item.woord}
 
         }
     })
