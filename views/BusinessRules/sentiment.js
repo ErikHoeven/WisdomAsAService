@@ -7,15 +7,19 @@ var cheerio = require("cheerio")
     ,async = require('async')
     ,mongo = require('mongodb')
     ,db = require('monk')('localhost/commevents')
+    ,dbm = require('mongodb').MongoClient
     ,companies =  db.get('companyresults')
     ,corpus = db.get('corpus')
     ,url = db.get('url')
-    ,d3 = require('d3');
+    ,d3 = require('d3')
+    ,score = db.get('businessrules')
+    ,tmp = db.get('tmp')
 
 
 exports.saveBijvoegelijkeNaamwoorden = function (req, res, next) {
     console.info('saveBijvoegelijkeNaamwoorden')
-    var result = {}, dbUrl = [], dbCorpus = [], dbTweets = [], test = 'mongodb://localhost:27017/commevents', message = [], token = [], lstBvnToken = [], lstBvN =[]
+    tmp.remove({})
+    var result = {}, dbUrl = [], dbCorpus = [], dbTweets = [], test = 'mongodb://localhost:27017/commevents', message = [], token = [], lstBvnToken = [], lstBvN = [], scoreResultaten = []
 
     mongo.connect(test, function (err, db) {
         console.info('MONGODB START CHECK COLLECTIONS')
@@ -23,13 +27,13 @@ exports.saveBijvoegelijkeNaamwoorden = function (req, res, next) {
         var tasks = [
             // Load corpus
             function (callback) {
-                db.collection('corpus').find({typeWoord:'Bijvoegelijknaamwoord'}).toArray(function (err, corpus) {
+                db.collection('corpus').find({typeWoord: 'Bijvoegelijknaamwoord'}).toArray(function (err, corpus) {
                     if (err) return callback(err);
                     locals.corpus = corpus;
                     callback();
                 })
             },
-             // Load Tweets from table
+            // Load Tweets from table
             function (callback) {
                 db.collection('STG_LEADS_AUTOSCHADE').find({}).toArray(function (err, tweets) {
                     if (err) return callback(err);
@@ -52,26 +56,49 @@ exports.saveBijvoegelijkeNaamwoorden = function (req, res, next) {
             if (dbCorpus.length > 0) {
                 console.info('Bijvoegelijknaamwoord aanwezig')
                 var i = 0, totaalSentimentWoorden = []
-                //token = tokenizeTekst(dbTweets[529].text)
-                //lstBvnToken = searchBijvoegelijknaamwoordInToken(token, dbCorpus)
-                //console.info(dbTweets[529].text)
-                //console.info(lstBvnToken)
-                dbTweets.forEach(function (tweet) {
-                    token = tokenizeTekst(tweet.text)
+                // A.1 Loop door de tweets heen en Tokenize de tweets (Van zinnen losse woorden in een tabel)
+                //dbTweets.length
+                for (var i = 0 ; i <  1000; i++) {
+                    //console.info(dbTweets[i].text)
+                    token = tokenizeTekst(dbTweets[i].text)
+
+
+                    //A.1.1 Per Token de Bijvoegelijknaamwoord zoeken in de corpus.
                     lstBvnToken = searchBijvoegelijknaamwoordInToken(token, dbCorpus)
-                    if (lstBvnToken.length > 0){
+                    if (lstBvnToken.length > 0) {
                         //console.info({nr: i ,lstBvnToken: lstBvnToken})
 
                         lstBvnToken.forEach(function (woord) {
-                            totaalSentimentWoorden.push({woord:woord})
+                            totaalSentimentWoorden.push({woord: woord})
                         })
                     }
 
                     i++
+                }
+                // A.2 Toon het totaal aan bijvoegelijknaamwoorden welke gevonden zijn in de Tweets
+                //console.info(totaalSentimentWoorden)
+                var wordCount = d3.nest()
+                    .key(function (d) {
+                        return d.woord;
+                    })
+                    .rollup(function (v) {
+                        return v.length;
+                    })
+                    .entries(totaalSentimentWoorden)
+
+                console.info(wordCount)
+                var scoreResultaten = [], fieldToSet = {}, insert = 0
+
+                wordCount.forEach(function (word) {
+                    fieldToSet = {}
+                    if(word.values > 1 ){
+                        fieldToSet.woord = word.key
+                        fieldToSet.score = ''
+
+                        tmp.insert(fieldToSet)
+                    }
+
                 })
-                console.info(totaalSentimentWoorden)
-
-
 
             }
 
@@ -107,16 +134,45 @@ exports.saveBijvoegelijkeNaamwoorden = function (req, res, next) {
                         url.find({}).then((u) => {
                             u.forEach(function (s) {
                             insertWordsToCorpus(s.URL)
-                            })
                         })
-
+                    })
                     }
                 })
             }
         })
-    })
-}
 
+
+    })
+    setTimeout(function () {
+        console.info('TEMP')
+
+        mongo.connect(test, function (err, db) {
+            console.info('MONGODB START CHECK COLLECTIONS')
+            var locals = {}
+            var tmp = []
+            var tasks = [
+                // Load corpus
+                function (callback) {
+                    db.collection('tmp').find({}).toArray(function (err, tmp) {
+                        if (err) return callback(err);
+                        locals.tmp = tmp;
+                        callback();
+                    })
+                }]
+            async.parallel(tasks, function (err) {
+                if (err) return next(err);
+                db.close();
+                tmp = locals.tmp
+                console.info('Read tmp')
+                console.info('tmp: ' + tmp.length)
+                console.info(tmp)
+                res.status(200).json(tmp)
+
+            })
+        })
+
+    }, 3000)
+}
 
 function insertWordsToCorpus(url){
         //console.info('insertWordsToCorpus:' + url)
@@ -181,11 +237,15 @@ function tokenizeTekst(tweet, tweetid) {
         var patt1 = /[,!:]/g
         item.replace(patt1,'')
 
-
     })
 
     return tweetArray
 }
+
+
+
+
+
 
 
 
