@@ -5,106 +5,24 @@ block head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     script(src="../../views/BusinessRules/dataHandler.js")
-    script.
-
-        myCurentRecords   =[];
-        myUpdatedRecoreds =[];
-        Counter = 1 ;
-        var txtCurrentValue;
-        var newValue = {};
-        var id;
-        var $th;
-        var isLocked = 0;
-
-        String.prototype.ltrim = function () {
-            return this.replace(/^\s+/,"");}
-
-
-            function getNewValue(t, e) {
-                if (e.keyCode == 13) {
-                    newValue = '{"_id": "' + id + '","' + $th + '": "' + t.ltrim() + '"}';
-                    var jsonNewValue = {}
-                    jsonNewValue = JSON.parse(newValue);
-                    jsonNewValue.updateField = $th;
-                    jsonNewValue.updateValue = t.ltrim();
-
-                    $.ajax({
-                        url: '/BusinessRules/findApiData',
-                        type: 'POST',
-                        contentType: 'application/json',
-                        data: JSON.stringify(jsonNewValue)
-                    });
-                }
-            }
-            function setTdColor(){
-
-                for (var i = 1; i < jsonMyCurrentRecord.length + 1; i++) {
-
-                    var val1 = $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').text();
-                    //console.info(i + ' : ' + val1);
-                    if (val1) {
-                        console.info(val1);
-                        $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').css('background-color', '#' + val1);
-                        $("#tblBusinessRules").find('tr:eq(' + i + ') td:eq(3)').text('');
-                    }
-
-                }
-
-            }
-
+    script(src="../../views/BusinessRules/buildSentimentTrainingSet.js")
+    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
 
 block body
-    div(id="setMyCurrentRecords")
-        each BusinessRule, i in data
-            script.
-
-                if (Counter < #{data.length}) {
-                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}","kleur": "#{BusinessRule.cattegorycolor}","_id": "#{BusinessRule._id}"},');
-                }
-                else {
-                    myCurentRecords.push('{"opzoekwaarde": "#{BusinessRule.lookupValue}", "cattegorie": "#{BusinessRule.tagCattegory}", "typeBusinessRule": "#{BusinessRule.typeBusinessRule}","kleur": "#{BusinessRule.cattegorycolor}","_id": "#{BusinessRule._id}"}');
-                }
-                Counter++
-
-    div(id="getMyCurrentReccords")
-        script.
-            var strMyCurrentRecord = "";
-            for (i = 0; i < #{data.length};i++) {
-                strMyCurrentRecord = strMyCurrentRecord + myCurentRecords[i];
-            }
-            var jsonMyCurrentRecord = JSON.parse('[' +strMyCurrentRecord + ']');
-
-    .container-fluid
-        .row
-            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                h1.page-header BusinessRules
-        .row
-            br
-            br
-            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                form(method='post', action='/BusinessRules')
-                    .table-responsive
-                       script.
-                           $(document).ready(function(){
-                               setTdColor();
-                           });
-                           $("a").click(function(){
-                               console.info('click');
-                               console.info($('#tblBusinessRules >tbody >tr').length);
-                               console.info($("#tblBusinessRules").find('tr:eq(1) td:eq(1)').text());
-                               });
-
-
-
-
-
-
-        p
+    .row
+        .col-lg-10
+            h1 BusinessRules
+    .row
+        .col-sm-4
+            #tblBusinessrules
+    .row(id= 'buttens')
+        .col-sm-4
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
-        p
-            button.btn.btn-primary(type='button' id='sentiment') add Sentiment
+        .col-md-5
+            #btnSentiment
+                button.btn.btn-primary(type='button' id='sentiment') toevoegen Sentiment woorden
+
             script.
                 $('#sentiment').click(function () {
                     $.ajax({
@@ -113,11 +31,11 @@ block body
                         contentType: 'application/json',
                         data: JSON.stringify({message: 'Maak sentiment'}),
                         success: function (response) {
+                            var scoreSet = []
                             console.info(response)
-                            createTable(response)
+                            //createGeneric(response, 'tblBusinessrules', 'tblSentiment')
+                            scoreSet = createSentimentTable(response, 'tblBusinessrules', 'tblSentiment', 'btnSentiment', 1)
                         }
                     });
                 })
-
-
 

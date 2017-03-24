@@ -243,6 +243,58 @@ function tokenizeTekst(tweet, tweetid) {
 }
 
 
+// UPDATE van Sentiment tagger in de tempory collection
+exports.updSentiment = function (req, res, next) {
+    var updateSet = req.body.updateSet, uri = 'mongodb://localhost:27017/commevents'
+    console.info('Update Set')
+
+    // update set
+    updateSet.forEach(function (row) {
+        tmp.update({_id: row.id}, {$set: {score: row.score}}, false, true)
+
+    })
+
+    // remove
+    updateSet.forEach(function (row) {
+        if (row.score == '') {
+            console.info('remove: ' + row.id + ' score: ' + row.score)
+            tmp.remove({_id: row.id})
+        }
+        else{
+            console.info('not removed: ' + row.id + ' score: ' + row.score)
+        }
+
+    })
+
+
+
+
+    mongo.connect(uri, function (err, db) {
+        console.info('MONGODB START CHECK COLLECTIONS')
+        var locals = {}, tasks = [
+                                    // Load tmp
+                                    function (callback) {
+                                        db.collection('tmp').find({}).toArray(function (err, tmp) {
+                                            if (err) return callback(err);
+                                            locals.tmp = tmp;
+                                            callback();
+                                        })
+                                    }
+                                  ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            var dbtmp = []
+            db.close()
+            dbtmp = locals.tmp
+            console.info(dbtmp)
+
+
+            res.status(200).json({berich: 'Succesvol gewijzigd', result: dbtmp})
+
+        })
+    })
+}
 
 
 

@@ -50,6 +50,8 @@ exports = module.exports = function(app, passport) {
 
   //Sentiment
     app.post('/BusinessRules/sentiment', require('./views/BusinessRules/sentiment').saveBijvoegelijkeNaamwoorden);
+    app.post('/BusinessRules/updSentiment', require('./views/BusinessRules/sentiment').updSentiment);
+    app.post('/BusinessRules/BuildSentimentModel', require('./views/BusinessRules/buildSentimentModel').BuildSentimentModel);
 
 
 
