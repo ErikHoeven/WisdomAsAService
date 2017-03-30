@@ -58,8 +58,8 @@ exports.saveBijvoegelijkeNaamwoorden = function (req, res, next) {
                 var i = 0, totaalSentimentWoorden = []
                 // A.1 Loop door de tweets heen en Tokenize de tweets (Van zinnen losse woorden in een tabel)
                 //dbTweets.length
-                for (var i = 0 ; i <  1000; i++) {
-                    //console.info(dbTweets[i].text)
+                for (var i = 0 ; i <  500; i++) {
+                    console.info(dbTweets[i].text)
                     token = tokenizeTekst(dbTweets[i].text)
 
 

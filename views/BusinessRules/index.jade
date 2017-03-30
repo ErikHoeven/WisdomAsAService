@@ -7,15 +7,15 @@ block head
     meta(name='viewport', content='width=device-width, initial-scale=1')
     script(src="../../views/BusinessRules/dataHandler.js")
     script(src="../../views/BusinessRules/buildSentimentTrainingSet.js")
-    link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-
 block body
     .row
         .col-lg-10
             h1 BusinessRules
     .row
-        .col-sm-4
+        .col-sm-6
             #tblBusinessrules
+        .col-sm-4
+            #trainingSetOptions
     .row(id= 'buttens')
         .col-sm-4
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
@@ -38,4 +38,3 @@ block body
                         }
                     });
                 })
-
