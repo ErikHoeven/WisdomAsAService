@@ -12,18 +12,12 @@ function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyCo
     console.info('hideKeyColumn: ' + hideKeyColumn)
     console.info('updateRows:' + updateRows )
     console.info('columnValue: ' + columnValue)
-    console.info(data[0])
-    console.info(data[1])
-
-
-
 
     columns.forEach(function (col) {
             if (col != hideKeyColumn){
                 strColumns = strColumns + '<th>' + col + '</th>'
             }
     })
-
 
     if (updateRows == 1 ){
         strColumns = strColumns + '<th>edit</th><th>delete</th>'
@@ -37,15 +31,13 @@ function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyCo
     for (var i = 0; i < columns.length; i++){
           colpos.push({column: columns[i], col_pos: i})
     }
-
-    console.info(colpos)
     console.info('---------------------------------------------')
 
 
     data.forEach(function (row) {
         keys = Object.keys(row)
         lastPos = -1
-        updateProperties = '<td><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +columnValue + '\',\'' + row['_id'] +'\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' +columnValue + '\',\'' + row['_id'] +'\')"></td>'
+        updateProperties = '<td id="update'+ row['_id'] + '"><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +columnValue + '\',\'' + row['_id'] +'\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' + row['_id'] +'\')"></td>'
 
 
         if (rowNumber == 0 ){
@@ -71,27 +63,21 @@ function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyCo
             keys.forEach(function (columKey) {
                 colpos.forEach(function (col) {
                     if (columKey != hideKeyColumn || !hideKeyColumn){
-
-                        //console.info('ColPos: ' + col.col_pos + ' columnkey: ' +  columKey + 'col.column: ' + col.column)
                         if (col.column == columKey && col.col_pos > lastPos && col.col_pos  == 0 ){
-
                             strData = strData + '<tr><td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'
                             lastPos = col.col_pos
                         }
                         if (col.column == columKey && col.col_pos > lastPos && col.col_pos  > 0 && col.col_pos < colpos.length - updateAftrek ){
-                            console.info(columKey)
                                 strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'
                                 lastPos = col.col_pos
                         }
                         if (col.column == columKey  && col.col_pos == colpos.length - updateAftrek ){
                             if (updateRows == 1){
-                                console.info('LastPos: ' + col.col_pos + ' columnkey: ' +  columKey)
                                 strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'+ updateProperties + '</tr>'
                             }
                             else {
                                 strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td></tr>'
                             }
-
                             lastPos = col.col_pos
                         }
                     }
@@ -106,7 +92,6 @@ function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyCo
     $('#' + div).append('<table class="table table-hover" id="' + tablename +'">')
     $('#' + tablename).append('<thead>><tr>' +  strColumns + '</tr></thead>')
     $('#' + tablename).append('<tbody>' + strData + '</tbody></table>')
-
 }
 
 function createSentimentTable(data,div, tablename, button) {
@@ -158,13 +143,9 @@ function createSentimentTable(data,div, tablename, button) {
 }
 
 function updateField(column, id) {
-    console.info('Column: ' + column)
-    console.info('id: ' + id)
-    console.info('score: '+ $('#' + column + id).html())
     var score = $('#' + column + id).html()
-
     $('#' + column + id).html('<input id="txt'+ column + id + '" type="text" value="'+ score  +'"></input>')
-    $('#' + column + id).append('<button id="cmdSave" type="button" class="btn btn-default btn-sm" onclick="update(\'' +column + '\',\'' + id +'\')">' +
+    $('#update' + id).html('<button id="cmdSave" type="button" class="btn btn-default btn-sm" onclick="update(\'' +column + '\',\'' + id +'\')">' +
         '<span class="glyphicon glyphicon-ok"></span></button>')
 }
 
@@ -185,9 +166,6 @@ function update(column, id) {
          response.forEach(function (row) {
              trainingset.push({tekst: row.tekst, score: row.score, _id: row._id })
          })
-         console.info(trainingset)
-         columns =  Object.keys(trainingset[0])
-         //console.info(columns)
          createGeneric(trainingset, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Update Training set for Sentiment Model')
 
         }
@@ -195,22 +173,16 @@ function update(column, id) {
 }
 
 function deleteRow(id){
-
-
     $.ajax({
-        url: '/BusinessRules/deleteTrainingSet',
+        url: '/BusinessRules/deleteRowTrainingsSet',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({deleteKey: id}),
         success: function (response) {
-
             var trainingset = []
             response.forEach(function (row) {
                 trainingset.push({tekst: row.tekst, score: row.score, _id: row._id })
             })
-            console.info(trainingset)
-            columns =  Object.keys(trainingset[0])
-            //console.info(columns)
             createGeneric(trainingset, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Update Training set for Sentiment Model')
 
         }

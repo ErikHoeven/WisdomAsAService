@@ -15,6 +15,7 @@ var  async = require('async')
     ,tweets = []
     ,validatieSetSize = 0
     ,dbtmp = []
+    ,natural = require('natural')
 
 
 
@@ -140,7 +141,74 @@ exports.updateTrainingSet = function (req, res, next) {
             res.status(200).json(trainingset)
         })
     })
+}
 
+
+exports.deleteRowTrainingsSet = function (req, res, next) {
+    var id = req.body.deleteKey
+    console.info('deleteRowTrainingsSet: ' + id )
+    dbtrainingset.remove({_id: id})
+
+    mongo.connect(test, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [
+            // Load Tweets from table
+            function (callback) {
+                db.collection('trainingset').find({}).toArray(function (err, trainingset) {
+                    if (err) return callback(err);
+                    locals.trainingset = trainingset;
+                    callback();
+                });
+            }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            trainingset = []
+
+            locals.trainingset.forEach(function (row) {
+                trainingset.push({_id: row._id, tekst: row.tekst, score: row.score })
+            })
+            res.status(200).json(trainingset)
+        })
+    })
+}
+
+exports.model = function (req, res, next) {
+    console.info('Building model.....')
+    classifier = new natural.BayesClasifier()
+
+    mongo.connect(test, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [
+            // Load Tweets from table
+            function (callback) {
+                db.collection('trainingset').find({}).toArray(function (err, trainingset) {
+                    if (err) return callback(err);
+                    locals.trainingset = trainingset;
+                    callback();
+                });
+            }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            trainingset = []
+
+            locals.trainingset.forEach(function (row) {
+                //trainingset.push({_id: row._id, tekst: row.tekst, score: row.score })
+                classifier.addDocument(row.text, row.score)
+            })
+
+            classifier.train()
+
+
+
+            res.status(200).json('ModelTraind')
+        })
+    })
 
 
 

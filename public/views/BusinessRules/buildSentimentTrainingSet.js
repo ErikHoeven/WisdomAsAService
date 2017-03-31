@@ -33,14 +33,28 @@ function createTrainingSet(divButton){
             success: function (response) {
                 createGeneric(response, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Training set for Sentiment Model')
                 $('#trainingSetOptions').html('')
-
-                columns =  Object.keys(response[0])
-                console.info(columns)
-
-
+                $('#btnSentiment').html('<button type="button" id="cmdBuildModel" class="btn btn-primary">Build Sentiment Model</button>')
             }
         });
     });
 }
 
+function buildSentimentModel() {
+    console.info('BuildModel')
+    // AJAX to Server Script buidlSentiment zonder input is message output is also message
+    $.ajax({
+        url: '/BusinessRules/model',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({message: 'BuildModel'}),
+        success: function (response) {
+            createGeneric(response, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Training set for Sentiment Model')
+            $('#trainingSetOptions').html('')
+            $('#btnSentiment').html('<button type="button" id="cmdBuildModel" class="btn btn-primary">Build Sentiment Model</button>')
+        }
+    });
 
+
+    // return to main
+
+}

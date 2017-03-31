@@ -53,6 +53,8 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/updSentiment', require('./views/BusinessRules/sentiment').updSentiment);
     app.post('/BusinessRules/BuildSentimentModel', require('./views/BusinessRules/buildSentimentModel').BuildSentimentModel);
     app.post('/BusinessRules/updateTrainingSet', require('./views/BusinessRules/buildSentimentModel').updateTrainingSet);
+    app.post('/BusinessRules/deleteRowTrainingsSet', require('./views/BusinessRules/buildSentimentModel').deleteRowTrainingsSet);
+    app.post('/BusinessRules/model', require('./views/BusinessRules/buildSentimentModel').model);
 
 
 
