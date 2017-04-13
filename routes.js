@@ -55,6 +55,7 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/updateTrainingSet', require('./views/BusinessRules/buildSentimentModel').updateTrainingSet);
     app.post('/BusinessRules/deleteRowTrainingsSet', require('./views/BusinessRules/buildSentimentModel').deleteRowTrainingsSet);
     app.post('/BusinessRules/model', require('./views/BusinessRules/buildSentimentModel').model);
+    app.post('/BusinessRules/showBusinessRules', require('./views/BusinessRules/buildSentimentModel').showBusinessRules);
 
 
 

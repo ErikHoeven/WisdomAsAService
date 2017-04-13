@@ -309,6 +309,7 @@ block body
           label Actie:
           select.form-control(name='lstActie' id="lstActie")
             option Zoeken
+            option Zoeken bijvoegelijknaamwoorden
             option handmatig toevoegen
           label Typewoord:
           select.form-control(name='lstWoordvorm' id="lstWoordvorm")
@@ -319,12 +320,38 @@ block body
             option VoltooidDeelWoord
           label Woord
           input.form-control(type='text', name="txtWoord" id="txtWoord")
+    script.
 
+        $('#lstActie').change(function(){
+            var valueListActie = $('#lstActie option:selected').text()
+            console.info(valueListActie)
+            if ( valueListActie == 'Zoeken bijvoegelijknaamwoorden') {
+                $('#divCmdToevoegenBusinessRules').html('<button type="button" id="addBijvoegelijknaamwoorden" class="btn btn-primary">toevoegen Bijvoegelijknaamwoorden</button>')
+
+                $('#addBijvoegelijknaamwoorden').click(function () {
+                    console.info('Toevoegen bijvoegelijknaamwoorden')
+                    $.ajax({
+                        url: '/BusinessRules/sentiment',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({message: 'Toevoegen woorden'}),
+                        success: function (response) {
+                            console.info(response)
+                            //createGeneric(response, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Training set for Sentiment Model')
+                            //$('#trainingSetOptions').html('')
+                            //$('#btnSentiment').html('<button type="button" id="cmdBuildModel" class="btn btn-primary">Build Sentiment Model</button>')
+                        }
+                    });
+                })
+
+            }
+        })
 
 
     div.row
       div.col-sm-6
         div.form-group
-          button.btn.btn-primary.btn-signup(type='submit' id='cmdToevoegenBusinessRules') Toevoegen aan rules
+          #divCmdToevoegenBusinessRules
+            button.btn.btn-primary.btn-signup(type='submit' id='cmdToevoegenBusinessRules') Toevoegen aan rules
 
 

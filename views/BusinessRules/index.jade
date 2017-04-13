@@ -1,10 +1,7 @@
 extends ../../layouts/default
 
 block head
-    title View Events
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
+    title Business Rules
     script(src="../../views/BusinessRules/dataHandler.js")
     script(src="../../views/BusinessRules/buildSentimentTrainingSet.js")
 block body
@@ -26,10 +23,10 @@ block body
             script.
                 $('#sentiment').click(function () {
                     $.ajax({
-                        url: '/BusinessRules/sentiment',
+                        url: '/BusinessRules/saveBijvoegelijkeNaamwoorden',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({message: 'Maak sentiment'}),
+                        data: JSON.stringify({message: 'toevoegen Bijvoegelijknaamwoorden'}),
                         success: function (response) {
                             var scoreSet = []
                             console.info(response)
@@ -37,4 +34,21 @@ block body
                             scoreSet = createSentimentTable(response, 'tblBusinessrules', 'tblSentiment', 'btnSentiment', 1)
                         }
                     });
+                })
+
+                $(document).ready(function () {
+                    $.ajax({
+                        url: '/BusinessRules/showBusinessRules',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({message: 'toevoegen Bijvoegelijknaamwoorden'}),
+                        success: function (response) {
+                            //var scoreSet = []
+                            console.info(response)
+                            createGeneric(response, 'tblBusinessrules', 'tblSentiment')
+                            //scoreSet = createSentimentTable(response, 'tblBusinessrules', 'tblSentiment', 'btnSentiment', 1)
+                        }
+                    });
+
+
                 })

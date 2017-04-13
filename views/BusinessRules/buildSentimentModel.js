@@ -213,3 +213,35 @@ exports.model = function (req, res, next) {
 
 
 }
+
+
+exports.showBusinessRules = function (req, res, next) {
+
+    console.info('Building model.....')
+    var businessrules = []
+
+
+    mongo.connect(test, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [
+            // Load Tweets from table
+            function (callback) {
+                db.collection('businessrules').find({}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+
+            res.status(200).json(locals.businessrules)
+        })
+    })
+
+
+
+}

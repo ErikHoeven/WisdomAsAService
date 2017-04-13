@@ -3,18 +3,29 @@
  */
 
 
-function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyColumn, titel){
+function createGeneric (data, div, tablename, updateRows, columnValue, hideKeyColumn, titel, filterColumn, filterValue){
 
-    var columns = [], strColumns = '', i = 0, strData = '', keys= [],colpos = [], lastPos = -1, countColss, rowNumber = 0, updateProperties, updateAftrek = 1
+    var columns = [], strColumns = ''
+        , i = 0
+        , strData = ''
+        , keys= [],colpos = []
+        , lastPos = -1
+        , countColss
+        , rowNumber = 0
+        , updateProperties
+        , updateAftrek = 1
+
     columns =  Object.keys(data[0])
     console.info('---------------------------------------------')
     console.info('titel: ' + titel)
     console.info('hideKeyColumn: ' + hideKeyColumn)
     console.info('updateRows:' + updateRows )
     console.info('columnValue: ' + columnValue)
+    console.info()
 
     columns.forEach(function (col) {
-            if (col != hideKeyColumn){
+
+                if (col != hideKeyColumn){
                 strColumns = strColumns + '<th>' + col + '</th>'
             }
     })
