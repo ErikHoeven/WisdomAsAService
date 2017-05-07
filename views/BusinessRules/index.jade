@@ -44,8 +44,17 @@ block body
                         data: JSON.stringify({message: 'toevoegen Bijvoegelijknaamwoorden'}),
                         success: function (response) {
                             //var scoreSet = []
-                            console.info(response)
-                            createGeneric(response, 'tblBusinessrules', 'tblSentiment')
+                            var tableDefinition = {}
+                            tableDefinition.divTable = 'tblBusinessrules'
+                            tableDefinition.tableName = 'tblSentiment'
+                            tableDefinition.keyColumn = ['_id']
+                            tableDefinition.hideColumns = ['searchReturnValue','cattegoryValue','__v','search']
+                            tableDefinition.title = 'Business Rules'
+                            tableDefinition.editRow = 'Y'
+                            tableDefinition.isEditable = 'N'
+                            tableDefinition.sourceCollection = 'businessrules'
+
+                            createGenericTable(response, tableDefinition)
                             //scoreSet = createSentimentTable(response, 'tblBusinessrules', 'tblSentiment', 'btnSentiment', 1)
                         }
                     });

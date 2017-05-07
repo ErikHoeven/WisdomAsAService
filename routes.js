@@ -66,7 +66,8 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/show/:id/', require('./views/BusinessRules/index').read);
   app.post('/BusinessRules/', require('./views/BusinessRules/index').create);
   app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
-  app.post('/BusinessRules/upload', require('./views/BusinessRules/uploadFile').uploadFile)
+  app.post('/BusinessRules/upload', require('./views/BusinessRules/uploadFile').uploadFile);
+  app.post('/BusinessRules/updateGeneric', require('./views/BusinessRules/buildSentimentModel').updateGeneric);
 
 
 
