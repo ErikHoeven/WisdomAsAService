@@ -19,7 +19,7 @@
  */
 
 
-function createGenericTable (data, tableDefinition){
+function createGenericTable (data, tableDefinition, pagnationStep, actualStep ){
 
     var   columns = []
         , strColumns = ''
@@ -40,7 +40,7 @@ function createGenericTable (data, tableDefinition){
 
 
     columns =  Object.keys(data[0])
-    console.info('-------------------')
+    console.info('--------------------------------------------------------------------')
     console.info('titel: ' + tableDefinition.title)
     console.info('KeyColumn: ' + tableDefinition.keyColumn)
     console.info('hideColls:' + totHideCols )
@@ -48,11 +48,33 @@ function createGenericTable (data, tableDefinition){
     console.info('totHideCols: ' +  totHideCols.length)
     console.info('div place: ' + tableDefinition.divTable )
     console.info('div name: ' + tableDefinition.tableName)
+    console.info('pagnationStep: ' + pagnationStep  )
+    console.info('actualStep: ' + actualStep)
+    console.info('datalength: ' + data.length )
+    var pagnationSteps =  data.length/  pagnationStep
+    console.info('pagnationsteps: ' + pagnationSteps)
     updateAftrek = totHideCols.length
     console.info(columns )
+    console.info(sourceCollection)
+    var pagnationString = '<ul class="pagination">'
 
+    if (tableDefinition.actualStep > 0) {
+        var startingStepRow = actualStep * pagnationStep
+        var lastStepRow = startingStepRow + pagnationStep
 
+    }
+    else {
+        var startingStepRow = 0
+        var lastStepRow = startingStepRow + pagnationStep
 
+    }
+
+    for (var i = 0; i < pagnationSteps; i++){
+        pagnationString = pagnationString + '<li><a href="#" onclick="createGenericTable (\'' + JSON.stringify(data) + '\',\'' + JSON.stringify(tableDefinition) +'\',\'' + pagnationStep + '\',\''+ i + '\')">'+ i +'</a></li>'
+    }
+    pagnationString = pagnationString + '</ul>'
+
+    console.info(pagnationString)
     columns.forEach(function (col) {
         var i = 0;
         if( col != findHideCols(col,totHideCols)){
@@ -73,7 +95,7 @@ function createGenericTable (data, tableDefinition){
     for (var i = 0; i < columns.length; i++){
           colpos.push({column: columns[i], col_pos: i})
     }
-    console.info('-----------------------')
+    console.info('----------------------------------------------------------------------------------')
 
 
     data.forEach(function (row) {
@@ -84,7 +106,7 @@ function createGenericTable (data, tableDefinition){
 
         // A. First row
         var updateProperties = '<td id="update'+ row['_id'] + '"><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +columnValue + '\',\'' + row['_id'] +'\',\'' + sourceCollection + '\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' + row['_id'] +'\')"></td>'
-        if (rowNumber == 0 ){
+        if (rowNumber == 0 && rowNumber == startingStepRow ){
             strData = '<tr>'
             keys.forEach(function (columKey) {
                 colpos.forEach(function (col) {
@@ -104,7 +126,7 @@ function createGenericTable (data, tableDefinition){
             }
         }
         // B. Rows after first row
-        if (rowNumber > 0 ){
+        if (rowNumber > 0 && rowNumber <=  lastStepRow && rowNumber >= startingStepRow ){
             lastPos = 0
             //B.1 Check if the count of keys is the same as the first row. If it is less then only map the and create a new row
 
@@ -131,14 +153,14 @@ function createGenericTable (data, tableDefinition){
                         }
 
                         // B col_position of the table definition is greather then the last column pos of the dataset and col pos of the table defintion is 0
-                        if (lastPos > 0 && lastPos < colpos.length - updateAftrek && colHit == 0) {
+                        if (lastPos > 0 && lastPos < colpos.length - updateAftrek && colHit == 0 ) {
                             strData = strData + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>'
                             lastPos++
                             colHit = 1
                         }
 
                         // C Last Column in the Row
-                        if (lastPos == colpos.length - updateAftrek && colHit ==  0) {
+                        if (lastPos == colpos.length - updateAftrek && colHit ==  0 ) {
                             if (tableDefinition.editRow == 'Y') {
 
 
@@ -165,6 +187,7 @@ function createGenericTable (data, tableDefinition){
     $('#' + tableDefinition.divTable).append('<table class="table table-hover" id="' + tableDefinition.tableName +'">')
     $('#' + tableDefinition.tableName).append('<thead>><tr>' +  strColumns + '</tr></thead>')
     $('#' + tableDefinition.tableName).append('<tbody>' + strData + '</tbody></table>')
+    $('#pagnation').html(pagnationString)
 }
 
 function createSentimentTable(data,div, tablename, button) {
