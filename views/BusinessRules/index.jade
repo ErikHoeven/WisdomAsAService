@@ -10,13 +10,34 @@ block body
             h1 BusinessRules
     .row
         .col-sm-6
+            h4 Filter
+    .row
+        .col-sm-2
+            #searchTypeRule
+        .col-sm-2
+            #searchLookupValue
+
+
+    .row
+        .col-sm-6
             #tblBusinessrules
         .col-sm-4
             #trainingSetOptions
-    .row(id= 'buttens')
+    .row(id= 'rowPagnation')
         .col-sm-4
             #pagnation
-    .row(id= 'buttens')
+        .col-sm-2
+            .form-group
+                label(for='sel1') rows per page
+                select#pagnationOption.form-control
+                    option 10
+                    option 15
+                    option 20
+                    option 25
+                    option 30
+                    option 35
+                    option 40
+    .row(id= 'buttens' )
         .col-sm-4
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
         .col-md-5
@@ -40,26 +61,80 @@ block body
                 })
 
                 $(document).ready(function () {
+
+                    var tableDefinition = {}
+                    tableDefinition.divTable = 'tblBusinessrules'
+                    tableDefinition.tableName = 'tblSentiment'
+                    tableDefinition.keyColumn = ['_id']
+                    tableDefinition.hideColumns = ['searchReturnValue','cattegoryValue','__v','search']
+                    tableDefinition.title = 'Business Rules'
+                    tableDefinition.editRow = 'Y'
+                    tableDefinition.isEditable = 'N'
+                    tableDefinition.sourceCollection = 'businessrules'
+
+                    console.info(tableDefinition)
+
                     $.ajax({
-                        url: '/BusinessRules/showBusinessRules',
+                        url: '/BusinessRules/buildGenericTable',
                         type: 'POST',
                         contentType: 'application/json',
-                        data: JSON.stringify({message: 'toevoegen Bijvoegelijknaamwoorden'}),
+                        data: JSON.stringify({
+                            tableDefinition: tableDefinition,
+                            setPagnationStep: 10,
+                            setActualStep: 1
+                        }),
                         success: function (response) {
-                            //var scoreSet = []
-                            var tableDefinition = {}
-                            tableDefinition.divTable = 'tblBusinessrules'
-                            tableDefinition.tableName = 'tblSentiment'
-                            tableDefinition.keyColumn = ['_id']
-                            tableDefinition.hideColumns = ['searchReturnValue','cattegoryValue','__v','search']
-                            tableDefinition.title = 'Business Rules'
-                            tableDefinition.editRow = 'Y'
-                            tableDefinition.isEditable = 'N'
-                            tableDefinition.sourceCollection = 'businessrules'
-                            createGenericTable(response, tableDefinition, 10, 0)
-                            //scoreSet = createSentimentTable(response, 'tblBusinessrules', 'tblSentiment', 'btnSentiment', 1)
+                            $('#' + response.tableResult.div).html('')
+                            $('#' + response.tableResult.div).append('<table class="table table-hover" id="' + response.tableResult.tableName + '">')
+                            $('#' + response.tableResult.tableName).append('<thead>><tr>' + response.tableResult.strColumns + '</tr></thead>')
+                            $('#' + response.tableResult.tableName).append('<tbody>' + response.tableResult.strData + '</tbody></table>')
+                            //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                            $('#pagnation').html(response.pagingResultSet)
+
+                            // Capture change in URL to load the next resultset
+                            $(window).on('hashchange', function (e) {
+                                console.info('changed')
+                                var hash = window.location.hash.replace('#', '')
+
+                                $.ajax({
+                                    url: '/BusinessRules/buildGenericTable',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        tableDefinition: tableDefinition,
+                                        setPagnationStep: 10,
+                                        setActualStep: hash
+                                    }),
+                                    success: function (response) {
+                                        $('#' + response.tableResult.div).html('')
+                                        $('#' + response.tableResult.div).append('<table class="table table-hover" id="' + response.tableResult.tableName + '">')
+                                        $('#' + response.tableResult.tableName).append('<thead>><tr>' + response.tableResult.strColumns + '</tr></thead>')
+                                        $('#' + response.tableResult.tableName).append('<tbody>' + response.tableResult.strData + '</tbody></table>')
+                                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                                        $('#pagnation').html(response.pagingResultSet)
+                                    }
+                                });
+                            })
+
                         }
                     });
+
+                    // Fil Search field for typeBusiness Rule
+                    $.ajax({
+                        url: '/BusinessRules/createTypeBusinessRuleList',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({message: 'get data'}),
+                        success: function (response) {
+                            var scoreSet = []
+                            console.info(response)
+                            //createGeneric(response, 'tblBusinessrules', 'tblSentiment')
+
+                        }
+                    });
+
+
+
 
 
                 })
