@@ -17,6 +17,7 @@ var cheerio = require("cheerio")
     ,tableDefinition = {}
 
 
+
 exports.createGenericTable = function (req, res, next) {
         console.info('start createGenericTable')
         tableDefinition = req.body.tableDefinition
@@ -282,40 +283,33 @@ function setPagnation(data, pagnationStep, actualStep ) {
 }
 
 
-exports.createTypeBusinessRuleList = function (req, res, next) {
+exports.getBusinessRuleListFilterList = function (req, res, next) {
+    var br = db.get('businessrules')
+    console.info('---> getBusinessRuleListFilter <-----')
 
-    mongo.connect(uri, function (err, db) {
-        console.info('MONGODB START CHECK COLLECTIONS')
-        var locals = {}, tasks = [
-            // Load tmp
-            function (callback) {
-                db.collection('businessrules').distinct('typeBusinessRule').toArray(function (err, businessrules) {
-                    if (err) return callback(err);
-                    locals.businessrules = businessrules;
-                    callback();
-                })
-            }
-        ];
-        console.info('--------------- START ASYNC ------------------------')
-        async.parallel(tasks, function (err) {
-            if (err) return next(err);
-            var businessrules = []
-            db.close()
-            businessrules = locals.businessrules
+    br.distinct('typeBusinessRule',function (err, doc) {
+        var optionList = '<select class="form-control" id="fltrZoekWaarde">'
+        doc.forEach(function (item) {
+            optionList = optionList + '<option>'+ item +'</option>'
 
-            //console.info(businessrules)
-            var tableResult = '  <div class="form-group"><label for="sel1">Select list (select one):</label><select class="form-control" id="sel1">'
+        })
+        optionList = optionList + '</select>'
+        console.info(optionList)
+        res.status(200).json({message:optionList})
 
-            businessrules.forEach(function (e) {
-                console.info(e)
-            })
+    })
+
+
+
+
+
 
 
 
             //res.status(200).json({tableResult: businessrules, pagingResultSet: pagingResultSet })
 
-        })
-    })
+
+
 
 
 }

@@ -57,7 +57,7 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/model', require('./views/BusinessRules/buildSentimentModel').model);
     app.post('/BusinessRules/showBusinessRules', require('./views/BusinessRules/buildSentimentModel').showBusinessRules);
     app.post('/BusinessRules/buildGenericTable', require('./views/BusinessRules/buildGenericTable').createGenericTable);
-    app.post('/BusinessRules/createTypeBusinessRuleList', require('./views/BusinessRules/buildGenericTable').createTypeBusinessRuleList);
+    app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
 
 
 

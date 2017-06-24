@@ -16,6 +16,7 @@ block body
             #searchTypeRule
         .col-sm-2
             #searchLookupValue
+                input#searchLookupTerm.form-control(type='text')
 
 
     .row
@@ -42,7 +43,8 @@ block body
             a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
         .col-md-5
             #btnSentiment
-                button.btn.btn-primary(type='button' id='sentiment') toevoegen Sentiment woorden
+                button
+                .btn.btn-primary(type='button' id='sentiment') toevoegen Sentiment woorden
 
             script.
                 $('#sentiment').click(function () {
@@ -71,8 +73,6 @@ block body
                     tableDefinition.editRow = 'Y'
                     tableDefinition.isEditable = 'N'
                     tableDefinition.sourceCollection = 'businessrules'
-
-                    console.info(tableDefinition)
 
                     $.ajax({
                         url: '/BusinessRules/buildGenericTable',
@@ -121,20 +121,25 @@ block body
 
                     // Fil Search field for typeBusiness Rule
                     $.ajax({
-                        url: '/BusinessRules/createTypeBusinessRuleList',
+                        url: '/BusinessRules/getBusinessRuleListFilterList',
                         type: 'POST',
                         contentType: 'application/json',
                         data: JSON.stringify({message: 'get data'}),
                         success: function (response) {
                             var scoreSet = []
-                            console.info(response)
-                            //createGeneric(response, 'tblBusinessrules', 'tblSentiment')
+                            $('#searchTypeRule').html(response.message)
 
                         }
                     });
 
+                    var term = []
+                    $('#searchLookupTerm').click(function () {
+                        console.info('test')
+                        $('#searchLookupTerm').keyup(function (e) {
 
-
+                            autocompletionLookupValue(e,document.getElementById('searchLookupTerm').selectionStart)
+                        });
+                    })
 
 
                 })

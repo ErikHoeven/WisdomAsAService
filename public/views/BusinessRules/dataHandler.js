@@ -161,3 +161,30 @@ function createNewTableData (data, tableDefinition, pagnationStep, actualStep){
 
 }
 
+var term = [], lastKnownPos = 0
+
+function autocompletionLookupValue(val, pos) {
+    arrayLenght = term.length
+    console.info(pos)
+
+
+    if (val.key == 'Backspace'){
+        term.splice(lastKnownPos-1,1)
+        console.info(term)
+    }
+    if (val.key == 'ArrowLeft' || val.key == 'ArrowRight'){
+        // get from current position the array position
+        pos = document.getElementById('searchLookupTerm').selectionStart
+        // previous char would be deleted (Backspace)
+        lastKnownPos = pos
+    }
+
+
+    if(pos == arrayLenght + 1 && val.key != 'BackSpace' ) {
+        term.push({pos: term.length + 1, searchTerm: val.key})
+        console.info(term)
+
+    }
+
+}
+
