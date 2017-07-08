@@ -298,7 +298,59 @@ exports.getBusinessRuleListFilterList = function (req, res, next) {
         res.status(200).json({message:optionList})
 
     })
+}
 
+exports.getBusinessRuleFilter = function (req, res, next) {
+
+    var lookupterm = '', term = req.body.term, tableDefinition = req.body.tableDefinition
+
+    term.forEach(function (t) {
+        lookupterm = lookupterm +  t.searchTerm
+
+    })
+
+
+
+
+    mongo.connect(uri, function (err, db) {
+
+        console.info('MONGODB START CHECK COLLECTIONS')
+
+        var locals = {}, tasks = [
+            // Load tmp
+            function (callback) {
+                db.collection('businessrules').find({"lookupValue": {$regex: ".*" + lookupterm + ".*"}  }).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                })
+            }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            var businessrules = []
+            db.close()
+            businessrules = locals.businessrules
+
+            console.info(businessrules.length)
+            if (businessrules.length == 0){
+                res.status(200).json({status: 'error' ,message: 'Not the right combination of characters!!'})
+            }
+            else {
+                var tableResult = genericTable(businessrules, tableDefinition, 10, 1)
+                var pagingResultSet = setPagnation(businessrules, 10,1)
+                res.status(200).json({tableResult: tableResult, pagingResultSet: pagingResultSet, status: 'succes', message: 'refresh table succesfull' })
+
+            }
+
+
+        })
+    })
+
+
+
+}
 
 
 
@@ -312,4 +364,3 @@ exports.getBusinessRuleListFilterList = function (req, res, next) {
 
 
 
-}

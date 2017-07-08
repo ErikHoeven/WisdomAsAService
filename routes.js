@@ -55,10 +55,6 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/updateTrainingSet', require('./views/BusinessRules/buildSentimentModel').updateTrainingSet);
     app.post('/BusinessRules/deleteRowTrainingsSet', require('./views/BusinessRules/buildSentimentModel').deleteRowTrainingsSet);
     app.post('/BusinessRules/model', require('./views/BusinessRules/buildSentimentModel').model);
-    app.post('/BusinessRules/showBusinessRules', require('./views/BusinessRules/buildSentimentModel').showBusinessRules);
-    app.post('/BusinessRules/buildGenericTable', require('./views/BusinessRules/buildGenericTable').createGenericTable);
-    app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
-
 
 
   //BusinessRules routes
@@ -70,6 +66,10 @@ exports = module.exports = function(app, passport) {
   app.get('/BusinessRules/updateCattValues',require('./views/BusinessRules/index').updateCattValues);
   app.post('/BusinessRules/upload', require('./views/BusinessRules/uploadFile').uploadFile);
   app.post('/BusinessRules/updateGeneric', require('./views/BusinessRules/buildSentimentModel').updateGeneric);
+    app.post('/BusinessRules/showBusinessRules', require('./views/BusinessRules/buildSentimentModel').showBusinessRules);
+    app.post('/BusinessRules/buildGenericTable', require('./views/BusinessRules/buildGenericTable').createGenericTable);
+    app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
+    app.post('/BusinessRules/getBusinessRuleFilter', require('./views/BusinessRules/buildGenericTable').getBusinessRuleFilter);
 
 
 

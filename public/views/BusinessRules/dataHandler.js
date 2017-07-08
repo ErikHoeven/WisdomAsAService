@@ -165,13 +165,12 @@ var term = [], lastKnownPos = 0
 
 function autocompletionLookupValue(val, pos) {
     arrayLenght = term.length
-    console.info(pos)
-
+    console.info('execute autocompletion:')
 
     if (val.key == 'Backspace'){
         term.splice(lastKnownPos-1,1)
-        console.info(term)
     }
+
     if (val.key == 'ArrowLeft' || val.key == 'ArrowRight'){
         // get from current position the array position
         pos = document.getElementById('searchLookupTerm').selectionStart
@@ -182,9 +181,8 @@ function autocompletionLookupValue(val, pos) {
 
     if(pos == arrayLenght + 1 && val.key != 'BackSpace' ) {
         term.push({pos: term.length + 1, searchTerm: val.key})
-        console.info(term)
-
     }
 
+return term
 }
 

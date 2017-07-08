@@ -11,6 +11,8 @@ block body
     .row
         .col-sm-6
             h4 Filter
+        .col-sm-6
+            #message
     .row
         .col-sm-2
             #searchTypeRule
@@ -136,8 +138,31 @@ block body
                     $('#searchLookupTerm').click(function () {
                         console.info('test')
                         $('#searchLookupTerm').keyup(function (e) {
+                            $('#message').html('')
+                            var term = autocompletionLookupValue(e,document.getElementById('searchLookupTerm').selectionStart)
 
-                            autocompletionLookupValue(e,document.getElementById('searchLookupTerm').selectionStart)
+                            $.ajax({
+                                url: '/BusinessRules/getBusinessRuleFilter',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({term: term, tableDefinition: tableDefinition}),
+                                success: function (response) {
+                                    if (response.status == 'succes'){
+                                        $('#' + response.tableResult.div).html('')
+                                        $('#' + response.tableResult.div).append('<table class="table table-hover" id="' + response.tableResult.tableName + '">')
+                                        $('#' + response.tableResult.tableName).append('<thead>><tr>' + response.tableResult.strColumns + '</tr></thead>')
+                                        $('#' + response.tableResult.tableName).append('<tbody>' + response.tableResult.strData + '</tbody></table>')
+                                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                                        $('#pagnation').html(response.pagingResultSet)
+                                    }
+                                    else {
+                                        $('#message').html('<div class="alert alert-danger"><strong>'+ response.status +': </strong>' + response.message + '</div>')
+                                    }
+
+                                }
+                            })
+
+
                         });
                     })
 
