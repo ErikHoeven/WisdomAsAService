@@ -3,14 +3,8 @@ extends ../../layouts/default
 block head
   title Add Event
   //JS
-  link(href='../../views/BusinessRules/colorpicker/jquery.colorpicker.css', rel='stylesheet', type='text/css')
-  link(rel='stylesheet', href='../../views/Dashboard/graph.css')
-  link(href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/themes/ui-lightness/jquery-ui.css', rel='stylesheet', type='text/css')
-  script(src='../../views/jquery-2.2.3.min.js')
-  script(src='../../views/jquery-ui.min.js')
-  script(src='../../views/BusinessRules/colorpicker/jquery.colorpicker.js')
-  script(src="../../views/Dashboard/pieChart.js")
-  script(src='../../views/Dashboard/d3pie.js')
+  script(src='../../views/BusinessRules/jscolor-custom-look/jscolor.js')
+  script(src='https://code.jquery.com/jquery-3.2.1.min.js')
   //script(src='../../views/BusinessRules/Simulatie.js')
   script.
       var lstCatValues = [];
@@ -226,12 +220,10 @@ block head
                       , value: 100
                   });
                   console.info(datasetvb);
-                  buildPieChart('pieDemo', datasetvb, 'Voorbeeld', 250, 250);
               }
           });
 
           $('#kleur').focusin(function () {
-              $('#pieDemo').html('');
               teller = 0;
           });
 
@@ -287,13 +279,7 @@ block body
       div.col-sm-6
         div.form-group(id='Kleurbepaler')
           label Kleur:
-            input.form-control(type='text', value='0fa7c2' class='cp-websafe' name="kleur" id="kleur")
-            script.
-                $(function () {
-                    $('.cp-websafe').colorpicker({
-                        limit: 'websafe'
-                    });
-                });
+            input.form-control(type='text', value='0fa7c2' class="jscolor{width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:'transparent', insetColor:'#000'}" name="kleur" id="kleur")
 
     div.form-group(id='KamervanKoophandel')
       div.row
