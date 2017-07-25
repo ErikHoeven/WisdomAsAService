@@ -10,7 +10,7 @@ block body
       div.page-header
         h1 Sign Up
       div#signup
-        form#signupFrom.form-horizontal(method='post', action='  ', enctype='multipart/form-data', data-toggle="validator" role="form")
+        form#signupFrom.form-horizontal(method='post', action='/signup/upload', enctype='multipart/form-data', data-toggle="validator" role="form")
           #status
             .container
               .row
@@ -72,7 +72,7 @@ block body
                             readURL(this);
                         });
                   .form-group
-                    button#submit.btn.btn-primary.btn-lg.btn-block.login-button(type='button') Register
+                    button#submit.btn.btn-primary.btn-lg.btn-block.login-button(type='submit') Register
                   .login-register
                     a(href='/') Login
 
