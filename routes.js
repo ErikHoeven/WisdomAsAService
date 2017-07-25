@@ -85,20 +85,8 @@ exports = module.exports = function(app, passport) {
 
   //sign up
   app.get('/signup/', require('./views/signup/index').init);
-  app.get('/signup/', require('./views/signup/index').signup);
+  app.post('/signup/upload', require('./views/signup/index').fileupload);
 
-  //social sign up
-  app.post('/signup/social/', require('./views/signup/index').signupSocial);
-  app.get('/signup/twitter/', passport.authenticate('twitter', { callbackURL: '/signup/twitter/callback/' }));
-  app.get('/signup/twitter/callback/', require('./views/signup/index').signupTwitter);
-  app.get('/signup/github/', passport.authenticate('github', { callbackURL: '/signup/github/callback/', scope: ['user:email'] }));
-  app.get('/signup/github/callback/', require('./views/signup/index').signupGitHub);
-  app.get('/signup/facebook/', passport.authenticate('facebook', { callbackURL: '/signup/facebook/callback/', scope: ['email'] }));
-  app.get('/signup/facebook/callback/', require('./views/signup/index').signupFacebook);
-  app.get('/signup/google/', passport.authenticate('google', { callbackURL: '/signup/google/callback/', scope: ['profile email'] }));
-  app.get('/signup/google/callback/', require('./views/signup/index').signupGoogle);
-  app.get('/signup/tumblr/', passport.authenticate('tumblr', { callbackURL: '/signup/tumblr/callback/' }));
-  app.get('/signup/tumblr/callback/', require('./views/signup/index').signupTumblr);
 
   //login/out
   app.get('/login/', require('./views/login/index').init);

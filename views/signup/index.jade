@@ -2,12 +2,7 @@ extends ../../layouts/default
 
 block head
   title Sign Up
-
-block neck
-  link(rel='stylesheet', href='/views/signup/index.min.css?#{cacheBreaker}')
-
-block feet
-  script(src='/views/signup/index.min.js?#{cacheBreaker}')
+  script(src="../../views/signup/formhadlerSignup.js")
 
 block body
   div.row
@@ -15,62 +10,78 @@ block body
       div.page-header
         h1 Sign Up
       div#signup
-      if oauthTwitter || oauthGitHub || oauthFacebook || oauthGoogle || oauthTumblr
-        hr
-        p Or sign up using...
-        if oauthMessage
-          div.alerts
-            div.alert.alert-info.alert-dismissable
-              button.close(type='button', data-dismiss='alert') &times;
-              |#{oauthMessage}&nbsp;
-              b
-                a(href='/login/') Login Here
-        div.btn-group.btn-group-justified
-          if oauthTwitter
-            a.btn.btn-info(href='/signup/twitter/')
-              i.fa.fa-twitter.fa-lg
-              |  Twitter
-          if oauthGitHub
-            a.btn.btn-info(href='/signup/github/')
-              i.fa.fa-github.fa-lg
-              |  GitHub
-          if oauthFacebook
-            a.btn.btn-info(href='/signup/facebook/')
-              i.fa.fa-facebook-square.fa-lg
-              |  Facebook
-          if oauthGoogle
-            a.btn.btn-info(href='/signup/google/')
-              i.fa.fa-google-plus-square.fa-lg
-              |  Google
-          if oauthTumblr
-            a.btn.btn-info(href='/signup/tumblr/')
-              i.fa.fa-tumblr-square.fa-lg
-              |  Tumblr
-    div.col-sm-6.marketing
-      div.page-header
-        h1 Campy Benefits
-      p.lead Really, you will love it inside. It's super great!
-      i.fa.fa-thumbs-o-up.super-awesome
+        form#signupFrom.form-horizontal(method='post', action='  ', enctype='multipart/form-data', data-toggle="validator" role="form")
+          #status
+            .container
+              .row
+                .col-md-6
+                  .form-group
+                    label.cols-sm-2.control-label(for='name') Your name
+                    .cols-sm-10
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-user.fa(aria-hidden='true')
+                        input#name.form-control(type='text', name='name', placeholder='Enter your Name')
+                .col-xs-6
+                  #avatarPreview
+                    br
+                    br
+                    img#imgPreview(src='#', alt='your image' width=150 height=150)
+              .row
+                .col-md-6
+                  .form-group
+                    label.cols-sm-2.control-label(for='email' class="control-label" data-error="Bruh, that email address is invalid" required) Your Email
+                    .cols-sm-10
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-envelope.fa(aria-hidden='true')
+                        input#email.form-control(type='text', name='email', placeholder='Enter your Email' )
+              .row
+                .col-md-6
+                  .form-group
+                    label.cols-sm-2.control-label(for='username') Username
+                    .cols-sm-10
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-users.fa(aria-hidden='true')
+                        input#username.form-control(type='text', name='username', placeholder='Enter your Username')
+              .row
+                .col-md-6
+                  .form-group
+                    label.cols-sm-2.control-label(for='password') Password
+                    .cols-sm-10
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-lock.fa-lg(aria-hidden='true')
+                        input#password.form-control(type='text', name='password', placeholder='Enter your Password')
+              .row
+                .col-md-6
+                  .form-group
+                    label.cols-sm-2.control-label(for='confirm') Confirm Password
+                    .cols-sm-10
+                      .input-group
+                        span.input-group-addon
+                          i.fa.fa-lock.fa-lg(aria-hidden='true')
+                        input#confirm.form-control(type='text', name='confirm', placeholder='Confirm your Password', data-match="#password", data-match-error="Whoops, these don't match", required)
+              .row
+                .col-md-6
+                  .form-group
+                    input#avatar(type='file', name='uploadFile', multiple='multiple')
+                    script.
+                        $("#avatar").change(function () {
+                            readURL(this);
+                        });
+                  .form-group
+                    button#submit.btn.btn-primary.btn-lg.btn-block.login-button(type='button') Register
+                  .login-register
+                    a(href='/') Login
 
-  script(type='text/template', id='tmpl-signup')
-    form
-      div.alerts
-        |<% _.each(errors, function(err) { %>
-        div.alert.alert-danger.alert-dismissable
-          button.close(type='button', data-dismiss='alert') &times;
-          |<%- err %>
-        |<% }); %>
-      div.form-group(class!='<%- errfor.username ? "has-error" : "" %>')
-        label Pick a Username:
-        input.form-control(type='text', name='username', value!='<%= username %>')
-        span.help-block <%- errfor.username %>
-      div.form-group(class!='<%- errfor.email ? "has-error" : "" %>')
-        label Enter Your Email:
-        input.form-control(type='text', name='email', value!='<%= email %>')
-        span.help-block <%- errfor.email %>
-      div.form-group(class!='<%- errfor.password ? "has-error" : "" %>')
-        label Create a Password:
-        input.form-control(type='password', name='password', value!='<%= password %>')
-        span.help-block <%- errfor.password %>
-      div.form-group
-        button.btn.btn-primary.btn-signup(type='button') Create My Account
+
+
+
+
+
+
+
+
+

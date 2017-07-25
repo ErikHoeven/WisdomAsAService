@@ -67,9 +67,10 @@ exports.fileupload = function (req, res, next){
     //console.info(req)
     upload(req,res,function(err) {
         if(err) {
+            console.info('Errror!!')
             return res.end("Error uploading file.");
         }
-
+        console.info('succes')
         res.redirect(req.originalUrl)
 
     });
