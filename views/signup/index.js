@@ -25,6 +25,8 @@ var multer  =   require('multer'),
     userWaas = db.get('user_waas')
 
 
+
+
 exports.init = function(req, res){
     res.render('signup/index');
 };
@@ -50,7 +52,6 @@ exports.fileupload = function (req, res, next){
         frmUser.username = req.body.username
         frmUser.password = req.body.password
         frmUser.confirmpassword = req.body.confirm
-
         mongo.connect(url, function (err, db) {
             var tasks = [
                 // Load users

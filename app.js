@@ -12,8 +12,9 @@ var config = require('./config'),
     multer  =   require('multer'),
     passport = require('passport'),
     mongoose = require('mongoose'),
-    helmet = require('helmet');
-
+    helmet = require('helmet'),
+    flash = require('connect-flash'),
+    expressValidator = require('express-validator');
 
 var storage =   multer.diskStorage({
     destination: function (req, file, callback) {
@@ -68,19 +69,22 @@ app.use(session({
   secret: config.cryptoKey,
   store: new mongoStore({ url: config.mongodb.uri })
 }));
+// Connect Flash
+app.use(flash())
+
+app.use(function (req, res, next) {
+    res.locals.messages = require('express-messages')(req, res);
+    next();
+});
+
+// Connect Passport
 app.use(passport.initialize());
 app.use(passport.session());
-//app.use(csrf({ cookie: { signed: true } }));
 helmet(app);
 
-//response locals
-app.use(function(req, res, next) {
- // res.cookie('_csrfToken', req.csrfToken());
-  res.locals.user = {};
-  res.locals.user.defaultReturnUrl = req.user && req.user.defaultReturnUrl();
-  res.locals.user.username = req.user && req.user.username;
-  next();
-});
+
+
+
 
 //global locals
 app.locals.projectName = app.config.projectName;
@@ -94,6 +98,24 @@ require('./passport')(app, passport);
 //setup routes
 require('./routes')(app, passport);
 
+// Express Validator
+app.use(expressValidator({
+    errorFormatter: function(param, msg, value) {
+        var namespace = param.split('.')
+            , root    = namespace.shift()
+            , formParam = root;
+
+        while(namespace.length) {
+            formParam += '[' + namespace.shift() + ']';
+        }
+        return {
+            param : formParam,
+            msg   : msg,
+            value : value
+        };
+    }
+}));
+
 //custom (friendly) error handler
 app.use(require('./views/http/index').http500);
 
@@ -102,6 +124,22 @@ app.utility = {};
 app.utility.sendmail = require('./util/sendmail');
 app.utility.slugify = require('./util/slugify');
 app.utility.workflow = require('./util/workflow');
+
+
+
+//response locals
+app.use(function(req, res, next) {
+    // res.cookie('_csrfToken', req.csrfToken());
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
+    next();
+    next();
+});
+
+
+
 
 //listen up
 app.server.listen(app.config.port, function(){
