@@ -25,10 +25,10 @@ exports = module.exports = function(app, passport) {
 
                 if (err) { return done(err); }
                 if (!user) {
-                    return done(null, false, { message: 'Incorrect email.' });
+                    return done(null, false, req.flash('loginMessage', 'No user found.'));
                 }
                 if (user.password != password) {
-                    return done(null, false, { message: 'Incorrect password.' });
+                    return done(null, false, req.flash('loginMessage', 'Wrong password'));
                 }
                 return done(null, user);
 

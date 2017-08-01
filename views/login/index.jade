@@ -2,9 +2,11 @@ extends ../../layouts/default
 block head
     title Login
 block body
-    -if(messages.length)
-       each message, i in messages
-        li #{message}
+    if (message.length > 0)
+        #alert
+            .alert.alert-danger
+                strong
+                |  #{message}
     .row
         .col-sm-4
             #divMessages
