@@ -12,8 +12,6 @@ html
     script(src='/javascripts/jquery-ui/jquery-ui.min.js')
     script(src='/javascripts/bootstrap.js')
 
-
-
     block neck
   body
     div.navbar.navbar-default.navbar-fixed-top
@@ -32,9 +30,12 @@ html
             li: a(href='/about/') About
             li: a(href='/signup/') Sign Up
             li: a(href='/contact/') Contact
-            li: a(href='/events/') Events
-            li: a(href='/BusinessRules/') BusinessRules
-            li: a(href='/Dashboard/') Dashboard
+            li: a(href='/events/') Events 
+            if (typeof(user) !== 'undefined')
+              li: a(href='/BusinessRules/') BusinessRules
+            if (typeof(user) !== 'undefined')
+              li: a(href='/Dashboard/') Dashboard
+            p #{user}
           ul.nav.navbar-nav.navbar-right
             if user && user.username
               li: a(href='#{user.defaultReturnUrl}')

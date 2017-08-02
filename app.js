@@ -72,7 +72,13 @@ app.use(session({
 // Connect Flash
 app.use(flash())
 
-app.use(function (req, res, next) {
+//response locals
+app.use(function(req, res, next) {
+    // res.cookie('_csrfToken', req.csrfToken());
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.error = req.flash('error');
+    res.locals.user = req.user || null;
     res.locals.messages = require('express-messages')(req, res);
     next();
 });
@@ -81,9 +87,6 @@ app.use(function (req, res, next) {
 app.use(passport.initialize());
 app.use(passport.session());
 helmet(app);
-
-
-
 
 
 //global locals
@@ -127,16 +130,7 @@ app.utility.workflow = require('./util/workflow');
 
 
 
-//response locals
-app.use(function(req, res, next) {
-    // res.cookie('_csrfToken', req.csrfToken());
-    res.locals.success_msg = req.flash('success_msg');
-    res.locals.error_msg = req.flash('error_msg');
-    res.locals.error = req.flash('error');
-    res.locals.user = req.user || null;
-    next();
-    next();
-});
+
 
 
 
