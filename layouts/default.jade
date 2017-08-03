@@ -11,6 +11,11 @@ html
     script(src='https://code.jquery.com/jquery-3.2.1.min.js')
     script(src='/javascripts/jquery-ui/jquery-ui.min.js')
     script(src='/javascripts/bootstrap.js')
+    script(src='/views/home/homepageHandler.js')
+    script.
+      var user
+      user = !{JSON.stringify(user)}
+      console.info(user)
 
     block neck
   body
@@ -26,25 +31,12 @@ html
             span.icon-bar
         div.navbar-collapse.my-navbar-collapse.collapse
           ul.nav.navbar-nav
-            li: a(href='/') Home
-            li: a(href='/about/') About
-            li: a(href='/signup/') Sign Up
-            li: a(href='/contact/') Contact
-            li: a(href='/events/') Events 
-            if (typeof(user) !== 'undefined')
-              li: a(href='/BusinessRules/') BusinessRules
-            if (typeof(user) !== 'undefined')
-              li: a(href='/Dashboard/') Dashboard
-            p #{user}
+          script.
+            menuHandler(user);
           ul.nav.navbar-nav.navbar-right
-            if user && user.username
-              li: a(href='#{user.defaultReturnUrl}')
-                i.fa.fa-user
-                |  #{user.username}
-            else
-              li: a(href='/login/')
-                i.fa.fa-user
-                |  Sign In
+          script.
+            loginHander(user)
+
 
     div.page
       div.container

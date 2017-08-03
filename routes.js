@@ -29,7 +29,7 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/model', require('./views/BusinessRules/buildSentimentModel').model);
 
 
-    //BusinessRules routes
+    //BusinessRules
     app.get('/BusinessRules/', require('./views/BusinessRules/index').find);
     app.post('/BusinessRules/findApiData', require('./views/BusinessRules/index').findApiData);
     app.get('/BusinessRules/add', require('./views/BusinessRules/index').add);
@@ -43,10 +43,13 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
     app.post('/BusinessRules/getBusinessRuleFilter', require('./views/BusinessRules/buildGenericTable').getBusinessRuleFilter);
 
-    //Dashboard routes
-    app.get('/Dashboard/', require('./views/Dashboard/index').find);
-    app.post('/Dashboard/findTweetPerNode',require('./views/Dashboard/graphActions').findTweetPerNode);
-    app.post('/Dashboard/filterNodesOnAantalTweets',require('./views/Dashboard/graphActions').filterNodesOnAantalTweets);
+    //Peronal dashboard
+    app.get('/Dashboard/', require('./views/Dashboard/index').init);
+
+    //Dashboard socialGraph routes
+    //app.get('/Dashboard/socialGraph', require('./views/Dashboard/socialGraph/index').find);
+    //app.post('/Dashboard/socialGraph/findTweetPerNode',require('./views/DashboardsocialGraph/graphActions').findTweetPerNode);
+    //app.post('/Dashboard/socialGraph/filterNodesOnAantalTweets',require('./views/Dashboard/socialGraph/graphActions').filterNodesOnAantalTweets);
     //app.get('/Dashboard/setTweetsperCattegory', require('./views/Dashboard/index').setTweetsperCattegory);
 
 
@@ -59,6 +62,17 @@ exports = module.exports = function(app, passport) {
         function(req, res) {
             // render the page and pass in any flash data if it exists
             res.render('./login/index', { message: req.flash('loginMessage') })
+        }
+    )
+
+    //logout
+    app.get('/logout/',
+        function(req, res) {
+            // destroy user
+            req.logout();
+            req.flash('success_msg', 'You are logged out');
+            //redirect to homepage
+            res.redirect('/');
         }
     )
 

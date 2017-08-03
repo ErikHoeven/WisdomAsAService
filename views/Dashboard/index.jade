@@ -1,164 +1,36 @@
 extends ../../layouts/default
 
 block head
-    title View Events
+    title Personal Dashboard
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
     link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     script(src='../../views/jquery-2.2.3.min.js')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
-    //script(src='//d3js.org/d3.v3.min.js')
     script(src="https://d3js.org/d3.v4.min.js")
-    //script(src='../../views/Dashboard/d3pie.js')
-
-    //style.
-    //  .links line {
-    //  stroke: #999;
-    //  stroke-opacity: 0.6;
-    //  }
-    //  .nodes circle {
-    //  stroke: #fff;
-    //  stroke-width: 1.5px;
-    //  }
-
-
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
-    script.
-
-        // LOAD DATA
-        var stgTweets =  [];
-        stgTweets = !{JSON.stringify(tweets)};
-
-        var tweetsPerDay = [];
-        tweetsPerDay = !{JSON.stringify(tweetsPerDay)};
-
-        var domainValues = [];
-        domainValues = !{JSON.stringify(domainValues)};
-
-        var tweetsPerCattegorry = []
-        tweetsPerCattegorry = !{JSON.stringify(tweetsPerCattegorry)};
-
-        var tweetsPerCattegoryPerDay = [];
-        tweetsPerCattegoryPerDay = !{JSON.stringify(tweetsPerCattegoryPerDay)}
-
-        var graph = [];
-        graphStructure = !{JSON.stringify(graphStructure)}
-        //console.info(graphStructure)
-
-    script(src="../../views/Dashboard/dataHandler.js")
-    //script(src="../../views/Dashboard/LineChartFull.js")
-    //script(src="../../views/Dashboard/pieChart.js")
-    //script(src="../../views/Dashboard/Barchart.js")
-    script(src='../../views/Dashboard/Graph.js')
 
 block body
     .container-fluid
-        .row(id="Header")
-            .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-                h1(align="Left").page-header Tweet subjects about Telecom
-        //.row(id="Navigatie")
-        //    .col-md-4
-        //    .col-md-4
-        //        label Detail niveau:
-        //            select.form-control(name='lstDetailNiveauLineGraph' id="lstDetailNiveauLineGraph")
-        //                option ActualWeek
-        //                option ActualMonth
-        //                option ActualYear
-        //    .col-md-4
-        //        label Kalender:
-        //            select.form-control(name='lstKalender' id="lstKalender")
-        //                option Week
-        //                option Month
-        //                option Year
-        //    .col-md-4
-        //        label Kalender:
-        //            select.form-control(name='lstDetailNiveauLineGraph' id="lstDetailNiveauLineGraph")
-        //                option Week
-        //                option Month
-        //                option Year
-        //        script.
-        //            $(document).ready(function () {
-        //                var graphCount = 0
-        //
-        //                //loadLineGraph(data)
-        //                $("#lstDetailNiveauLineGraph").change(function () {
-        //                    var strValue = ""
-        //                    var strValue = $(this).val();
-        //                    graphCount++
-        //
-        //
-        //                    if (strValue == 'ActualMonth') {
-        //
-        //                        console.info('graphOnMonth')
-        //                        console.info(graphCount)
-        //                        var dataSet = filterDates(actualMonth().startMonth, actualMonth().endMonth, data, 'ActualMonth')
-        //                        loadLineGraph(dataSet,'ActualMonth',min_max_filterDates(dataSet),graphCount)
-        //                       }
-        //
-        //                    if (strValue == 'ActualWeek') {
-        //
-        //                        console.info('graphOnWeek')
-        //                        console.info(graphCount)
-        //                        dataSet = filterDates(actualWeek().startWeekDay, actualWeek().endWeekDay, data, 'ActualWeek')
-        //                        loadLineGraph(dataSet,'ActualWeek',min_max_filterDates(dataSet),graphCount)
-        //                    }
-        //
-        //
-        //                })
-        //                $("#clearGraph").click(function () {
-        //                    var svg = d3.select("#lineChartSimple").selectAll("*").remove();
-        //                    var table = d3.select("tbody").selectAll("*").remove();
-        //                })
-        //            })
-        //    .col-md-4
-        //        .btn-group(role='group', aria-label='...')
-        //            #clearGraph.btn.btn-default(type='button') Clear
-
-
-
-        //.row(id="Graphs")
-        //    .col-md-4
-        //        h4 Total tweets per Cattegory
-        //        #pieChart(align="bottom" width=300 heigth=300)
-        //    .col-md-4
-        //        h4 Daily Tweets per cattegorie
-        //        #lineChartSimple(align="bottom" width=300 heigth=300)
-        //    .col-md-4
-
-        .row(id="DirectedGraphs")
-            .col-md-4
-                #filteredTweets(align="bottom")
-
-
-            .col-md-8
-                #aantalTweetsPerNode
-                    label min tweets per subject:
-                    input(type='text'  id='aantalTweets' maxlength="2" size="2")
-                    script.
-                        $("#aantalTweets").keypress(function (e) {
-                            if (e.which == 13) {
-                                var aantalTweets = $("#aantalTweets").val()
-                                $('#directedGraph').html('')
-                                $('#directedGraph').html('<svg width="700" height="600"> align="right"</svg>')
-
-                                filterGraphOnAantalTweets(aantalTweets,stgTweets)
-                            }
-                        });
-
-
-
-
-                #directedGraph(align="center" width=700 heigth=600)
-                    svg(width='700', height='600')
-                    script.
-                         plotSocialGrah(graphStructure,stgTweets)
-
-
-
-        .row(id="Details")
-            .col-md-9
-                #tableDetails
-                    table.table.table-hover
-
+        .row
+            .col-md-3
+                .widget
+                    .widget-content.bg-white
+                        .row
+                            .col-xs-6
+                                h3.counter.font-bold.font-size-38 231
+                            .col-xs-6
+                                p.font-size-38
+                                    span.glyphicon.glyphicon-user
+                        p Users Registered
+                        .progress.progress-xs
+                            .progress-bar.bg-green(role='progressbar', data-transitiongoal='74', aria-valuenow='74', style='width: 74%;')
+                        a.padding-8.hvr-bounce-to-right.bg-green(href='#', style='width:100%;')
+                            | Read full report
+                            i.fa.fa-arrow-circle-right
+            .col-md-3
+            .col-md-3
+            .col-md-3
+            .col-md-3
 
