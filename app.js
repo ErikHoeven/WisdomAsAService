@@ -57,6 +57,7 @@ app.set('view engine', 'jade');
 app.use(require('morgan')('dev'));
 app.use(require('compression')());
 app.use(require('serve-static')(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(require('method-override')());
 app.use(express.static('public'));
 app.use(bodyParser.json());
