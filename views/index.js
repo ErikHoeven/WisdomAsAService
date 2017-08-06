@@ -1,5 +1,7 @@
 'use strict';
 
 exports.init = function(req, res){
-   res.render('index', {user: req.user});
+   var user = {}
+   user = req.user||{}
+   res.render('index', {user: user});
 };

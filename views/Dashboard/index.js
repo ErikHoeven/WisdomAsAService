@@ -5,6 +5,7 @@
 var request = require("request")
 
 exports.init = function(req, res, next){
-    req.flash('succes_msg','fdsafadfdasf')
-    res.render('Dashboard/index');
+    var user = {}
+    user = req.user||{}
+    res.render('Dashboard/index',{user: user});
 }

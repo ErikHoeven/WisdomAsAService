@@ -5,32 +5,69 @@ block head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
-    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     script(src='../../views/jquery-2.2.3.min.js')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src="https://d3js.org/d3.v4.min.js")
+    script(src="/views/Dashboard/createWidgets.js")
+
+    link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
+    link(href='/stylesheets/global-plugins.css', rel='stylesheet')
+    link(href='/vendors/jquery-icheck/skins/all.css', rel='stylesheet')
+
+    // This plugins css uses on this page only
+    link(href='/vendors/maps/css/jquery-jvectormap-2.0.1.css', rel='stylesheet', type='text/css')
+    link(href='/vendors/morris-chart/morris.css', rel='stylesheet')
+    link(href='/vendors/video-js/video-js.min.css', rel='stylesheet', type='text/css')
+    link(href='/vendors/c3-chart/c3.min.css', rel='stylesheet', type='text/css')
+    link(href='/css/flot-chart.css', rel='stylesheet')
+    link(href='/stylesheets/vendors/jquery-ricksaw-chart/css/rickshaw.css', rel='stylesheet')
+    link(href='/vendors/summernote/summernote.css', rel='stylesheet')
+    link(href='/vendors/summernote/summernote-bs3.css', rel='stylesheet')
+    link(href='/vendors/select2/select2.css', rel='stylesheet')
+    link(href='/vendors/bootstrap-tagsinput/bootstrap-tagsinput.css', rel='stylesheet')
+
+    // Custom styles for this template
+    link(href='/stylesheets/theme.css', rel='stylesheet')
+    link(href='/stylesheets/style-responsive.css', rel='stylesheet')
+    link(href='/stylesheets/class-helpers.css', rel='stylesheet')
+
+    // Color schemes
+    link(href='/stylesheets/colors/green.css', rel='stylesheet')
+    link(href='/stylesheets/colors/turquoise.css', rel='stylesheet')
+    link(href='/stylesheets/colors/blue.css', rel='stylesheet')
+    link(href='/stylesheets/colors/amethyst.css', rel='stylesheet')
+    link(href='/stylesheets/colors/cloud.css', rel='stylesheet')
+    link(href='/stylesheets/colors/sun-flower.css', rel='stylesheet')
+    link(href='/stylesheets/colors/carrot.css', rel='stylesheet')
+    link(href='/stylesheets/colors/alizarin.css', rel='stylesheet')
+    link(href='/stylesheets/colors/concrete.css', rel='stylesheet')
+    link(href='/stylesheets/colors/wet-asphalt.css', rel='stylesheet')
+
+    // Fonts
+    link(href='/fonts/Indie-Flower/indie-flower.css', rel='stylesheet')
+    link(href='/fonts/Open-Sans/open-sans.css?family=Open+Sans:300,400,700', rel='stylesheet')
+
+
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
+
+
+
 
 block body
     .container-fluid
         .row
-            .col-md-3
-                .widget
-                    .widget-content.bg-white
-                        .row
-                            .col-xs-6
-                                h3.counter.font-bold.font-size-38 231
-                            .col-xs-6
-                                p.font-size-38
-                                    span.glyphicon.glyphicon-user
-                        p Users Registered
-                        .progress.progress-xs
-                            .progress-bar.bg-green(role='progressbar', data-transitiongoal='74', aria-valuenow='74', style='width: 74%;')
-                        a.padding-8.hvr-bounce-to-right.bg-green(href='#', style='width:100%;')
-                            | Read full report
-                            i.fa.fa-arrow-circle-right
-            .col-md-3
-            .col-md-3
-            .col-md-3
-            .col-md-3
+            p
+            br
+            br
+            br
+        .row
+            .col-sm-4(id='userprofile')
+                script.
+                    setUserProfile(user)
+
+            #Tweets
+                script.
+                    setMachtingTweets(10)
+            #LinkedInn
+
 

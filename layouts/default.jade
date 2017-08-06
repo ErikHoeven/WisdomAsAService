@@ -13,10 +13,11 @@ html
     script(src='/javascripts/bootstrap.js')
     script(src='/views/home/homepageHandler.js')
     script.
-      var user
-      user = !{JSON.stringify(user)}
-      console.info(user)
-
+      var user = {}
+      console.info(jQuery.isEmptyObject(!{JSON.stringify(user)}))
+        if (jQuery.isEmptyObject(!{JSON.stringify(user)}) == false){
+          user = !{JSON.stringify(user)}
+        }
     block neck
   body
     div.navbar.navbar-default.navbar-fixed-top

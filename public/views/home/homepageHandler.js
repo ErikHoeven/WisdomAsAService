@@ -4,14 +4,15 @@
 
 function menuHandler(user){
     console.info('start menu handling')
-    console.info(user)
-    if(user === undefined){
+    if(jQuery.isEmptyObject(user) == true){
+        console.info('user not found')
         $(".nav.navbar-nav").append('<li><a href="/">Home</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/signup/">Sign Up</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/contact/">Contact</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/events/">Events </a></li>')
     }
     else{
+        console.info('user found')
         $(".nav.navbar-nav").append('<li><a href="/">Home</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/contact/">Contact</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/events/">Events </a></li>')
@@ -22,8 +23,8 @@ function menuHandler(user){
 }
 
 function loginHander(user){
-    console.info('start user handling')
-    if(user === undefined){
+    console.info('start loginHander handling')
+    if(jQuery.isEmptyObject(user) == true){
         console.info('user not found')
         $('.nav.navbar-nav.navbar-right').append('<a href="/login" class="btn btn-info btn-sm" ><span class="glyphicon glyphicon-user"></span> Login</a>')
     }
