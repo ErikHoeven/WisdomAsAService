@@ -45,7 +45,8 @@
     "translate": "*",
     "natural": "*",
     "formidable": "*",
-    "connect-flash": "*"
+    "connect-flash": "*",
+    "moment":"^2.18.1"
   },
   "devDependencies": {
     "bootstrap": "^3.x.x",

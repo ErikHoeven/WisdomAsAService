@@ -9,6 +9,11 @@ block head
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src="https://d3js.org/d3.v4.min.js")
     script(src="/views/Dashboard/createWidgets.js")
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js')
+
 
     link(href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", rel="stylesheet")
     link(href='/stylesheets/global-plugins.css', rel='stylesheet')
@@ -61,15 +66,75 @@ block body
             br
             br
         .row
-        .row
-            .col-sm-4(id='userprofile')
-                script.
-                    setUserProfile(user)
-        .row
-            .col-sm-5
-                #Tweets
+            .col-md-12
+                #userProfile
                     script.
-                        setMachtingTweets(10)
-            #LinkedInn
+                        setUserProfile(user)
+        .row
+            .col-md-12
+                .widget
+                    .social-style-1.bg-white.padding-left-15.padding-right-15.margin-bottom-20
+                        .row
+                            .col-md-6.bg-facebook.padding-bottom-38.text-center
+                                .text-center
+                                    p.pull-left.margin-top-20
+                                        i.fa.fa-facebook.fa-4x
+                                    .social-overview
+                                        span.font-size-40.counter.font-bold.text-left 2100
+                                        p.margin-left-50.text-left Fans
+                            .col-md-6.bg-twitter.padding-bottom-38.text-center
+                                .text-center
+                                    p.pull-left.margin-top-20
+                                        i.fa.fa-twitter.fa-4x
+                                    .social-overview
+                                        span.font-size-40.counter.font-bold.text-left 1500
+                                        p.margin-left-50.text-left Followers
+                        // /row
+                        .row
+                            .col-md-6.bg-rss.padding-bottom-38.text-center
+                                .text-center
+                                    p.pull-left.margin-top-20
+                                        i.fa.fa-rss.fa-4x
+                                    .social-overview
+                                        span.font-size-40.counter.font-bold.text-left 5000
+                                        p.margin-left-50.text-left Subscribers
+                            .col-md-6.bg-youtube.padding-bottom-38.text-center
+                                .text-center
+                                    p.pull-left.margin-top-20
+                                        i.fa.fa-youtube.fa-4x
+                                    .social-overview
+                                        span.font-size-40.counter.font-bold.text-left 4300
+                                        p.margin-left-50.text-left Viewers
+        .row
+            .col-md-6
+                #myfirstchart
+                    script.
+                        getTweets()
+                        new Morris.Line({
+                            // ID of the element in which to draw the chart.
+                            element: 'myfirstchart',
+                            // Chart data records -- each entry in this array corresponds to a point on
+                            // the chart.
+                            data: [
+                                {year: '2008', value: 20},
+                                {year: '2009', value: 10},
+                                {year: '2010', value: 5},
+                                {year: '2011', value: 5},
+                                {year: '2012', value: 20}
+                            ],
+                            // The name of the data record attribute that contains x-values.
+                            xkey: 'year',
+                            // A list of names of data record attributes that contain y-values.
+                            ykeys: ['value'],
+                            // Labels for the ykeys -- will be displayed when you hover over the
+                            // chart.
+                            labels: ['Value']
+                        });
+
+
+
+
+
+
 
 

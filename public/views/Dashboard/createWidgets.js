@@ -15,14 +15,38 @@ function setMachtingTweets(tweets) {
 
 function setUserProfile(user) {
     console.info('setUserProfile')
-    var url = user.profilePictureURI
+    var url = user.profilePictureURI, username = user.username
     console.info(url)
     if (!url) {
         url = '/images/users/img2.jpg'
     }
 
-    $('#userprofile').append('<img src="' + url + '" class="img-circle profile-avatar" alt="User avatar">')
+    $('#userProfile').append('' +
+        '<div class="widget user-view-style-2">' +
+        '<div class="widget-wrapper">' +
+        '<div class="widget-content">' +
+        '<div class="text-center user-profile bg-white">' +
+        '<div class="header-cover bg-green">' +
+        '</div>' +
+        '<div class="user-profile-inner padding-top-17">' +
+        '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true">' +
+        '<h4 class="fg-gray font-bold">'+ username + '</h4></div></div></div></div></div>')
+}
+
+
+
+function getTweets(){
+    $.ajax({
+        url: '/Dashboard/getTweets',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({deleteKey: 'id'}),
+        success: function (response) {
+            console.info('succes')
+       }
+   })
 
 }
+
 
 
