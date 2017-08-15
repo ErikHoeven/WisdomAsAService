@@ -1,7 +1,7 @@
 /**
  * Created by erik on 8/6/17.
  */
-function setMachtingTweets(tweets, likes, retweets, div) {
+function setMachtingTweets(tweets, likes, retweets, uniqueUsers, div) {
 
     $(div).html('')
 
@@ -34,6 +34,17 @@ function setMachtingTweets(tweets, likes, retweets, div) {
         '<span class="font-size-40 counter font-bold text-left">' + retweets + '</span>' +
         '<p class="margin-left-50 text-left">Retweets this month</p>' +
         '</div></div></div>')
+
+    $(div).append('<div class="col-md-6 bg-twitter padding-bottom-38 text-center"> ' +
+        '<div class="text-center">' +
+        '<p class="pull-left margin-top-20">' +
+        '<i class="fa fa-twitter fa-4x"></i>' +
+        '</p>' +
+        '<div class="social-overview">' +
+        '<span class="font-size-40 counter font-bold text-left">' + uniqueUsers + '</span>' +
+        '<p class="margin-left-50 text-left">Users this month</p>' +
+        '</div></div></div>')
+
 
 
 }
@@ -72,7 +83,8 @@ function getTweets(){
             var likes = data.tweets[0].values.likesPerDay
             var retweetsPerDay = data.tweets[0].values.retweetsPerDay
             var dataPlot = data.graphArrayDayTweets
-            setMachtingTweets(aantalTweets, likes, retweetsPerDay, '#social')
+            var uniqueUsers = data.uniqueUsers
+            setMachtingTweets(aantalTweets, likes, retweetsPerDay, uniqueUsers, '#social')
 
             // Building Chart
             $('#myfirstchart').html('')

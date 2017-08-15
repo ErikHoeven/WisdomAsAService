@@ -12,6 +12,7 @@ var  cheerio = require("cheerio")
     ,uri = 'mongodb://localhost:27017/commevents'
     ,dbTweets = db.get('STG_LEADS_AUTOSCHADE')
     ,moment = require('moment')
+    ,underscore = require('underscore')
 
 
 exports.init = function(req, res, next){
@@ -33,6 +34,7 @@ exports.getTweets = function (req, res, next) {
        , isRetweeted =  0
        , graphArrayDayTweets = []
        , i = 0
+       , lstUserPerMonth = []
 
 
 
@@ -84,9 +86,6 @@ exports.getTweets = function (req, res, next) {
         console.info(dayTweetCount)
 
         console.info('-------------------------------------------')
-        console.info(moment(dayTweetCount[0].key,'MM-DD-YYYY').toDate())
-        console.info(moment(dayTweetCount[1].key,'MM-DD-YYYY').toDate())
-        console.info(moment(dayTweetCount[2].key,'MM-DD-YYYY').toDate())
 
 
         dayTweetCount.forEach(function (day) {
@@ -94,8 +93,17 @@ exports.getTweets = function (req, res, next) {
             i++
         })
 
+        twMonthClean.forEach(function (tw) {
+            lstUserPerMonth.push(tw.user.name)
+        })
+
+        var uniqueUsers = underscore.uniq(lstUserPerMonth)
+
+
+
+
         console.info(graphArrayDayTweets)
-        res.status(200).json({tweets:allTweetsPerMonth, graphArrayDayTweets: graphArrayDayTweets})
+        res.status(200).json({tweets:allTweetsPerMonth, graphArrayDayTweets: graphArrayDayTweets, uniqueUsers: uniqueUsers.length})
     })
 }
 
