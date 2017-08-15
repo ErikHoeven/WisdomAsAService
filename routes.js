@@ -45,7 +45,7 @@ exports = module.exports = function(app, passport) {
 
     //Peronal dashboard
     app.get('/Dashboard/', require('./views/Dashboard/index').init);
-    app.post('/Dashboard/getTweets', require('./views/Dashboard/index').getTweets);
+    app.get('/Dashboard/getTweets', require('./views/Dashboard/index').getTweets);
 
 
     //Dashboard socialGraph routes

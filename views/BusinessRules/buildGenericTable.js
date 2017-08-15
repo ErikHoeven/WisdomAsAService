@@ -358,9 +358,6 @@ exports.getBusinessRuleFilter = function (req, res, next) {
 
 
 
-            //res.status(200).json({tableResult: businessrules, pagingResultSet: pagingResultSet })
-
-
 
 
 

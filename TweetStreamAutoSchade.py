@@ -4,6 +4,8 @@ from tweepy.streaming import StreamListener
 import time
 import json
 from pymongo import MongoClient
+from datetime import datetime
+
 
 #Mongo Settings
 client = MongoClient()
@@ -33,7 +35,16 @@ class listener(StreamListener):
             
             if tweet["lang"] == "nl":
                 print tweet["id"]
+
+                #print tweet["created_at"]
+                created_at =  tweet["created_at"][:-10] + tweet["created_at"][26:]
+                created_at =  datetime.strptime(created_at,"%a %b %d %H:%M:%S %Y")
+                created_at = datetime.strftime(created_at,"%m/%d/%Y %H:%M:%S")
+                created_at = datetime.strptime(created_at,"%m/%d/%Y %H:%M:%S")
+                print created_at
+                tweet["created_at"] =  created_at
                 Tweets.insert(tweet)
+
             
             
 

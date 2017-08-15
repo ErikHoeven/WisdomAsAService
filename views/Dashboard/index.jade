@@ -72,64 +72,18 @@ block body
                         setUserProfile(user)
         .row
             .col-md-12
-                .widget
-                    .social-style-1.bg-white.padding-left-15.padding-right-15.margin-bottom-20
-                        .row
-                            .col-md-6.bg-facebook.padding-bottom-38.text-center
-                                .text-center
-                                    p.pull-left.margin-top-20
-                                        i.fa.fa-facebook.fa-4x
-                                    .social-overview
-                                        span.font-size-40.counter.font-bold.text-left 2100
-                                        p.margin-left-50.text-left Fans
-                            .col-md-6.bg-twitter.padding-bottom-38.text-center
-                                .text-center
-                                    p.pull-left.margin-top-20
-                                        i.fa.fa-twitter.fa-4x
-                                    .social-overview
-                                        span.font-size-40.counter.font-bold.text-left 1500
-                                        p.margin-left-50.text-left Followers
-                        // /row
-                        .row
-                            .col-md-6.bg-rss.padding-bottom-38.text-center
-                                .text-center
-                                    p.pull-left.margin-top-20
-                                        i.fa.fa-rss.fa-4x
-                                    .social-overview
-                                        span.font-size-40.counter.font-bold.text-left 5000
-                                        p.margin-left-50.text-left Subscribers
-                            .col-md-6.bg-youtube.padding-bottom-38.text-center
-                                .text-center
-                                    p.pull-left.margin-top-20
-                                        i.fa.fa-youtube.fa-4x
-                                    .social-overview
-                                        span.font-size-40.counter.font-bold.text-left 4300
-                                        p.margin-left-50.text-left Viewers
+                #social.widget
+
         .row
             .col-md-6
                 #myfirstchart
                     script.
-                        getTweets()
-                        new Morris.Line({
-                            // ID of the element in which to draw the chart.
-                            element: 'myfirstchart',
-                            // Chart data records -- each entry in this array corresponds to a point on
-                            // the chart.
-                            data: [
-                                {year: '2008', value: 20},
-                                {year: '2009', value: 10},
-                                {year: '2010', value: 5},
-                                {year: '2011', value: 5},
-                                {year: '2012', value: 20}
-                            ],
-                            // The name of the data record attribute that contains x-values.
-                            xkey: 'year',
-                            // A list of names of data record attributes that contain y-values.
-                            ykeys: ['value'],
-                            // Labels for the ykeys -- will be displayed when you hover over the
-                            // chart.
-                            labels: ['Value']
-                        });
+                        var auto_refresh = setInterval(function () {
+                            getTweets()
+                        }, 15000 )
+
+
+
 
 
 
