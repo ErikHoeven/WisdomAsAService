@@ -6,13 +6,14 @@ block head
     script(src="../../views/BusinessRules/buildSentimentTrainingSet.js")
 block body
     .row
-        .col-lg-10
-            h1 BusinessRules
-    .row
-        .col-sm-6
-            h4 Filter
         .col-sm-6
             #message
+    #header.row
+        .col-lg-10
+            h3 Zoek voorwaarden
+    #filter.row
+        #filterContent.col-sm-6
+            h4 Filter
     .row
         .col-sm-2
             #searchTypeRule
@@ -31,7 +32,7 @@ block body
             #pagnation
         .col-sm-2
             .form-group
-                label(for='sel1') rows per page
+                label(for='sel1' id='rowsPerPage') rows per page
                 select#pagnationOption.form-control
                     option 10
                     option 15
@@ -42,7 +43,7 @@ block body
                     option 40
     .row(id= 'buttens' )
         .col-sm-4
-            a(href='/BusinessRules/add', class='btn btn-default') Toevoegen labels
+            a(href='/BusinessRules/add', class='btn btn-default' id='addSearchRules') Toevoegen voorwaarden
         .col-md-5
             #btnSentiment
                 button
@@ -70,7 +71,7 @@ block body
                     tableDefinition.divTable = 'tblBusinessrules'
                     tableDefinition.tableName = 'tblSentiment'
                     tableDefinition.keyColumn = ['_id']
-                    tableDefinition.hideColumns = ['searchReturnValue','cattegoryValue','__v','search']
+                    tableDefinition.hideColumns = ['searchReturnValue','__v','search','userId']
                     tableDefinition.title = 'Business Rules'
                     tableDefinition.editRow = 'Y'
                     tableDefinition.isEditable = 'N'
@@ -140,12 +141,13 @@ block body
                         $('#searchLookupTerm').keyup(function (e) {
                             $('#message').html('')
                             var term = autocompletionLookupValue(e,document.getElementById('searchLookupTerm').selectionStart)
+                            var cattegory = $('#fltrZoekWaarde option:selected').text()
 
                             $.ajax({
                                 url: '/BusinessRules/getBusinessRuleFilter',
                                 type: 'POST',
                                 contentType: 'application/json',
-                                data: JSON.stringify({term: term, tableDefinition: tableDefinition}),
+                                data: JSON.stringify({term: term, tableDefinition: tableDefinition, cattegory: cattegory }),
                                 success: function (response) {
                                     if (response.status == 'succes'){
                                         $('#' + response.tableResult.div).html('')

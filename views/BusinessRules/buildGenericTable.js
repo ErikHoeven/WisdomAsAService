@@ -130,13 +130,11 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
     columns.forEach(function (col) {
         var i = 0;
         if( col != findHideCols(col,totHideCols)){
-            console.info(col)
             strColumns = strColumns + '<th>' + col + '</th>'
+
         }
     })
-
-
-    if (tableDefinition.editRow ==  'Y' ){
+     if (tableDefinition.editRow ==  'Y' ){
         strColumns = strColumns + '<th>edit</th><th>delete</th>'
         updateAftrek =  updateAftrek + 1
     }
@@ -163,10 +161,19 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
             keys.forEach(function (columKey) {
                 colpos.forEach(function (col) {
 
+
                     if (col.column == columKey && col.col_pos > lastPos && columKey != findHideCols(columKey, totHideCols)){
-                        strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'
+                        console.info(row[columKey] + ' : ' + Array.isArray(row[columKey]))
+
+                        if (Array.isArray(row[columKey]) == false){
+                            strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'
+                        }
+                        else {
+                            strData = strData + '<td id="'+ columKey + row['_id'] + '" align="center"><i class="fa fa-binoculars" onclick="searchArray(\'' +columKey + '\',\'' + row['_id'] +'\',\'' + sourceCollection + '\',\'N\')"></i></td>'
+                        }
                         lastPos = col.col_pos
                     }
+
                 })
             })
 
@@ -220,8 +227,6 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
 
 
                                 updateProperties = '<td id="update'+ row['_id'] + '"><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +rowDef + '\',\'' + sourceCollection +'\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' + row['_id'] +'\')"></td>'
-
-                                //console.info(rowDef)
                                 strData = strData + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>' + updateProperties + '</tr>'
                             }
                             else {
@@ -270,6 +275,12 @@ function rowDefinition (KeyofColumns, allHideColNames, rowId ){
     return tableDefinition
 }
 
+
+function searchDefiniton(KeyColumn, rowId) {
+
+}
+
+
 function setPagnation(data, pagnationStep, actualStep ) {
     var pagnationSteps =  data.length/  pagnationStep
     console.info('pagnationsteps: ' + pagnationSteps)
@@ -302,15 +313,15 @@ exports.getBusinessRuleListFilterList = function (req, res, next) {
 
 exports.getBusinessRuleFilter = function (req, res, next) {
 
-    var lookupterm = '', term = req.body.term, tableDefinition = req.body.tableDefinition
+    var lookupterm = '', term = req.body.term, tableDefinition = req.body.tableDefinition, category = req.body.cattegory
+
 
     term.forEach(function (t) {
         lookupterm = lookupterm +  t.searchTerm
-
     })
 
 
-
+    console.info(lookupterm)
 
     mongo.connect(uri, function (err, db) {
 
@@ -319,7 +330,7 @@ exports.getBusinessRuleFilter = function (req, res, next) {
         var locals = {}, tasks = [
             // Load tmp
             function (callback) {
-                db.collection('businessrules').find({"lookupValue": {$regex: ".*" + lookupterm + ".*"}  }).toArray(function (err, businessrules) {
+                db.collection('businessrules').find({$and:[{$or:[{"lookupValue": {$regex: ".*" + lookupterm + ".*"}},{"tagCattegory": {$regex: ".*" + lookupterm + ".*"}}]}]}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
                     locals.businessrules = businessrules;
                     callback();
@@ -338,23 +349,44 @@ exports.getBusinessRuleFilter = function (req, res, next) {
                 res.status(200).json({status: 'error' ,message: 'Not the right combination of characters!!'})
             }
             else {
-                var tableResult = genericTable(businessrules, tableDefinition, 10, 1)
-                var pagingResultSet = setPagnation(businessrules, 10,1)
-                res.status(200).json({tableResult: tableResult, pagingResultSet: pagingResultSet, status: 'succes', message: 'refresh table succesfull' })
 
+                if ( category == null){
+                    var tableResult = genericTable(businessrules, tableDefinition, 10, 1)
+                    var pagingResultSet = setPagnation(businessrules, 10,1)
+                }
+                else {
+                    console.info('--------------- Cattegory not null -----------------------------------')
+                    var newbusinessrules = fltrArray(businessrules, category)
+
+                    if (newbusinessrules.length > 0){
+                        console.info(newbusinessrules)
+                        var tableResult = genericTable(newbusinessrules, tableDefinition, 10, 1)
+                        var pagingResultSet = setPagnation(newbusinessrules, 10,1)
+                        res.status(200).json({tableResult: tableResult, pagingResultSet: pagingResultSet, status: 'succes', message: 'refresh table succesfull' })
+                    }
+                    else {
+                        res.status(200).json({status: 'error' ,message: 'Not the right combination of characters!!'})
+                    }
+
+                }
             }
-
-
         })
     })
-
-
-
 }
 
 
 
-
+function fltrArray (array, fltr){
+    console.info('------------------- START FILTER ----------------------')
+    var rsltArray = []
+    array.forEach(function (r) {
+        if (r.typeBusinessRule == fltr){
+            console.info(r)
+            rsltArray.push(r)
+        }
+    })
+    return rsltArray
+}
 
 
 

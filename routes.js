@@ -42,6 +42,7 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/buildGenericTable', require('./views/BusinessRules/buildGenericTable').createGenericTable);
     app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
     app.post('/BusinessRules/getBusinessRuleFilter', require('./views/BusinessRules/buildGenericTable').getBusinessRuleFilter);
+    app.post('/BusinessRules/getSearchResultArray', require('./views/BusinessRules/getSearchResultArray').getSearchResultArray);
 
     //Peronal dashboard
     app.get('/Dashboard/', require('./views/Dashboard/index').init);

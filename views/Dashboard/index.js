@@ -13,6 +13,7 @@ var  cheerio = require("cheerio")
     ,dbTweets = db.get('STG_LEADS_AUTOSCHADE')
     ,moment = require('moment')
     ,underscore = require('underscore')
+    ,natural = require('natural')
 
 
 exports.init = function(req, res, next){
@@ -43,11 +44,9 @@ exports.getTweets = function (req, res, next) {
     endMonth = moment(endMonth).format('MM-DD-YYYY')
     endMonth = new Date (endMonth)
 
-    console.info(endMonth)
-    console.info(startMonth)
-
     dbTweets.find({created_at:{$gt: startMonth, $lt: endMonth}},function (error,twMonth) {
 
+        //(1) Clean tweet for reportng purpose ->  twMonthClean[]
         twMonth.forEach(function (tweet) {
             tweet.created_at = moment(tweet.created_at).format('MM-DD-YYYY')
             tweet.retweeted = isRetweeted
@@ -61,6 +60,7 @@ exports.getTweets = function (req, res, next) {
 
         })
 
+        // (2) Aggegrate the whole month on twMonthClean[]
         var allTweetsPerMonth = d3.nest()
             .key(function(d) { return d.all; })
             .rollup(function(v) { return {
@@ -72,8 +72,9 @@ exports.getTweets = function (req, res, next) {
 
         console.info(allTweetsPerMonth)
 
-        console.info('-------------------------------------------')
+        console.info('----------------------------------------------------------------')
 
+        // (3) Aggegrate the day on twMonthClean[]
         var dayTweetCount = d3.nest()
             .key(function(d) { return d.created_at; })
             .rollup(function(v) { return {
@@ -83,27 +84,40 @@ exports.getTweets = function (req, res, next) {
             }; })
             .entries(twMonthClean);
 
-        console.info(dayTweetCount)
-
-        console.info('-------------------------------------------')
-
 
         dayTweetCount.forEach(function (day) {
             graphArrayDayTweets.push({date: moment(dayTweetCount[i].key,'MM-DD-YYYY').toDate(), value: day.values.count})
             i++
         })
 
+        console.info(graphArrayDayTweets)
+        console.info('----------------------------------------------------------------')
+
         twMonthClean.forEach(function (tw) {
             lstUserPerMonth.push(tw.user.name)
         })
 
         var uniqueUsers = underscore.uniq(lstUserPerMonth)
+        console.info(uniqueUsers.length)
+
+        console.info('----------------------------------------------------------------')
+        var wordList,wordArray = []
+
+        for (var counter = 0; counter < twMonthClean.length; counter++){
+            wordList = setSentenceToWord(twMonthClean[counter].text)
+            wordArray = wordArray.concat(wordList)
+        }
+
+        var wordCloud = fltrWordCountList(wordArray,5,null)
+
+        console.info(wordCloud)
 
 
-
-
-        console.info(graphArrayDayTweets)
-        res.status(200).json({tweets:allTweetsPerMonth, graphArrayDayTweets: graphArrayDayTweets, uniqueUsers: uniqueUsers.length})
+        res.status(200).json({tweets:allTweetsPerMonth
+                            , graphArrayDayTweets: graphArrayDayTweets
+                            , uniqueUsers: uniqueUsers.length
+                            //, wordCloud: wordCloud
+                            })
     })
 }
 
@@ -152,9 +166,47 @@ function actualMonth() {
 
 }
 
+function setSentenceToWord(tweetsText) {
+    var tokenizer = new natural.WordTokenizer();
 
-function  sendToFrontEnd(message) {
+    return tokenizer.tokenize(tweetsText)
 
-    res.render('Dashboard/index',{message: message})
+}
 
+
+function fltrWordCountList(wordCloud, filterCount, fltrList) {
+    var returnList = [], wordCloudDef = [], compareWord = null, count = 0
+
+    wordCloud.sort();
+
+
+    wordCloud.forEach(function (word) {
+
+        if(word != compareWord && count == 0){
+            compareWord = word
+        }
+
+        if(word == compareWord){
+            if (count == 0){
+                count++
+            }
+            else {
+                count++
+            }
+        }
+
+        if (word != compareWord && count > 0){
+            wordCloudDef.push({word: word, count: count + 1})
+            count = 0
+            compareWord = word
+        }
+    })
+
+    wordCloudDef.forEach(function (word) {
+        if(word.count >= filterCount){
+            returnList.push(word)
+        }
+
+    })
+    return returnList
 }

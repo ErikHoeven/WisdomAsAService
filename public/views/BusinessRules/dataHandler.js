@@ -91,13 +91,19 @@ function update(column, id, sourceCollection) {
     console.info('---------------------')
     console.info('column: ' + column)
     console.info('id: ' + id)
+    console.info('value:' +  value)
+    var valuelist = []
 
     var fields = column.split(','), updateSet = [], value, updateRow = {}
 
     fields.forEach(function (field) {
-        value = $('#' + field).val()
+        $('#' + field).each(function (idx, elem) {
+            console.info('i')
+            console.info($(elem).val())
+        })
+
         column = field.replace('txt','').replace(id,'')
-        updateRow[column] = value
+        updateRow[column] = valuelist
         updateRow.id = id
         updateRow.collection = sourceCollection
         updateSet.push(updateRow)
@@ -106,7 +112,7 @@ function update(column, id, sourceCollection) {
     console.info(updateSet[0])
 
 
-    $.ajax({
+/*    $.ajax({
       //url: '/BusinessRules/updateTrainingSet',
       url: '/BusinessRules/updateGeneric',
       type: 'POST',
@@ -120,7 +126,7 @@ function update(column, id, sourceCollection) {
           tableDefinition.divTable = 'tblBusinessrules'
           tableDefinition.tableName = 'tblSentiment'
           tableDefinition.keyColumn = ['_id']
-          tableDefinition.hideColumns = ['searchReturnValue','cattegoryValue','__v','search']
+          tableDefinition.hideColumns = ['searchReturnValue','__v','search']
           tableDefinition.title = 'Business Rules'
           tableDefinition.editRow = 'Y'
           tableDefinition.isEditable = 'N'
@@ -131,7 +137,7 @@ function update(column, id, sourceCollection) {
         //createGeneric(trainingset, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Update Training set for Sentiment Model')
 
          }
-      })
+      })*/
 
     console.info('---------------------')
 
@@ -185,4 +191,65 @@ function autocompletionLookupValue(val, pos) {
 
 return term
 }
+
+function searchArray(column, id, sourceCollection, edit){
+    console.info('searchArray')
+    var strTable = '<table class="table table-hover" id="valueDetails"><thead><tr><th>values</th></tr></thead><tbody>'
+    var strTableBody = ''
+    var dynButton = '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="searchArray(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\',\'Y\')">Edit</button> '
+
+
+
+
+    $.ajax({
+        url: '/BusinessRules/getSearchResultArray',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id, column: column}),
+        success: function (response) {
+            var i = 0
+
+            if (edit == 'N'){
+                // (A table body for non edit modus
+                response.forEach(function (v) {
+                strTableBody = strTableBody + '<tr><td>'+ v +'</td><tr></tr>'
+                })
+
+            }
+            else {
+                response.forEach(function (v) {
+                    strTableBody = strTableBody + '<tr><td><input type="text" id="'+ column + '" value="'+ v +'"></td><tr></tr>'
+                    i++
+
+                    dynButton = '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Save</button> '
+
+                })
+            }
+
+            // (1) Hide all unnesserly information
+            $('#fltrZoekWaarde').hide()
+            $('#searchLookupTerm').hide()
+            $('#pagnationOption').hide()
+            $('#addSearchRules').hide()
+            $('#sentiment').hide()
+            $('.pagination').hide()
+            $('#rowsPerPage').hide()
+
+            // (2)  Build detail screen
+            $('#filterContent').attr('class', 'col-md-8')
+            $('#filterContent').html('<div class="col-md-8">' +
+                '<div class="thumbnail"><div class="caption">' +
+                '<h4>' + column + '</h4>' +
+                 strTable + strTableBody +'</tbody></table></p> </div> <div class="ratings"> ' +
+                '</div> <div class="space-ten">' +
+                '</div> <div class="btn-ground text-center"> ' +
+                dynButton +
+                '<button type="button" class="btn btn-primary" data-toggle="modal">Add</button> ' +
+                '<button type="button" class="btn btn-primary" data-toggle="modal">Close</button></div> ' +
+                '<div class="space-ten"></div></div></div>')
+        }
+    })
+}
+
+
 
