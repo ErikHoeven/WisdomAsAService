@@ -90,7 +90,7 @@ exports.create = function(req, res, next) {
             return workflow.emit('response');
         }
 
-        if(req.body.lstTypeBusinessRule == 'Zoekwaarde'){
+        if(req.body.lstTypeBusinessRule == 'Zoekwaarde' || req.body.lstTypeBusinessRule == 'WordCloudExceptions'){
             workflow.emit('createLookupValue');
         }
         if(req.body.lstTypeBusinessRule == 'Cattegorie' ||

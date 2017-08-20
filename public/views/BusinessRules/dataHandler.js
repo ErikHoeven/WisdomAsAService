@@ -92,13 +92,22 @@ function update(column, id, sourceCollection) {
     console.info('column: ' + column)
     console.info('id: ' + id)
     console.info('value:' +  value)
-    var valuelist = []
+    var valuelist = [], valueRecord = ''
 
     var fields = column.split(','), updateSet = [], value, updateRow = {}
-
+    console.info('-----------------------------------------------------')
     fields.forEach(function (field) {
         $('.' + field).each(function (idx, elem) {
-            valuelist.push($(elem).val())
+
+
+            if (!$(elem).html()){
+                valueRecord =  $(elem).val()
+            }
+            else {
+                valueRecord = $(elem).html()
+            }
+
+            valuelist.push(valueRecord)
         })
 
         column = field.replace('txt','').replace(id,'')
@@ -123,7 +132,7 @@ function update(column, id, sourceCollection) {
 
           location.reload()
 
-          /*var tableDefinition = {}
+/*          var tableDefinition = {}
           tableDefinition.divTable = 'tblBusinessrules'
           tableDefinition.tableName = 'searchCondititions'
           tableDefinition.keyColumn = ['_id']
@@ -213,7 +222,7 @@ function searchArray(column, id, sourceCollection, edit){
             if (edit == 'N'){
                 // (A table body for non edit modus
                 response.forEach(function (v) {
-                strTableBody = strTableBody + '<tr><td>'+ v +'</td><tr></tr>'
+                strTableBody = strTableBody + '<tr><td class="'+ column+'">'+ v +'</td><tr></tr>'
                 })
 
             }
@@ -237,15 +246,16 @@ function searchArray(column, id, sourceCollection, edit){
             $('#rowsPerPage').hide()
 
             // (2)  Build detail screen
+            var table = 'valueDetails'
             $('#filterContent').attr('class', 'col-md-8')
             $('#filterContent').html('<div class="col-md-8">' +
                 '<div class="thumbnail"><div class="caption">' +
                 '<h4>' + column + '</h4>' +
                  strTable + strTableBody +'</tbody></table></p> </div> <div class="ratings"> ' +
                 '</div> <div class="space-ten">' +
-                '</div> <div class="btn-ground text-center"> ' +
+                '</div> <div class="btn-ground text-center" id="butonGroup"> ' +
                 dynButton +
-                '<button type="button" class="btn btn-primary" data-toggle="modal">Add</button> ' +
+                '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="addValue(\'' + table + '\',\'' + column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Add</button> ' +
                 '<button type="button" class="btn btn-primary" data-toggle="modal">Close</button></div> ' +
                 '<div class="space-ten"></div></div></div>')
         }
@@ -257,7 +267,16 @@ function searchArray(column, id, sourceCollection, edit){
 
 function addValue(table, column, id, sourceCollection) {
     $('#' + table + '> tbody').append('<tr><td><input type="text" class="'+ column+'"></td></tr>')
-    $('#edit').html('<button type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Save</button> ')
+
+    var saveButonExist = $('#save').length
+    console.info(saveButonExist)
+    if (saveButonExist == 0 ){
+        $('#butonGroup').append('<button type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')" id="save">Save</button>')
+        $('#edit').hide()
+    }
+
+
+
 
 }
 

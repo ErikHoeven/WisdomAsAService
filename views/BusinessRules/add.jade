@@ -23,6 +23,8 @@ block head
           $('#Dictionary').hide();
           $('#txtWoord').hide();
           $('#lstWoordvorm').hide()
+          $('#lstWordCloudExceptions').hide()
+
 
           console.info('document geladen');
 
@@ -40,6 +42,7 @@ block head
                   $('#Scraping').hide();
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
+                  $('#lstWordCloudExceptions').hide()
 
 
               }
@@ -54,6 +57,7 @@ block head
                   $('#Scraping').hide();
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
+                  $('#lstWordCloudExceptions').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
@@ -67,6 +71,7 @@ block head
                   $('#Scraping').hide();
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
+                  $('#lstWordCloudExceptions').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
@@ -80,6 +85,7 @@ block head
                   $('#Scraping').hide();
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
+                  $('#lstWordCloudExceptions').hide()
 
               }
 
@@ -94,6 +100,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#Upload').hide();
+                  $('#lstWordCloudExceptions').hide()
 
                   var formFields = getSimFormFields()
 
@@ -111,6 +118,7 @@ block head
                   $('#KamervanKoophandel').show();
                   $('#Dictionary').hide();
                   $('#Upload').hide();
+                  $('#lstWordCloudExceptions').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
@@ -125,6 +133,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').show();
                   $('#Upload').hide();
+                  $('#lstWordCloudExceptions').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
@@ -139,6 +148,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#Upload').hide();
+                  $('#lstWordCloudExceptions').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
@@ -153,6 +163,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#Upload').show();
+                  $('#lstWordCloudExceptions').hide()
               }
 
           });
@@ -249,9 +260,9 @@ block body
             option Dictionary
             option BuildGraph
             option Upload
+            option WordCloudExceptions
       div.col-sm-6
         #pieDemo
-
     div.row
       div.col-sm-6
         div.form-group(id='zoekwaarde')
