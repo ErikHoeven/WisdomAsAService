@@ -97,9 +97,8 @@ function update(column, id, sourceCollection) {
     var fields = column.split(','), updateSet = [], value, updateRow = {}
 
     fields.forEach(function (field) {
-        $('#' + field).each(function (idx, elem) {
-            console.info('i')
-            console.info($(elem).val())
+        $('.' + field).each(function (idx, elem) {
+            valuelist.push($(elem).val())
         })
 
         column = field.replace('txt','').replace(id,'')
@@ -112,7 +111,7 @@ function update(column, id, sourceCollection) {
     console.info(updateSet[0])
 
 
-/*    $.ajax({
+    $.ajax({
       //url: '/BusinessRules/updateTrainingSet',
       url: '/BusinessRules/updateGeneric',
       type: 'POST',
@@ -122,22 +121,24 @@ function update(column, id, sourceCollection) {
 
          console.info(response)
 
-          var tableDefinition = {}
+          location.reload()
+
+          /*var tableDefinition = {}
           tableDefinition.divTable = 'tblBusinessrules'
-          tableDefinition.tableName = 'tblSentiment'
+          tableDefinition.tableName = 'searchCondititions'
           tableDefinition.keyColumn = ['_id']
-          tableDefinition.hideColumns = ['searchReturnValue','__v','search']
-          tableDefinition.title = 'Business Rules'
+          tableDefinition.hideColumns = ['searchReturnValue','__v','search','userId']
+          tableDefinition.title = 'Search conditions'
           tableDefinition.editRow = 'Y'
           tableDefinition.isEditable = 'N'
           tableDefinition.sourceCollection = 'businessrules'
 
-          createGenericTable(response, tableDefinition)
+          createGenericTable(response, tableDefinition)*/
 
         //createGeneric(trainingset, 'tblBusinessrules', 'trainingSet', 1, 'score', '_id', 'Update Training set for Sentiment Model')
 
          }
-      })*/
+      })
 
     console.info('---------------------')
 
@@ -196,7 +197,7 @@ function searchArray(column, id, sourceCollection, edit){
     console.info('searchArray')
     var strTable = '<table class="table table-hover" id="valueDetails"><thead><tr><th>values</th></tr></thead><tbody>'
     var strTableBody = ''
-    var dynButton = '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="searchArray(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\',\'Y\')">Edit</button> '
+    var dynButton = '<button id="edit" type="button" class="btn btn-primary" data-toggle="modal" onclick="searchArray(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\',\'Y\')">Edit</button> '
 
 
 
@@ -218,10 +219,10 @@ function searchArray(column, id, sourceCollection, edit){
             }
             else {
                 response.forEach(function (v) {
-                    strTableBody = strTableBody + '<tr><td><input type="text" id="'+ column + '" value="'+ v +'"></td><tr></tr>'
+                    strTableBody = strTableBody + '<tr><td><input type="text" class="'+ column + '" value="'+ v +'"></td><tr></tr>'
                     i++
 
-                    dynButton = '<button type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Save</button> '
+                    dynButton = '<button id="save" type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Save</button> '
 
                 })
             }
@@ -249,6 +250,15 @@ function searchArray(column, id, sourceCollection, edit){
                 '<div class="space-ten"></div></div></div>')
         }
     })
+}
+
+
+
+
+function addValue(table, column, id, sourceCollection) {
+    $('#' + table + '> tbody').append('<tr><td><input type="text" class="'+ column+'"></td></tr>')
+    $('#edit').html('<button type="button" class="btn btn-primary" data-toggle="modal" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')">Save</button> ')
+
 }
 
 
