@@ -259,8 +259,4 @@ function fltrWordCountList(wordCloud, filterCount, fltrList) {
     else {
         return returnList
     }
-
-
-
-
 }

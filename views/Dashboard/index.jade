@@ -55,15 +55,28 @@ block body
                         setUserProfile(user)
         .row
             .col-md-12
-                #social.widget
+                ul.nav.nav-pills
+                    li.active
+                        a(href='#1a', data-toggle='tab') Social Overview
+                    li
+                        a(href='#2a', data-toggle='tab') Tickets Dashboard
+
+                .tab-content.clearfix
+                    #1a.tab-pane.active
+                        .col-md-6
+                            #social.widget
+                        #myfirstchart
+                            script.
+                                var auto_refresh = setInterval(function () {
+                                    getTweets()
+                                }, 15000)
+
+                    #2a.tab-pane
+                        #ticketOverview
 
         .row
             .col-md-6
-                #myfirstchart
-                    script.
-                        var auto_refresh = setInterval(function () {
-                            getTweets()
-                        }, 15000 )
+
             .col-md-6
                 #wordcloud
 

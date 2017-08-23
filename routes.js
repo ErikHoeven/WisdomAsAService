@@ -19,6 +19,7 @@ exports = module.exports = function(app, passport) {
     app.post('/upload/readFile', require('./views/upload/index').readFile);
     app.post('/upload/tranlateWords', require('./views/upload/index').tranlateWords);
     app.post('/upload/saveTranlateWords', require('./views/upload/index').saveTranlateWords);
+    app.post('/upload/Excel', require('./views/upload/readExceltoJSON').readExceltoJSON);
 
     //Sentiment
     app.post('/BusinessRules/sentiment', require('./views/BusinessRules/sentiment').saveBijvoegelijkeNaamwoorden);

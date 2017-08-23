@@ -68,6 +68,32 @@ block body
 
 
                     })
+            #readExcel
+                button.btn.btn-primary(type='button' id='cdmReadExcel') ReadExcel
+                script.
+                    $('#cdmReadExcel').click(function () {
+                        var selectedFiles = []
+                        console.info('START READING')
+                        readFile = 1
+                        $('input[name="chb_FileName"]:checked').each(function () {
+                            selectedFiles.push(this.value);
+                        });
+                        //console.info(selectedFiles)
+
+                        $.ajax({
+                            url: '/upload/Excel',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({selectedFiles: selectedFiles}),
+                            success: function (response) {
+
+
+
+                            }
+                        });
+
+
+                    })
         .row
             #displayReadedDataSection
         .row

@@ -17,7 +17,7 @@ var multer  =   require('multer'),
                     },
                     filename: function (req, file, callback) {
                         originalFileName = file.originalname.split('.')
-                            callback(null, originalFileName[0] + '-' + Date.now());
+                            callback(null, originalFileName[0] + '-' + Date.now() + '.' + originalFileName[1] );
                     }
                     }),
      async = require('async'),
@@ -30,7 +30,10 @@ var multer  =   require('multer'),
      translate = require('translate'),
      sys = require('sys'),
      csvdb = db.get('csv'),
-     businessRules = db.get('businessrules');
+     businessRules = db.get('businessrules'),
+     excel2json = require("excel-to-json");
+
+
 
 
 
