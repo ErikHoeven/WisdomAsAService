@@ -28,7 +28,10 @@ exports.getTickets = function (req, res, next) {
         console.info('-------------------Get Tickets --------------------------------------------------------')
 
     stgOmniTracker.find({'Creation Date':{$gt: actMonth.startMonth, $lt: actMonth.endMonth}},function (err, tickets) {
+
+
             var resultSet = {}, aggCountsPerDayCattegory = []
+            console.info(tickets)
 
             var countsPerDay = d3.nest()
                 .key(function (d) {
@@ -52,6 +55,7 @@ exports.getTickets = function (req, res, next) {
                         count: d3.sum(v, function (d) {
                             return d.count;
                         }),
+
                     };
                 })
                 .entries(tickets)
@@ -67,7 +71,8 @@ exports.getTickets = function (req, res, next) {
                     countCreatedTickets = 0,
                     countSolvedTickets = 0,
                     snapshot = moment(key[3]).format('DD-MM-YYYY'),
-                    snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
+                    snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate(),
+                    pushObject = {}
 
 
                     if (State == 'Classification'){
@@ -82,15 +87,25 @@ exports.getTickets = function (req, res, next) {
                         countSolvedTickets = count
                     }
 
+                    pushObject.CreationDate = moment(CreationDate).toDate()
+                    pushObject.Group = Group
+                    pushObject.State = State
+                    pushObject.count = row.values.count
+                    pushObject.countOpenTickets = countOpenTickets
+                    pushObject.countCreatedTickets = countCreatedTickets
+                    pushObject.snapshotDate = snapshotDate
+                    console.info(Object.keys(row.key))
+                    //pushObject[]
 
-                aggCountsPerDayCattegory.push({ CreationDate: moment(CreationDate).toDate(),
-                                                Group: Group,
-                                                State: State,
-                                                count: row.values.count,
-                                                countOpenTickets: countOpenTickets,
-                                                countCreatedTickets: countCreatedTickets,
-                                                countSolvedTickets: countSolvedTickets,
-                                                snapshotDate: snapshotDate   })
+
+
+                aggCountsPerDayCattegory.push(pushObject)
+
+
+
+
+
+
             });
             console.info('----------------------------------------------')
 

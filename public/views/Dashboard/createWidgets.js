@@ -124,7 +124,7 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes')
-
+            //console.info(data)
 
                     fltrGroup = data.fltrGroup
                     fltrState = data.fltrState
@@ -150,32 +150,28 @@ function getTickets() {
 
                     $('#createdTickets').text(values.createdTickets)
                     $('#openTickets').text(values.openTickets)
-                    $('#solvedTickets').text(values.solvedTickets)
+                    $('#closedTickets').text(values.solvedTickets)
                     $('#newTickets').text(values.createdTickets)
+
+                    console.info(values.fltrData)
+                    plotGraph('ticketChart',newValues.fltrData)
                 })
 
-            values = filterTickets('All',data.aggCountsPerDayCattegory)
+            newValues = filterTickets('All',data.aggCountsPerDayCattegory)
 
-            $('#createdTickets').text(values.createdTickets)
-            $('#openTickets').text(values.openTickets)
-            $('#solvedTickets').text(values.solvedTickets)
-            $('#newTickets').text(values.createdTickets)
+            $('#createdTickets').text(newValues.createdTickets)
+            $('#openTickets').text(newValues.openTickets)
+            $('#closedTickets').text(newValues.solvedTickets)
+            $('#newTickets').text(newValues.createdTickets)
+            $('#ticketChart').html('')
 
-
-
-
-
+            console.info('------------------------------------------')
+            //console.info(newValues.fltrData)
+            plotGraph('ticketChart',newValues.fltrData)
+            console.info('------------------------------------------')
         }
     })
 }
-
-
-
-
-
-
-
-
 
 function getWordCloud(div, lstWord){
     console.info(lstWord)
@@ -223,11 +219,51 @@ function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
 
     if (value != 'All'){
-        console.info(dataset)
+        //console.info(dataset)
         returnArray = _.where(dataset,{Group: value})
     }
     else{
         returnArray = dataset
+        console.info(returnArray)
+        var countsPerDay = d3.nest()
+            .key(function (d) {
+                return d.CreationDate
+            })
+            .rollup(function (v) {
+                return {
+                    'EPS-CPF': d3.sum(v, function (d) {
+                        return d['EPS - CPF_Count']
+                    }),
+                    'EPS-E-Soft': d3.sum(v, function (d) {
+                        return d['EPS - E-Soft_Count'];
+                    }),
+                    'Service desk 1st line': d3.sum(v, function (d) {
+                        return d['Service desk 1st line_Count'];
+                    }),
+                    'EPS-SRL': d3.sum(v, function (d) {
+                        return d['EPS - SRL_Count'];
+                    }),
+                    'EPS Apps 2nd line': d3.sum(v, function (d) {
+                        return d['EPS Apps 2nd line_Count'];
+                    }),
+                    'EPS-Infra': d3.sum(v, function (d) {
+                        return d['EPS - Infra_Count'];
+                    }),
+                    'EPS-Cognos': d3.sum(v, function (d) {
+                        return d['EPS - Cognos_Count'];
+                    }),
+                    'Desktop Virtualisation 2nd line': d3.sum(v, function (d) {
+                        return d['Desktop Virtualisation 2nd line_Count'];
+                    }),
+                };
+            })
+            .entries(returnArray)
+
+            //console.info(countsPerDay)
+
+
+
+
     }
 
     var aggCountsPerDayCattegory = returnArray
@@ -256,13 +292,23 @@ function filterTickets(value, dataset) {
         openTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countOpenTickets,
         solvedTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countSolvedTickets
 
+
+    returnArray.forEach(function (r) {
+        var d = moment(r.CreationDate).format('DD-MM-YYYY')
+        r.CreationDate = d
+    })
+
     returnObject.createdTickets = createdTickets
     returnObject.openTickets = openTickets
     returnObject.solvedTickets = solvedTickets
+    returnObject.fltrData = returnArray
 
 
     return returnObject
 }
 
 
+function plotGraph (div, data){
 
+
+}

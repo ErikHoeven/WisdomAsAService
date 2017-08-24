@@ -35,6 +35,8 @@ exports.readExceltoJSON = function (req,res,next) {
                 //console.info(moment())
                 r['Creation Date'] = creationDate
                 r.count = 1
+                var groupCount = r['Responsible Group'] + '_Count'
+                r[groupCount] = 1
                 r.snapshotDate = snapshotDate
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate
             })
