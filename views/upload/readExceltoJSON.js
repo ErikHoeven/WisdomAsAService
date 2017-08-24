@@ -1,35 +1,19 @@
 /**
  * Created by erik on 8/23/17.
  */
-var multer  =   require('multer'),
-    cheerio = require("cheerio"),
-    fs = require('fs'),
-    csv = require('fast-csv'),
-    testFolder = './uploads/',
-    request = require("request"),
-    async = require('async'),
-    mongo = require('mongodb'),
+var async = require('async'),
     db = require('monk')('localhost/commevents'),
-    PropertiesReader = require('properties-reader'),
-    br = db.get('businessrules'),
-    url = 'mongodb://localhost:27017/commevents',
-    sys = require('sys'),
-    csvdb = db.get('csv'),
     stgOmniTracker = db.get('stgOmniTracker'),
     moment = require('moment'),
-    dateCorrection = [],
-    dateString = '',
-    d3 = require('d3')
-
-
-
-    businessRules = db.get('businessrules'),
     xlsxj  = require("xlsx-to-json"),
     node_xj = require("xls-to-json"),
+    dateCorrection = [],
+    dateString = '',
+    d3 = require('d3'),
     filename = '',
     output = ''
-
-
+   ,snapshot = moment().format('DD-MM-YYYY')
+   ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 exports.readExceltoJSON = function (req,res,next) {
     filename = './uploads/' + req.body.selectedFiles[0]
@@ -51,48 +35,14 @@ exports.readExceltoJSON = function (req,res,next) {
                 //console.info(moment())
                 r['Creation Date'] = creationDate
                 r.count = 1
-                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State
+                r.snapshotDate = snapshotDate
+                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate
             })
 
-            var resultSet = {}, aggCountsPerDayCattegory = []
-
-            var countsPerDay = d3.nest()
-                .key(function (d) {
-                    return d['Creation Date']
-                })
-                .rollup(function (v) {
-                    return {
-                        count: d3.sum(v, function (d) {
-                            return d.count;
-                        }),
-                    };
-                })
-                .entries(result)
-
-            var countsPerDayCattegory = d3.nest()
-                .key(function (d) {
-                    return d.aggGrain
-                })
-                .rollup(function (v) {
-                    return {
-                        count: d3.sum(v, function (d) {
-                            return d.count;
-                        }),
-                    };
-                })
-                .entries(result)
-
-            console.info(countsPerDayCattegory)
-            countsPerDayCattegory.forEach(function (row) {
-                var key = row.key.split('|')
-                var CreationDate = key[0], Group = key[1], State = key[2], count = row.values.count
-                aggCountsPerDayCattegory.push({CreationDate: moment(CreationDate).toDate(), Group: Group, State: State, count: row.values.count})
-            });
-            console.info(aggCountsPerDayCattegory)
-
+            stgOmniTracker.remove({})
             stgOmniTracker.insert(result)
 
-            res.status(201).json({countsPerDayCattegory: countsPerDayCattegory, aggCountsPerDayCattegory: aggCountsPerDayCattegory });
+            res.status(201).json({message: 'Succesfull uploaded' });
 
         }
     })

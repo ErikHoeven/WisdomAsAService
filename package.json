@@ -46,7 +46,10 @@
     "natural": "*",
     "formidable": "*",
     "connect-flash": "*",
-    "moment":"^2.18.1"
+    "moment":"*",
+    "excel-to-json": "*",
+    "xlsx-to-json" : "*",
+    "xls-to-json" : "*"
   },
   "devDependencies": {
     "bootstrap": "^3.x.x",

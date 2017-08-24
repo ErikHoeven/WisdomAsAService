@@ -1,6 +1,7 @@
 /**
  * Created by erik on 8/6/17.
  */
+
 function setMachtingTweets(tweets, likes, retweets, uniqueUsers, div) {
 
     $(div).html('')
@@ -123,11 +124,51 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes')
-            console.info(data)
+
+
+                    fltrGroup = data.fltrGroup
+                    fltrState = data.fltrState
+                    fltrGroupString = '<select class="selectpicker" id="selectFltrGroup">'
+                    fltrStateString = '<select class="selectpicker" id="selectFltrState">'
+
+                    fltrGroup.forEach(function (row) {
+                      fltrGroupString = fltrGroupString + '<option>' + row +'</option>'
+                        //console.info(fltrGroupString)
+                    })
+                    fltrGroupString = fltrGroupString + '</select>'
+
+                    fltrState.forEach(function (row) {
+                        fltrStateString = fltrStateString + '<option>' + row +'</option>'
+                        //console.info(fltrGroupString)
+                    })
+                fltrStateString = fltrStateString + '</select>'
+
+                $('#fltrListCattegory').html(fltrGroupString)
+
+                $('#selectFltrGroup').change(function () {
+                    var fltrValue = $('#selectFltrGroup option:selected').text(), values = filterTickets(fltrValue,data.aggCountsPerDayCattegory)
+
+                    $('#createdTickets').text(values.createdTickets)
+                    $('#openTickets').text(values.openTickets)
+                    $('#solvedTickets').text(values.solvedTickets)
+                    $('#newTickets').text(values.createdTickets)
+                })
+
+            values = filterTickets('All',data.aggCountsPerDayCattegory)
+
+            $('#createdTickets').text(values.createdTickets)
+            $('#openTickets').text(values.openTickets)
+            $('#solvedTickets').text(values.solvedTickets)
+            $('#newTickets').text(values.createdTickets)
+
+
+
+
 
         }
     })
 }
+
 
 
 
@@ -175,6 +216,52 @@ function getWordCloud(div, lstWord){
             .text(function(d) { return d.text; });
     }
 
+}
+
+
+function filterTickets(value, dataset) {
+    var returnArray = [], returnObject = {}
+
+    if (value != 'All'){
+        console.info(dataset)
+        returnArray = _.where(dataset,{Group: value})
+    }
+    else{
+        returnArray = dataset
+    }
+
+    var aggCountsPerDayCattegory = returnArray
+
+    var countsPerDayCattegory = d3.nest()
+        .key(function (d) {
+            return d.snapshotDate
+        })
+        .rollup(function (v) {
+            return {
+                countCreatedTickets: d3.sum(v, function (d) {
+                    return d.countCreatedTickets;
+                }),
+                countOpenTickets: d3.sum(v, function (d) {
+                    return d.countOpenTickets;
+                }),
+                countSolvedTickets: d3.sum(v, function (d) {
+                    return d.countSolvedTickets;
+                }),
+            };
+        })
+        .entries(aggCountsPerDayCattegory)
+
+
+    var createdTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countCreatedTickets,
+        openTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countOpenTickets,
+        solvedTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countSolvedTickets
+
+    returnObject.createdTickets = createdTickets
+    returnObject.openTickets = openTickets
+    returnObject.solvedTickets = solvedTickets
+
+
+    return returnObject
 }
 
 

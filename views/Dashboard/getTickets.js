@@ -18,6 +18,10 @@ var  cheerio = require("cheerio")
     ,natural = require('natural')
     ,actWeek = actualWeek()
     ,actMonth =  actualMonth()
+    ,ftlrGroup = []
+    ,fltrState = []
+    ,compareWordGroup = null
+    ,compareWordState = null
 
 exports.getTickets = function (req, res, next) {
 
@@ -52,19 +56,63 @@ exports.getTickets = function (req, res, next) {
                 })
                 .entries(tickets)
 
-            console.info(countsPerDayCattegory)
+
             countsPerDayCattegory.forEach(function (row) {
                 var key = row.key.split('|')
-                var CreationDate = key[0], Group = key[1], State = key[2], count = row.values.count
-                aggCountsPerDayCattegory.push({CreationDate: moment(CreationDate).toDate(), Group: Group, State: State, count: row.values.count})
+                var CreationDate = key[0],
+                    Group = key[1],
+                    State = key[2],
+                    count = row.values.count,
+                    countOpenTickets = 0,
+                    countCreatedTickets = 0,
+                    countSolvedTickets = 0,
+                    snapshot = moment(key[3]).format('DD-MM-YYYY'),
+                    snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
+
+
+                    if (State == 'Classification'){
+                      countCreatedTickets = count
+                    }
+
+                    if (State == 'In progress' || row.State == 'Classification' || row.State == 'Waiting'  ){
+                        countOpenTickets = count
+                    }
+
+                    if (State == 'Solved'){
+                        countSolvedTickets = count
+                    }
+
+
+                aggCountsPerDayCattegory.push({ CreationDate: moment(CreationDate).toDate(),
+                                                Group: Group,
+                                                State: State,
+                                                count: row.values.count,
+                                                countOpenTickets: countOpenTickets,
+                                                countCreatedTickets: countCreatedTickets,
+                                                countSolvedTickets: countSolvedTickets,
+                                                snapshotDate: snapshotDate   })
             });
             console.info('----------------------------------------------')
-            console.info(aggCountsPerDayCattegory)
 
-        res.status(200).json({countsPerDayCattegory:countsPerDayCattegory
-            , aggCountsPerDayCattegory: aggCountsPerDayCattegory
-        })
+        ftlrGroup.push('All')
+        fltrState.push('All')
 
+        aggCountsPerDayCattegory.forEach(function (row) {
+                if(row.Group != compareWordGroup){
+                    ftlrGroup.push(row.Group)
+                    compareWordGroup = row.Group
+                }
+                if(row.State != compareWordState){
+                    fltrState.push(row.State)
+                    compareWordState = row.State
+                }
+            })
+
+        //underscore._unique
+        ftlrGroup = underscore.uniq(ftlrGroup)
+        fltrState = underscore.uniq(fltrState)
+
+            res.status(200).json({aggCountsPerDayCattegory: aggCountsPerDayCattegory, fltrGroup:ftlrGroup, fltrState: fltrState  })
         })
 
 }

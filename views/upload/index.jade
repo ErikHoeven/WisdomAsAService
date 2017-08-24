@@ -14,6 +14,8 @@ block body
     script(src="../../views/upload/dataHandler.js")
     .container
         .row
+            .col-md-4
+                #message
         .row
             .col-md-4
             .col-md-4
@@ -86,9 +88,7 @@ block body
                             contentType: 'application/json',
                             data: JSON.stringify({selectedFiles: selectedFiles}),
                             success: function (response) {
-
-
-
+                                $('#message').html('<div class="alert alert-info"><strong>Info!</strong><br>'+ response.message+'</div>')
                             }
                         });
 
