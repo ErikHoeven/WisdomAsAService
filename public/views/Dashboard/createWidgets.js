@@ -78,7 +78,6 @@ function getTweets(){
         contentType: 'application/json',
         success: function (data) {
             console.info('succes')
-            console.info(data)
             var aantalTweets = data.tweets[0].values.count
             var likes = data.tweets[0].values.likesPerDay
             var retweetsPerDay = data.tweets[0].values.retweetsPerDay
@@ -116,6 +115,25 @@ function getTweets(){
    })
 
 }
+
+function getTickets() {
+    $.ajax({
+        url: '/Dashboard/getTickets',
+        type: 'GET',
+        contentType: 'application/json',
+        success: function (data) {
+            console.info('succes')
+            console.info(data)
+
+        }
+    })
+}
+
+
+
+
+
+
 
 
 function getWordCloud(div, lstWord){

@@ -63,22 +63,31 @@ block body
 
                 .tab-content.clearfix
                     #1a.tab-pane.active
-                        .col-md-6
+                        .col-md-12
                             #social.widget
-                        #myfirstchart
-                            script.
-                                var auto_refresh = setInterval(function () {
-                                    getTweets()
-                                }, 15000)
+                        .row
+                            .col-md-6
+                                #myfirstchart
+                                    script.
+                                        var auto_refresh_SocialFeeds = setInterval(function () {
+                                            getTweets()
+                                        }, 15000)
+                            .col-md-6
+                                #wordcloud
 
                     #2a.tab-pane
-                        #ticketOverview
+                        .col-md-12
+                            #ticketOverview
+                                script.
+                                    var auto_refresh_Tickets = setInterval(function () {
+                                        getTickets()
+                                    }, 15000)
+
 
         .row
             .col-md-6
 
-            .col-md-6
-                #wordcloud
+
 
 
 

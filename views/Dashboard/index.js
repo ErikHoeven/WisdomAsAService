@@ -94,9 +94,9 @@ exports.getTweets = function (req, res, next) {
                 }; })
                 .entries(twMonthClean);
 
-            console.info(allTweetsPerMonth)
+            //console.info(allTweetsPerMonth)
 
-            console.info('----------------------------------------------------------------')
+            //console.info('----------------------------------------------------------------')
 
             // (3) Aggegrate the day on twMonthClean[]
             var dayTweetCount = d3.nest()
@@ -114,17 +114,17 @@ exports.getTweets = function (req, res, next) {
                 i++
             })
 
-            console.info(graphArrayDayTweets)
-            console.info('----------------------------------------------------------------')
+            //console.info(graphArrayDayTweets)
+            //console.info('----------------------------------------------------------------')
 
             twMonthClean.forEach(function (tw) {
                 lstUserPerMonth.push(tw.user.name)
             })
 
             var uniqueUsers = underscore.uniq(lstUserPerMonth)
-            console.info(uniqueUsers.length)
+            //console.info(uniqueUsers.length)
 
-            console.info('----------------------------------------------------------------')
+            //console.info('----------------------------------------------------------------')
             var wordList,wordArray = []
 
             for (var counter = 0; counter < twMonthClean.length; counter++){
@@ -133,10 +133,10 @@ exports.getTweets = function (req, res, next) {
             }
 
 
-            //console.info(fltrWordCloud)
+
             var wordCloud = fltrWordCountList(wordArray,5,fltrWordCloud)
 
-            //console.info(wordCloud)
+
 
 
             res.status(200).json({tweets:allTweetsPerMonth
@@ -147,6 +147,9 @@ exports.getTweets = function (req, res, next) {
         })
     })
 }
+
+
+
 
 
 
@@ -249,7 +252,7 @@ function fltrWordCountList(wordCloud, filterCount, fltrList) {
             if (compareWord == 1){
                 wordCloud.push(rrl)
                 compareWord = 0
-                console.info(rrl)
+                //console.info(rrl)
             }
 
 

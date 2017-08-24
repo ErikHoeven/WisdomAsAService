@@ -153,7 +153,7 @@ exports.tranlateWords =  function (req, res, next) {
             //console.info(searchWords)
             restult = matchWordWithBusinessRules(searchWords,businessrules)
             console.info('-------------start restult:------------------')
-            console.info(restult)
+            //console.info(restult)
             console.info('-------------einde restult:------------------')
             res.status(201).json(restult)
 
