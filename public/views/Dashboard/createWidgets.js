@@ -153,7 +153,7 @@ function getTickets() {
 
             console.info('-------------Plot Graph-----------------------------')
             //plotGraph('ticketChart',newValues.countPerDay)
-            d3GraphPlot('ticketChart1',newValues.countPerDay)
+            d3GraphPlot('ticketChart2',newValues.countPerDay)
             console.info('------------------------------------------')
         }
     })
