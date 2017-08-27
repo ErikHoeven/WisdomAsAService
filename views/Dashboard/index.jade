@@ -15,6 +15,8 @@ block head
     script(src="/vendor/d3/d3.layout.cloud.js")
     script(src="http://underscorejs.org/underscore-min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js")
+    script(src='https://www.gstatic.com/charts/loader.js')
+    script(src="https://canvasjs.com/assets/script/canvasjs.min.js")
 
     // Custom styles for this template
     link(href='/stylesheets/theme.css', rel='stylesheet')
@@ -39,9 +41,8 @@ block head
 
     //Custom script
     script(src="/views/Dashboard/createWidgets.js")
-
-   link(rel='stylesheet', href='../../views/Dashboard/graph.css')
-
+    script(src="/views/Dashboard/ticketsGraphs.js")
+    link(rel='stylesheet', href='../../views/Dashboard/graph.css')
 
 block body
     .container-fluid
@@ -117,14 +118,19 @@ block body
                                             p Closed Tickets
                                             i.fa.fa-envelope.fa-3x
                         .row
-                            .col-md-12
-                                #ticketChart
+                            .col-md-6
+                                .widget
+                                    #ticketChart
+                                        script.
+                                            getTickets()
+//                                            var auto_refresh_tickets = setInterval(function () {
+//                                                getTickets()
+//                                            }, 15000)
+                            .col-md-6
+                                .widget
+                                    #ticketChart2
 
-                    script.
-                        getTickets()
-                        var auto_refresh_tickets = setInterval(function () {
-                            getTickets()
-                        }, 35000)
+
 
 
 

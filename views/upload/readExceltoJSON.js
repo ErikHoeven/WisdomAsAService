@@ -32,7 +32,6 @@ exports.readExceltoJSON = function (req,res,next) {
             result.forEach(function (r) {
                 dateString = correctionOfDate(r['Creation Date'])
                 var creationDate = moment(dateString, 'DD-MM-YYYY').toDate()
-                //console.info(moment())
                 r['Creation Date'] = creationDate
                 r.count = 1
                 var groupCount = r['Responsible Group'] + '_Count'

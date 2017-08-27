@@ -53,7 +53,6 @@ function setMachtingTweets(tweets, likes, retweets, uniqueUsers, div) {
 function setUserProfile(user) {
     console.info('setUserProfile')
     var url = user.profilePictureURI, username = user.username
-    console.info(url)
     if (!url) {
         url = '/images/users/img2.jpg'
     }
@@ -78,7 +77,7 @@ function getTweets(){
         type: 'GET',
         contentType: 'application/json',
         success: function (data) {
-            console.info('succes')
+            console.info('succes getTweets')
             var aantalTweets = data.tweets[0].values.count
             var likes = data.tweets[0].values.likesPerDay
             var retweetsPerDay = data.tweets[0].values.retweetsPerDay
@@ -95,13 +94,6 @@ function getTweets(){
                 // Chart data records -- each entry in this array corresponds to a point on
                 // the chart.
                 data: dataPlot,
-                //    [
-                //    {date: '2008', value: 20},
-                //    {date: '2009', value: 10},
-                //    {year: '2010', value: 5},
-                //    {year: '2011', value: 5},
-                //    {year: '2012', value: 20}
-                //],
                 // The name of the data record attribute that contains x-values.
                 xkey: 'date',
                 // A list of names of data record attributes that contain y-values.
@@ -110,7 +102,6 @@ function getTweets(){
                 // chart.
                 labels: ['Value']
             });
-
             //getWordCloud('#wordcloud', wordCloud)
        }
    })
@@ -123,8 +114,7 @@ function getTickets() {
         type: 'GET',
         contentType: 'application/json',
         success: function (data) {
-            console.info('succes')
-            //console.info(data)
+            console.info('succes getTickets')
 
                     fltrGroup = data.fltrGroup
                     fltrState = data.fltrState
@@ -133,13 +123,11 @@ function getTickets() {
 
                     fltrGroup.forEach(function (row) {
                       fltrGroupString = fltrGroupString + '<option>' + row +'</option>'
-                        //console.info(fltrGroupString)
                     })
                     fltrGroupString = fltrGroupString + '</select>'
 
                     fltrState.forEach(function (row) {
                         fltrStateString = fltrStateString + '<option>' + row +'</option>'
-                        //console.info(fltrGroupString)
                     })
                 fltrStateString = fltrStateString + '</select>'
 
@@ -153,8 +141,6 @@ function getTickets() {
                     $('#closedTickets').text(values.solvedTickets)
                     $('#newTickets').text(values.createdTickets)
 
-                    console.info(values.fltrData)
-                    plotGraph('ticketChart',newValues.fltrData)
                 })
 
             newValues = filterTickets('All',data.aggCountsPerDayCattegory)
@@ -165,9 +151,9 @@ function getTickets() {
             $('#newTickets').text(newValues.createdTickets)
             $('#ticketChart').html('')
 
-            console.info('------------------------------------------')
-            //console.info(newValues.fltrData)
-            plotGraph('ticketChart',newValues.fltrData)
+            console.info('-------------Plot Graph-----------------------------')
+            //plotGraph('ticketChart',newValues.countPerDay)
+            d3GraphPlot('ticketChart1',newValues.countPerDay)
             console.info('------------------------------------------')
         }
     })
@@ -177,9 +163,7 @@ function getWordCloud(div, lstWord){
     console.info(lstWord)
 
     var cloud = d3.layout.cloud;
-
     var fill = d3.schemeCategory20
-
     var layout = cloud()
         .size([500, 500])
         .words(lstWord.map(function(d) {
@@ -219,51 +203,92 @@ function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
 
     if (value != 'All'){
-        //console.info(dataset)
         returnArray = _.where(dataset,{Group: value})
+
+    var countsPerDay = d3.nest()
+        .key(function (d) {
+            return d.snapshotDate
+        })
+        .rollup(function (v) {
+            return {
+                'cpf': d3.sum(v, function (d) {
+                    return d['cpf']
+                }),
+                'esoft': d3.sum(v, function (d) {
+                    return d['esoft'];
+                }),
+                'firstLine': d3.sum(v, function (d) {
+                    return d['firstLine'];
+                }),
+                'infra': d3.sum(v, function (d) {
+                    return d['infra'];
+                }),
+                'secondLineApps': d3.sum(v, function (d) {
+                    return d['secondLineApps'];
+                }),
+                'infra': d3.sum(v, function (d) {
+                    return d['infra'];
+                }),
+                'cognos': d3.sum(v, function (d) {
+                    return d['cognos'];
+                }),
+                'desktopVirtualisatie': d3.sum(v, function (d) {
+                    return d['desktopVirtualisatie'];
+                }),
+                'srl': d3.sum(v, function (d) {
+                    return d['srl'];
+                }),
+            };
+        })
+        .entries(dataset)
+
     }
     else{
         returnArray = dataset
-        console.info(returnArray)
+
+        console.info('returnArray')
+
         var countsPerDay = d3.nest()
             .key(function (d) {
-                return d.CreationDate
+                return d.snapshotDate
             })
             .rollup(function (v) {
                 return {
-                    'EPS-CPF': d3.sum(v, function (d) {
-                        return d['EPS - CPF_Count']
+                    'cpf': d3.sum(v, function (d) {
+                        return d['cpf']
                     }),
-                    'EPS-E-Soft': d3.sum(v, function (d) {
-                        return d['EPS - E-Soft_Count'];
+                    'esoft': d3.sum(v, function (d) {
+                        return d['esoft'];
                     }),
-                    'Service desk 1st line': d3.sum(v, function (d) {
-                        return d['Service desk 1st line_Count'];
+                    'firstLine': d3.sum(v, function (d) {
+                        return d['firstLine'];
                     }),
-                    'EPS-SRL': d3.sum(v, function (d) {
-                        return d['EPS - SRL_Count'];
+                    'infra': d3.sum(v, function (d) {
+                        return d['infra'];
                     }),
-                    'EPS Apps 2nd line': d3.sum(v, function (d) {
-                        return d['EPS Apps 2nd line_Count'];
+                    'secondLineApps': d3.sum(v, function (d) {
+                        return d['secondLineApps'];
                     }),
-                    'EPS-Infra': d3.sum(v, function (d) {
-                        return d['EPS - Infra_Count'];
+                    'infra': d3.sum(v, function (d) {
+                        return d['infra'];
                     }),
-                    'EPS-Cognos': d3.sum(v, function (d) {
-                        return d['EPS - Cognos_Count'];
+                    'cognos': d3.sum(v, function (d) {
+                        return d['cognos'];
                     }),
-                    'Desktop Virtualisation 2nd line': d3.sum(v, function (d) {
-                        return d['Desktop Virtualisation 2nd line_Count'];
+                    'desktopVirtualisatie': d3.sum(v, function (d) {
+                        return d['desktopVirtualisatie'];
+                    }),
+                    'srl': d3.sum(v, function (d) {
+                        return d['srl'];
                     }),
                 };
-            })
-            .entries(returnArray)
-
-            //console.info(countsPerDay)
-
-
-
-
+        })
+        .entries(returnArray)
+        var labels = Object.keys(countsPerDay[0].value)
+           ,labelData = []
+        labels.forEach(function (label) {
+            labelData.push(countsPerDay[0].value[label])
+        })
     }
 
     var aggCountsPerDayCattegory = returnArray
@@ -302,13 +327,17 @@ function filterTickets(value, dataset) {
     returnObject.openTickets = openTickets
     returnObject.solvedTickets = solvedTickets
     returnObject.fltrData = returnArray
+    returnObject.countPerDay = countsPerDay
 
 
     return returnObject
 }
 
 
-function plotGraph (div, data){
 
 
-}
+
+
+
+
+
