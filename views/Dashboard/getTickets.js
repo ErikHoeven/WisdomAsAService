@@ -82,8 +82,6 @@ exports.getTickets = function (req, res, next) {
                 })
                 .entries(tickets)
 
-            //console.info(countsPerDayCattegory)
-
             countsPerDayCattegory.forEach(function (row) {
                 var key = row.key.split('|')
                 var CreationDate = key[0],
@@ -95,6 +93,8 @@ exports.getTickets = function (req, res, next) {
                     countSolvedTickets = 0,
                     snapshot = moment(key[3]).format('DD-MM-YYYY'),
                     snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate(),
+                    lastChange =  moment(key[5]).format('DD-MM-YYYY'),
+                    lastChangeDate =  moment(lastChange,'DD-MM-YYYY').toDate(),
                     cpf = row.values['EPS-CPF'],
                     esoft = row.values['EPS-E-Soft'],
                     firstLine = row.values['Service desk 1st line'],
@@ -103,6 +103,7 @@ exports.getTickets = function (req, res, next) {
                     cognos = row.values['EPS-Cognos'],
                     infra = row.values['EPS-Infra'],
                     desktopVirtualisatie = row.values['Desktop Virtualisation 2nd line'],
+                    leadTime,
                     pushObject = {}
                     pushObject.CreationDate = moment(CreationDate).toDate()
                     pushObject.Group = Group
@@ -110,22 +111,37 @@ exports.getTickets = function (req, res, next) {
 
 
                     if (State == 'Classification'){
-                      countCreatedTickets = count
+                        countCreatedTickets = count
+                        leadTime = daydiff(moment(CreationDate).toDate(),snapshotDate)
                     }
 
-                    if (State == 'In progress' || row.State == 'Classification' || row.State == 'Waiting'  ){
+                    if (State == 'In progress' ){
                         countOpenTickets = count
+                        leadTime = daydiff(moment(CreationDate).toDate(),snapshotDate)
+                    }
+
+                    if (State == 'Classification' ){
+                        countOpenTickets = count
+                        leadTime = daydiff(moment(CreationDate).toDate(),snapshotDate)
+                    }
+
+                    if (State == 'Waiting'  ){
+                        countOpenTickets = count
+                        leadTime = daydiff(moment(CreationDate).toDate(),snapshotDate)
                     }
 
                     if (State == 'Solved'){
                         countSolvedTickets = count
+                        leadTime = daydiff(moment(CreationDate).toDate(),lastChangeDate)
                     }
 
 
                     pushObject.count = row.values.count
                     pushObject.countOpenTickets = countOpenTickets
                     pushObject.countCreatedTickets = countCreatedTickets
+                    pushObject.countSolvedTickets = countSolvedTickets
                     pushObject.snapshotDate = snapshotDate
+                    pushObject.leadTime = leadTime
 
                     // "Service desk 2nd line",
                     // "EPS Infra 2nd line",
@@ -140,7 +156,7 @@ exports.getTickets = function (req, res, next) {
                         pushObject.cpf = row.values.count
                     }
                     if(key[1] == 'EPS - E-Soft'){
-                    pushObject.esoft = row.values.count
+                        pushObject.esoft = row.values.count
                     }
                     if(key[1] == 'EPS - SRL'){
                         pushObject.srl = row.values.count
@@ -173,10 +189,6 @@ exports.getTickets = function (req, res, next) {
             });
             console.info('----------------------------------------------')
 
-
-            //console.info(underscore.where(aggCountsPerDayCattegory,{Group:"EPS - CPF"}))
-
-
             ftlrGroup.push('All')
             fltrState.push('All')
 
@@ -191,23 +203,37 @@ exports.getTickets = function (req, res, next) {
                 }
             })
 
-
-
-
             ftlrGroup = underscore.uniq(ftlrGroup)
             fltrState = underscore.uniq(fltrState)
 
-            console.info(ftlrGroup)
+            var titleList = []
+
+            tickets.forEach(function (ticket) {
+                var titleWords = ticket.Title.split(' ')
+                titleWords.forEach(function (word) {
+                    titleList.push(word.toLowerCase())
+                })
+            })
 
 
+            var wordList = fltrWordCountList(titleList,6, null)
+            var exceptions = ['"content"','->column','re','zetten','when','within']
+            //console.info(wordList)
+            var fltrWordList = wordList.filter(function( o){
+                return exceptions.indexOf(o.word) == -1;
+            });
 
-            res.status(200).json({aggCountsPerDayCattegory: aggCountsPerDayCattegory, fltrGroup:ftlrGroup, fltrState: fltrState  })
+            var dataSpider= []
+            fltrWordList.forEach(function (word) {
+                dataSpider.push({axis:word.word, value:word.count})
+            })
+
+            //console.info()
+
+            res.status(200).json({aggCountsPerDayCattegory: aggCountsPerDayCattegory, fltrGroup:ftlrGroup, fltrState: fltrState, dataSpider: dataSpider })
         })
 
 }
-
-
-
 
 function actualWeek() {
     var d = new Date();
@@ -250,3 +276,71 @@ function actualMonth() {
     }
 
 }
+
+
+
+function daydiff(first, second) {
+    return Math.round((second-first)/(1000*60*60*24));
+}
+
+
+function fltrWordCountList(wordCloud, filterCount, fltrList) {
+    var returnList = [], wordCloudDef = [], compareWord = null, count = 0
+    // (1) Sort the words
+    wordCloud.sort();
+    // (2) Count the words
+    wordCloud.forEach(function (word) {
+
+        if(word != compareWord && count == 0){
+            compareWord = word
+        }
+
+        if(word == compareWord){
+            if (count == 0){
+                count++
+            }
+            else {
+                count++
+            }
+        }
+
+        if (word != compareWord && count > 0){
+            wordCloudDef.push({word: word, count: count + 1})
+            count = 0
+            compareWord = word
+        }
+    })
+
+    wordCloudDef.forEach(function (word) {
+        if(word.count >= filterCount){
+            returnList.push(word)
+        }
+
+    })
+
+    wordCloud = [], compareWord = 0
+
+    if (fltrList != null){
+        returnList.forEach(function (rrl) {
+            fltrList.forEach(function (frl) {
+                //console.info(rrl.word + ' =! ' + frl.lookupValue)
+                if (rrl.word != frl.lookupValue){
+                    compareWord = 1
+                }
+            })
+            if (compareWord == 1){
+                wordCloud.push(rrl)
+                compareWord = 0
+                //console.info(rrl)
+            }
+
+
+        })
+        return wordCloud
+    }
+    else {
+        return returnList
+    }
+}
+
+

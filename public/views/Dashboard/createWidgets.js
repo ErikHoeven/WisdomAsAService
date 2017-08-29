@@ -115,6 +115,7 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
+            console.info(data)
 
                     fltrGroup = data.fltrGroup
                     fltrState = data.fltrState
@@ -154,6 +155,7 @@ function getTickets() {
             console.info('-------------Plot Graph-----------------------------')
             //plotGraph('ticketChart',newValues.countPerDay)
             d3GraphPlot('ticketChart2',newValues.countPerDay)
+            setSpiderChart('ticketChart', data.dataSpider)
             console.info('------------------------------------------')
         }
     })
@@ -201,7 +203,6 @@ function getWordCloud(div, lstWord){
 
 function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
-
     if (value != 'All'){
         returnArray = _.where(dataset,{Group: value})
 
@@ -225,9 +226,6 @@ function filterTickets(value, dataset) {
                 }),
                 'secondLineApps': d3.sum(v, function (d) {
                     return d['secondLineApps'];
-                }),
-                'infra': d3.sum(v, function (d) {
-                    return d['infra'];
                 }),
                 'cognos': d3.sum(v, function (d) {
                     return d['cognos'];
@@ -292,6 +290,8 @@ function filterTickets(value, dataset) {
     }
 
     var aggCountsPerDayCattegory = returnArray
+    console.info('aggCountsPerDayCattegory')
+    console.info(aggCountsPerDayCattegory)
 
     var countsPerDayCattegory = d3.nest()
         .key(function (d) {
@@ -312,6 +312,7 @@ function filterTickets(value, dataset) {
         })
         .entries(aggCountsPerDayCattegory)
 
+    console.info(countsPerDayCattegory)
 
     var createdTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countCreatedTickets,
         openTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countOpenTickets,
@@ -329,7 +330,8 @@ function filterTickets(value, dataset) {
     returnObject.fltrData = returnArray
     returnObject.countPerDay = countsPerDay
 
-
+    console.info('returnObject')
+    console.info(aggCountsPerDayCattegory)
     return returnObject
 }
 

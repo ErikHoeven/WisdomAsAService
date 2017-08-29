@@ -33,7 +33,7 @@ function plotGraph (div, ds) {
 
 function d3GraphPlot(div, ds) {
     console.info('d3GraphPlot')
-
+    $('#' + div).html('')
     console.info(ds)
     console.info('ds')
     var data = [], object = {}

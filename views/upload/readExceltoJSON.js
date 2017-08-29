@@ -23,24 +23,44 @@ exports.readExceltoJSON = function (req,res,next) {
     node_xj({
         input: filename,  // input xls
         output: output, // output json
-        sheet: "Incidents"  // specific sheetname
+        sheet: "Export0"  // specific sheetname
     }, function(err, result) {
         if (err) {
             console.error(err);
         } else {
 
+
+
+
             result.forEach(function (r) {
                 dateString = correctionOfDate(r['Creation Date'])
-                var creationDate = moment(dateString, 'DD-MM-YYYY').toDate()
+                var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
+                dateString = correctionOfDate(r['Last Change'])
+                var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+
+                // Ticket Type
+                if (r.Number.substring(0,3) == 'INC'){
+                    ticketType = 'Incident'
+                }
+                if (r.Number.substring(0,3) == 'SRQ'){
+                    ticketType = 'Service Request'
+                }
+                if (r.Number.substring(0,3) == 'RFC'){
+                    ticketType = 'Change'
+                }
+
+
                 r['Creation Date'] = creationDate
                 r.count = 1
                 var groupCount = r['Responsible Group'] + '_Count'
                 r[groupCount] = 1
+                r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
-                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate
+                r.lastChange = lastChange
+                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange
             })
 
-            stgOmniTracker.remove({})
+            //stgOmniTracker.remove({})
             stgOmniTracker.insert(result)
 
             res.status(201).json({message: 'Succesfull uploaded' });
@@ -52,8 +72,9 @@ exports.readExceltoJSON = function (req,res,next) {
 
 function correctionOfDate(inputDate){
     var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
-
-    dateCorrection = inputDate.split('-')
+    console.info('inputDate')
+    console.info(inputDate)
+    dateCorrection = inputDate.split('/')
     // Days to 2 pos
     if (dateCorrection[0].length == 1){
         dateString = '0' + dateCorrection[0] + '-'

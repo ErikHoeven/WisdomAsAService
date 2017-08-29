@@ -42,6 +42,8 @@ block head
     //Custom script
     script(src="/views/Dashboard/createWidgets.js")
     script(src="/views/Dashboard/ticketsGraphs.js")
+    script(src="/views/Dashboard/setSpiderChart.js")
+    script(src="/views/Dashboard/RadarChart.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
 
 block body
@@ -73,9 +75,9 @@ block body
                                 #myfirstchart
                                     script.
                                         getTweets()
-                                        var auto_refresh_SocialFeeds = setInterval(function () {
-                                            getTweets()
-                                        }, 15000)
+                                        //var auto_refresh_SocialFeeds = setInterval(function () {
+                                        //    getTweets()
+                                        //}, 15000)
                             .col-md-6
                                 #wordcloud
 
@@ -123,6 +125,9 @@ block body
                                     #ticketChart
                                         script.
                                             getTickets()
+                                            var auto_refresh_Tickets = setInterval(function () {
+                                                getTickets()
+                                            }, 15000)
 
                             .col-md-6
                                 .widget
