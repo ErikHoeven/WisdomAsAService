@@ -1,14 +1,14 @@
 /**
  * Created by erik on 8/29/17.
  */
-function setSpiderChart (div,data){
-    var w = 500,
-        h = 500;
+function setSpiderChart (div,data, legenda){
+    var w = 400,
+        h = 300;
 
-    var colorscale = d3.scale.category10();
+    var colorscale = d3.scaleOrdinal(d3.schemeCategory10);
 
 //Legend titles
-    var LegendOptions = ['All'];
+    var LegendOptions = legenda;
 
 //Data
     var d = data
@@ -24,7 +24,7 @@ function setSpiderChart (div,data){
 
 //Call function to draw the Radar chart
 //Will expect that data is in %'s
-    RadarChart.draw("#chart", d, mycfg);
+    RadarChart.draw("#"+ div, d, mycfg);
 
 ////////////////////////////////////////////
 /////////// Initiate legend ////////////////
@@ -44,7 +44,7 @@ function setSpiderChart (div,data){
         .attr("y", 10)
         .attr("font-size", "12px")
         .attr("fill", "#404040")
-        .text("What % of owners use a specific service in a week");
+        .text("Responsible groups");
 
 //Initiate Legend
     var legend = svg.append("g")

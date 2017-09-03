@@ -19,8 +19,10 @@ var RadarChart = {
             TranslateY: 30,
             ExtraWidthX: 100,
             ExtraWidthY: 100,
-            color: d3.scale.category10()
+            color: d3.scaleOrdinal(d3.schemeCategory10)
         };
+
+        console.info('data')
 
         if('undefined' !== typeof options){
             for(var i in options){
@@ -29,6 +31,9 @@ var RadarChart = {
                 }
             }
         }
+
+
+
         cfg.maxValue = Math.max(cfg.maxValue, d3.max(d, function(i){return d3.max(i.map(function(o){return o.value;}))}));
         var allAxis = (d[0].map(function(i, j){return i.axis}));
         var total = allAxis.length;
@@ -100,7 +105,8 @@ var RadarChart = {
 
         axis.append("text")
             .attr("class", "legend")
-            .text(function(d){return d})
+            .text(function(d){
+                return d})
             .style("font-family", "sans-serif")
             .style("font-size", "11px")
             .attr("text-anchor", "middle")

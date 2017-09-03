@@ -109,6 +109,7 @@ function getTweets(){
 }
 
 function getTickets() {
+
     $.ajax({
         url: '/Dashboard/getTickets',
         type: 'GET',
@@ -117,46 +118,109 @@ function getTickets() {
             console.info('succes getTickets')
             console.info(data)
 
-                    fltrGroup = data.fltrGroup
-                    fltrState = data.fltrState
-                    fltrGroupString = '<select class="selectpicker" id="selectFltrGroup">'
-                    fltrStateString = '<select class="selectpicker" id="selectFltrState">'
+            // Intialize variables
+            fltrGroup = data.fltrGroup
+            fltrState = data.fltrState
+            fltrGroupString = '<select class="selectpicker" id="selectFltrGroup">'
+            fltrStateString = '<select class="selectpicker" id="selectFltrState">'
 
-                    fltrGroup.forEach(function (row) {
-                      fltrGroupString = fltrGroupString + '<option>' + row +'</option>'
-                    })
-                    fltrGroupString = fltrGroupString + '</select>'
+            fltrGroup.forEach(function (row) {
+                fltrGroupString = fltrGroupString + '<option>' + row + '</option>'
+            })
+            fltrGroupString = fltrGroupString + '</select>'
 
-                    fltrState.forEach(function (row) {
-                        fltrStateString = fltrStateString + '<option>' + row +'</option>'
-                    })
-                fltrStateString = fltrStateString + '</select>'
+            fltrState.forEach(function (row) {
+                fltrStateString = fltrStateString + '<option>' + row + '</option>'
+            })
+            fltrStateString = fltrStateString + '</select>'
 
-                $('#fltrListCattegory').html(fltrGroupString)
+            $('#fltrListCattegory').html(fltrGroupString)
 
-                $('#selectFltrGroup').change(function () {
-                    var fltrValue = $('#selectFltrGroup option:selected').text(), values = filterTickets(fltrValue,data.aggCountsPerDayCattegory)
 
-                    $('#createdTickets').text(values.createdTickets)
-                    $('#openTickets').text(values.openTickets)
-                    $('#closedTickets').text(values.solvedTickets)
-                    $('#newTickets').text(values.createdTickets)
+            var values = filterTickets('All', data.aggCountsPerDayCattegory)
+            console.info(values)
 
-                })
-
-            newValues = filterTickets('All',data.aggCountsPerDayCattegory)
-
-            $('#createdTickets').text(newValues.createdTickets)
-            $('#openTickets').text(newValues.openTickets)
-            $('#closedTickets').text(newValues.solvedTickets)
-            $('#newTickets').text(newValues.createdTickets)
-            $('#ticketChart').html('')
+            $('#createdTickets').text(values.createdTickets)
+            $('#openTickets').text(values.openTickets)
+            $('#closedTickets').text(values.solvedTickets)
+            $('#newTickets').text(values.createdTickets)
 
             console.info('-------------Plot Graph-----------------------------')
             //plotGraph('ticketChart',newValues.countPerDay)
-            d3GraphPlot('ticketChart2',newValues.countPerDay)
-            setSpiderChart('ticketChart', data.dataSpider)
+            d3GraphPlot('ticketChart2', values.countPerDay)
+            setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
             console.info('------------------------------------------')
+
+            $('#selectFltrGroup').change(function () {
+                var fltrValue = $('#selectFltrGroup option:selected').text(),
+                    newvalues = filterTickets(fltrValue, data.aggCountsPerDayCattegory)
+
+
+                    $('#createdTickets').text(newvalues.createdTickets)
+                    $('#openTickets').text(newvalues.openTickets)
+                    $('#closedTickets').text(newvalues.solvedTickets).click(function () {
+
+                        console.info('Solved click')
+                        var table = getTicketList(data.allTickets, {Group: fltrValue, State: 'Solved'},10, 1)
+                        var pagnation = setPagnation(data.allTickets, 10, 1, {Group: fltrValue,State: 'Solved'})
+
+                        $('#' + table.div).html('')
+                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                        $('#pagnation').html(pagnation)
+
+                        // Capture change in URL to load the next resultset
+                        $(window).on('hashchange', function (e) {
+                            console.info('changed')
+                            var hash = window.location.hash.replace('#', '')
+
+                            var table = getTicketList(data.allTickets, {Group: fltrValue,State: 'Solved'}, 10, hash)
+                            var pagnation = setPagnation(data.allTickets, 10, hash, {Group: fltrValue,State: 'Solved'})
+
+                            $('#' + table.div).html('')
+                            $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                            $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                            $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                            //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                            $('#pagnation').html(pagnation)
+
+                        })
+                    })
+                    $('#newTickets').text(newvalues.createdTickets).click(function () {
+
+                        console.info('newTickets click')
+                        var table = getTicketList(data.allTickets, {Group: fltrValue, State: 'Classification'},10, 1)
+                        var pagnation = setPagnation(data.allTickets, 10, 1, {Group: fltrValue,State: 'Classification'})
+
+                        $('#' + table.div).html('')
+                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                        $('#pagnation').html(pagnation)
+
+                        // Capture change in URL to load the next resultset
+                        $(window).on('hashchange', function (e) {
+                            console.info('changed')
+                            var hash = window.location.hash.replace('#', '')
+
+                            var table = getTicketList(data.allTickets, {Group: fltrValue,State: 'Classification'}, 10, hash)
+                            var pagnation = setPagnation(data.allTickets, 10, hash, {Group: fltrValue,State: 'Classification'})
+
+                             $('#' + table.div).html('')
+                             $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                             $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                             $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                             //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                             $('#pagnation').html(pagnation)
+
+                     })
+                })
+
+
+            })
         }
     })
 }
