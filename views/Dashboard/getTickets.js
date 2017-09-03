@@ -121,7 +121,6 @@ exports.getTickets = function (req, res, next) {
             }
 
             if (State == 'Classification') {
-                countOpenTickets = count
                 leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
             }
 

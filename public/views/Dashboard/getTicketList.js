@@ -1,11 +1,29 @@
 function  getTicketList(data, filter, pagnationStep, ActualStep) {
     var tickets
+    //console.info('FILTER TYPE: ' +  filter.prop.constructor )
+    console.info('FILTER: ' + Array.isArray(filter))
 
-    if (filter != 'All'){
-        tickets = _.where(data,{'Responsible Group': filter.Group, State: filter.State})
+    if (Array.isArray(filter) != true){
+        console.info('filter is object')
+        if (filter != 'All'){
+            tickets = _.where(data,{'Responsible Group': filter.Group, State: filter.State})
+        }
+        else {
+            tickets = _.where(data,{State: filter.State})
+        }
     }
     else {
-        tickets = _.where(data,{State: filter.State})
+        var test = []
+        var tickets = []
+
+        filter.forEach(function (f) {
+            test = _.where(data,{'Responsible Group': f.Group, State: f.State})
+            Array.prototype.push.apply(tickets, test)
+            //console.info(f)
+            //console.info(test)
+        })
+        console.info(tickets)
+
     }
 
     var tableDefinition = {}

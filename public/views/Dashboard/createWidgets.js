@@ -157,7 +157,37 @@ function getTickets() {
 
 
                     $('#createdTickets').text(newvalues.createdTickets)
-                    $('#openTickets').text(newvalues.openTickets)
+                    $('#openTickets').text(newvalues.openTickets).click(function () {
+
+                        console.info('Open click')
+                        var filterArray = [{Group: fltrValue, State: 'In progress'},{Group: fltrValue, State: 'Waiting'}]
+                        var table = getTicketList(data.allTickets, filterArray,10, 1)
+                        var pagnation = setPagnation(data.allTickets, 10, 1, filterArray)
+
+                        $('#' + table.div).html('')
+                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                        $('#pagnation').html(pagnation)
+
+                        // Capture change in URL to load the next resultset
+                        $(window).on('hashchange', function (e) {
+                            console.info('changed')
+                            var hash = window.location.hash.replace('#', '')
+
+                            var table = getTicketList(data.allTickets, filterArray, 10, hash)
+                            var pagnation = setPagnation(data.allTickets, 10, hash, filterArray)
+
+                            $('#' + table.div).html('')
+                            $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
+                            $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
+                            $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
+                            //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
+                            $('#pagnation').html(pagnation)
+
+                        })
+                    })
                     $('#closedTickets').text(newvalues.solvedTickets).click(function () {
 
                         console.info('Solved click')
@@ -261,7 +291,6 @@ function getWordCloud(div, lstWord){
             })
             .text(function(d) { return d.text; });
     }
-
 }
 
 
