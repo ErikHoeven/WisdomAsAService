@@ -254,6 +254,7 @@ function getTickets() {
             ticketsCreatedCPF(data.aggCountsPerDayCattegory)
             ticketsSolvedCPF(data.allTickets)
             ticketsCreatedCognos(data.aggCountsPerDayCattegory)
+            ticketsSolvedCognos(data.allTickets)
         }
     })
 }

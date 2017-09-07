@@ -431,7 +431,7 @@ function ticketsSolvedCPF(ds){
 }
 
 // (7) --- ticketsCreatedCognos -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsCreatedCPF);
+google.charts.setOnLoadCallback(ticketsCreatedCognos);
 function ticketsCreatedCognos(ds) {
     console.info('Start ticketsCreatedCognos')
 
@@ -458,7 +458,7 @@ function ticketsCreatedCognos(ds) {
             };
         })
         .entries(ds);
-
+    console.info(countsPerWeek)
     countsPerWeek.forEach(function (r) {
         tableRows.push([Number(r.key),r.value.ticketsCreatedCognos])
     })
@@ -498,6 +498,76 @@ function ticketsCreatedCognos(ds) {
     chart.draw(data, options);
 }
 
+// (8) --- ticketsSolvedCognos -------------------------------------------------------------------------------------------------------------
+google.charts.setOnLoadCallback(ticketsSolvedCognos);
+function ticketsSolvedCognos(ds){
+    console.info('Start ticketsSolvedPerWeek Cognos')
+    // (A)Define column headers
+    var dataNew = new google.visualization.DataTable()
+    dataNew.addColumn('number', 'Weeknumber');
+    dataNew.addColumn('number', 'Tickets');
+
+
+    //(D) Filter tickets to only Solved
+    ds = _.where(ds,{'State':'Solved'})
+    ds = _.where(ds,{'Responsible Group':'EPS - Cognos'})
+
+    console.info(ds)
+    // (2.A)Define table rows
+    var rowsSolved = []
+
+    //(2.B) Group ds on Last Change
+    var countsPerWeek = d3.nest()
+        .key(function (d) {
+            return d['Last Change']
+        })
+        .rollup(function (v) {
+            return {
+                'TicketsSolved': d3.sum(v, function (d) {
+                    return d['count']
+                }),
+            };
+        })
+        .entries(ds);
+
+    console.info(countsPerWeek)
+    //(2.C) Convert char weeknumber to number
+    countsPerWeek.forEach(function (r) {
+        rowsSolved.push([Number(r.key),Number(r.value.TicketsSolved)])
+    })
+
+    //(2.D) Sort table rows
+    var rowsSolvedSorted = rowsSolved.sort(Comparator)
+    // (2.E) Add table rows to table
+    dataNew.addRows(rowsSolvedSorted)
+    console.info(rowsSolvedSorted)
+    //(3) Set graph options
+    var options = {
+        title: 'Tickets Solved per week Cognos',
+        hAxis: {
+            title: 'Weeknumber'
+        },
+        vAxis: {
+            title: 'Tickets'
+        },
+        trendlines: {
+            0: {
+                type: 'polynomial',
+                degree: 3,
+                visibleInLegend: true,
+                pointSize: 20, // Set the size of the trendline dots.
+                opacity: 0.1
+            }
+        },
+        width:550,
+        height:300,
+    };
+
+    //(4) Draw Graph
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('ticketsSolvedCognos'));
+    chart.draw(dataNew, options);
+}
 
 
 
