@@ -116,8 +116,6 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
-            console.info(data)
-
             // Intialize variables
             fltrGroup = data.fltrGroup
             fltrState = data.fltrState
@@ -136,9 +134,7 @@ function getTickets() {
 
             $('#fltrListCattegory').html(fltrGroupString)
 
-
             var values = filterTickets('All', data.aggCountsPerDayCattegory)
-            console.info(values)
 
             $('#createdTickets').text(values.createdTickets)
             $('#openTickets').text(values.openTickets)
@@ -251,6 +247,13 @@ function getTickets() {
 
 
             })
+            ticketsCreatedPerWeek(data.aggCountsPerDayCattegory)
+            ticketsSolvedPerWeek(data.allTickets)
+            ticketsCreatedSRL(data.aggCountsPerDayCattegory)
+            ticketsSolvedSRL(data.allTickets)
+            ticketsCreatedCPF(data.aggCountsPerDayCattegory)
+            ticketsSolvedCPF(data.allTickets)
+            ticketsCreatedCognos(data.aggCountsPerDayCattegory)
         }
     })
 }

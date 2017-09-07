@@ -49,6 +49,7 @@ exports = module.exports = function(app, passport) {
     app.get('/Dashboard/', require('./views/Dashboard/index').init);
     app.get('/Dashboard/getTweets', require('./views/Dashboard/index').getTweets);
     app.get('/Dashboard/getTickets', require('./views/Dashboard/getTickets').getTickets);
+    app.get('/Dashboard/update', require('./views/Dashboard/getTickets').updateGeneric);
 
 
 

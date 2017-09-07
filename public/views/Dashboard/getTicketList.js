@@ -44,12 +44,17 @@ function  getTicketList(data, filter, pagnationStep, ActualStep) {
                                     'aggGrain',
                                     'Reason for waiting']
     tableDefinition.title = 'Business Rules'
-    tableDefinition.editRow = 'N'
+    tableDefinition.editRow = 'Y'
     tableDefinition.isEditable = 'N'
-    tableDefinition.sourceCollection = 'businessrules'
+    tableDefinition.sourceCollection = 'stgOmniTracker'
     console.info('tickets after filter')
     console.info(tickets)
     console.info('Gen Table')
+
+    if (filter.Group == 'EPS - SRL_Count'){
+        console.info('EPS - SRL_Count Hit')
+        tableDefinition.hideColumns.push('EPS - SRL_Count')
+    }
     return  genericTable (tickets, tableDefinition, pagnationStep, ActualStep )
 
 }
@@ -303,4 +308,87 @@ function setPagnation(data, pagnationStep, actualStep, filter ) {
     }
 
     return paginationHTML
+}
+
+
+function update(column, id, sourceCollection) {
+    console.info('updateConfirmed:')
+    console.info('---------------------')
+    console.info('column: ' + column)
+    console.info('id: ' + id)
+    console.info('value:' + value)
+    var valuelist = [], valueRecord = ''
+
+    var fields = column.split(','), updateSet = [], value, updateRow = {}
+    console.info('-----------------------------------------------------')
+    fields.forEach(function (field) {
+        $('.' + field).each(function (idx, elem) {
+
+
+            if (!$(elem).html()) {
+                valueRecord = $(elem).val()
+            }
+            else {
+                valueRecord = $(elem).html()
+            }
+
+            valuelist.push(valueRecord)
+        })
+
+        column = field.replace('txt', '').replace(id, '')
+        updateRow[column] = valuelist
+        updateRow.id = id
+        updateRow.collection = sourceCollection
+        updateSet.push(updateRow)
+    })
+
+    console.info(updateSet[0])
+
+}
+/*    $.ajax({
+        url: '/Dashboard/update',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({updateSet: updateSet[0]}),
+        success: function (response) {
+
+            console.info(response)
+
+            location.reload()
+
+        }
+    })
+}
+ */
+
+
+function updateField(row, sourceCollection) {
+    console.info(' -- updateFields --')
+    console.info(sourceCollection)
+
+    var rows = row.split(','), i = 0, id = rows[0], column
+    //console.info(rows[2].replace(/\n/g, " "))
+    console.info($("[id='Affected Person59a9534a5560ad4272f88603']").text())
+    // Update td to input fields
+
+
+
+    rows.forEach(function (r) {
+        if (i > 0 ){
+            var value = $('[id="' + r + '"]').text()
+            $('[id="' + r + '"]').html('<input id="txt' + r + '" type="text" value="'+ value  + '"></input>')
+
+            if (i == 1){
+                column = 'txt' + r
+            }
+            if ( i > 1 ){
+                column = column + ',txt' + r
+            }
+        }
+        i++
+    })
+
+    //Change Pencil to save button
+    $('#update' + id).html('<button id="cmdSave" type="button" class="btn btn-default btn-sm" onclick="update(\'' +column + '\',\'' + id +'\',\'' + sourceCollection + '\')"><span class="glyphicon glyphicon-ok"></span></button>')
+
 }

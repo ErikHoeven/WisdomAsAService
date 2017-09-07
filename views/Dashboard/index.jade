@@ -45,6 +45,7 @@ block head
     script(src="/views/Dashboard/createWidgets.js")
     script(src="/views/Dashboard/ticketsGraphs.js")
     script(src="/views/Dashboard/getTicketList.js")
+    script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
 
 block body
@@ -66,7 +67,8 @@ block body
                         a(href='#1a', data-toggle='tab') Social Overview
                     li
                         a(href='#2a', data-toggle='tab') Tickets Dashboard
-
+                    li
+                        a(href='#3a', data-toggle='tab') Trends
                 .tab-content.clearfix
                     #1a.tab-pane.active
                         .col-md-12
@@ -137,6 +139,30 @@ block body
                                 .widget
                                     #ticketsList
                                     #pagnation
+
+                    #3a.tab-pane
+                        .row
+                            .col-md-6
+                                .widget
+                                    #ticketsCreatedPerWeek
+                            .col-md-6
+                                .widget
+                                    #ticketsSolvedPerWeek
+                        .row
+                            .col-md-6
+                                .widget
+                                    #ticketsCreatedSRL
+                            .col-md-6
+                                .widget
+                                    #ticketsSolvedSRL
+                        .row
+                            .col-md-6
+                                .widget
+                                    #ticketsCreatedCPF
+                            .col-md-6
+                                .widget
+                                    #ticketsSolvedCPF
+
 
 
 

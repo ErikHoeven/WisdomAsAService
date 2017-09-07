@@ -384,4 +384,47 @@ function fltrWordCountList(wordCloud, filterCount, fltrList) {
     }
 }
 
+exports.updateGeneric = function (req, res, next) {
+    var  parameters = req.body.updateSet
+        ,collection = parameters.collection
+        ,id = parameters.id
+        ,pars = Object.keys(parameters)
+        ,updateSet = []
+        ,updateObject = {}
+        ,connection = db.get(collection)
+        ,returnSet = []
 
+    // Filter the id and collection
+    pars.forEach(function (par) {
+        if (par != 'id' && par != 'collection' ){
+            updateObject[par] = parameters[par]
+        }
+    })
+
+
+    console.info(updateObject)
+
+
+    connection.update({_id: id}, {$set: updateObject}, false, true)
+
+    mongo.connect(test, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [
+            // Load Tweets from table
+            function (callback) {
+                db.collection(collection).find({}).toArray(function (err, collection) {
+                    if (err) return callback(err);
+                    locals.collection = collection;
+                    callback();
+                });
+            }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+
+            res.status(200).json(locals.collection)
+        })
+    })
+}
