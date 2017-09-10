@@ -74,7 +74,7 @@ function correctionOfDate(inputDate){
     var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
     console.info('inputDate')
     console.info(inputDate)
-    dateCorrection = inputDate.split('/')
+    dateCorrection = inputDate.split('-')
     // Days to 2 pos
     if (dateCorrection[0].length == 1){
         dateString = '0' + dateCorrection[0] + '-'
@@ -85,6 +85,7 @@ function correctionOfDate(inputDate){
 
     // Month to 2 pos
     if (dateCorrection[1].length == 1){
+        console.info('Maand heeft 1 pos')
         dateString = dateString + '0' + dateCorrection[1] + '-'
     }
     else {

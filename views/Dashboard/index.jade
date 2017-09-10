@@ -45,9 +45,9 @@ block head
     script(src="/views/Dashboard/createWidgets.js")
     script(src="/views/Dashboard/ticketsGraphs.js")
     script(src="/views/Dashboard/getTicketList.js")
+    script(src="/views/Dashboard/ticketsLeadsTime.js")
     script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
-
 block body
     .container-fluid
         .row
@@ -63,12 +63,14 @@ block body
         .row
             .col-md-12
                 ul.nav.nav-pills
-                    li.active
-                        a(href='#1a', data-toggle='tab') Social Overview
                     li
+                        a(href='#1a', data-toggle='tab') Social Overview
+                    li.active
                         a(href='#2a', data-toggle='tab') Tickets Dashboard
                     li
-                        a(href='#3a', data-toggle='tab') Trends
+                        a(href='#3a', data-toggle='tab') Trends on Amount
+                    li
+                        a(href='#4a', data-toggle='tab') Trends on Time
                 .tab-content.clearfix
                     #1a.tab-pane.active
                         .col-md-12
@@ -135,10 +137,22 @@ block body
                                 .widget
                                     #ticketChart
                         .row
+                            .col-md-6
+                                .widget
+                                    #test
+                            .col-md-6
+                                .widget
+                                    #removeWord
+                                    #removeButton
+                        .row
                             .col-md-12
                                 .widget
                                     #ticketsList
                                     #pagnation
+
+
+
+
 
                     #3a.tab-pane
                         .row

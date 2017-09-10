@@ -1,276 +1,292 @@
-/**
- * Created by erik on 8/24/17.
- */
-
 'use strict';
 
-var  cheerio = require("cheerio")
-    ,request = require("request")
+var  request = require("request")
     ,async = require('async')
     ,mongo = require('mongodb')
-    ,db = require('monk')('localhost/commevents')
-    ,dbm = require('mongodb').MongoClient
     ,d3 = require('d3')
     ,uri = 'mongodb://localhost:27017/commevents'
-    ,stgOmniTracker = db.get('stgOmniTracker')
     ,moment = require('moment')
     ,underscore = require('underscore')
-    ,natural = require('natural')
     ,actWeek = actualWeek()
     ,actMonth =  actualMonth()
     ,ftlrGroup = []
     ,fltrState = []
     ,compareWordGroup = null
     ,compareWordState = null
+    ,locals = {}
 
 exports.getTickets = function (req, res, next) {
 
         console.info('-------------------Get Tickets --------------------------------------------------------')
-    stgOmniTracker.find({},function (err, tickets) {
 
-
-        var resultSet = {}, aggCountsPerDayCattegory = []
-
-        var countsPerDay = d3.nest()
-            .key(function (d) {
-                return d['Creation Date']
-            })
-            .rollup(function (v) {
-                return {
-                    count: d3.sum(v, function (d) {
-                        return d.count;
-                    }),
-                };
-            })
-            .entries(tickets)
-
-        var countsPerDayCattegory = d3.nest()
-            .key(function (d) {
-                return d.aggGrain
-            })
-            .rollup(function (v) {
-                return {
-                    count: d3.sum(v, function (d) {
-                        return d.count;
-                    }),
-                    'cpf': d3.sum(v, function (d) {
-                        return d['EPS - CPF_Count']
-                    }),
-                    'esoft': d3.sum(v, function (d) {
-                        return d['EPS - E-Soft_Count'];
-                    }),
-                    'firstLine': d3.sum(v, function (d) {
-                        return d['Service desk 1st line_Count'];
-                    }),
-                    'srl': d3.sum(v, function (d) {
-                        return d['EPS - SRL_Count'];
-                    }),
-                    'secondLineApps': d3.sum(v, function (d) {
-                        return d['EPS Apps 2nd line_Count'];
-                    }),
-                    'infra': d3.sum(v, function (d) {
-                        return d['EPS - Infra_Count'];
-                    }),
-                    'cognos': d3.sum(v, function (d) {
-                        return d['EPS - Cognos_Count'];
-                    }),
-                    'desktopVirtualisatie': d3.sum(v, function (d) {
-                        return d['Desktop Virtualisation 2nd line_Count'];
-                    }),
-
-                };
-            })
-            .entries(tickets)
-
-        countsPerDayCattegory.forEach(function (row) {
-            var key = row.key.split('|')
-            var CreationDate = key[0],
-                Group = key[1],
-                State = key[2],
-                count = row.values.count,
-                countOpenTickets = 0,
-                countCreatedTickets = 0,
-                countSolvedTickets = 0,
-                snapshot = moment(key[3]).format('DD-MM-YYYY'),
-                snapshotDate = moment(snapshot, 'DD-MM-YYYY').toDate(),
-                lastChange = moment(key[5]).format('DD-MM-YYYY'),
-                lastChangeDate = moment(lastChange, 'DD-MM-YYYY').toDate(),
-                cpf = row.values['EPS-CPF'],
-                esoft = row.values['EPS-E-Soft'],
-                firstLine = row.values['Service desk 1st line'],
-                srl = row.values['EPS-SRL'],
-                secondLineApps = row.values['EPS Apps 2nd line'],
-                cognos = row.values['EPS-Cognos'],
-                infra = row.values['EPS-Infra'],
-                desktopVirtualisatie = row.values['Desktop Virtualisation 2nd line'],
-                leadTime,
-                pushObject = {}
-            pushObject.CreationDate = moment(CreationDate).toDate()
-            pushObject.Group = Group
-            pushObject.State = State
-
-
-            if (State == 'Classification') {
-                countCreatedTickets = count
-                leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
+    mongo.connect(uri, function (err, db) {
+        console.info('MONGODB START CHECK COLLECTIONS')
+        var tasks = [   // Load tweets
+            function (callback) {
+                db.collection('businessrules').find({typeBusinessRule: 'SpiderGraphExeption'}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            },
+            // Load corpus
+            function (callback) {
+                db.collection('stgOmniTracker').find({}).toArray(function (err, tickets) {
+                    if (err) return callback(err);
+                    locals.tickets = tickets;
+                    callback();
+                });
             }
+        ];
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            var businessrules = locals.businessrules, tickets = locals.tickets, resultSet = {}, aggCountsPerDayCattegory = []
+            db.close()
 
-            if (State == 'In progress') {
-                countOpenTickets = count
-                leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-            }
-
-            if (State == 'Classification') {
-                leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-            }
-
-            if (State == 'Waiting') {
-                countOpenTickets = count
-                leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-            }
-
-            if (State == 'Solved') {
-                countSolvedTickets = count
-                leadTime = daydiff(moment(CreationDate).toDate(), lastChangeDate)
-            }
-
-
-            pushObject.count = row.values.count
-            pushObject.countOpenTickets = countOpenTickets
-            pushObject.countCreatedTickets = countCreatedTickets
-            pushObject.countSolvedTickets = countSolvedTickets
-            pushObject.snapshotDate = snapshotDate
-            pushObject.leadTime = leadTime
-
-            // "Service desk 2nd line",
-            // "EPS Infra 2nd line",
-            // "Operating Systems 2nd line",
-            // "Realdolmen Apps 2nd line",
-            // "Operations 1st line",
-            // "EPS - DWH",
-            // "Field Back End HW 2nd line",
-            //"Realdolmen Infra 2nd Line"
-
-            if (key[1] == 'EPS - CPF') {
-                pushObject.cpf = row.values.count
-            }
-            if (key[1] == 'EPS - E-Soft') {
-                pushObject.esoft = row.values.count
-            }
-            if (key[1] == 'EPS - SRL') {
-                pushObject.srl = row.values.count
-            }
-            if (key[1] == 'Service desk 1st line') {
-                pushObject.firstLine = row.values.count
-            }
-            if (key[1] == 'EPS Apps 2nd line') {
-                pushObject.secondLineApps = row.values.count
-            }
-            if (key[1] == 'EPS - Cognos') {
-                pushObject.cognos = row.values.count
-            }
-            if (key[1] == 'EPS - Infra') {
-                pushObject.infra = row.values.count
-            }
-            if (key[1] == 'Desktop Virtualisation 2nd line') {
-                pushObject.desktopVirtualisatie = row.values.count
-            }
-
-            //pushObject[]
-
-            aggCountsPerDayCattegory.push(pushObject)
-
-
-        });
-        console.info('----------------------------------------------')
-
-        ftlrGroup.push('All')
-        fltrState.push('All')
-
-        aggCountsPerDayCattegory.forEach(function (row) {
-            if (row.Group != compareWordGroup) {
-                ftlrGroup.push(row.Group)
-                compareWordGroup = row.Group
-            }
-            if (row.State != compareWordState) {
-                fltrState.push(row.State)
-                compareWordState = row.State
-            }
-        })
-
-        ftlrGroup = underscore.uniq(ftlrGroup)
-        fltrState = underscore.uniq(fltrState)
-
-
-        // Aggegrate to Group
-        var titleList = []
-        var legenda = []
-        var aggTicketsGroup = d3.nest()
-            .key(function (d) {
-                return d['Responsible Group'];
-            })
-            .entries(tickets);
-
-
-        var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong'], temp = []
-
-
-        aggTicketsGroup.forEach(function (group) {
-            var values = group.values, innerArray = []
-            values.forEach(function (value) {
-
-                var titleWords = value.Title.split(' ')
-                titleWords.forEach(function (word) {
-                    innerArray.push(word)
+            console.info(locals)
+            var countsPerDay = d3.nest()
+                .key(function (d) {
+                    return d['Creation Date']
                 })
+                .rollup(function (v) {
+                    return {
+                        count: d3.sum(v, function (d) {
+                            return d.count;
+                        }),
+                    };
+                })
+                .entries(tickets)
+
+
+            var countsPerDayCattegory = d3.nest()
+                .key(function (d) {
+                    return d.aggGrain
+                })
+                .rollup(function (v) {
+                    return {
+                        count: d3.sum(v, function (d) {
+                            return d.count;
+                        }),
+                        'cpf': d3.sum(v, function (d) {
+                            return d['EPS - CPF_Count']
+                        }),
+                        'esoft': d3.sum(v, function (d) {
+                            return d['EPS - E-Soft_Count'];
+                        }),
+                        'firstLine': d3.sum(v, function (d) {
+                            return d['Service desk 1st line_Count'];
+                        }),
+                        'srl': d3.sum(v, function (d) {
+                            return d['EPS - SRL_Count'];
+                        }),
+                        'secondLineApps': d3.sum(v, function (d) {
+                            return d['EPS Apps 2nd line_Count'];
+                        }),
+                        'infra': d3.sum(v, function (d) {
+                            return d['EPS - Infra_Count'];
+                        }),
+                        'cognos': d3.sum(v, function (d) {
+                            return d['EPS - Cognos_Count'];
+                        }),
+                        'desktopVirtualisatie': d3.sum(v, function (d) {
+                            return d['Desktop Virtualisation 2nd line_Count'];
+                        }),
+
+                    };
+                })
+                .entries(tickets)
+
+            countsPerDayCattegory.forEach(function (row) {
+                var key = row.key.split('|')
+                var CreationDate = key[0],
+                    Group = key[1],
+                    State = key[2],
+                    count = row.values.count,
+                    countOpenTickets = 0,
+                    countCreatedTickets = 0,
+                    countSolvedTickets = 0,
+                    snapshot = moment(key[3]).format('DD-MM-YYYY'),
+                    snapshotDate = moment(snapshot, 'DD-MM-YYYY').toDate(),
+                    lastChange = moment(key[5]).format('DD-MM-YYYY'),
+                    lastChangeDate = moment(lastChange, 'DD-MM-YYYY').toDate(),
+                    cpf = row.values['EPS-CPF'],
+                    esoft = row.values['EPS-E-Soft'],
+                    firstLine = row.values['Service desk 1st line'],
+                    srl = row.values['EPS-SRL'],
+                    secondLineApps = row.values['EPS Apps 2nd line'],
+                    cognos = row.values['EPS-Cognos'],
+                    infra = row.values['EPS-Infra'],
+                    desktopVirtualisatie = row.values['Desktop Virtualisation 2nd line'],
+                    leadTime,
+                    pushObject = {}
+                pushObject.CreationDate = moment(CreationDate).toDate()
+                pushObject.Group = Group
+                pushObject.State = State
+
+
+                if (State == 'Classification') {
+                    countCreatedTickets = count
+                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
+                }
+
+                if (State == 'In progress') {
+                    countOpenTickets = count
+                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
+                }
+
+                if (State == 'Classification') {
+                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
+                }
+
+                if (State == 'Waiting') {
+                    countOpenTickets = count
+                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
+                }
+
+                if (State == 'Solved') {
+                    countSolvedTickets = count
+                    leadTime = daydiff(moment(CreationDate).toDate(), lastChangeDate)
+                }
+
+
+                pushObject.count = row.values.count
+                pushObject.countOpenTickets = countOpenTickets
+                pushObject.countCreatedTickets = countCreatedTickets
+                pushObject.countSolvedTickets = countSolvedTickets
+                pushObject.snapshotDate = snapshotDate
+                pushObject.leadTime = leadTime
+
+                // "Service desk 2nd line",
+                // "EPS Infra 2nd line",
+                // "Operating Systems 2nd line",
+                // "Realdolmen Apps 2nd line",
+                // "Operations 1st line",
+                // "EPS - DWH",
+                // "Field Back End HW 2nd line",
+                //"Realdolmen Infra 2nd Line"
+
+                if (key[1] == 'EPS - CPF') {
+                    pushObject.cpf = row.values.count
+                }
+                if (key[1] == 'EPS - E-Soft') {
+                    pushObject.esoft = row.values.count
+                }
+                if (key[1] == 'EPS - SRL') {
+                    pushObject.srl = row.values.count
+                }
+                if (key[1] == 'Service desk 1st line') {
+                    pushObject.firstLine = row.values.count
+                }
+                if (key[1] == 'EPS Apps 2nd line') {
+                    pushObject.secondLineApps = row.values.count
+                }
+                if (key[1] == 'EPS - Cognos') {
+                    pushObject.cognos = row.values.count
+                }
+                if (key[1] == 'EPS - Infra') {
+                    pushObject.infra = row.values.count
+                }
+                if (key[1] == 'Desktop Virtualisation 2nd line') {
+                    pushObject.desktopVirtualisatie = row.values.count
+                }
+
+                aggCountsPerDayCattegory.push(pushObject)
+
             });
 
-            var wordList = fltrWordCountList(innerArray,3, null)
-            var fltrWordList = wordList.filter(function( o) {
-                return exceptions.indexOf(o.word) == -1;
-            })
-            temp = []
+            console.info('----------------------------------------------')
 
-            if (fltrWordList.length > 0){
-                fltrWordList.forEach(function (w) {
-                    temp.push({axis: w.word, value: w.count})
+            ftlrGroup.push('All')
+            fltrState.push('All')
+
+            aggCountsPerDayCattegory.forEach(function (row) {
+                if (row.Group != compareWordGroup) {
+                    ftlrGroup.push(row.Group)
+                    compareWordGroup = row.Group
+                }
+                if (row.State != compareWordState) {
+                    fltrState.push(row.State)
+                    compareWordState = row.State
+                }
+            })
+
+            ftlrGroup = underscore.uniq(ftlrGroup)
+            fltrState = underscore.uniq(fltrState)
+
+
+            // Aggegrate to Group
+            var titleList = []
+            var legenda = []
+            var aggTicketsGroup = d3.nest()
+                .key(function (d) {
+                    return d['Responsible Group'];
                 })
-                titleList.push(temp)
-                legenda.push(group.key)
-            }
-        })
+                .entries(tickets);
 
-        temp = []
-        titleList.forEach(function (t) {
-            t.forEach(function (row) {
-                temp.push(row.value)
+            var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong'], temp = []
+
+            businessrules.forEach(function (row) {
+                exceptions.push(row.lookupValue)
             })
 
-        })
-         temp = underscore.uniq(temp)
-        var max = d3.max(temp)
+            aggTicketsGroup.forEach(function (group) {
+                var values = group.values, innerArray = []
+                values.forEach(function (value) {
 
-        temp = []
-        titleList.forEach(function (set) {
-            set.forEach(function (row) {
-                row.value =  Math.round((row.value / max) * 100) / 100
+                    var titleWords = value.Title.split(' ')
+                    titleWords.forEach(function (word) {
+                        innerArray.push(word)
+                    })
+                });
+
+                var wordList = fltrWordCountList(innerArray,3, null)
+                var fltrWordList = wordList.filter(function( o) {
+                    return exceptions.indexOf(o.word) == -1;
+                })
+                temp = []
+
+                if (fltrWordList.length > 0){
+                    fltrWordList.forEach(function (w) {
+                        temp.push({axis: w.word, value: w.count})
+                    })
+                    titleList.push(temp)
+                    legenda.push(group.key)
+                }
             })
-        })
 
-        console.info(titleList)
-        //console.info(legenda)
+            temp = []
+            titleList.forEach(function (t) {
+                t.forEach(function (row) {
+                    temp.push(row.value)
+                })
+
+            })
+            temp = underscore.uniq(temp)
+            var max = d3.max(temp)
+
+            temp = []
+            titleList.forEach(function (set) {
+                set.forEach(function (row) {
+                    row.value =  Math.round((row.value / max) * 100) / 100
+                })
+            })
+
+            console.info(titleList)
+            //console.info(legenda)
 
 
-        console.info('------------ MAX --------')
-        //console.info(d3.max(dataSpider, function(i){console.info(i.map(function (o) { console.info(o)}))}))
+            console.info('------------ MAX --------')
+            //console.info(d3.max(dataSpider, function(i){console.info(i.map(function (o) { console.info(o)}))}))
 
-        res.status(200).json({
-            aggCountsPerDayCattegory: aggCountsPerDayCattegory,
-            fltrGroup: ftlrGroup,
-            fltrState: fltrState,
-            dataSpider: titleList,
-            legendaSpider: legenda,
-            allTickets: tickets
+            res.status(200).json({
+                aggCountsPerDayCattegory: aggCountsPerDayCattegory,
+                fltrGroup: ftlrGroup,
+                fltrState: fltrState,
+                dataSpider: titleList,
+                legendaSpider: legenda,
+                allTickets: tickets
+            })
         })
     })
 }

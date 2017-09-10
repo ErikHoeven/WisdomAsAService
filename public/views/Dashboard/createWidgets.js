@@ -145,6 +145,23 @@ function getTickets() {
             //plotGraph('ticketChart',newValues.countPerDay)
             d3GraphPlot('ticketChart2', values.countPerDay)
             setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
+
+            $('#removeWord').html('<input type="text" id="txtRemoveWord"></input>')
+            $('#removeButton').html('<button type="button" class="btn btn-primary" id="cmdRemoveWord">Remove word</button>')
+            // Add exception to wordspider
+            $('#cmdRemoveWord').click(function () {
+                console.info('cmdRemoveWord: ' + $('#txtRemoveWord').val())
+                $.ajax({
+                    url: '/Dashboard/removeWordfromSpider',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({expection: $('#txtRemoveWord').val()}),
+                    success: function (response) {
+                        console.info('reload!!')
+                        location.reload()
+                    }
+                });
+            })
             console.info('------------------------------------------')
 
             $('#selectFltrGroup').change(function () {
@@ -247,6 +264,7 @@ function getTickets() {
 
 
             })
+            // Ticket Trends on Amount
             ticketsCreatedPerWeek(data.aggCountsPerDayCattegory)
             ticketsSolvedPerWeek(data.allTickets)
             ticketsCreatedSRL(data.aggCountsPerDayCattegory)
@@ -255,6 +273,14 @@ function getTickets() {
             ticketsSolvedCPF(data.allTickets)
             ticketsCreatedCognos(data.aggCountsPerDayCattegory)
             ticketsSolvedCognos(data.allTickets)
+
+            // Ticket Trends on Time
+            ticketLeadTime(data.allTickets)
+
+
+
+
+
         }
     })
 }
