@@ -44,7 +44,13 @@ exports.getTickets = function (req, res, next) {
             var businessrules = locals.businessrules, tickets = locals.tickets, resultSet = {}, aggCountsPerDayCattegory = []
             db.close()
 
-            console.info(locals)
+            tickets.forEach(function (ticket) {
+                ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
+
+            })
+
+
+
             var countsPerDay = d3.nest()
                 .key(function (d) {
                     return d['Creation Date']
@@ -96,6 +102,8 @@ exports.getTickets = function (req, res, next) {
                     };
                 })
                 .entries(tickets)
+
+
 
             countsPerDayCattegory.forEach(function (row) {
                 var key = row.key.split('|')
@@ -272,12 +280,15 @@ exports.getTickets = function (req, res, next) {
                 })
             })
 
-            console.info(titleList)
-            //console.info(legenda)
+            var snapshots = [], snapshotDate
+            tickets.forEach(function (ticket) {
+                snapshots.push(ticket.snapshotDate)
+            })
 
+            snapshots = Array.from(new Set(snapshots))
+            console.info('------------- SNAPSHOTS ---------------')
+            console.info(snapshots)
 
-            console.info('------------ MAX --------')
-            //console.info(d3.max(dataSpider, function(i){console.info(i.map(function (o) { console.info(o)}))}))
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
@@ -285,7 +296,9 @@ exports.getTickets = function (req, res, next) {
                 fltrState: fltrState,
                 dataSpider: titleList,
                 legendaSpider: legenda,
-                allTickets: tickets
+                allTickets: tickets,
+                snapshots: snapshots
+
             })
         })
     })

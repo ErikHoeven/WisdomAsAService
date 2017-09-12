@@ -2,7 +2,7 @@
  * Created by erik on 9/5/17.
  */
 // Initialize modules
-google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
+//google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
 
 // (1) --- ticketsCreatedPerWeek -------------------------------------------------------------------------------------------------------------
 google.charts.setOnLoadCallback(ticketsCreatedPerWeek);

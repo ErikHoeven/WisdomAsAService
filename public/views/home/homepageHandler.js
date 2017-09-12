@@ -18,6 +18,7 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/events/">Events </a></li>')
         $(".nav.navbar-nav").append('<li><a href="/BusinessRules/">Zoekmachine</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Dashboard</a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
     }
 
 }

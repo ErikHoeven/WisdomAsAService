@@ -9,7 +9,6 @@ block head
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src="https://d3js.org/d3.v4.js")
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
-    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js')
     script(src='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js')
     script(src="/vendor/d3/d3.layout.cloud.js")
@@ -44,10 +43,21 @@ block head
     script(src="/views/Dashboard/setSpiderChart.js")
     script(src="/views/Dashboard/createWidgets.js")
     script(src="/views/Dashboard/ticketsGraphs.js")
+    script(src="/views/Dashboard/filterTickets.js")
+    script(src="/views/Dashboard/funnelRapport.js")
     script(src="/views/Dashboard/getTicketList.js")
     script(src="/views/Dashboard/ticketsLeadsTime.js")
     script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
+    script.
+        $(document).ready(function () {
+            $('#TrendsAmount').click(function () {
+                $('#1a').hide()
+            })
+            $('#Dashboard').click(function () {
+                $('#1a').show()
+            })
+        })
 block body
     .container-fluid
         .row
@@ -63,37 +73,22 @@ block body
         .row
             .col-md-12
                 ul.nav.nav-pills
-                    li
-                        a(href='#1a', data-toggle='tab') Social Overview
                     li.active
-                        a(href='#2a', data-toggle='tab') Tickets Dashboard
+                        a(href='#1a', data-toggle='tab' id='Dashboard') Tickets Dashboard
                     li
-                        a(href='#3a', data-toggle='tab') Trends on Amount
+                        a(href='#2a', data-toggle='tab' id='TrendsAmount') Trends on Amount
                     li
-                        a(href='#4a', data-toggle='tab') Trends on Time
-                .tab-content.clearfix
-                    #1a.tab-pane.active
-                        .col-md-12
-                            #social.widget
-                        .row
-                            .col-md-6
-                                #myfirstchart
-                                    script.
-                                        getTweets()
-                                        //var auto_refresh_SocialFeeds = setInterval(function () {
-                                        //    getTweets()
-                                        //}, 15000)
-                            .col-md-6
-                                #wordcloud
-
-                    #2a.tab-pane
+                        a(href='#3a', data-toggle='tab') Trends on Time
+                    li
+                        a(href='#4a', data-toggle='tab') Social Overview
+                .tab-content
+                    #1a.fade.in.active
                         .row
                             .col-md-3
                                 #fltrListCattegory
                                 br
                             .col-md-3
                                 #fltrListState
-
                         .row
                             .col-md-6
                                 .widget
@@ -128,11 +123,6 @@ block body
                             .col-md-6
                                 .widget
                                     #ticketChart2
-                                        script.
-                                            getTickets()
-                                            //var auto_refresh_Tickets = setInterval(function () {
-                                            //    getTickets()
-                                            //}, 15000)
                             .col-md-6
                                 .widget
                                     #ticketChart
@@ -149,12 +139,12 @@ block body
                                 .widget
                                     #ticketsList
                                     #pagnation
-
-
-
-
-
-                    #3a.tab-pane
+                                    script.
+                                        getTickets()
+                                        //var auto_refresh_Tickets = setInterval(function () {
+                                        //    getTickets()
+                                        //}, 15000)
+                    #2a.tab-pane.fade
                         .row
                             .col-md-6
                                 .widget
@@ -183,11 +173,21 @@ block body
                             .col-md-6
                                 .widget
                                     #ticketsSolvedCognos
-                    #4a.tab-pane
+
+                    #3a.tab-pane.active.fade
+                        .col-md-12
+                            #social.widget
                         .row
                             .col-md-6
-                                .widget
-                                    #ticketsPerUSer
+                                #myfirstchart
+                                    script.
+                                        //getTweets()
+                                        //var auto_refresh_SocialFeeds = setInterval(function () {
+                                        //    getTweets()
+                                        //}, 15000)
+                            .col-md-6
+                                #wordcloud
+
 
 
 

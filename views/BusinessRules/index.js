@@ -49,7 +49,9 @@ exports.find = function(req, res, next){
             //res.json(results);
             console.log("Results No XHR ");
             //console.log(results);
-            res.render('BusinessRules/index', { data: results.data });
+            var user = {}
+            user = req.user||{}
+            res.render('BusinessRules/index', { data: results.data, user: user });
 
 
         }
@@ -67,13 +69,17 @@ exports.read = function(req, res, next){
             res.send(BusinessRules);
         }
         else {
-            res.render('BusinessRules/details', { BusinessRules: BusinessRules });
+            var user = {}
+            user = req.user||{}
+            res.render('BusinessRules/details', { BusinessRules: BusinessRules, user:user });
         }
     });
 };
 
 exports.add = function(req, res){
-    res.render('BusinessRules/add');
+    var user = {}
+    user = req.user||{}
+    res.render('BusinessRules/add',{user:user});
 };
 
 exports.create = function(req, res, next) {

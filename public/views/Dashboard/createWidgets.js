@@ -45,9 +45,6 @@ function setMachtingTweets(tweets, likes, retweets, uniqueUsers, div) {
         '<span class="font-size-40 counter font-bold text-left">' + uniqueUsers + '</span>' +
         '<p class="margin-left-50 text-left">Users this month</p>' +
         '</div></div></div>')
-
-
-
 }
 
 function setUserProfile(user) {
@@ -69,8 +66,6 @@ function setUserProfile(user) {
         '<h4 class="fg-gray font-bold">'+ username + '</h4></div></div></div></div></div>')
 }
 
-
-
 function getTweets(){
     $.ajax({
         url: '/Dashboard/getTweets',
@@ -85,23 +80,6 @@ function getTweets(){
             var uniqueUsers = data.uniqueUsers
             var wordCloud = data.wordCloud
             setMachtingTweets(aantalTweets, likes, retweetsPerDay, uniqueUsers, '#social')
-
-            // Building Chart
-            $('#myfirstchart').html('')
-            new Morris.Line({
-                // ID of the element in which to draw the chart.
-                element: 'myfirstchart',
-                // Chart data records -- each entry in this array corresponds to a point on
-                // the chart.
-                data: dataPlot,
-                // The name of the data record attribute that contains x-values.
-                xkey: 'date',
-                // A list of names of data record attributes that contain y-values.
-                ykeys: ['value'],
-                // Labels for the ykeys -- will be displayed when you hover over the
-                // chart.
-                labels: ['Value']
-            });
             //getWordCloud('#wordcloud', wordCloud)
        }
    })
@@ -116,11 +94,13 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
-            // Intialize variables
+
+            // Intialize variables filters
             fltrGroup = data.fltrGroup
             fltrState = data.fltrState
             fltrGroupString = '<select class="selectpicker" id="selectFltrGroup">'
             fltrStateString = '<select class="selectpicker" id="selectFltrState">'
+
 
             fltrGroup.forEach(function (row) {
                 fltrGroupString = fltrGroupString + '<option>' + row + '</option>'
@@ -145,7 +125,9 @@ function getTickets() {
             //plotGraph('ticketChart',newValues.countPerDay)
             d3GraphPlot('ticketChart2', values.countPerDay)
             setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
+            console.info('-------------Plot Graph End-----------------------------')
 
+            console.info('---------------START SPIDER UPDATE---------------------------')
             $('#removeWord').html('<input type="text" id="txtRemoveWord"></input>')
             $('#removeButton').html('<button type="button" class="btn btn-primary" id="cmdRemoveWord">Remove word</button>')
             // Add exception to wordspider
@@ -162,7 +144,7 @@ function getTickets() {
                     }
                 });
             })
-            console.info('------------------------------------------')
+            console.info('---------------EINDE SPIDER UPDATE---------------------------')
 
             $('#selectFltrGroup').change(function () {
                 var fltrValue = $('#selectFltrGroup option:selected').text(),
@@ -323,140 +305,6 @@ function getWordCloud(div, lstWord){
     }
 }
 
-
-function filterTickets(value, dataset) {
-    var returnArray = [], returnObject = {}
-    if (value != 'All'){
-        returnArray = _.where(dataset,{Group: value})
-
-    var countsPerDay = d3.nest()
-        .key(function (d) {
-            return d.snapshotDate
-        })
-        .rollup(function (v) {
-            return {
-                'cpf': d3.sum(v, function (d) {
-                    return d['cpf']
-                }),
-                'esoft': d3.sum(v, function (d) {
-                    return d['esoft'];
-                }),
-                'firstLine': d3.sum(v, function (d) {
-                    return d['firstLine'];
-                }),
-                'infra': d3.sum(v, function (d) {
-                    return d['infra'];
-                }),
-                'secondLineApps': d3.sum(v, function (d) {
-                    return d['secondLineApps'];
-                }),
-                'cognos': d3.sum(v, function (d) {
-                    return d['cognos'];
-                }),
-                'desktopVirtualisatie': d3.sum(v, function (d) {
-                    return d['desktopVirtualisatie'];
-                }),
-                'srl': d3.sum(v, function (d) {
-                    return d['srl'];
-                }),
-            };
-        })
-        .entries(dataset)
-
-    }
-    else{
-        returnArray = dataset
-
-        console.info('returnArray')
-
-        var countsPerDay = d3.nest()
-            .key(function (d) {
-                return d.snapshotDate
-            })
-            .rollup(function (v) {
-                return {
-                    'cpf': d3.sum(v, function (d) {
-                        return d['cpf']
-                    }),
-                    'esoft': d3.sum(v, function (d) {
-                        return d['esoft'];
-                    }),
-                    'firstLine': d3.sum(v, function (d) {
-                        return d['firstLine'];
-                    }),
-                    'infra': d3.sum(v, function (d) {
-                        return d['infra'];
-                    }),
-                    'secondLineApps': d3.sum(v, function (d) {
-                        return d['secondLineApps'];
-                    }),
-                    'infra': d3.sum(v, function (d) {
-                        return d['infra'];
-                    }),
-                    'cognos': d3.sum(v, function (d) {
-                        return d['cognos'];
-                    }),
-                    'desktopVirtualisatie': d3.sum(v, function (d) {
-                        return d['desktopVirtualisatie'];
-                    }),
-                    'srl': d3.sum(v, function (d) {
-                        return d['srl'];
-                    }),
-                };
-        })
-        .entries(returnArray)
-        var labels = Object.keys(countsPerDay[0].value)
-           ,labelData = []
-        labels.forEach(function (label) {
-            labelData.push(countsPerDay[0].value[label])
-        })
-    }
-
-    var aggCountsPerDayCattegory = returnArray
-    console.info('aggCountsPerDayCattegory')
-    console.info(aggCountsPerDayCattegory)
-
-    var countsPerDayCattegory = d3.nest()
-        .key(function (d) {
-            return d.snapshotDate
-        })
-        .rollup(function (v) {
-            return {
-                countCreatedTickets: d3.sum(v, function (d) {
-                    return d.countCreatedTickets;
-                }),
-                countOpenTickets: d3.sum(v, function (d) {
-                    return d.countOpenTickets;
-                }),
-                countSolvedTickets: d3.sum(v, function (d) {
-                    return d.countSolvedTickets;
-                }),
-            };
-        })
-        .entries(aggCountsPerDayCattegory)
-
-    console.info(countsPerDayCattegory)
-
-    var createdTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countCreatedTickets,
-        openTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countOpenTickets,
-        solvedTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countSolvedTickets
-
-
-    returnArray.forEach(function (r) {
-        var d = moment(r.CreationDate).format('DD-MM-YYYY')
-        r.CreationDate = d
-    })
-
-    returnObject.createdTickets = createdTickets
-    returnObject.openTickets = openTickets
-    returnObject.solvedTickets = solvedTickets
-    returnObject.fltrData = returnArray
-    returnObject.countPerDay = countsPerDay
-
-    console.info('returnObject')
-    console.info(aggCountsPerDayCattegory)
-    return returnObject
-}
 
 
 

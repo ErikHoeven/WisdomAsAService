@@ -56,8 +56,10 @@ exports.init = function(req, res) {
 
                 files.push (file)
             })
+            var user = {}
+            user = req.user||{}
             console.info(files)
-            res.render('upload/index', {files: files})
+            res.render('upload/index', {files: files, user: user})
         }
         else {
             console.log(err)
@@ -77,6 +79,7 @@ exports.fileupload = function (req, res, next){
         res.redirect(req.originalUrl)
 
     });
+
 }
 
 exports.readFile =  function (req, res, next) {
@@ -296,4 +299,5 @@ exports.saveTranlateWords =  function (req, res, next) {
 
     //businessRules.insert({})
     res.status(201).json('saveTranlateWords')
+
 }
