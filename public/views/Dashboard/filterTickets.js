@@ -3,6 +3,13 @@
  */
 function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
+    console.info('-------   dataset  ----------')
+
+    dataset.forEach(function (r) {
+        r.snapshotDate = moment(r.snapshotDate).format("DD-MM-YYYY")
+    })
+
+
     if (value != 'All'){
         returnArray = _.where(dataset,{Group: value})
 
@@ -39,7 +46,6 @@ function filterTickets(value, dataset) {
                 };
             })
             .entries(dataset)
-
     }
     else{
         returnArray = dataset
@@ -90,7 +96,7 @@ function filterTickets(value, dataset) {
     }
 
     var aggCountsPerDayCattegory = returnArray
-    console.info('aggCountsPerDayCattegory')
+    console.info('-------- aggCountsPerDayCattegory ---------')
     console.info(aggCountsPerDayCattegory)
 
     var countsPerDayCattegory = d3.nest()
@@ -112,25 +118,45 @@ function filterTickets(value, dataset) {
         })
         .entries(aggCountsPerDayCattegory)
 
-    console.info(countsPerDayCattegory)
-
-    var createdTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countCreatedTickets,
-        openTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countOpenTickets,
-        solvedTickets = countsPerDayCattegory[countsPerDayCattegory.length-1].value.countSolvedTickets
-
 
     returnArray.forEach(function (r) {
         var d = moment(r.CreationDate).format('DD-MM-YYYY')
         r.CreationDate = d
     })
 
-    returnObject.createdTickets = createdTickets
-    returnObject.openTickets = openTickets
-    returnObject.solvedTickets = solvedTickets
+    var stock = 0, stockCalulations = [], stockValues = {}
+    aggCountsPerDayCattegory = aggCountsPerDayCattegory.reverse()
+
+    console.info(countsPerDayCattegory)
+
+        for(var i = 0; i < countsPerDayCattegory.length; i++ ){
+            if (i == 0){
+                stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
+
+                if (stock <= 0){
+                    stock = 0
+                }
+
+                stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
+
+            }
+            if (i > 0){
+                stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets + stock ) - countsPerDayCattegory[i].value.countSolvedTickets
+
+                if (stock <= 0){
+                    stock = 0
+                }
+
+                stockCalulations.push({datum:countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock, solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
+            }
+        }
+        stockValues = stockCalulations[stockCalulations.length-1]
+
+    returnObject.stockValues = stockValues
     returnObject.fltrData = returnArray
     returnObject.countPerDay = countsPerDay
 
-    console.info('returnObject')
-    console.info(aggCountsPerDayCattegory)
+    console.info('--------- returnObject-----------')
+    console.info(returnObject)
     return returnObject
 }

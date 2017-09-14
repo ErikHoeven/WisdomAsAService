@@ -50,6 +50,8 @@ block head
     script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script.
+        google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
+
         $(document).ready(function () {
             $('#TrendsAmount').click(function () {
                 $('#1a').hide()
@@ -109,8 +111,8 @@ block body
                                 .widget
                                     .widget-content.bg-green-sea
                                         .text-center
-                                            #newTickets.span.font-size-40.counter No tickets found
-                                            p New Tickets
+                                            #stock.span.font-size-40.counter No tickets found
+                                            p Tickets stock
                                             i.fa.fa-plus-circle.fa-3x
                             .col-md-6
                                 .widget

@@ -1,53 +1,16 @@
-/**
- * Created by erik on 8/27/17.
- */
-function plotGraph (div, ds) {
-    console.info('plotGraph...')
-// ------------------Data ---------------------------------------------------
-    var label = moment(ds[0].key).format('YYYY-MM-DD')
-        , rest = ds[0].value
-        ,labels = Object.keys(rest)
-        , dsArray = []
-    labels.forEach(function (label) {
-        dsArray.push({label: label, y: ds[0].value[label]})
-    })
-
-// ------------------Build Grapph ---------------------------------------------------
-    var chart = new CanvasJS.Chart(div, {
-        theme: "theme2",//theme1
-        title:{
-            text: "Tickets per Group"
-        },
-        animationEnabled: true,   // change to true
-        data: [
-            {
-                // Change type to "bar", "area", "spline", "pie",etc.
-                type: "column",
-                dataPoints: dsArray
-            }
-        ]
-    });
-    chart.render();
-
-}
-
-
 // Initialize modules
-google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
-// (1) --- ticketsCreatedPerWeek -------------------------------------------------------------------------------------------------------------
 google.charts.setOnLoadCallback(d3GraphPlot);
 function d3GraphPlot(div, ds) {
-
-    console.info('d3 opnieuw with Google')
 
     var   allCols = Object.keys(ds[0].value)
         , tableCols = []
         , tableData = []
-        ,  data = new google.visualization.DataTable()
         , curentDate = moment().toISOString()
         , currentWeek = moment(curentDate,"YYYY-MM-DD").week()
+        , setTable = []
 
-    data.addColumn('number', 'Weeknumber')
+
+    tableCols.push('Weeknumber')
     tableData.push(currentWeek -1)
 
     allCols.forEach(function (row) {
@@ -56,34 +19,30 @@ function d3GraphPlot(div, ds) {
             tableData.push(ds[0].value[row])
         }
     })
+    setTable.push(tableCols)
+    setTable.push(tableData)
 
-    console.info(tableCols)
-    console.info(tableData)
+    var data = google.visualization.arrayToDataTable(setTable)
 
-
-    tableCols.forEach(function (row) {
-        data.addColumn('number', row)
-    })
-
-    data.addRows([tableData])
 
     var options = {
-        title: 'Tickets actual',
-        hAxis: {
-            title: 'Weeknumber'
+        chart: {
+            title: 'Total actual tickets',
+            subtitle: 'Europool System BI & DM team',
         },
-        vAxis: {
-            title: 'Tickets'
-        },
-        width:500,
-        height:400,
+        width:550,
+        height:300,
     };
 
-    var chart = new google.charts.Bar(document.getElementById(div));
-    chart.draw(data, options);
+    var chart = new google.charts.Bar(document.getElementById('ticketChart2'));
+    chart.draw(data, google.charts.Bar.convertOptions(options));
 
-
-
-
-
+    //var chart = new google.visualization.ColumnChart(document.getElementById('ticketChart2'));
+    //chart.draw(data, options)
 }
+
+
+
+
+
+

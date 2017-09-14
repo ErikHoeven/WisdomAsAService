@@ -94,6 +94,7 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
+            console.info(data.aggCountsPerDayCattegory)
 
             // Intialize variables filters
             fltrGroup = data.fltrGroup
@@ -114,12 +115,24 @@ function getTickets() {
 
             $('#fltrListCattegory').html(fltrGroupString)
 
-            var values = filterTickets('All', data.aggCountsPerDayCattegory)
 
-            $('#createdTickets').text(values.createdTickets)
-            $('#openTickets').text(values.openTickets)
-            $('#closedTickets').text(values.solvedTickets)
-            $('#newTickets').text(values.createdTickets)
+            var values = [], stock = 0, stockValues = {}
+            values = filterTickets('All', data.aggCountsPerDayCattegory)
+
+            console.info('Funnel values')
+            stockValues = values.stockValues
+            console.info(stockValues)
+
+
+
+            $('#createdTickets').text(stockValues.createdTickets).click(function () {
+                console.info('click createdTickets')
+
+                createfunnelRepport(data.allTickets,'ticketsList', {State: 'Classification'})
+            })
+            $('#openTickets').text(stockValues.opentTickets)
+            $('#closedTickets').text(stockValues.solvedTickets)
+            $('#stock').text(stockValues.ticketStock)
 
             console.info('-------------Plot Graph-----------------------------')
             //plotGraph('ticketChart',newValues.countPerDay)
@@ -150,99 +163,15 @@ function getTickets() {
                 var fltrValue = $('#selectFltrGroup option:selected').text(),
                     newvalues = filterTickets(fltrValue, data.aggCountsPerDayCattegory)
 
+                    console.info('Funnel values Change')
+                    stockValues = newvalues.stockValues
+                    console.info(stockValues)
 
-                    $('#createdTickets').text(newvalues.createdTickets)
-                    $('#openTickets').text(newvalues.openTickets).click(function () {
-
-                        console.info('Open click')
-                        var filterArray = [{Group: fltrValue, State: 'In progress'},{Group: fltrValue, State: 'Waiting'}]
-                        var table = getTicketList(data.allTickets, filterArray,10, 1)
-                        var pagnation = setPagnation(data.allTickets, 10, 1, filterArray)
-
-                        $('#' + table.div).html('')
-                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                        $('#pagnation').html(pagnation)
-
-                        // Capture change in URL to load the next resultset
-                        $(window).on('hashchange', function (e) {
-                            console.info('changed')
-                            var hash = window.location.hash.replace('#', '')
-
-                            var table = getTicketList(data.allTickets, filterArray, 10, hash)
-                            var pagnation = setPagnation(data.allTickets, 10, hash, filterArray)
-
-                            $('#' + table.div).html('')
-                            $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                            $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                            $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                            //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                            $('#pagnation').html(pagnation)
-
-                        })
-                    })
-                    $('#closedTickets').text(newvalues.solvedTickets).click(function () {
-
-                        console.info('Solved click')
-                        var table = getTicketList(data.allTickets, {Group: fltrValue, State: 'Solved'},10, 1)
-                        var pagnation = setPagnation(data.allTickets, 10, 1, {Group: fltrValue,State: 'Solved'})
-
-                        $('#' + table.div).html('')
-                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                        $('#pagnation').html(pagnation)
-
-                        // Capture change in URL to load the next resultset
-                        $(window).on('hashchange', function (e) {
-                            console.info('changed')
-                            var hash = window.location.hash.replace('#', '')
-
-                            var table = getTicketList(data.allTickets, {Group: fltrValue,State: 'Solved'}, 10, hash)
-                            var pagnation = setPagnation(data.allTickets, 10, hash, {Group: fltrValue,State: 'Solved'})
-
-                            $('#' + table.div).html('')
-                            $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                            $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                            $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                            //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                            $('#pagnation').html(pagnation)
-
-                        })
-                    })
-                    $('#newTickets').text(newvalues.createdTickets).click(function () {
-
-                        console.info('newTickets click')
-                        var table = getTicketList(data.allTickets, {Group: fltrValue, State: 'Classification'},10, 1)
-                        var pagnation = setPagnation(data.allTickets, 10, 1, {Group: fltrValue,State: 'Classification'})
-
-                        $('#' + table.div).html('')
-                        $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                        $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                        $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                        //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                        $('#pagnation').html(pagnation)
-
-                        // Capture change in URL to load the next resultset
-                        $(window).on('hashchange', function (e) {
-                            console.info('changed')
-                            var hash = window.location.hash.replace('#', '')
-
-                            var table = getTicketList(data.allTickets, {Group: fltrValue,State: 'Classification'}, 10, hash)
-                            var pagnation = setPagnation(data.allTickets, 10, hash, {Group: fltrValue,State: 'Classification'})
-
-                             $('#' + table.div).html('')
-                             $('#' + table.div).append('<table class="table table-hover" id="' + table.tableName + '">')
-                             $('#' + table.tableName).append('<thead>><tr>' + table.strColumns + '</tr></thead>')
-                             $('#' + table.tableName).append('<tbody>' + table.strData + '</tbody></table>')
-                             //$('#' + button).html('<button type="button" id="updSentiment" class="btn btn-primary">update Sentiment Score</button>')
-                             $('#pagnation').html(pagnation)
-
-                     })
-                })
+                    console.info('----- Change ----------')
+                    $('#createdTickets').text(stockValues.createdTickets)
+                    $('#openTickets').text(stockValues.createdTickets)
+                    $('#closedTickets').text(stockValues.solvedTickets)
+                    $('#stock').text(stockValues.ticketStock)
 
 
             })

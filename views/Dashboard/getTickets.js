@@ -288,6 +288,8 @@ exports.getTickets = function (req, res, next) {
             snapshots = Array.from(new Set(snapshots))
             console.info('------------- SNAPSHOTS ---------------')
             console.info(snapshots)
+            console.info('------------- aggCountsPerDayCattegory ---------------')
+            console.info(aggCountsPerDayCattegory)
 
 
             res.status(200).json({

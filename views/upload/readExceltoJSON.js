@@ -12,7 +12,7 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment().format('DD-MM-YYYY')
+   ,snapshot = moment('12-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 exports.readExceltoJSON = function (req,res,next) {
