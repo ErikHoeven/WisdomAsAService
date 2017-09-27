@@ -52,12 +52,38 @@ block head
     script.
         google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
 
+        google.charts.setOnLoadCallback(d3GraphPlot);
+        google.charts.setOnLoadCallback(ticketsPerUser);
+        google.charts.setOnLoadCallback(ticketsCreatedPerWeek);
+        google.charts.setOnLoadCallback(ticketsSolvedPerWeek);
+        google.charts.setOnLoadCallback(ticketsCreatedSRL);
+        google.charts.setOnLoadCallback(ticketsSolvedSRL);
+        google.charts.setOnLoadCallback(ticketsCreatedCPF);
+        google.charts.setOnLoadCallback(ticketsSolvedCPF);
+        google.charts.setOnLoadCallback(ticketsCreatedCognos);
+        google.charts.setOnLoadCallback(ticketsSolvedCognos);
+
+        google.charts.setOnLoadCallback(createfunnelRepport);
+
+
         $(document).ready(function () {
             $('#TrendsAmount').click(function () {
                 $('#1a').hide()
+                $('#2a').show()
+                $('#3a').hide()
+
+
             })
             $('#Dashboard').click(function () {
                 $('#1a').show()
+                $('#2a').hide()
+                $('#3a').hide()
+
+            })
+            $('#TabTicketsPerUser').click(function () {
+                $('#1a').hide()
+                $('#2a').hide()
+                $('#3a').show()
             })
         })
 block body
@@ -80,7 +106,7 @@ block body
                     li
                         a(href='#2a', data-toggle='tab' id='TrendsAmount') Trends on Amount
                     li
-                        a(href='#3a', data-toggle='tab') Trends on Time
+                        a(href='#3a', data-toggle='tab' id='TabTicketsPerUser') Tickets per User
                     li
                         a(href='#4a', data-toggle='tab') Social Overview
                 .tab-content
@@ -177,19 +203,32 @@ block body
                                     #ticketsSolvedCognos
 
                     #3a.tab-pane.active.fade
-                        .col-md-12
-                            #social.widget
+
+                        .col-md-6
+                            #ticketsPerUser.widget
                         .row
                             .col-md-6
                                 #myfirstchart
-                                    script.
+                                    //script.
                                         //getTweets()
                                         //var auto_refresh_SocialFeeds = setInterval(function () {
                                         //    getTweets()
                                         //}, 15000)
                             .col-md-6
                                 #wordcloud
-
+                    #4a.tab-pane.active.fade
+                        .col-md-12
+                            #social.widget
+                        .row
+                            .col-md-6
+                                #myfirstchart
+                                    //script.
+                                        //getTweets()
+                                        //var auto_refresh_SocialFeeds = setInterval(function () {
+                                        //    getTweets()
+                                        //}, 15000)
+                            .col-md-6
+                                #wordcloud
 
 
 

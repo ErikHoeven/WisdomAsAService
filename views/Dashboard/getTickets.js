@@ -105,6 +105,22 @@ exports.getTickets = function (req, res, next) {
 
 
 
+            var countsPerUser = d3.nest()
+                .key(function (d) {
+                    return d['Affected Person']
+                })
+                .rollup(function (v) {
+                    return {
+                        count: d3.sum(v, function (d) {
+                            return d.count;
+                        }),
+                    };
+                })
+                .entries(tickets)
+
+
+
+
             countsPerDayCattegory.forEach(function (row) {
                 var key = row.key.split('|')
                 var CreationDate = key[0],
@@ -285,12 +301,21 @@ exports.getTickets = function (req, res, next) {
                 snapshots.push(ticket.snapshotDate)
             })
 
+            var aggCountTicketsPerUser = []
+
+            countsPerUser.forEach(function (r) {
+                if (r.values.count > 4){
+                    aggCountTicketsPerUser.push({user: r.key, countTickets: r.values.count})
+                }
+            })
+
             snapshots = Array.from(new Set(snapshots))
             console.info('------------- SNAPSHOTS ---------------')
             console.info(snapshots)
             console.info('------------- aggCountsPerDayCattegory ---------------')
             console.info(aggCountsPerDayCattegory)
-
+            console.info('------------- count per USer ---------------')
+            console.info(aggCountTicketsPerUser)
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
@@ -299,7 +324,8 @@ exports.getTickets = function (req, res, next) {
                 dataSpider: titleList,
                 legendaSpider: legenda,
                 allTickets: tickets,
-                snapshots: snapshots
+                snapshots: snapshots,
+                ticketsPerUser: aggCountTicketsPerUser
 
             })
         })

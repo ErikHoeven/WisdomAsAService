@@ -125,10 +125,13 @@ function getTickets() {
 
 
 
+
             $('#createdTickets').text(stockValues.createdTickets).click(function () {
                 console.info('click createdTickets')
+                console.info(moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY'))
+                var vandaag = moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
 
-                createfunnelRepport(data.allTickets,'ticketsList', {State: 'Classification'})
+                createfunnelRepport(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
             })
             $('#openTickets').text(stockValues.opentTickets)
             $('#closedTickets').text(stockValues.solvedTickets)
@@ -185,13 +188,11 @@ function getTickets() {
             ticketsCreatedCognos(data.aggCountsPerDayCattegory)
             ticketsSolvedCognos(data.allTickets)
 
+            //Tickets per user
+            ticketsPerUser(data.ticketsPerUser)
+
             // Ticket Trends on Time
-            ticketLeadTime(data.allTickets)
-
-
-
-
-
+            //ticketLeadTime(data.allTickets)
         }
     })
 }

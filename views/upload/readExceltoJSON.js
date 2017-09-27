@@ -12,7 +12,7 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment('12-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+   ,snapshot = moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 exports.readExceltoJSON = function (req,res,next) {
@@ -57,7 +57,7 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
-                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange
+                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange + '|' + r['Affected Person']
             })
 
             //stgOmniTracker.remove({})
@@ -73,8 +73,9 @@ exports.readExceltoJSON = function (req,res,next) {
 function correctionOfDate(inputDate){
     var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
     console.info('inputDate')
-    console.info(inputDate)
-    dateCorrection = inputDate.split('-')
+    //console.info(inputDate)
+    dateCorrection = inputDate.split('/')
+    //console.info(dateCorrection)
     // Days to 2 pos
     if (dateCorrection[0].length == 1){
         dateString = '0' + dateCorrection[0] + '-'

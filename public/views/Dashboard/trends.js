@@ -1,6 +1,6 @@
 
 // (1) --- ticketsCreatedPerWeek -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsCreatedPerWeek);
+//google.charts.setOnLoadCallback(ticketsCreatedPerWeek);
 function ticketsCreatedPerWeek(ds) {
     console.info('ticketsCreatedPerWeek')
     //Define column headers
@@ -64,7 +64,7 @@ function ticketsCreatedPerWeek(ds) {
 
 }
 // (2) --- ticketsSolvedPerWeek -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsSolvedPerWeek);
+//google.charts.setOnLoadCallback(ticketsSolvedPerWeek);
 function ticketsSolvedPerWeek(ds) {
     console.info('Start ticketsSolvedPerWeek')
 
@@ -146,7 +146,7 @@ function ticketsSolvedPerWeek(ds) {
 }
 
 // (3) --- ticketsCreatedSRL -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsCreatedSRL);
+//google.charts.setOnLoadCallback(ticketsCreatedSRL);
 function ticketsCreatedSRL(ds) {
     console.info('Start ticketsCreatedSRL')
 
@@ -215,7 +215,7 @@ function ticketsCreatedSRL(ds) {
 }
 
 // (4) --- ticketsSolvedSRL -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsSolvedSRL);
+//google.charts.setOnLoadCallback(ticketsSolvedSRL);
 function ticketsSolvedSRL(ds){
     console.info('Start ticketsSolvedPerWeek SRL')
     // (A)Define column headers
@@ -287,7 +287,7 @@ function ticketsSolvedSRL(ds){
 }
 
 // (5) --- ticketsCreatedCPF -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsCreatedCPF);
+//google.charts.setOnLoadCallback(ticketsCreatedCPF);
 function ticketsCreatedCPF(ds) {
     console.info('Start ticketsCreatedCPF')
 
@@ -355,7 +355,7 @@ function ticketsCreatedCPF(ds) {
 }
 
 // (6) --- ticketsSolvedCPF -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsSolvedCPF);
+//google.charts.setOnLoadCallback(ticketsSolvedCPF);
 function ticketsSolvedCPF(ds){
     console.info('Start ticketsSolvedPerWeek CPF')
     // (A)Define column headers
@@ -426,7 +426,7 @@ function ticketsSolvedCPF(ds){
 }
 
 // (7) --- ticketsCreatedCognos -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsCreatedCognos);
+//google.charts.setOnLoadCallback(ticketsCreatedCognos);
 function ticketsCreatedCognos(ds) {
     console.info('Start ticketsCreatedCognos')
 
@@ -494,7 +494,7 @@ function ticketsCreatedCognos(ds) {
 }
 
 // (8) --- ticketsSolvedCognos -------------------------------------------------------------------------------------------------------------
-google.charts.setOnLoadCallback(ticketsSolvedCognos);
+//google.charts.setOnLoadCallback(ticketsSolvedCognos);
 function ticketsSolvedCognos(ds){
     console.info('Start ticketsSolvedPerWeek Cognos')
     // (A)Define column headers

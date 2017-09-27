@@ -1,5 +1,5 @@
 // Initialize modules
-google.charts.setOnLoadCallback(d3GraphPlot);
+//google.charts.setOnLoadCallback(d3GraphPlot);
 function d3GraphPlot(div, ds) {
 
     var   allCols = Object.keys(ds[0].value)
