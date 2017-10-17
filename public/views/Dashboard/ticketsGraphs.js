@@ -22,6 +22,9 @@ function d3GraphPlot(div, ds) {
     setTable.push(tableCols)
     setTable.push(tableData)
 
+    console.info('--------------setTable ----------------------')
+    console.info(setTable)
+
     var data = google.visualization.arrayToDataTable(setTable)
 
 

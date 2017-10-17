@@ -3,7 +3,6 @@
  */
 function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
-    console.info('-------   dataset  ----------')
 
     dataset.forEach(function (r) {
         r.snapshotDate = moment(r.snapshotDate).format("DD-MM-YYYY")
@@ -96,9 +95,6 @@ function filterTickets(value, dataset) {
     }
 
     var aggCountsPerDayCattegory = returnArray
-    console.info('-------- aggCountsPerDayCattegory ---------')
-    console.info(aggCountsPerDayCattegory)
-
     var countsPerDayCattegory = d3.nest()
         .key(function (d) {
             return d.snapshotDate
@@ -127,8 +123,7 @@ function filterTickets(value, dataset) {
     var stock = 0, stockCalulations = [], stockValues = {}
     aggCountsPerDayCattegory = aggCountsPerDayCattegory.reverse()
 
-    console.info(countsPerDayCattegory)
-
+        if (countsPerDayCattegory.length > 1){
         for(var i = 0; i < countsPerDayCattegory.length; i++ ){
             if (i == 0){
                 stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
@@ -152,11 +147,21 @@ function filterTickets(value, dataset) {
         }
         stockValues = stockCalulations[stockCalulations.length-1]
 
-    returnObject.stockValues = stockValues
-    returnObject.fltrData = returnArray
-    returnObject.countPerDay = countsPerDay
+            returnObject.stockValues = stockValues
+            returnObject.fltrData = returnArray
+            returnObject.countPerDay = countsPerDay
 
-    console.info('--------- returnObject-----------')
-    console.info(returnObject)
+    }
+    else {
+
+            countsPerDayCattegory[0].value.ticketStock = stock
+            countsPerDayCattegory[0].value.createdTickets = countsPerDayCattegory[0].value.countCreatedTickets
+            countsPerDayCattegory[0].value.solvedTickets = countsPerDayCattegory[0].value.countSolvedTickets
+            countsPerDayCattegory[0].value.openTickets = countsPerDayCattegory[0].value.countOpenTickets
+            returnObject.stockValues = countsPerDayCattegory[0].value
+            returnObject.fltrData = returnArray
+            returnObject.countPerDay = countsPerDay
+
+        }
     return returnObject
 }

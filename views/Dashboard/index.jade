@@ -5,7 +5,12 @@ block head
     meta(charset='utf-8')
     meta(http-equiv='X-UA-Compatible', content='IE=edge')
     meta(name='viewport', content='width=device-width, initial-scale=1')
+    //script(src='https://www.gstatic.com/charts/loader.js')
     script(src='../../views/jquery-2.2.3.min.js')
+    script(type='text/javascript', src="https://www.google.com/jsapi?autoload= \
+    {'modules':[{'name':'visualization','version':'1.1','packages':\
+    ['corechart', 'bar', 'table']}]}")
+    //script(src='//www.google.com/jsapi')
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src="https://d3js.org/d3.v4.js")
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
@@ -14,7 +19,6 @@ block head
     script(src="/vendor/d3/d3.layout.cloud.js")
     script(src="http://underscorejs.org/underscore-min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js")
-    script(src='https://www.gstatic.com/charts/loader.js')
     script(src="https://canvasjs.com/assets/script/canvasjs.min.js")
 
     // Custom styles for this template
@@ -50,28 +54,12 @@ block head
     script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script.
-        google.charts.load('current', {packages: ['corechart', 'bar', 'table']});
-
-        google.charts.setOnLoadCallback(d3GraphPlot);
-        google.charts.setOnLoadCallback(ticketsPerUser);
-        google.charts.setOnLoadCallback(ticketsCreatedPerWeek);
-        google.charts.setOnLoadCallback(ticketsSolvedPerWeek);
-        google.charts.setOnLoadCallback(ticketsCreatedSRL);
-        google.charts.setOnLoadCallback(ticketsSolvedSRL);
-        google.charts.setOnLoadCallback(ticketsCreatedCPF);
-        google.charts.setOnLoadCallback(ticketsSolvedCPF);
-        google.charts.setOnLoadCallback(ticketsCreatedCognos);
-        google.charts.setOnLoadCallback(ticketsSolvedCognos);
-
-        google.charts.setOnLoadCallback(createfunnelRepport);
-
 
         $(document).ready(function () {
             $('#TrendsAmount').click(function () {
                 $('#1a').hide()
                 $('#2a').show()
                 $('#3a').hide()
-
 
             })
             $('#Dashboard').click(function () {
@@ -165,8 +153,12 @@ block body
                         .row
                             .col-md-12
                                 .widget
-                                    #ticketsList
+                                    #INCTicketListHeader
+                                    #INCTicketList
+                                    #SRQTicketListHeader
+                                    #SRQTicketList
                                     #pagnation
+                                    #toolbarTicketList
                                     script.
                                         getTickets()
                                         //var auto_refresh_Tickets = setInterval(function () {

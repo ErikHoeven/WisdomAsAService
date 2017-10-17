@@ -2,7 +2,6 @@
 // (1) --- ticketsCreatedPerWeek -------------------------------------------------------------------------------------------------------------
 //google.charts.setOnLoadCallback(ticketsCreatedPerWeek);
 function ticketsCreatedPerWeek(ds) {
-    console.info('ticketsCreatedPerWeek')
     //Define column headers
 
     var data = new google.visualization.DataTable()
@@ -75,8 +74,9 @@ function ticketsSolvedPerWeek(ds) {
 
     //(B) Format DATE to Week
     ds.forEach(function (row) {
-        row['Last Change'] = moment(row['Last Change'],'DD/MM/YYYY').week()
+        row['Last Change'] = moment(row['lastChange']).week()
     })
+
 
     //(C) Filter tickets to only Solved
     ds = _.where(ds,{'State':'Solved'})
@@ -148,7 +148,6 @@ function ticketsSolvedPerWeek(ds) {
 // (3) --- ticketsCreatedSRL -------------------------------------------------------------------------------------------------------------
 //google.charts.setOnLoadCallback(ticketsCreatedSRL);
 function ticketsCreatedSRL(ds) {
-    console.info('Start ticketsCreatedSRL')
 
     var data = new google.visualization.DataTable()
     data.addColumn('number', 'Weeknumber');
@@ -228,7 +227,7 @@ function ticketsSolvedSRL(ds){
     ds = _.where(ds,{'State':'Solved'})
     ds = _.where(ds,{'Responsible Group':'EPS - SRL'})
 
-    console.info(ds)
+
     // (2.A)Define table rows
     var rowsSolved = []
 
@@ -256,7 +255,6 @@ function ticketsSolvedSRL(ds){
     var rowsSolvedSorted = rowsSolved.sort(Comparator)
     // (2.E) Add table rows to table
     dataNew.addRows(rowsSolvedSorted)
-    console.info(rowsSolvedSorted)
     //(3) Set graph options
     var options = {
         title: 'Tickets Solved per week SRL',
@@ -289,17 +287,12 @@ function ticketsSolvedSRL(ds){
 // (5) --- ticketsCreatedCPF -------------------------------------------------------------------------------------------------------------
 //google.charts.setOnLoadCallback(ticketsCreatedCPF);
 function ticketsCreatedCPF(ds) {
-    console.info('Start ticketsCreatedCPF')
-
     var data = new google.visualization.DataTable()
     data.addColumn('number', 'Weeknumber');
     data.addColumn('number', 'Tickets');
 
     //(A) Filter tickets to only for SRL
     ds = _.where(ds,{'Group':'EPS - CPF'})
-
-
-    console.info(ds)
 
     var tableRows = []
     var countsPerWeek = d3.nest()
@@ -321,9 +314,7 @@ function ticketsCreatedCPF(ds) {
     //Sort table rows
     var tableRows = tableRows.sort(Comparator)
 
-    console.info(tableRows)
     data.addRows(tableRows)
-    console.info('Data Added')
 
 
     var options = {
@@ -346,7 +337,6 @@ function ticketsCreatedCPF(ds) {
         width:550,
         height:300,
     };
-    console.info('options is set')
 
     var chart = new google.visualization.ColumnChart(
         document.getElementById('ticketsCreatedCPF'));
@@ -368,7 +358,8 @@ function ticketsSolvedCPF(ds){
     ds = _.where(ds,{'State':'Solved'})
     ds = _.where(ds,{'Responsible Group':'EPS - CPF'})
 
-    console.info(ds)
+    console.info(' ------------  ticketsSolved CPF -------------')
+
     // (2.A)Define table rows
     var rowsSolved = []
 
@@ -386,12 +377,11 @@ function ticketsSolvedCPF(ds){
         })
         .entries(ds);
 
-    console.info(countsPerWeek)
+
     //(2.C) Convert char weeknumber to number
     countsPerWeek.forEach(function (r) {
         rowsSolved.push([Number(r.key),Number(r.value.TicketsSolved)])
     })
-
     //(2.D) Sort table rows
     var rowsSolvedSorted = rowsSolved.sort(Comparator)
     // (2.E) Add table rows to table

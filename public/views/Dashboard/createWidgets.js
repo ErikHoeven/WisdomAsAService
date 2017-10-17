@@ -94,7 +94,6 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
-            console.info(data.aggCountsPerDayCattegory)
 
             // Intialize variables filters
             fltrGroup = data.fltrGroup
@@ -115,33 +114,43 @@ function getTickets() {
 
             $('#fltrListCattegory').html(fltrGroupString)
 
-
+            // Calculate Stock
             var values = [], stock = 0, stockValues = {}
             values = filterTickets('All', data.aggCountsPerDayCattegory)
 
-            console.info('Funnel values')
+            console.info('-----------  Funnel values------------')
             stockValues = values.stockValues
-            console.info(stockValues)
-
-
+            //console.info(stockValues)
+            //console.info('-----------  Funnel values------------')
+            //console.info(moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY'))
+            var vandaag = moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
 
 
             $('#createdTickets').text(stockValues.createdTickets).click(function () {
                 console.info('click createdTickets')
-                console.info(moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY'))
-                var vandaag = moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
-
-                createfunnelRepport(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
+                createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
+                createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
             })
-            $('#openTickets').text(stockValues.opentTickets)
-            $('#closedTickets').text(stockValues.solvedTickets)
+            $('#openTickets').text(stockValues.openTickets).click(function () {
+                console.info('click openTickets')
+                createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'In progress', snapshotDate: vandaag})
+                createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'In progress', snapshotDate: vandaag})
+
+            })
+            $('#closedTickets').text(stockValues.solvedTickets).click(function () {
+                console.info('click SolvedTickets')
+                createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Solved', snapshotDate: vandaag})
+                createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Solved', snapshotDate: vandaag})
+            })
             $('#stock').text(stockValues.ticketStock)
 
-            console.info('-------------Plot Graph-----------------------------')
+
+            //console.info('-------------Plot Graph-----------------------------')
             //plotGraph('ticketChart',newValues.countPerDay)
             d3GraphPlot('ticketChart2', values.countPerDay)
+
             setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
-            console.info('-------------Plot Graph End-----------------------------')
+            //console.info('-------------Plot Graph End-----------------------------')
 
             console.info('---------------START SPIDER UPDATE---------------------------')
             $('#removeWord').html('<input type="text" id="txtRemoveWord"></input>')
@@ -155,7 +164,7 @@ function getTickets() {
                     contentType: 'application/json',
                     data: JSON.stringify({expection: $('#txtRemoveWord').val()}),
                     success: function (response) {
-                        console.info('reload!!')
+                        //console.info('reload!!')
                         location.reload()
                     }
                 });
@@ -171,9 +180,21 @@ function getTickets() {
                     console.info(stockValues)
 
                     console.info('----- Change ----------')
-                    $('#createdTickets').text(stockValues.createdTickets)
-                    $('#openTickets').text(stockValues.createdTickets)
-                    $('#closedTickets').text(stockValues.solvedTickets)
+                    $('#createdTickets').text(stockValues.createdTickets).click(function () {
+                        console.info('click createdTickets')
+                        createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
+                        createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
+                    })
+                    $('#openTickets').text(stockValues.openTickets).click(function () {
+                        console.info('click createdTickets')
+                        createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'In progress': fltrValue, snapshotDate: vandaag})
+                        createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'In progress': fltrValue, snapshotDate: vandaag})
+                    })
+                    $('#closedTickets').text(stockValues.solvedTickets).click(function () {
+                        console.info('click createdTickets')
+                        createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'Solved': fltrValue, snapshotDate: vandaag})
+                        createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'Solved': fltrValue, snapshotDate: vandaag})
+                    })
                     $('#stock').text(stockValues.ticketStock)
 
 

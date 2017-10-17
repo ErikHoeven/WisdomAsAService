@@ -12,7 +12,7 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment('26-09-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+   ,snapshot = moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 exports.readExceltoJSON = function (req,res,next) {
@@ -34,9 +34,9 @@ exports.readExceltoJSON = function (req,res,next) {
 
             result.forEach(function (r) {
                 dateString = correctionOfDate(r['Creation Date'])
-                var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
+                var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
                 dateString = correctionOfDate(r['Last Change'])
-                var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+                var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
 
                 // Ticket Type
                 if (r.Number.substring(0,3) == 'INC'){
@@ -58,10 +58,20 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange + '|' + r['Affected Person']
+
+                if (ticketType == 'Service Request'){
+                    console.info('---------SRQ-------------')
+                    console.info(dateString)
+                    console.info(creationDate)
+                    console.info(r['Creation Date'])
+                }
+
             })
 
             //stgOmniTracker.remove({})
             stgOmniTracker.insert(result)
+
+
 
             res.status(201).json({message: 'Succesfull uploaded' });
 
@@ -73,7 +83,7 @@ exports.readExceltoJSON = function (req,res,next) {
 function correctionOfDate(inputDate){
     var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
     console.info('inputDate')
-    //console.info(inputDate)
+    console.info(inputDate)
     dateCorrection = inputDate.split('/')
     //console.info(dateCorrection)
     // Days to 2 pos
