@@ -12,12 +12,13 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+   ,snapshot = moment('20-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 exports.readExceltoJSON = function (req,res,next) {
     filename = './uploads/' + req.body.selectedFiles[0]
     output = 'test.json'
+
     console.info(filename)
 
     node_xj({
@@ -33,10 +34,30 @@ exports.readExceltoJSON = function (req,res,next) {
 
 
             result.forEach(function (r) {
+
+                //var input = '01/01/1997';
+
+
+
                 dateString = correctionOfDate(r['Creation Date'])
-                var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
-                dateString = correctionOfDate(r['Last Change'])
-                var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
+
+
+                // Check DD-MM-YYYY
+                checkDate = dateString.split('-')
+
+                if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1  ){
+                    var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
+                    console.info(r.Number + ' : ' + dateString )
+                    console.info(creationDate)
+                    dateString = correctionOfDate(r['Last Change'])
+                    var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+                }
+                else {
+                    var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
+                    dateString = correctionOfDate(r['Last Change'])
+                    var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
+
+                }
 
                 // Ticket Type
                 if (r.Number.substring(0,3) == 'INC'){
@@ -59,7 +80,7 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.lastChange = lastChange
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange + '|' + r['Affected Person']
 
-                if (ticketType == 'Service Request'){
+                if (ticketType == 'Service Request' && r.Number == 'SRQ-287662'){
                     console.info('---------SRQ-------------')
                     console.info(dateString)
                     console.info(creationDate)
@@ -82,9 +103,13 @@ exports.readExceltoJSON = function (req,res,next) {
 
 function correctionOfDate(inputDate){
     var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
-    console.info('inputDate')
-    console.info(inputDate)
-    dateCorrection = inputDate.split('/')
+    if (inputDate.indexOf('-') >= 0 ){
+        dateCorrection = inputDate.split('-')
+    }
+    else{
+        dateCorrection = inputDate.split('/')
+    }
+
     //console.info(dateCorrection)
     // Days to 2 pos
     if (dateCorrection[0].length == 1){
@@ -96,7 +121,6 @@ function correctionOfDate(inputDate){
 
     // Month to 2 pos
     if (dateCorrection[1].length == 1){
-        console.info('Maand heeft 1 pos')
         dateString = dateString + '0' + dateCorrection[1] + '-'
     }
     else {

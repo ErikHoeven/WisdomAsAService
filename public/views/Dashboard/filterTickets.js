@@ -122,21 +122,18 @@ function filterTickets(value, dataset) {
 
     var stock = 0, stockCalulations = [], stockValues = {}
     aggCountsPerDayCattegory = aggCountsPerDayCattegory.reverse()
-
+    console.info('countsPerDayCattegory.length')
+    console.info(countsPerDayCattegory)
+    console.info('countsPerDayCattegory.length')
         if (countsPerDayCattegory.length > 1){
         for(var i = 0; i < countsPerDayCattegory.length; i++ ){
             if (i == 0){
-                stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
 
-                if (stock <= 0){
-                    stock = 0
-                }
-
-                stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
-
+                stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: 0 , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
+                //stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
             }
             if (i > 0){
-                stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets + stock ) - countsPerDayCattegory[i].value.countSolvedTickets
+                stock = ( countsPerDayCattegory[i-1].value.countCreatedTickets + countsPerDayCattegory[i-1].value.countOpenTickets + stock ) - countsPerDayCattegory[i-1].value.countSolvedTickets
 
                 if (stock <= 0){
                     stock = 0
@@ -145,6 +142,11 @@ function filterTickets(value, dataset) {
                 stockCalulations.push({datum:countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock, solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
             }
         }
+
+            console.info('--------- Stock ---------------')
+            console.info(stockCalulations)
+            console.info('--------- Stock ---------------')
+
         stockValues = stockCalulations[stockCalulations.length-1]
 
             returnObject.stockValues = stockValues
@@ -163,5 +165,5 @@ function filterTickets(value, dataset) {
             returnObject.countPerDay = countsPerDay
 
         }
-    return returnObject
+        return returnObject
 }

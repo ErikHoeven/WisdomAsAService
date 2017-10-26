@@ -120,10 +120,10 @@ function getTickets() {
 
             console.info('-----------  Funnel values------------')
             stockValues = values.stockValues
-            //console.info(stockValues)
+            console.info(stockValues)
             //console.info('-----------  Funnel values------------')
             //console.info(moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY'))
-            var vandaag = moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+            var vandaag = moment('20-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
 
 
             $('#createdTickets').text(stockValues.createdTickets).click(function () {
@@ -131,7 +131,7 @@ function getTickets() {
                 createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
                 createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', snapshotDate: vandaag})
             })
-            $('#openTickets').text(stockValues.openTickets).click(function () {
+            $('#openTickets').text(stockValues.opentTickets).click(function () {
                 console.info('click openTickets')
                 createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'In progress', snapshotDate: vandaag})
                 createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'In progress', snapshotDate: vandaag})
@@ -185,7 +185,7 @@ function getTickets() {
                         createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
                         createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
                     })
-                    $('#openTickets').text(stockValues.openTickets).click(function () {
+                    $('#openTickets').text(stockValues.opentTickets).click(function () {
                         console.info('click createdTickets')
                         createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'In progress': fltrValue, snapshotDate: vandaag})
                         createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'In progress': fltrValue, snapshotDate: vandaag})
