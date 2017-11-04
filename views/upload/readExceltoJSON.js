@@ -136,12 +136,23 @@ exports.readExceltoJSON = function (req,res,next) {
                 var datumFormat
                 //var input = '01/01/1997'- Creation Date
                 dateString = correctionOfDate(r['Creation Date'])
-                datumFormat =  dateStringtoDate(dateString)
-                r['Creation Date'] = datumFormat
+                creationDate = dateStringtoDate(dateString)
+                console.info(r['Number'] + '  | '  + dateString )
+                console.info(creationDate)
+
+                dateString = correctionOfDate(r['Last Change'])
+                lastChange = dateStringtoDate(dateString)
+
+                dateString = correctionOfDate(r['Solved Date'])
+                solvedDate = dateStringtoDate(dateString)
+
+                dateString = correctionOfDate(r['Closed Date'])
+                closedDate = dateStringtoDate(dateString)
 
 
 
-
+                //datumFormat =  dateStringtoDate(dateString)
+                //r['Creation Date'] = datumFormat
 
                 // Ticket Type
                 if (r.Number.substring(0, 3) == 'INC') {
@@ -154,7 +165,6 @@ exports.readExceltoJSON = function (req,res,next) {
                     ticketType = 'Change'
                 }
 
-
                 r['Creation Date'] = creationDate
                 r.count = 1
                 var groupCount = r['Responsible Group'] + '_Count'
@@ -162,13 +172,13 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
+                r.SolvedDate = solvedDate
+                r.closedDate = closedDate
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
 
+
+                stgOmniTracker.insert(r)
             })
-
-
-
-
 
             console.info(data.length)
             res.status(201).json({message: 'Succesfull uploaded'});
@@ -183,65 +193,75 @@ exports.readExceltoJSON = function (req,res,next) {
 
 function correctionOfDate(inputDate){
 
-    console.info(inputDate)
     var dateCorrection = []
        ,dateString = ''
        , hourstrip = []
        , timeStr = ''
        , temp = []
-    if (inputDate.indexOf('-') >= 0 ){
+
+    //Check if date is completed with 2 digets for days and months
+    if (inputDate.indexOf('-') >= 3 ){
         dateCorrection = inputDate.split('-')
-    }
-    else{
-        //console.info('date seperator = /')
-        dateCorrection = inputDate.split('/')
-    }
+        dateString = dateCorrection[0]
+        timeStr = dateCorrection[1]
+   }
 
-    console.info(dateCorrection)
-    // Days to 2 pos
-    if (dateCorrection[0].length == 1){
-        dateString = '0' + dateCorrection[0] + '-'
-    }
-    else {
-        dateString = dateCorrection[0] + '-'
-    }
+    //If not completed completed with a zero before all single digets (days and months )
+   else{
+       if (inputDate.indexOf('-') >= 0  && inputDate.indexOf('-') < 3){
+            dateCorrection = inputDate.split('-')
+       }
+       else{
+           //console.info('date seperator = /')
+           dateCorrection = inputDate.split('/')
+       }
 
-    // Month to 2 pos
-    if (dateCorrection[1].length == 1){
-        dateString = dateString + '0' + dateCorrection[1] + '-'
-    }
-    else {
-        dateString = dateString +  dateCorrection[1] + '-'
-    }
+       // Days to 2 pos
+       if (dateCorrection[0].length == 1){
+           dateString = '0' + dateCorrection[0] + '-'
+       }
+       else {
+           dateString = dateCorrection[0] + '-'
+       }
 
-    //console.info(dateCorrection[2])
-    var temp = dateCorrection[2].split(' ')
+       // Month to 2 pos
+       if (dateCorrection[1].length == 1){
+           dateString = dateString + '0' + dateCorrection[1] + '-'
+       }
+       else {
+           dateString = dateString +  dateCorrection[1] + '-'
+       }
 
-    dateString = dateString + temp[0]
+       //console.info(dateCorrection[2])
+       var temp = dateCorrection[2].split(' ')
 
-    // --------------------CORECTION OF HH -------------------------
-    hourstrip = temp[1].split(':')
-    if (hourstrip[0].trim.length == 1){
-        timeStr = '0' + hourstrip[0].trim + ':'
-    }
-    else {
-        timeStr = hourstrip[0] + ':'
-    }
+       dateString = dateString + temp[0]
 
-    // ------------------- CORECTION OF MM -------------------------
-    if (hourstrip[1].trim.length == 1){
-        timeStr = timeStr +  '0' + hourstrip[1].trim + ':'
-    }
-    else {
-        timeStr = timeStr +  hourstrip[1] + ':'
-    }
-    // ------------------- CORECTION OF SS -------------------------
-    if (hourstrip[2].trim.length == 1){
-        timeStr = timeStr +  '0' + hourstrip[2].trim
-    }
-    else {
-        timeStr = timeStr +  hourstrip[2]
-    }
+       // --------------------CORECTION OF HH -------------------------
+       hourstrip = temp[1].split(':')
+       if (hourstrip[0].trim.length == 1){
+           timeStr = '0' + hourstrip[0].trim + ':'
+       }
+       else {
+           timeStr = hourstrip[0] + ':'
+       }
+
+       // ------------------- CORECTION OF MM -------------------------
+       if (hourstrip[1].trim.length == 1){
+           timeStr = timeStr +  '0' + hourstrip[1].trim + ':'
+       }
+       else {
+           timeStr = timeStr +  hourstrip[1] + ':'
+       }
+       // ------------------- CORECTION OF SS -------------------------
+       if (hourstrip[2].trim.length == 1){
+           timeStr = timeStr +  '0' + hourstrip[2].trim
+       }
+       else {
+           timeStr = timeStr +  hourstrip[2]
+       }
+   }
+
     return dateString
 }
 
@@ -249,25 +269,27 @@ function correctionOfDate(inputDate){
 function dateStringtoDate(dateString) {
 
     var returnDate
-    checkDate = dateString.split('-')
 
-    if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
-        returnDate = moment(dateString, 'DD-MM-YYYY').toDate()
-    }
-    else {
-        returnDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
-    }
+    if (dateString.indexOf('-') > 0){
+        checkDate = dateString.split('-')
 
-    return returnDate
-}
-
-
-function cleanArray(actual) {
-    var newArray = new Array();
-    for (var i = 0; i < actual.length; i++) {
-        if (actual[i]) {
-            newArray.push(actual[i]);
+        if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
+            returnDate = moment(dateString, 'DD-MM-YYYY').toDate()
+        }
+        else {
+            returnDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
         }
     }
-    return newArray;
+    else{
+
+        checkDate = dateString.split('/')
+
+        if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
+            returnDate = moment(dateString, 'DD-MM-YYYY').toDate()
+        }
+        else {
+            returnDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
+        }
+    }
+    return returnDate
 }
