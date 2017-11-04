@@ -5,7 +5,6 @@ var async = require('async'),
     db = require('monk')('localhost/commevents'),
     stgOmniTracker = db.get('stgOmniTracker'),
     moment = require('moment'),
-    xlsxj  = require("xlsx-to-json"),
     node_xj = require("xls-to-json"),
     dateCorrection = [],
     dateString = '',
@@ -15,58 +14,143 @@ var async = require('async'),
    ,snapshot = moment('20-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
+
+
 exports.readExceltoJSON = function (req,res,next) {
     filename = './uploads/' + req.body.selectedFiles[0]
     output = 'test.json'
+    filesplit = filename.split('.')
 
-    console.info(filename)
+    if (filesplit[2] == 'xls') {
+        console.info('xls')
+        node_xj({
+            input: filename,  // input xls
+            output: output, // output json
+            sheet: "Export0"  // specific sheetname
+        }, function (err, result) {
+            if (err) {
+                console.error(err);
+            } else {
+                result.forEach(function (r) {
 
-    node_xj({
-        input: filename,  // input xls
-        output: output, // output json
-        sheet: "Export0"  // specific sheetname
-    }, function(err, result) {
-        if (err) {
-            console.error(err);
-        } else {
-
-
-
-
-            result.forEach(function (r) {
-
-                //var input = '01/01/1997';
+                    //var input = '01/01/1997';
+                    dateString = correctionOfDate(r['Creation Date'])
 
 
+                    // Check DD-MM-YYYY
+                    checkDate = dateString.split('-')
 
+                    if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
+                        var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
+                        //console.info(r.Number + ' : ' + dateString )
+                        //console.info(creationDate)
+                        dateString = correctionOfDate(r['Last Change'])
+                        var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+                    }
+                    else {
+                        var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
+                        dateString = correctionOfDate(r['Last Change'])
+                        var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
+
+                    }
+
+                    // Ticket Type
+                    if (r.Number.substring(0, 3) == 'INC') {
+                        ticketType = 'Incident'
+                    }
+                    if (r.Number.substring(0, 3) == 'SRQ') {
+                        ticketType = 'Service Request'
+                    }
+                    if (r.Number.substring(0, 3) == 'RFC') {
+                        ticketType = 'Change'
+                    }
+
+
+                    r['Creation Date'] = creationDate
+                    r.count = 1
+                    var groupCount = r['Responsible Group'] + '_Count'
+                    r[groupCount] = 1
+                    r.ticketType = ticketType
+                    r.snapshotDate = snapshotDate
+                    r.lastChange = lastChange
+                    r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
+
+                })
+
+                //stgOmniTracker.remove({})
+                stgOmniTracker.insert(result)
+                res.status(201).json({message: 'Succesfull uploaded'});
+
+            }
+        })
+    }
+    if (filesplit[2] == 'xlsx') {
+        console.info('xlsx')
+        console.info(filename)
+
+
+        var XLSX = require('xlsx');
+        var workbook = XLSX.readFile(filename);
+        var sheet_name_list = workbook.SheetNames;
+        var cleanData = []
+        sheet_name_list.forEach(function(y) {
+            var worksheet = workbook.Sheets[y];
+            var headers = {};
+            var data = [];
+            for (z in worksheet) {
+                if(z[0] === '!') continue;
+                var tt = 0;
+
+                for (var i = 0; i < z.length; i++) {
+                    if (!isNaN(z[i])) {
+                        tt = i;
+                        break;
+                    }
+                };
+                var col = z.substring(0,tt);
+                var row = parseInt(z.substring(tt));
+                var value = worksheet[z].v;
+
+                //store header names
+                if(row == 4 && value) {
+                    headers[col] = value;
+                    continue;
+                }
+
+                if(!data[row]) data[row]={};
+                data[row][headers[col]] = value;
+            }
+            //drop those first two rows which are empty
+            data.shift();
+            data.shift();
+
+            //Clean Data
+            for (i = 3; i < data.length; i++){
+                if (data[i] != 'undefined '){
+                    cleanData.push(data[i])
+                }
+            }
+
+            //EnrichData
+            cleanData.forEach(function (r) {
+                var datumFormat
+                //var input = '01/01/1997'- Creation Date
                 dateString = correctionOfDate(r['Creation Date'])
+                datumFormat =  dateStringtoDate(dateString)
+                r['Creation Date'] = datumFormat
 
 
-                // Check DD-MM-YYYY
-                checkDate = dateString.split('-')
 
-                if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1  ){
-                    var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
-                    console.info(r.Number + ' : ' + dateString )
-                    console.info(creationDate)
-                    dateString = correctionOfDate(r['Last Change'])
-                    var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
-                }
-                else {
-                    var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
-                    dateString = correctionOfDate(r['Last Change'])
-                    var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
 
-                }
 
                 // Ticket Type
-                if (r.Number.substring(0,3) == 'INC'){
+                if (r.Number.substring(0, 3) == 'INC') {
                     ticketType = 'Incident'
                 }
-                if (r.Number.substring(0,3) == 'SRQ'){
+                if (r.Number.substring(0, 3) == 'SRQ') {
                     ticketType = 'Service Request'
                 }
-                if (r.Number.substring(0,3) == 'RFC'){
+                if (r.Number.substring(0, 3) == 'RFC') {
                     ticketType = 'Change'
                 }
 
@@ -78,39 +162,42 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
-                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' +  snapshotDate + '|' + ticketType + '|' +lastChange + '|' + r['Affected Person']
-
-                if (ticketType == 'Service Request' && r.Number == 'SRQ-287662'){
-                    console.info('---------SRQ-------------')
-                    console.info(dateString)
-                    console.info(creationDate)
-                    console.info(r['Creation Date'])
-                }
+                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
 
             })
 
-            //stgOmniTracker.remove({})
-            stgOmniTracker.insert(result)
 
 
 
-            res.status(201).json({message: 'Succesfull uploaded' });
 
-        }
-    })
+            console.info(data.length)
+            res.status(201).json({message: 'Succesfull uploaded'});
+
+        });
+    }
 }
 
 
+
+
+
 function correctionOfDate(inputDate){
-    var dateCorrection = [], dateString = '', hourstrip = [], timeStr = '', temp = []
+
+    console.info(inputDate)
+    var dateCorrection = []
+       ,dateString = ''
+       , hourstrip = []
+       , timeStr = ''
+       , temp = []
     if (inputDate.indexOf('-') >= 0 ){
         dateCorrection = inputDate.split('-')
     }
     else{
+        //console.info('date seperator = /')
         dateCorrection = inputDate.split('/')
     }
 
-    //console.info(dateCorrection)
+    console.info(dateCorrection)
     // Days to 2 pos
     if (dateCorrection[0].length == 1){
         dateString = '0' + dateCorrection[0] + '-'
@@ -127,6 +214,7 @@ function correctionOfDate(inputDate){
         dateString = dateString +  dateCorrection[1] + '-'
     }
 
+    //console.info(dateCorrection[2])
     var temp = dateCorrection[2].split(' ')
 
     dateString = dateString + temp[0]
@@ -155,4 +243,31 @@ function correctionOfDate(inputDate){
         timeStr = timeStr +  hourstrip[2]
     }
     return dateString
+}
+
+
+function dateStringtoDate(dateString) {
+
+    var returnDate
+    checkDate = dateString.split('-')
+
+    if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
+        returnDate = moment(dateString, 'DD-MM-YYYY').toDate()
+    }
+    else {
+        returnDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
+    }
+
+    return returnDate
+}
+
+
+function cleanArray(actual) {
+    var newArray = new Array();
+    for (var i = 0; i < actual.length; i++) {
+        if (actual[i]) {
+            newArray.push(actual[i]);
+        }
+    }
+    return newArray;
 }
