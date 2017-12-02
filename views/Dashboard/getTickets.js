@@ -21,7 +21,7 @@ exports.getTickets = function (req, res, next) {
 
     mongo.connect(uri, function (err, db) {
         console.info('MONGODB START CHECK COLLECTIONS')
-        var tasks = [   // Load tweets
+        var tasks = [   // Load businessrules
             function (callback) {
                 db.collection('businessrules').find({typeBusinessRule: 'SpiderGraphExeption'}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
@@ -29,7 +29,7 @@ exports.getTickets = function (req, res, next) {
                     callback();
                 });
             },
-            // Load corpus
+            // Load stgOmniTracker
             function (callback) {
                 db.collection('stgOmniTracker').find({}).toArray(function (err, tickets) {
                     if (err) return callback(err);

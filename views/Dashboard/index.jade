@@ -20,6 +20,12 @@ block head
     script(src="http://underscorejs.org/underscore-min.js")
     script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js")
     script(src="https://canvasjs.com/assets/script/canvasjs.min.js")
+    script(type='text/javascript', src='/bower_components/pptxgenjs/libs/jquery.min.js')
+    script(type='text/javascript', src='/bower_components/pptxgenjs/libs/jszip.min.js')
+    script(type='text/javascript', src='/bower_components/pptxgenjs/dist/pptxgen.js')
+    script(type="text/javascript", src="/bower_components/pptxgenjs/dist/pptxgen.bundle.js")
+
+
 
     // Custom styles for this template
     link(href='/stylesheets/theme.css', rel='stylesheet')
@@ -38,6 +44,7 @@ block head
     link(href='/stylesheets/colors/concrete.css', rel='stylesheet')
     link(href='/stylesheets/colors/wet-asphalt.css', rel='stylesheet')
 
+
     // Fonts
     link(href='/fonts/Indie-Flower/indie-flower.css', rel='stylesheet')
     link(href='/fonts/Open-Sans/open-sans.css?family=Open+Sans:300,400,700', rel='stylesheet')
@@ -53,9 +60,12 @@ block head
     script(src="/views/Dashboard/ticketsLeadsTime.js")
     script(src="/views/Dashboard/trends.js")
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
+    script(src="/views/Dashboard/exportToPowerPoint.js")
+    script(src="/views/Dashboard/exportToExcelBackLog.js")
     script.
-
+        var pptx = new PptxGenJS();
         $(document).ready(function () {
+
             $('#TrendsAmount').click(function () {
                 $('#1a').hide()
                 $('#2a').show()
@@ -155,8 +165,10 @@ block body
                                 .widget
                                     #INCTicketListHeader
                                     #INCTicketList
+                                    #INCTicketBackLogButton
                                     #SRQTicketListHeader
                                     #SRQTicketList
+                                    #SRQTicketBackLogButton
                                     #pagnation
                                     #toolbarTicketList
                                     script.

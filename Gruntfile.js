@@ -170,7 +170,7 @@ module.exports = function(grunt) {
       },
       layouts: {
         files: {
-          'public/layouts/core.min.css': [
+            'public/layouts/core.min.css': [
             'public/less/bootstrap-build.less',
             'public/less/font-awesome-build.less',
             'public/layouts/core.less'
@@ -206,7 +206,34 @@ module.exports = function(grunt) {
       vendor: {
         src: ['public/vendor/**']
       }
-    }
+    },
+      bowerRequirejs: {
+          target: {
+              rjsConfig: 'app/config.js'
+          }
+      },
+      wiredep: {
+
+          task: {
+
+              // Point to the files that should be updated when
+              // you run `grunt wiredep`
+              src: [
+                  'views/**/*.html',   // .html support...
+                  'views/**/*.jade',   // .jade support...
+                  'public/stylesheets/bootstrap.css',  // .scss & .sass support...
+                  'app/config.yml'         // and .yml & .yaml support out of the box!
+              ],
+
+              options: {
+                  // See wiredep's configuration documentation for the options
+                  // you may pass:
+
+                  // https://github.com/taptapship/wiredep#configuration
+              }
+          }
+      }
+
   });
 
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -218,8 +245,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-concurrent');
   grunt.loadNpmTasks('grunt-nodemon');
   grunt.loadNpmTasks('grunt-newer');
-
+  grunt.loadNpmTasks('grunt-bower-requirejs');
+  grunt.registerTask('default', ['bowerRequirejs']);
   grunt.registerTask('default', ['copy:vendor', 'newer:uglify', 'newer:less', 'concurrent']);
   grunt.registerTask('build', ['copy:vendor', 'uglify', 'less']);
   grunt.registerTask('lint', ['jshint']);
+  grunt.loadNpmTasks('grunt-wiredep');
 };

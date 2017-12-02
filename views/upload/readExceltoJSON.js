@@ -133,22 +133,54 @@ exports.readExceltoJSON = function (req,res,next) {
 
             //EnrichData
             cleanData.forEach(function (r) {
+
+                console.info('CleanData: ' + r['Number'] )
                 var datumFormat
                 //var input = '01/01/1997'- Creation Date
                 dateString = correctionOfDate(r['Creation Date'])
                 creationDate = dateStringtoDate(dateString)
-                console.info(r['Number'] + '  | '  + dateString )
+                console.info('CreationDate:' + r['Number'] + '  | '  + dateString )
                 console.info(creationDate)
 
                 dateString = correctionOfDate(r['Last Change'])
                 lastChange = dateStringtoDate(dateString)
+                console.info('lastChange:' + r['Number'] + '  | '  + dateString )
+                console.info(lastChange)
 
-                dateString = correctionOfDate(r['Solved Date'])
-                solvedDate = dateStringtoDate(dateString)
+                if(r['Solved Date'] ){
+                    if (r['Solved Date'].length == 19){
+                        console.info('solvedDate:' + r['Number'])
+                        dateString = correctionOfDate(r['Solved Date'])
+                        solvedDate = dateStringtoDate(dateString)
+                        console.info(solvedDate)
+                        r.SolvedDate = solvedDate
+                    }
+                    else {
+                        r.SolvedDate = ''
+                    }
 
-                dateString = correctionOfDate(r['Closed Date'])
-                closedDate = dateStringtoDate(dateString)
+                }
+                else {
+                    r.SolvedDate = ''
+                }
 
+                if(r['Closed Date']) {
+                    if(r['Closed Date'].length == 19){
+                        console.info('closedDate:' + r['Number'] )
+                        console.info(r['Closed Date'].length)
+                        dateString = correctionOfDate(r['Closed Date'])
+                        closedDate = dateStringtoDate(dateString)
+                        console.info(closedDate)
+                        r.closedDate = closedDate
+                    }
+                    else{
+                        r.closedDate = ''
+                    }
+
+                }
+                else {
+                    r.closedDate = ''
+                }
 
 
                 //datumFormat =  dateStringtoDate(dateString)
@@ -172,8 +204,6 @@ exports.readExceltoJSON = function (req,res,next) {
                 r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
-                r.SolvedDate = solvedDate
-                r.closedDate = closedDate
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
 
 

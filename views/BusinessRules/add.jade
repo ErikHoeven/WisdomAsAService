@@ -24,6 +24,7 @@ block head
           $('#txtWoord').hide();
           $('#lstWoordvorm').hide()
           $('#lstWordCloudExceptions').hide()
+          $('#lstDashBoardFilters').hide()
 
 
           console.info('document geladen');
@@ -43,6 +44,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
 
 
               }
@@ -58,6 +60,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
@@ -72,6 +75,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
@@ -86,6 +90,7 @@ block head
                   $('#KamervanKoophandel').hide();
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
 
               }
 
@@ -101,6 +106,7 @@ block head
                   $('#Dictionary').hide();
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
 
                   var formFields = getSimFormFields()
 
@@ -119,6 +125,7 @@ block head
                   $('#Dictionary').hide();
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
@@ -134,6 +141,7 @@ block head
                   $('#Dictionary').show();
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
@@ -149,6 +157,7 @@ block head
                   $('#Dictionary').hide();
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
@@ -164,6 +173,7 @@ block head
                   $('#Dictionary').hide();
                   $('#Upload').show();
                   $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
               }
 
           });
@@ -261,6 +271,7 @@ block body
             option BuildGraph
             option Upload
             option WordCloudExceptions
+            option DashBoardFilters
       div.col-sm-6
         #pieDemo
     div.row

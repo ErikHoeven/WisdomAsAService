@@ -13,15 +13,40 @@ function createfunnelRepportIncidents(ds, div, filter){
                                 , '', 'count'
                                 , 'EPS - CPF_Count'
                                 , 'aggGrain'
-                                ,'Customer Reference'
-                                ,'Reason for waiting'
-                                ,'Planned Date / Time'
-                                ,'Customer Free Text'
+                                , 'Customer Reference'
+                                , 'Reason for waiting'
+                                , 'Planned Date / Time'
+                                , 'Customer Free Text'
                                 , 'EPS - Cognos_Count'
                                 , 'EPS - SRL_Count'
                                 , 'Responsible User'
                                 , 'Company'
                                 , 'ticketType'
+                                , "Process"
+                                , "Category"
+                                , "Category Path"
+                                , "Last Change"
+                                , "Solved Date"
+                                , "Closed Date"
+                                , "Contract ID"
+                                , "Intervention Target Date/Time"
+                                , "Intervention Actual Date/Time"
+                                , "Intervention SLA State"
+                                , "Resolution Actual Date/Time"
+                                , "Resolution SLA State"
+                                , "Reopened"
+                                , "Applicant"
+                                , "Source"
+                                , "Category Reporting Title "
+                                , "Overall Status"
+                                , "SolvedDate"
+                                , "closedDate"
+                                , "EPS Infra 2nd line_Count"
+                                , "snapshotDate"
+                                , "lastChange"
+                                , "SLA"
+                                , "Solution Description"
+                                , "Contract Name"
     )
     var dataset2 = []
     console.info(columns)
@@ -32,8 +57,8 @@ function createfunnelRepportIncidents(ds, div, filter){
     })
 
     console.info('----------  DATASET --------------------')
-    console.info(dataset[0])
-    console.info(dataset)
+    //console.info(dataset[0])
+    //console.info(dataset)
     dataset.forEach(function (r) {
         var keys = Object.keys(r)
         // (1) Loop trhoug keys of the rows from the dataset
@@ -42,7 +67,15 @@ function createfunnelRepportIncidents(ds, div, filter){
             columns.forEach(function (c) {
                 // (c) Compare the keys with the columsn if matched then add to row
                 if (k == c){
-                    row.push(r[k].toString())
+
+                    if (c = 'Creation Date'){
+                        row.push(r[k].toString().substring(0,10))
+                    }
+                    else{
+                        row.push(r[k].toString())
+                    }
+
+
                 }
 
             })
@@ -79,15 +112,41 @@ function createfunnelRepportSRQ(ds, div, filter){
         , '', 'count'
         , 'EPS - CPF_Count'
         , 'aggGrain'
-        ,'Customer Reference'
-        ,'Reason for waiting'
-        ,'Planned Date / Time'
-        ,'Customer Free Text'
+        , 'Customer Reference'
+        , 'Reason for waiting'
+        , 'Planned Date / Time'
+        , 'Customer Free Text'
         , 'EPS - Cognos_Count'
         , 'EPS - SRL_Count'
         , 'Responsible User'
         , 'Company'
         , 'ticketType'
+        , "Process"
+        , "Category"
+        , "Category Path"
+        , "Last Change"
+        , "Solved Date"
+        , "Closed Date"
+        , "Contract ID"
+        , "Intervention Target Date/Time"
+        , "Intervention Actual Date/Time"
+        , "Intervention SLA State"
+        , "Resolution Actual Date/Time"
+        , "Resolution SLA State"
+        , "Reopened"
+        , "Applicant"
+        , "Source"
+        , "Category Reporting Title "
+        , "Overall Status"
+        , "SolvedDate"
+        , "closedDate"
+        , "EPS Infra 2nd line_Count"
+        , "snapshotDate"
+        , "lastChange"
+        , "SLA"
+        , "Solution Description"
+        , "Contract Name"
+
     )
     var dataset2 = []
     console.info(columns)
@@ -108,7 +167,12 @@ function createfunnelRepportSRQ(ds, div, filter){
             columns.forEach(function (c) {
                 // (c) Compare the keys with the columsn if matched then add to row
                 if (k == c){
-                    row.push(r[k].toString())
+                    if (c = 'Creation Date'){
+                        row.push(r[k].toString().substring(0,10))
+                    }
+                    else{
+                        row.push(r[k].toString())
+                    }
                 }
 
             })

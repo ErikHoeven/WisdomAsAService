@@ -94,6 +94,7 @@ function getTickets() {
         contentType: 'application/json',
         success: function (data) {
             console.info('succes getTickets')
+            console.info(data)
 
             // Intialize variables filters
             fltrGroup = data.fltrGroup
@@ -183,7 +184,28 @@ function getTickets() {
                     $('#createdTickets').text(stockValues.createdTickets).click(function () {
                         console.info('click createdTickets')
                         createfunnelRepportIncidents(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
+
+                        // Incidenten to PowerPoint
+                        $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                        $('#cmdCreateUserStories').click(function () {
+                            createBackLog(data.allTickets, {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag},'Incident')
+                        })
+                        //Incidenten to Planning & Prio Collection
+                        $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                        $('#cmdToPlanning').click(function () {
+                            promotoToBackLog(data.allTickets, {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag},'Incident')
+                        })
+
                         createfunnelRepportSRQ(data.allTickets,'ticketsList', {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag})
+
+                        // Service Requests to Powerpoint
+                        $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                        $('#cmdSRQCreateUserStories').click(function () {
+                            createBackLog(data.allTickets, {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag},'Service Request')
+                        })
+
+
+
                     })
                     $('#openTickets').text(stockValues.opentTickets).click(function () {
                         console.info('click createdTickets')
@@ -219,6 +241,7 @@ function getTickets() {
 }
 
 function getWordCloud(div, lstWord){
+    console.info('WordCloud')
     console.info(lstWord)
 
     var cloud = d3.layout.cloud;
