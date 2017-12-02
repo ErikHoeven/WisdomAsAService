@@ -11,7 +11,5 @@ var async = require('async'),
 
 exports.promoteToBackLog = function (req, res, next) {
         backlog.insert(req.body.dataset)
-
     res.status(200).json({message: 'User Stories to planning'})
-
 }
