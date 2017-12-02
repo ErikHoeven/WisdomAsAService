@@ -17,6 +17,7 @@ in MongoDb.
   4.1 crontab -e (en kies voor vim )
   4.2 Ga helemaal naar beneden en druk op "i"
   4.3 plak daar de volgende regel in: "* */10 * * * /home/erik/git/WisdomAsAService/myscript.sh"
+5. sudo npm install -g browserify  
 
 
 
