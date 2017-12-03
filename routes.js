@@ -44,6 +44,7 @@ exports = module.exports = function(app, passport) {
     app.post('/BusinessRules/getBusinessRuleListFilterList', require('./views/BusinessRules/buildGenericTable').getBusinessRuleListFilterList);
     app.post('/BusinessRules/getBusinessRuleFilter', require('./views/BusinessRules/buildGenericTable').getBusinessRuleFilter);
     app.post('/BusinessRules/getSearchResultArray', require('./views/BusinessRules/getSearchResultArray').getSearchResultArray);
+    app.post('/BusinessRules/addDevelopers', require('./views/BusinessRules/backlogAssignment').addDeveloperToBusinessRules);
 
     //Peronal dashboard
     app.get('/Dashboard/', require('./views/Dashboard/index').init);
@@ -52,8 +53,9 @@ exports = module.exports = function(app, passport) {
     app.get('/Dashboard/update', require('./views/Dashboard/getTickets').updateGeneric);
     app.post('/Dashboard/removeWordfromSpider', require('./views/Dashboard/addException').addSpiderException);
     app.post('/Dashboard/promoteToBackLog', require('./views/Dashboard/promoteToBackLog').promoteToBackLog);
-
-
+    app.get('/Dashboard/getBackLog',require('./views/Dashboard/promoteToBackLog').getBackLogList);
+    app.post('/Dashboard/updateBackLog',require('./views/Dashboard/promoteToBackLog').updateBacklog);
+    app.get('/Dashboard/clearBacklog',require('./views/Dashboard/promoteToBackLog').clearBacklog);
 
 
 

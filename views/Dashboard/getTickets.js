@@ -310,12 +310,12 @@ exports.getTickets = function (req, res, next) {
             })
 
             snapshots = Array.from(new Set(snapshots))
-            console.info('------------- SNAPSHOTS ---------------')
-            console.info(snapshots)
-            console.info('------------- aggCountsPerDayCattegory ---------------')
-            console.info(aggCountsPerDayCattegory)
-            console.info('------------- count per USer ---------------')
-            console.info(aggCountTicketsPerUser)
+            //console.info('------------- SNAPSHOTS ---------------')
+            //console.info(snapshots)
+            //console.info('------------- aggCountsPerDayCattegory ---------------')
+            //console.info(aggCountsPerDayCattegory)
+            //console.info('------------- count per USer ---------------')
+            //console.info(aggCountTicketsPerUser)
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
@@ -459,7 +459,7 @@ exports.updateGeneric = function (req, res, next) {
     })
 
 
-    console.info(updateObject)
+    //console.info(updateObject)
 
 
     connection.update({_id: id}, {$set: updateObject}, false, true)
@@ -476,7 +476,7 @@ exports.updateGeneric = function (req, res, next) {
                 });
             }
         ];
-        console.info('--------------- START ASYNC ------------------------')
+        //console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();

@@ -96,9 +96,11 @@ exports.create = function(req, res, next) {
             return workflow.emit('response');
         }
 
+        //Workflow Zoekwaarde
         if(req.body.lstTypeBusinessRule == 'Zoekwaarde' || req.body.lstTypeBusinessRule == 'WordCloudExceptions'){
             workflow.emit('createLookupValue');
         }
+        //Workflow createCattegorie
         if(req.body.lstTypeBusinessRule == 'Cattegorie' ||
            req.body.lstTypeBusinessRule == 'Google zoekwaarde' ||
            req.body.lstTypeBusinessRule == 'Scrape Strategy' ||
@@ -106,15 +108,21 @@ exports.create = function(req, res, next) {
            req.body.lstTypeBusinessRule == 'Dictionary' ||
            req.body.lstTypeBusinessRule == 'BuildGraph' ||
            req.body.lstTypeBusinessRule == 'Upload'
-
-        )
-        {
+        ){
             console.log('createCattegorie -- Google Zoekwaarde or Scrape Strategy');
             workflow.emit('createCattegorie');
         }
+
+        //Workflow score
         if(req.body.lstTypeBusinessRule == 'Score') {
             workflow.emit('createScore');
         }
+
+        if(req.body.lstTypeBusinessRule == 'maintenanceAssignment') {
+            workflow.emit('maintenanceAssignment');
+        }
+
+
 
 
     });

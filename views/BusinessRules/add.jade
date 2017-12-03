@@ -25,6 +25,7 @@ block head
           $('#lstWoordvorm').hide()
           $('#lstWordCloudExceptions').hide()
           $('#lstDashBoardFilters').hide()
+          $('#maintenanceAssignment').hide()
 
 
           console.info('document geladen');
@@ -45,6 +46,7 @@ block head
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
 
 
               }
@@ -61,6 +63,7 @@ block head
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Score') {
@@ -76,6 +79,7 @@ block head
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
 
               }
               if ($('#lstTypeBusinessRule option:selected').text() == 'Google zoekwaarde') {
@@ -91,6 +95,7 @@ block head
                   $('#Dictionary').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
 
               }
 
@@ -107,6 +112,7 @@ block head
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
 
                   var formFields = getSimFormFields()
 
@@ -126,6 +132,7 @@ block head
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Dictionary') {
@@ -142,6 +149,7 @@ block head
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'BuildGraph') {
@@ -158,6 +166,7 @@ block head
                   $('#Upload').hide();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
               }
 
               if ($('#lstTypeBusinessRule option:selected').text() == 'Upload') {
@@ -174,8 +183,26 @@ block head
                   $('#Upload').show();
                   $('#lstWordCloudExceptions').hide()
                   $('#lstDashBoardFilters').hide()
+                  $('#maintenanceAssignment').hide()
               }
 
+              if ($('#lstTypeBusinessRule option:selected').text() == 'maintenanceAssignment') {
+                  $('#Kleurbepaler').hide();
+                  $('#zoekwaarde').hide();
+                  $('#score').hide();
+                  $('#Cattegorie').hide();
+                  $('#CattegorieValue').hide();
+                  $('#Simulatie').hide();
+                  $('#lstSimAantalFormulieren').hide();
+                  $('#Scraping').hide();
+                  $('#KamervanKoophandel').hide();
+                  $('#Dictionary').hide();
+                  $('#Upload').hide();
+                  $('#lstWordCloudExceptions').hide()
+                  $('#lstDashBoardFilters').hide()
+                  $('#cmdToevoegenBusinessRules').hide()
+                  $('#maintenanceAssignment').show()
+              }
           });
 
           $('#lstActie').change(function(){
@@ -272,6 +299,7 @@ block body
             option Upload
             option WordCloudExceptions
             option DashBoardFilters
+            option maintenanceAssignment
       div.col-sm-6
         #pieDemo
     div.row
@@ -328,8 +356,40 @@ block body
             option VoltooidDeelWoord
           label Woord
           input.form-control(type='text', name="txtWoord" id="txtWoord")
-    script.
 
+    div.form-group(id='maintenanceAssignment' name='maintenanceAssignment')
+      .row
+        .col-sm-1
+          label name:
+        .col-sm-3
+              input.form-control(type='text', name="txtDeveloper" id="txtDeveloper")
+      .row
+          .col-sm-1
+              label percentage:
+          .col-sm-3
+              input.form-control(type='text', name="txtPercentage" id="txtPercentage")
+      .row
+          .col-sm-3
+              button.btn.btn-primary(type='button' id='cmdInsertMaintenanceAssignment') MaintenanceAssignment
+              script.
+                  $('#cmdInsertMaintenanceAssignment').click(function () {
+                      var value = {}
+                      value.developer = $('#txtDeveloper').val()
+                      value.percentage = $('#txtPercentage').val()
+                      value.typeBusinessRule = 'maintenanceAssignment'
+
+                      $.ajax({
+                          url: '/BusinessRules/addDevelopers',
+                          type: 'POST',
+                          contentType: 'application/json',
+                          data: JSON.stringify({message: 'Toevoegen woorden', value: value}),
+                          success: function (response) {
+                              console.info(response)
+                          }
+                      });
+                  })
+
+    script.
         $('#lstActie').change(function(){
             var valueListActie = $('#lstActie option:selected').text()
             console.info(valueListActie)

@@ -204,6 +204,11 @@ function getTickets() {
                             createBackLog(data.allTickets, {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag},'Service Request')
                         })
 
+                        //Service Request to Planning & Prio Collection
+                        $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                        $('#cmdSRQToPlanning').click(function () {
+                            promotoToBackLog(data.allTickets, {State: 'Classification', 'Responsible Group': fltrValue, snapshotDate: vandaag},'Service Request')
+                        })
 
 
                     })
