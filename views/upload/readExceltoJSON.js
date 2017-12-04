@@ -11,7 +11,7 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment('20-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+   ,snapshot = moment('DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
 
 

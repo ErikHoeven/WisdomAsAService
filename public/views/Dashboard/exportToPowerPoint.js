@@ -74,7 +74,7 @@ function exportToPowerPointBacklog(dataset){
 
     dataset.forEach(function (row) {
         var slide = pptx.addNewSlide();
-        slide.addText('User Story: ' + row.Number + '                 Responsible Group: ' + row['Responsible Group'], { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
+        slide.addText('User Story: ' + row.Number + '               Responsible Group: ' + row['Responsible Group'], { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
 
         // TABLE 1: Simple array (if there is only one row of data, you can just use a simple array)
         var arrRows = [ row.Title ];

@@ -64,19 +64,53 @@ function updateBackLog(id) {
         data: JSON.stringify({updateFields: updatedFields}),
         success: function (response) {
             console.info(response)
-            var tableBacklog = '<table class="table table-hover">' + response.backlogHeader + response.backlogBody + '</table>'
+            var tableBacklog = '<table id="planboard" class="table table-hover">' + response.backlogHeader + response.backlogBody + '</table>'
             $('#tblBacklog').html(tableBacklog)
 
-            var tableDev = '<table class="table table-hover">' + response.devHeader + response.devBody + '</table>'
+            var tableDev = '<table id="devStoryPoints" class="table table-hover">' + response.devHeader + response.devBody + '</table>'
             $('#tblDev').html(tableDev)
 
             var dev = response.developer.split(' ')
 
             //update Story points per dev
-            var currentvalue = $("#" + dev[0]).html()
-            var newValue =  currentvalue -  response.storypoints
-            alert(newValue)
-            $("#" + dev[0]).html(newValue)
+            var developers = [], storypoints = [], data = [], row = {}
+            $('#planboard tbody tr td:nth-child(6)').each( function(){
+                //add item to array
+                developers.push( $(this).text() );
+            });
+
+            $('#planboard tbody tr td:nth-child(4)').each( function(){
+                //add item to array
+                storypoints.push( $(this).text() );
+            });
+
+            for(var i = 0; i < developers.length; i++){
+
+                for(var j = 0; j < storypoints.length; j++) {
+                    if (i == j && developers[i].length < 30 ){
+
+                        row.developers = developers[i]
+                        row.storypoints = parseInt(storypoints[j])
+                        data.push(row)
+                        row = {}
+                    }
+                }
+            }
+            var totalAssigntStoryPointsDeveloper = d3.nest()
+                .key(function(d) { return d.developers.split(' ')[0]; })
+                .rollup(function(v) { return d3.sum(v, function(d) { return d.storypoints; }); })
+                .object(data);
+
+            var devpointskeys = Object.keys(totalAssigntStoryPointsDeveloper)
+
+            devpointskeys.forEach(function (dev) {
+                var currentvalue = $("#" + dev).html()
+                   ,newValue =  currentvalue -  totalAssigntStoryPointsDeveloper[dev]
+                    $("#" + dev).html(newValue)
+            })
+
+
+
         }
     });
 

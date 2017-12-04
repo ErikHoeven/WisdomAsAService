@@ -137,6 +137,28 @@ exports.clearBacklog = function (req, res, next) {
 
 }
 
+exports.exportBacklogToPowerpoint = function (req, res, next) {
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('backlog').find({}).toArray(function (err, backlog) {
+                    if (err) return callback(err);
+                    locals.backlog = backlog;
+                    callback();
+                });
+            }
+        ];
+        //console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+
+            res.status(200).json({message: 'Succesful', dataset: locals.backlog})
+        })
+    })
+}
+
 
 //  ------------------------- Generic Functions --------------------------------------------------------------------
 function setHeader(lstColumns) {

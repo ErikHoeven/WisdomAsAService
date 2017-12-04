@@ -269,7 +269,18 @@ block body
                                     button.btn.btn-primary(type='button' id="cmdUserStories") User Stories
                                     script.
                                         $('#cmdUserStories').click(function () {
-                                            //createBackLog()
+                                            console.info('createPPT')
+
+                                            $.ajax({
+                                                url: '/Dashboard/addBacklogPPT',
+                                                type: 'GET',
+                                                contentType: 'application/json',
+                                                success: function (response) {
+                                                    //console.info('reload!!')
+                                                    exportToPowerPointBacklog(response.dataset)
+                                                }
+                                            });
+
                                         })
                         .row
                             .col-md-12
