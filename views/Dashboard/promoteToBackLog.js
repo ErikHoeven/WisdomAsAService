@@ -14,12 +14,8 @@ var async = require('async'),
 
 
 exports.promoteToBackLog = function (req, res, next) {
-        var backlog = underscore.uniq(req.body.dataset)
-        console.info(backlog)
-
-
-
-        backlog.insert(backlog)
+        var arrBacklog = underscore.uniq(req.body.dataset)
+        backlog.insert(arrBacklog)
         res.status(200).json({message: 'User Stories to planning'})
 }
 
