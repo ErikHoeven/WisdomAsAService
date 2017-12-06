@@ -9,11 +9,15 @@ var async = require('async'),
     moment = require('moment'),
     d3 = require('d3'),
     uri = 'mongodb://localhost:27017/commevents',
-    mongo = require('mongodb')
+    mongo = require('mongodb'),
+    underscore = require('underscore')
 
 
 exports.promoteToBackLog = function (req, res, next) {
-        backlog.insert(req.body.dataset)
+        var backlog = underscore.uniq(req.body.dataset)
+
+
+        backlog.insert(backlog)
         res.status(200).json({message: 'User Stories to planning'})
 }
 
