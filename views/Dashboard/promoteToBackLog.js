@@ -15,6 +15,8 @@ var async = require('async'),
 
 exports.promoteToBackLog = function (req, res, next) {
         var backlog = underscore.uniq(req.body.dataset)
+        console.info(backlog)
+
 
 
         backlog.insert(backlog)
