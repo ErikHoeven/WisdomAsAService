@@ -21,7 +21,7 @@ exports.promoteToBackLog = function (req, res, next) {
         })
         console.info(arrBackLog)
 
-        arrBackLog = underscore. _.uniq(sourceArray, function(x){
+        arrBackLog = underscore. _.uniq(arrBackLog, function(x){
             return x.Number;
         });
         backlog.insert(arrBackLog)
