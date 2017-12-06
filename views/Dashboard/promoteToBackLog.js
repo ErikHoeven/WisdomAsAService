@@ -21,7 +21,9 @@ exports.promoteToBackLog = function (req, res, next) {
         })
 
 
-        arrBackLog = underscore.uniq(arrBackLog)
+        arrBackLog = underscore. _.uniq(sourceArray, function(x){
+            return x.Number;
+        });
         backlog.insert(arrBackLog)
         res.status(200).json({message: 'User Stories to planning'})
 }
