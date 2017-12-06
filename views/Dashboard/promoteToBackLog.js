@@ -14,7 +14,14 @@ var async = require('async'),
 
 
 exports.promoteToBackLog = function (req, res, next) {
-        var arrBacklog = underscore.uniq(req.body.dataset)
+        var arrBackLog = []
+
+        req.body.dataset.forEach(function (row) {
+            arrBackLog.push({Number: row.Number,Title: row,Title,"Nr Of Open Calendar Days": row["Nr Of Open Calendar Days"]})
+        })
+
+
+        arrBackLog = underscore.uniq(arrBacklog)
         backlog.insert(arrBacklog)
         res.status(200).json({message: 'User Stories to planning'})
 }
