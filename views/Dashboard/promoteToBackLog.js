@@ -17,7 +17,7 @@ exports.promoteToBackLog = function (req, res, next) {
         var arrBackLog = []
 
         req.body.dataset.forEach(function (row) {
-            arrBackLog.push({Number: row.Number,Title: row,Title,"Nr Of Open Calendar Days": row["Nr Of Open Calendar Days"]})
+            arrBackLog.push({Number: row.Number,Title: row['Title'],'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]})
         })
 
 
