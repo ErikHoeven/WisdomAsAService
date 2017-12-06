@@ -14,12 +14,12 @@ var async = require('async'),
 
 
 exports.promoteToBackLog = function (req, res, next) {
-        var arrBackLog = []
+        var arrBackLog = [], dataset = req.body.dataset
 
-        req.body.dataset.forEach(function (row) {
+        dataset.forEach(function (row) {
             arrBackLog.push({Number: row.Number,Title: row['Title'],'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]})
         })
-
+        console.info(arrBackLog)
 
         arrBackLog = underscore. _.uniq(sourceArray, function(x){
             return x.Number;
