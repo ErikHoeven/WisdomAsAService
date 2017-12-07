@@ -3,15 +3,17 @@
  */
 
 function createfunnelRepportIncidents(ds, div, filter){
-    console.info()
     filter.ticketType =  "Incident"
     var dataset = _.where(ds,filter)
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
 
+
+
     columns = _.without(columns, '_id'
-                                , '', 'count'
+                                , ''
+                                , 'count'
                                 , 'EPS - CPF_Count'
                                 , 'aggGrain'
                                 , 'Customer Reference'
@@ -48,6 +50,8 @@ function createfunnelRepportIncidents(ds, div, filter){
                                 , "SLA"
                                 , "Solution Description"
                                 , "Contract Name"
+                                , "Your Reference"
+                                ,"Service desk 3rd line_Count"
     )
     var dataset2 = []
     console.info(columns)
@@ -109,14 +113,16 @@ function createfunnelRepportIncidents(ds, div, filter){
 }
 
 function createfunnelRepportSRQ(ds, div, filter){
-    console.info()
+
     filter.ticketType =  "Service Request"
     var dataset = _.where(ds,filter)
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
+
     columns = _.without(columns, '_id'
-        , '', 'count'
+        , ''
+        , 'count'
         , 'EPS - CPF_Count'
         , 'aggGrain'
         , 'Customer Reference'
@@ -153,6 +159,8 @@ function createfunnelRepportSRQ(ds, div, filter){
         , "SLA"
         , "Solution Description"
         , "Contract Name"
+        , "Your Reference"
+        , "Service desk 3rd line_Count"
 
     )
     var dataset2 = []
@@ -165,7 +173,6 @@ function createfunnelRepportSRQ(ds, div, filter){
 
     console.info('----------  DATASET --------------------')
     console.info(dataset[0])
-    console.info(dataset)
     dataset.forEach(function (r) {
         var keys = Object.keys(r)
         // (1) Loop trhoug keys of the rows from the dataset

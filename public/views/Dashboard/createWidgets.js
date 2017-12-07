@@ -124,7 +124,7 @@ function getTickets() {
             console.info(stockValues)
             //console.info('-----------  Funnel values------------')
             //console.info(moment('06-10-2017','DD-MM-YYYY').format('DD-MM-YYYY'))
-            var vandaag = moment('20-10-2017','DD-MM-YYYY').format('DD-MM-YYYY')
+            var vandaag = moment('07-12-2017','DD-MM-YYYY').format('DD-MM-YYYY')
 
 
             $('#createdTickets').text(stockValues.createdTickets).click(function () {

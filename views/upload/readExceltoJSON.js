@@ -11,11 +11,8 @@ var async = require('async'),
     d3 = require('d3'),
     filename = '',
     output = ''
-   ,snapshot = moment('DD-MM-YYYY').format('DD-MM-YYYY')
+   ,snapshot = moment(moment(),'DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
-    //test
-    console.info(snapshotDate)
-
 
 
 exports.readExceltoJSON = function (req,res,next) {
@@ -25,34 +22,34 @@ exports.readExceltoJSON = function (req,res,next) {
 
     if (filesplit[2] == 'xls') {
         console.info('xls')
+        //test
         node_xj({
             input: filename,  // input xls
             output: output, // output json
             sheet: "Export0"  // specific sheetname
         }, function (err, result) {
             if (err) {
+                console.info('error')
                 console.error(err);
             } else {
                 result.forEach(function (r) {
 
-                    //var input = '01/01/1997';
                     dateString = correctionOfDate(r['Creation Date'])
-
-
                     // Check DD-MM-YYYY
                     checkDate = dateString.split('-')
 
                     if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
                         var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
-                        //console.info(r.Number + ' : ' + dateString )
-                        //console.info(creationDate)
-                        dateString = correctionOfDate(r['Last Change'])
-                        var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+                        if(r['Last Change']){
+                            dateString = correctionOfDate(r['Last Change'])
+                            var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
+                        }
+
                     }
                     else {
-                        var creationDate = moment(dateString, 'MM-DD-YYYY').toDate(), ticketType = ''
+                        var creationDate = moment(dateString, 'DD-MM-YYYY').toDate(), ticketType = ''
                         dateString = correctionOfDate(r['Last Change'])
-                        var lastChange = moment(dateString, 'MM-DD-YYYY').toDate()
+                        var lastChange = moment(dateString, 'DD-MM-YYYY').toDate()
 
                     }
 
@@ -224,78 +221,75 @@ exports.readExceltoJSON = function (req,res,next) {
 
 
 function correctionOfDate(inputDate){
-
     var dateCorrection = []
        ,dateString = ''
        , hourstrip = []
        , timeStr = ''
        , temp = []
 
-    //Check if date is completed with 2 digets for days and months
-    if (inputDate.indexOf('-') >= 3 ){
-        dateCorrection = inputDate.split('-')
-        dateString = dateCorrection[0]
-        timeStr = dateCorrection[1]
-   }
 
-    //If not completed completed with a zero before all single digets (days and months )
-   else{
-       if (inputDate.indexOf('-') >= 0  && inputDate.indexOf('-') < 3){
+
+        //Check if date is completed with 2 digets for days and months
+         if (inputDate.indexOf('-') >= 0  && inputDate.indexOf('-') < 3){
             dateCorrection = inputDate.split('-')
-       }
-       else{
+            //timeStr = dateCorrection[1]
+         }
+         else{
            //console.info('date seperator = /')
            dateCorrection = inputDate.split('/')
-       }
+           timeStr = dateCorrection[1]
+         }
 
-       // Days to 2 pos
-       if (dateCorrection[0].length == 1){
+         // Days to 2 pos
+         if (dateCorrection[0].length == 1){
            dateString = '0' + dateCorrection[0] + '-'
-       }
-       else {
-           dateString = dateCorrection[0] + '-'
-       }
+         }
+         else {
+            dateString = dateCorrection[0] + '-'
+         }
 
-       // Month to 2 pos
-       if (dateCorrection[1].length == 1){
-           dateString = dateString + '0' + dateCorrection[1] + '-'
-       }
-       else {
-           dateString = dateString +  dateCorrection[1] + '-'
-       }
+           // Month to 2 pos
+           if (dateCorrection[1].length == 1){
+               dateString = dateString + '0' + dateCorrection[1] + '-'
+           }
+           else {
+               dateString = dateString +  dateCorrection[1] + '-'
 
-       //console.info(dateCorrection[2])
-       var temp = dateCorrection[2].split(' ')
+           }
 
-       dateString = dateString + temp[0]
+           //console.info(dateCorrection[2])
+           var temp = dateCorrection[2].split(' ')
+           dateString = dateString + temp[0]
 
-       // --------------------CORECTION OF HH -------------------------
-       hourstrip = temp[1].split(':')
-       if (hourstrip[0].trim.length == 1){
-           timeStr = '0' + hourstrip[0].trim + ':'
-       }
-       else {
-           timeStr = hourstrip[0] + ':'
-       }
+           // --------------------CORECTION OF HH -------------------------
+           // st
 
-       // ------------------- CORECTION OF MM -------------------------
-       if (hourstrip[1].trim.length == 1){
-           timeStr = timeStr +  '0' + hourstrip[1].trim + ':'
-       }
-       else {
-           timeStr = timeStr +  hourstrip[1] + ':'
-       }
-       // ------------------- CORECTION OF SS -------------------------
-       if (hourstrip[2].trim.length == 1){
-           timeStr = timeStr +  '0' + hourstrip[2].trim
-       }
-       else {
-           timeStr = timeStr +  hourstrip[2]
-       }
-   }
+           hourstrip = temp[1].split(':')
+           if (hourstrip[0].trim.length == 1){
+               timeStr = '0' + hourstrip[0].trim + ':'
+           }
+           else {
+               timeStr = hourstrip[0] + ':'
+           }
 
-    return dateString
-}
+           // ------------------- CORECTION OF MM -------------------------
+           if (hourstrip[1].trim.length == 1){
+               timeStr = timeStr +  '0' + hourstrip[1].trim + ':'
+           }
+           else {
+               timeStr = timeStr +  hourstrip[1] + ':'
+           }
+           // ------------------- CORECTION OF SS -------------------------
+           if (hourstrip[2].trim.length == 1){
+               timeStr = timeStr +  '0' + hourstrip[2].trim
+           }
+           else {
+               timeStr = timeStr +  hourstrip[2]
+           }
+        return dateString
+    }
+
+
 
 
 function dateStringtoDate(dateString) {

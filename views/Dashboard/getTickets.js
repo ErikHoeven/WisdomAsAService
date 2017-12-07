@@ -48,7 +48,7 @@ exports.getTickets = function (req, res, next) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
-
+            console.info(tickets[0])
 
 
             var countsPerDay = d3.nest()
