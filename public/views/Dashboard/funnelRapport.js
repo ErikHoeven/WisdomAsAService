@@ -87,7 +87,9 @@ function createfunnelRepportIncidents(ds, div, filter){
     })
 
 
-    rows = _.uniq(rows);
+    rows = _.uniq(rows, function(x){
+        return x[0];
+    });
 
 
     console.info('-------------------  ROWS ---------------')
@@ -187,7 +189,9 @@ function createfunnelRepportSRQ(ds, div, filter){
         row = []
     })
 
-    rows = _.uniq(rows);
+    rows = _.uniq(rows, function(x){
+        return x.Number;
+    });
     console.info('-------------------  ROWS ---------------')
     console.info(rows)
     var dataNew = new google.visualization.DataTable()
