@@ -13,6 +13,7 @@ var async = require('async'),
     output = ''
    ,snapshot = moment('DD-MM-YYYY').format('DD-MM-YYYY')
    ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
+    //test
     console.info(snapshotDate)
 
 
