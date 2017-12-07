@@ -190,7 +190,7 @@ function createfunnelRepportSRQ(ds, div, filter){
     })
 
     rows = _.uniq(rows, function(x){
-        return x.Number;
+        return x[0];
     });
     console.info('-------------------  ROWS ---------------')
     console.info(rows)
