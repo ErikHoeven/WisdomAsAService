@@ -9,6 +9,7 @@ function createfunnelRepportIncidents(ds, div, filter){
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
+
     columns = _.without(columns, '_id'
                                 , '', 'count'
                                 , 'EPS - CPF_Count'
@@ -84,6 +85,11 @@ function createfunnelRepportIncidents(ds, div, filter){
         rows.push(row)
         row = []
     })
+
+
+    rows = _.uniq(rows, function(x){
+        return x.Number;
+    });
 
     console.info('-------------------  ROWS ---------------')
     console.info(rows)
@@ -182,6 +188,9 @@ function createfunnelRepportSRQ(ds, div, filter){
         row = []
     })
 
+    rows = _.uniq(rows, function(x){
+        return x.Number;
+    });
     console.info('-------------------  ROWS ---------------')
     console.info(rows)
     var dataNew = new google.visualization.DataTable()

@@ -23,6 +23,7 @@ block head
     script(type='text/javascript', src='/bower_components/pptxgenjs/libs/jszip.min.js')
     script(type='text/javascript', src='/bower_components/pptxgenjs/dist/pptxgen.js')
     script(type="text/javascript", src="/bower_components/pptxgenjs/dist/pptxgen.bundle.js")
+    script(type="text/javascript", src="/bower_components/underscore/underscore.js")
 
 
 
@@ -62,6 +63,8 @@ block head
     script(src="/views/Dashboard/exportToPowerPoint.js")
     script(src="/views/Dashboard/exportToExcelBackLog.js")
     script.
+
+        var _ = require('underscore')
         var pptx = new PptxGenJS();
         $(document).ready(function () {
 
