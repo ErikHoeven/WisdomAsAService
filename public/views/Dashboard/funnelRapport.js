@@ -52,6 +52,7 @@ function createfunnelRepportIncidents(ds, div, filter){
                                 , "Contract Name"
                                 , "Your Reference"
                                 ,"Service desk 3rd line_Count"
+                                ,"Responsible Group"
     )
     var dataset2 = []
     console.info(columns)
@@ -161,6 +162,7 @@ function createfunnelRepportSRQ(ds, div, filter){
         , "Contract Name"
         , "Your Reference"
         , "Service desk 3rd line_Count"
+        , "Responsible Group"
 
     )
     var dataset2 = []
