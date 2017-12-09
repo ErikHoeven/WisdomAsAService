@@ -13,66 +13,69 @@ block body
     // functies voor het afhandelen van data
     script(src="../../views/upload/dataHandler.js")
     .container
+        form#uploadForm(method='post', enctype='multipart/form-data', action='/upload')
         .row
-            .col-md-4
+            .col-md-12
                 #message
         .row
             .col-md-4
+                input#files(type='file', name='upload', multiple='multiple')
+
             .col-md-4
-                br
-                br
-                form#uploadForm(method='post', enctype='multipart/form-data', action='/upload')
-                    input#files(type='file', name='upload', multiple='multiple')
-                    p(style='text-align: right; margin-top: 20px;')
-                        input.btn.btn-lg.btn-primary(type='submit', value='Upload Files' name='submit')
+                input.btn.btn-primary(type='submit', value='Upload Files' name='submit')
+
+
         .row
             #filesInFolder
-           script.
+            script.
 
                 if(files){
                     $('#filesInFolder').append('<table class="table table-hover" id=lstFiles ><thead><tr><th> Select </th><th> FileName </th><th> Upload Date </th><th> Read to DataStore </th>')
                     $('#lstFiles').append('<tbody>')
-
-                    files.forEach(function(file){
+                        files.forEach(function(file){
                         $('#lstFiles > tbody').append('<tr><td><input type="checkbox" name="chb_FileName" value="'+ file.filename+'"></td><td>'+ file.filename +'</td><td>' + file.creationDate + '</td><td>'+  file.AddToDataStore +'</td></tr>')
-
-
                     })
 
-                }
-                else {
-                console.info('No data found')
-                }
+                    }
+                    else {
+                        console.info('No data found')
+                    }
 
         .row
-            #readFilesSectie
-                button.btn.btn-primary(type='button' id='readFiles') ReadFiles
-                script.
-                    $('#readFiles').click(function(){
-                        var selectedFiles = []
-                        console.info('START READING')
-                        readFile = 1
-                        $('input[name="chb_FileName"]:checked').each(function () {
-                            selectedFiles.push(this.value);
-                        });
-                        //console.info(selectedFiles)
+            .col-md-2
+                #readFilesSectie
+                    button.btn.btn-primary(type='button' id='readFiles') ReadFiles
+                    script.
+                        $('#readFiles').click(function () {
+                            var selectedFiles = []
+                            console.info('START READING')
+                            readFile = 1
+                            $('input[name="chb_FileName"]:checked').each(function () {
+                                selectedFiles.push(this.value);
+                            });
+                            //console.info(selectedFiles)
 
-                        $.ajax({
-                            url: '/upload/readFile',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({selectedFiles: selectedFiles} ),
-                            success: function (response) {
-                            //console.info(response)
-                            readFile = searchData(readFile, response)
-                            }
-                        });
+                            $.ajax({
+                                url: '/upload/readFile',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({selectedFiles: selectedFiles}),
+                                success: function (response) {
+                                    //console.info(response)
+                                    readFile = searchData(readFile, response)
+                                }
+                            });
 
 
-                    })
-            #readExcel
+                        })
+            .col-md-2
                 button.btn.btn-primary(type='button' id='cdmReadExcel') ReadExcel
+            .col-md-2
+                |Upload date:
+                input#datepicker(type='text')
                 script.
+                    $("#datepicker").datepicker();
+
                     $('#cdmReadExcel').click(function () {
                         var selectedFiles = []
                         console.info('START READING')
@@ -80,20 +83,21 @@ block body
                         $('input[name="chb_FileName"]:checked').each(function () {
                             selectedFiles.push(this.value);
                         });
-                        //console.info(selectedFiles)
+
+                        var uploadDate = $('#datepicker').val()
 
                         $.ajax({
                             url: '/upload/Excel',
                             type: 'POST',
                             contentType: 'application/json',
-                            data: JSON.stringify({selectedFiles: selectedFiles}),
+                            data: JSON.stringify({selectedFiles: selectedFiles, uploadDate:  uploadDate}),
                             success: function (response) {
-                                $('#message').html('<div class="alert alert-info"><strong>Info!</strong><br>'+ response.message+'</div>')
+                                $('#message').html('<div class="alert alert-info"><strong>Info!</strong><br>' + response.message + '</div>')
                             }
                         });
 
-
                     })
+
         .row
             #displayReadedDataSection
         .row

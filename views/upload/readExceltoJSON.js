@@ -10,15 +10,20 @@ var async = require('async'),
     dateString = '',
     d3 = require('d3'),
     filename = '',
-    output = ''
-   ,snapshot = moment(moment(),'DD-MM-YYYY').format('DD-MM-YYYY')
-   ,snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
+    output = '',
+    snapshot = '',
+    snapshotDate = ''
+
+
+
 
 
 exports.readExceltoJSON = function (req,res,next) {
-    filename = './uploads/' + req.body.selectedFiles[0]
-    output = 'test.json'
-    filesplit = filename.split('.')
+     filename = './uploads/' + req.body.selectedFiles[0]
+     snapshot = moment(req.body.uploadDate,'MM/DD/YYYY').format('DD-MM-YYYY')
+     snapshotDate = moment(snapshot,'DD-MM-YYYY').toDate()
+     output = 'test.json'
+     filesplit = filename.split('.')
 
     if (filesplit[2] == 'xls') {
         console.info('xls')
