@@ -57,7 +57,7 @@ exports = module.exports = function(app, passport) {
     app.post('/Dashboard/updateBackLog',require('./views/Dashboard/promoteToBackLog').updateBacklog);
     app.get('/Dashboard/clearBacklog',require('./views/Dashboard/promoteToBackLog').clearBacklog);
     app.get('/Dashboard/addBacklogPPT',require('./views/Dashboard/promoteToBackLog').exportBacklogToPowerpoint);
-
+    app.get('/Dashboard/getRFC',require('./views/Dashboard/getRFC').getRFC);
 
 
     //Dashboard socialGraph routes

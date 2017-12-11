@@ -14,93 +14,92 @@ block body
     script(src="../../views/upload/dataHandler.js")
     .container
         form#uploadForm(method='post', enctype='multipart/form-data', action='/upload')
-        .row
-            .col-md-12
-                #message
-        .row
-            .col-md-4
-                input#files(type='file', name='upload', multiple='multiple')
+            .row
+                .col-md-12
+                    #message
+            .row
+                .col-md-4
+                    input#files(type='file', name='upload', multiple='multiple')
 
-            .col-md-4
-                input.btn.btn-primary(type='submit', value='Upload Files' name='submit')
+                .col-md-4
+                    input.btn.btn-primary(type='submit', value='Upload Files' name='submit')
 
 
-        .row
-            #filesInFolder
-            script.
+            .row
+                #filesInFolder
+                script.
 
-                if(files){
-                    $('#filesInFolder').append('<table class="table table-hover" id=lstFiles ><thead><tr><th> Select </th><th> FileName </th><th> Upload Date </th><th> Read to DataStore </th>')
-                    $('#lstFiles').append('<tbody>')
-                        files.forEach(function(file){
-                        $('#lstFiles > tbody').append('<tr><td><input type="checkbox" name="chb_FileName" value="'+ file.filename+'"></td><td>'+ file.filename +'</td><td>' + file.creationDate + '</td><td>'+  file.AddToDataStore +'</td></tr>')
-                    })
+                    if(files){
+                        $('#filesInFolder').append('<table class="table table-hover" id=lstFiles ><thead><tr><th> Select </th><th> FileName </th><th> Upload Date </th><th> Read to DataStore </th>')
+                        $('#lstFiles').append('<tbody>')
+                            files.forEach(function(file){
+                            $('#lstFiles > tbody').append('<tr><td><input type="checkbox" name="chb_FileName" value="'+ file.filename+'"></td><td>'+ file.filename +'</td><td>' + file.creationDate + '</td><td>'+  file.AddToDataStore +'</td></tr>')
+                        })
 
-                    }
-                    else {
-                        console.info('No data found')
-                    }
+                        }
+                        else {
+                            console.info('No data found')
+                        }
 
-        .row
-            .col-md-2
-                #readFilesSectie
-                    button.btn.btn-primary(type='button' id='readFiles') ReadFiles
+            .row
+                .col-md-2
+                        button.btn.btn-primary(type='button' id='readFiles') ReadFiles
+                        script.
+                            $('#readFiles').click(function () {
+                                var selectedFiles = []
+                                console.info('START READING')
+                                readFile = 1
+                                $('input[name="chb_FileName"]:checked').each(function () {
+                                    selectedFiles.push(this.value);
+                                });
+                                //console.info(selectedFiles)
+
+                                $.ajax({
+                                    url: '/upload/readFile',
+                                    type: 'POST',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({selectedFiles: selectedFiles}),
+                                    success: function (response) {
+                                        //console.info(response)
+                                        readFile = searchData(readFile, response)
+                                    }
+                                });
+
+
+                            })
+                .col-md-2
+                    button.btn.btn-primary(type='button' id='cdmReadExcel') ReadExcel
+                .col-md-2
+                    |Upload date:
+                    input#datepicker(type='text')
                     script.
-                        $('#readFiles').click(function () {
+                        $("#datepicker").datepicker();
+
+                        $('#cdmReadExcel').click(function () {
                             var selectedFiles = []
                             console.info('START READING')
                             readFile = 1
                             $('input[name="chb_FileName"]:checked').each(function () {
                                 selectedFiles.push(this.value);
                             });
-                            //console.info(selectedFiles)
+
+                            var uploadDate = $('#datepicker').val()
 
                             $.ajax({
-                                url: '/upload/readFile',
+                                url: '/upload/Excel',
                                 type: 'POST',
                                 contentType: 'application/json',
-                                data: JSON.stringify({selectedFiles: selectedFiles}),
+                                data: JSON.stringify({selectedFiles: selectedFiles, uploadDate:  uploadDate}),
                                 success: function (response) {
-                                    //console.info(response)
-                                    readFile = searchData(readFile, response)
+                                    $('#message').html('<div class="alert alert-info"><strong>Info!</strong><br>' + response.message + '</div>')
                                 }
                             });
 
-
                         })
-            .col-md-2
-                button.btn.btn-primary(type='button' id='cdmReadExcel') ReadExcel
-            .col-md-2
-                |Upload date:
-                input#datepicker(type='text')
-                script.
-                    $("#datepicker").datepicker();
 
-                    $('#cdmReadExcel').click(function () {
-                        var selectedFiles = []
-                        console.info('START READING')
-                        readFile = 1
-                        $('input[name="chb_FileName"]:checked').each(function () {
-                            selectedFiles.push(this.value);
-                        });
-
-                        var uploadDate = $('#datepicker').val()
-
-                        $.ajax({
-                            url: '/upload/Excel',
-                            type: 'POST',
-                            contentType: 'application/json',
-                            data: JSON.stringify({selectedFiles: selectedFiles, uploadDate:  uploadDate}),
-                            success: function (response) {
-                                $('#message').html('<div class="alert alert-info"><strong>Info!</strong><br>' + response.message + '</div>')
-                            }
-                        });
-
-                    })
-
-        .row
-            #displayReadedDataSection
-        .row
-            #translate
+            .row
+                #displayReadedDataSection
+            .row
+                #translate
 
 
