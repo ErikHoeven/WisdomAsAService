@@ -110,6 +110,7 @@ function filterTickets(value, dataset) {
                 countSolvedTickets: d3.sum(v, function (d) {
                     return d.countSolvedTickets;
                 }),
+
             };
         })
         .entries(aggCountsPerDayCattegory)

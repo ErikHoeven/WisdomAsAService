@@ -62,6 +62,7 @@ block head
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script(src="/views/Dashboard/exportToPowerPoint.js")
     script(src="/views/Dashboard/exportToExcelBackLog.js")
+    script(src="/views/Dashboard/rfcDashBoard.js")
     script.
 
         //var _ = require('underscore')
@@ -309,10 +310,8 @@ block body
                                     #pagnationRFC
                                     #toolbarRFCList
                                     script.
-                                        //getTickets()
-                                        //var auto_refresh_Tickets = setInterval(function () {
-                                        //    getTickets()
-                                        //}, 15000)
+                                        getAllRFC()
+
                     #5a.tab-pane.fade
                         .row
                             .col-md-6

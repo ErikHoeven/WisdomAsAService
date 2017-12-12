@@ -17,7 +17,7 @@ var  request = require("request")
 
 exports.getRFC = function (req, res, next) {
 
-    console.info('-------------------Get Tickets --------------------------------------------------------')
+    console.info('-------------------Get RFC --------------------------------------------------------')
 
     mongo.connect(uri, function (err, db) {
         console.info('MONGODB START CHECK COLLECTIONS')
@@ -31,7 +31,7 @@ exports.getRFC = function (req, res, next) {
             },
             // Load stgOmniTracker
             function (callback) {
-                db.collection('stgOmniTracker').find({typeTicket: "Change"}).toArray(function (err, tickets) {
+                db.collection('stgOmniTracker').find({ticketType: "Change"}).toArray(function (err, tickets) {
                     if (err) return callback(err);
                     locals.tickets = tickets;
                     callback();
@@ -48,7 +48,7 @@ exports.getRFC = function (req, res, next) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
-            console.info(tickets[0])
+            console.info(tickets)
 
 
             var countsPerDay = d3.nest()
@@ -154,12 +154,8 @@ exports.getRFC = function (req, res, next) {
                     leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
                 }
 
-                if (State == 'In progress') {
+                if (State == 'In progress' || State == "Acceptance" || State == "Testing" ||  State == "Information Needed" || State == "Planning" || State == "Ready For Implementation" ) {
                     countOpenTickets = count
-                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-                }
-
-                if (State == 'Classification') {
                     leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
                 }
 
