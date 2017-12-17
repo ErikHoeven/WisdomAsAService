@@ -220,7 +220,7 @@ exports.getTickets = function (req, res, next) {
             });
 
             console.info('----------------------------------------------')
-
+            console.info(countsPerDayCattegory)
             ftlrGroup.push('All')
             fltrState.push('All')
 

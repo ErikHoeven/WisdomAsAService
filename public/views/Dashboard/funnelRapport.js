@@ -8,7 +8,7 @@ function createfunnelRepportIncidents(ds, div, filter){
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
-
+    console.info(dataset)
 
 
     columns = _.without(columns, '_id'

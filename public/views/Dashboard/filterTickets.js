@@ -125,8 +125,11 @@ function filterTickets(value, dataset) {
     aggCountsPerDayCattegory = aggCountsPerDayCattegory.reverse()
     console.info('countsPerDayCattegory.length')
     console.info(countsPerDayCattegory)
-    console.info('countsPerDayCattegory.length')
         if (countsPerDayCattegory.length > 1){
+        console.info('countsPerDayCattegory.length > 1')
+        var countsPerDayCattegory =  _.sortBy(countsPerDayCattegory, function (o){ return moment(o.key,'DD-MM-YYYY')})
+
+
         for(var i = 0; i < countsPerDayCattegory.length; i++ ){
             if (i == 0){
 

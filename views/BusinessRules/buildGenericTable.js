@@ -7,6 +7,7 @@ var cheerio = require("cheerio")
     ,mongo = require('mongodb')
     ,db = require('monk')('localhost/commevents')
     ,dbm = require('mongodb').MongoClient
+    ,underscore = require('underscore')
     ,companies =  db.get('companyresults')
     ,corpus = db.get('corpus')
     ,url = db.get('url')
@@ -68,10 +69,6 @@ exports.createGenericTable = function (req, res, next) {
  *               ,start: shows row to start},
  *   deleteRow: option to delete row in dataSet[Y,N],
  *   editRow  : option to edit fields in dataset[Y,N]}
- *
- *
- *
- *
  */
 function genericTable (data, tableDefinition, pagnationStep, actualStep ){
 
@@ -97,6 +94,8 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
 
 
     columns =  Object.keys(data[0])
+    columns.push('developer')
+    columns.push('percentage')
     console.info('--------------------------------------------------------------------')
     console.info('titel: ' + tableDefinition.title)
     console.info('KeyColumn: ' + tableDefinition.keyColumn)
@@ -112,6 +111,7 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
     var pagnationSteps =  data.length/  pagnationStep
     console.info(columns )
     console.info(sourceCollection)
+    console.info(columns.length -  updateAftrek)
     if (actualStep == 1){
         startingStepRow = 0
     }
@@ -145,12 +145,43 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
     for (var i = 0; i < columns.length; i++){
         colpos.push({column: columns[i], col_pos: i})
     }
+    console.info(colpos)
     console.info('----------------------------------------------------------------------------------')
 
 
     data.forEach(function (row) {
         keys = Object.keys(row)
         lastPos = 0
+        var countcolLeft = columns.length - totHideCols.length
+        var colsLeft = reduceArray(keys,totHideCols, colpos)
+        var countKeysLeft = countcolLeft - colsLeft.length
+        var isLastColumn = 0
+
+        //Find lastCol in colpos
+        //A RESET COLUMN
+        colpos.forEach(function (cp) {
+          cp.isLastCol  = 0
+        })
+
+
+        colpos.forEach(function (cp) {
+            colsLeft.forEach(function (cl) {
+                if(cp.column == cl.column && cl.last_pos == 1){
+                    cp.isLastCol = 1
+                }
+                else{
+                    isLastColumn = 0
+                }
+            })
+        })
+        //console.info('------------------')
+        //console.info(colpos)
+        //console.info('------------------')
+
+
+
+
+
 
 
 
@@ -163,9 +194,8 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
 
 
                     if (col.column == columKey && col.col_pos > lastPos && columKey != findHideCols(columKey, totHideCols)){
-                        console.info(row[columKey] + ' : ' + Array.isArray(row[columKey]))
 
-                        if (Array.isArray(row[columKey]) == false){
+                        if (Array.isArray(row[columKey]) == false || row[columKey].length == 0){
                             strData = strData + '<td id="'+ columKey + row['_id'] + '">' + row[columKey] + '</td>'
                         }
                         else {
@@ -178,7 +208,15 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
             })
 
             if(tableDefinition.editRow ==  'Y' ){
-                strData = strData + updateProperties + '</tr>'
+
+                var strTD = ''
+
+                for(var i = 0;  i < countKeysLeft ; i++){
+                    strTD = strTD + '<td></td>'
+                }
+
+                strData = strData + strTD + updateProperties + '</tr>'
+
             }
             else{
                 strData = strData + '</tr>'
@@ -195,10 +233,13 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
             keys.forEach(function (columKey) {
                 colpos.forEach(function (col) {
                     if (columKey != findHideCols(columKey, totHideCols) && col.column == columKey && col.col_pos > lastPos ) {
+                        console.info('lastPos: ' + lastPos + ' col.col_pos: ' + col.col_pos + ' lastCol: ' + col.isLastCol + ' colHit: ' + colHit )
+                        console.info('-----------COLPOS----------')
+                        console.info(colpos)
                         colHit = 0
 
                         // A col_position of the table definition is greather then the last column pos of the dataset and col pos of the table defintion is 0
-                        if (lastPos == 0 && colHit == 0) {
+                        if (lastPos == 0 && colHit == 0 && col.isLastCol == 0) {
 
                             if (tableDefinition.isEditable == 'N') {
                                 strData = strData + '<tr><td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>'
@@ -212,22 +253,34 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
                         }
 
                         // B col_position of the table definition is greather then the last column pos of the dataset and col pos of the table defintion is 0
-                        if (lastPos > 0 && lastPos < colpos.length - updateAftrek && colHit == 0 ) {
+                        if (lastPos > 0 && lastPos < colpos.length - updateAftrek && colHit == 0 && col.isLastCol == 0 ) {
                             strData = strData + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>'
                             lastPos++
                             colHit = 1
                         }
 
                         // C Last Column in the Row
-                        if (lastPos == colpos.length - updateAftrek && colHit ==  0 ) {
+                        if ( colHit ==  0 && col.isLastCol == 1) {
+                            console.info('Last Col in Row')
                             if (tableDefinition.editRow == 'Y') {
+                                console.info('colpos.length')
+
+                                var countcolLeft = columns.length - totHideCols.length,
+                                    countKeysLeft = countcolLeft - reduceArray(keys,totHideCols, colpos).length,
+                                    strTD = ''
+
+                                console.info(countcolLeft)
+                                for(var i = 0;  i < countKeysLeft ; i++){
+                                    strTD = strTD + '<td></td>'
+                                }
+
 
 
                                 rowDef = rowDefinition(keys,totHideCols,row['_id'] )
 
 
                                 updateProperties = '<td id="update'+ row['_id'] + '"><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +rowDef + '\',\'' + sourceCollection +'\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' + row['_id'] +'\')"></td>'
-                                strData = strData + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>' + updateProperties + '</tr>'
+                                strData = strData + strTD + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td>' + updateProperties + '</tr>'
                             }
                             else {
                                 strData = strData + '<td id="' + columKey + row['_id'] + '">' + row[columKey] + '</td></tr>'
@@ -388,7 +441,61 @@ function fltrArray (array, fltr){
     return rsltArray
 }
 
+function reduceArray(array, filterArray, colpos) {
+    var keysLeft = [], keyNotMatch = 0, strKey = '', i = 0
+    array.forEach(function (k) {
+        filterArray.forEach(function (h) {
+            if (k != h && keyNotMatch == 0){
+                strKey = k
+                keyNotMatch = 0
+            }
+            else{
+                strKey = ''
+                keyNotMatch = 1
+            }
+        })
+        if(keyNotMatch == 0){
+            keysLeft.push({column: strKey})
+            keyNotMatch = 0
+            i++
+        }
+        else {
+            keyNotMatch = 0
+        }
+    })
 
+    var keyNotMatch = 0 , order = 0
+    keysLeft.forEach(function (kc) {
+        colpos.forEach(function (cp) {
+            if (kc.column == cp.column && keyNotMatch == 0){
+                keyNotMatch = 1
+                order = cp.col_pos
+            }
+        })
+        if (keyNotMatch == 1){
+            kc.col_pos = order
+            keyNotMatch = 0
+        }
+    })
+
+    var colposValues = [], last
+
+    keysLeft.forEach(function (r) {
+        colposValues.push(r.col_pos)
+    })
+    last = d3.max(colposValues)
+    keysLeft.forEach(function (k) {
+        if (k.col_pos == last){
+            k.last_pos = 1
+        }
+        else {
+            k.last_pos = 0
+        }
+    })
+
+    return keysLeft
+
+}
 
 
 
