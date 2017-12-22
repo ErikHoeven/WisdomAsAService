@@ -47,6 +47,10 @@ function getTickets() {
             stockValues = values.stockValues
             console.info(stockValues)
 
+
+
+
+
             var vandaag = moment(data.snapshots[data.snapshots.length - 1], 'DD-MM-YYYY').format('DD-MM-YYYY')
 
             $('#createdTickets').text(stockValues.createdTickets).click(function () {

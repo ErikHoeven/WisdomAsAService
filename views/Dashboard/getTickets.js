@@ -297,9 +297,18 @@ exports.getTickets = function (req, res, next) {
             })
 
             var snapshots = [], snapshotDate
+
             tickets.forEach(function (ticket) {
                 snapshots.push(ticket.snapshotDate)
             })
+
+
+            snapshots = underscore.sortBy(function (node) {
+                return - (moment(node,'DD-MM-YYYY'))
+
+            })
+
+            console.info(snapshots)
 
             var aggCountTicketsPerUser = []
 

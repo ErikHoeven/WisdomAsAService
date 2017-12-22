@@ -22,9 +22,8 @@ function  getTicketList(data, filter, pagnationStep, ActualStep) {
             //console.info(f)
             //console.info(test)
         })
-        console.info(tickets)
-
     }
+
 
     var tableDefinition = {}
     tableDefinition.divTable = 'ticketsList'

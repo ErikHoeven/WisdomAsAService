@@ -179,12 +179,6 @@ function genericTable (data, tableDefinition, pagnationStep, actualStep ){
         //console.info('------------------')
 
 
-
-
-
-
-
-
         // A. First row
         var updateProperties = '<td id="update'+ row['_id'] + '"><span class="glyphicon glyphicon-pencil" onclick="updateField(\'' +columnValue + '\',\'' + row['_id'] +'\',\'' + sourceCollection + '\')"></span></td><td><span class="glyphicon glyphicon-trash" onclick="deleteRow(\'' + row['_id'] +'\')"></td>'
         if (rowNumber == 0 && rowNumber == startingStepRow ){
