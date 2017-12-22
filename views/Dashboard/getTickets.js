@@ -48,8 +48,6 @@ exports.getTickets = function (req, res, next) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
-            console.info(tickets[0])
-
 
             var countsPerDay = d3.nest()
                 .key(function (d) {
@@ -220,7 +218,6 @@ exports.getTickets = function (req, res, next) {
             });
 
             console.info('----------------------------------------------')
-            console.info(countsPerDayCattegory)
             ftlrGroup.push('All')
             fltrState.push('All')
 
@@ -319,12 +316,6 @@ exports.getTickets = function (req, res, next) {
             })
 
             snapshots = Array.from(new Set(snapshots))
-            //console.info('------------- SNAPSHOTS ---------------')
-            //console.info(snapshots)
-            //console.info('------------- aggCountsPerDayCattegory ---------------')
-            //console.info(aggCountsPerDayCattegory)
-            //console.info('------------- count per USer ---------------')
-            //console.info(aggCountTicketsPerUser)
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
