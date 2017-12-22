@@ -133,7 +133,7 @@ function filterTickets(value, dataset) {
 
 
         var countsPerDayCattegory =  _.sortBy(countsPerDayCattegory, function (o){ return moment(o.key,'DD-MM-YYYY')})
-            countsPerDayCattegory = _.without(arr, _.findWhere(arr, {
+            countsPerDayCattegory = _.without(countsPerDayCattegory, _.findWhere(countsPerDayCattegory, {
                 datum: "Invalid date"
             }));
 
