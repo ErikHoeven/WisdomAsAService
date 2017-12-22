@@ -305,7 +305,7 @@ exports.getTickets = function (req, res, next) {
 
             })
 
-            console.info(snapshots)
+
 
             var aggCountTicketsPerUser = []
 
@@ -316,6 +316,7 @@ exports.getTickets = function (req, res, next) {
             })
 
             snapshots = Array.from(new Set(snapshots))
+            console.info(snapshots)
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
