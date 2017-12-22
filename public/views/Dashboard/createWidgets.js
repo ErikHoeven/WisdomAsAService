@@ -41,14 +41,11 @@ function getTickets() {
 
             // Calculate Stock
             var values = [], stock = 0, stockValues = {}
-            values = filterTickets({fltrCattegory:'All', fltrDate: vandaag}, data.aggCountsPerDayCattegory)
+            values = filterTickets('All', data.aggCountsPerDayCattegory)
 
             console.info('-----------  Funnel values------------')
             stockValues = values.stockValues
             console.info(stockValues)
-
-
-
 
 
             var vandaag = moment(data.snapshots[0], 'DD-MM-YYYY').format('DD-MM-YYYY')

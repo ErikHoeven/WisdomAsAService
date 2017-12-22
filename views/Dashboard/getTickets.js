@@ -301,7 +301,7 @@ exports.getTickets = function (req, res, next) {
 
 
             snapshots = underscore.sortBy(snapshots,function (node) {
-                return - (moment(node,'DD-MM-YYYY'))
+                return + (moment(node,'DD-MM-YYYY'))
 
             })
 
