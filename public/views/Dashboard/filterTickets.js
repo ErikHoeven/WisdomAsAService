@@ -9,7 +9,7 @@ function filterTickets(value, dataset) {
     })
 
 
-    if (value != 'All'){
+    if (value.fltrCattegory != 'All'){
         returnArray = _.where(dataset,{Group: value})
 
         var countsPerDay = d3.nest()
@@ -46,8 +46,13 @@ function filterTickets(value, dataset) {
             })
             .entries(dataset)
     }
+
+
+
     else{
         returnArray = dataset
+        dataset = _.where(dataset,{snapshotDate:fltrDate})
+
 
         console.info('returnArray')
 
