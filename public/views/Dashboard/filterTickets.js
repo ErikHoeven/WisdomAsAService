@@ -133,10 +133,6 @@ function filterTickets(value, dataset) {
 
 
         var countsPerDayCattegory =  _.sortBy(countsPerDayCattegory, function (o){ return moment(o.key,'DD-MM-YYYY')})
-            countsPerDayCattegory = _.without(countsPerDayCattegory, _.findWhere(countsPerDayCattegory, {
-                datum: "Invalid date"
-            }));
-
 
         for(var i = 0; i < countsPerDayCattegory.length; i++ ){
             if (i == 0){
@@ -144,7 +140,7 @@ function filterTickets(value, dataset) {
                 stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: 0 , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
                 //stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
             }
-            if (i > 0){
+            if (i > 0 && countsPerDayCattegory[i].datum != "Invalid date" ){
                 stock = ( countsPerDayCattegory[i-1].value.countCreatedTickets + countsPerDayCattegory[i-1].value.countOpenTickets + stock ) - countsPerDayCattegory[i-1].value.countSolvedTickets
 
                 if (stock <= 0){
