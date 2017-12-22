@@ -130,7 +130,12 @@ function filterTickets(value, dataset) {
     console.info(countsPerDayCattegory)
         if (countsPerDayCattegory.length > 1){
         console.info('countsPerDayCattegory.length > 1')
+
+
         var countsPerDayCattegory =  _.sortBy(countsPerDayCattegory, function (o){ return moment(o.key,'DD-MM-YYYY')})
+            countsPerDayCattegory = _.without(arr, _.findWhere(arr, {
+                datum: "Invalid date"
+            }));
 
 
         for(var i = 0; i < countsPerDayCattegory.length; i++ ){
