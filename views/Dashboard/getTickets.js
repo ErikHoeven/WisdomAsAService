@@ -500,7 +500,7 @@ function filterSnapshot(dataset){
         .entries(dataset)
 
     console.info('----------PER SNAPSHOT-------')
-    console.info(perSnapshot)
+    console.info(perSnapshot[0])
 
 
 
