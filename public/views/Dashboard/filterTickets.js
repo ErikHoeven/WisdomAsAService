@@ -135,7 +135,7 @@ function filterTickets(value, dataset) {
 
         countsPerDayCattegory.forEach(function (r) {
             if(r.key != null){
-                console.info(r.key)
+                console.info(r.key.length)
                 newCountsPerDayCattegory.push(r)
             }
             else {
