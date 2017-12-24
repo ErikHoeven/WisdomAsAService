@@ -49,6 +49,8 @@ exports.getTickets = function (req, res, next) {
 
             })
 
+            filterSnapshot(tickets)
+
             var countsPerDay = d3.nest()
                 .key(function (d) {
                     return d['Creation Date']
@@ -497,6 +499,7 @@ function filterSnapshot(dataset){
         })
         .entries(dataset)
 
+    console.info('----------PER SNAPSHOT-------')
     console.info(perSnapshot)
 
 
