@@ -5,7 +5,9 @@ function filterTickets(value, dataset) {
     var returnArray = [], returnObject = {}
 
     dataset.forEach(function (r) {
-        r.snapshotDate = moment(r.snapshotDate).format("DD-MM-YYYY")
+        if(r.snapshotDate){
+            r.snapshotDate = moment(r.snapshotDate).format("DD-MM-YYYY")
+        }
     })
 
 
