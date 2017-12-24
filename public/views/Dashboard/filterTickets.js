@@ -141,10 +141,13 @@ function filterTickets(value, dataset) {
             if(r.key != null){
                 newCountsPerDayCattegory.push(r)
             }
+            else {
+                console.info('ignore')
+            }
         })
 
 
-        console.info(countsPerDayCattegory)
+        console.info(newCountsPerDayCattegory)
 
 
 
@@ -153,17 +156,17 @@ function filterTickets(value, dataset) {
         for(var i = 0; i < newCountsPerDayCattegory.length; i++ ){
             if (i == 0){
 
-                stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: 0 , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
+                stockCalulations.push({datum: newCountsPerDayCattegory[i].key, createdTickets: newCountsPerDayCattegory[i].value.countCreatedTickets, opentTickets: newCountsPerDayCattegory[i].value.countOpenTickets, ticketStock: 0 , solvedTickets: newCountsPerDayCattegory[i].value.countSolvedTickets })
                 //stock = ( countsPerDayCattegory[i].value.countCreatedTickets + countsPerDayCattegory[i].value.countOpenTickets ) - countsPerDayCattegory[i].value.countSolvedTickets
             }
-            if (i > 0 && countsPerDayCattegory[i].datum != "Invalid date" ){
-                stock = ( countsPerDayCattegory[i-1].value.countCreatedTickets + countsPerDayCattegory[i-1].value.countOpenTickets + stock ) - countsPerDayCattegory[i-1].value.countSolvedTickets
+            if (i > 0 && newCountsPerDayCattegory[i].datum != "Invalid date" ){
+                stock = ( newCountsPerDayCattegory[i-1].value.countCreatedTickets + newCountsPerDayCattegory[i-1].value.countOpenTickets + stock ) - newCountsPerDayCattegory[i-1].value.countSolvedTickets
 
                 if (stock <= 0){
                     stock = 0
                 }
 
-                stockCalulations.push({datum:countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock, solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
+                stockCalulations.push({datum:newCountsPerDayCattegory[i].key, createdTickets: newCountsPerDayCattegory[i].value.countCreatedTickets, opentTickets: newCountsPerDayCattegory[i].value.countOpenTickets, ticketStock: stock, solvedTickets: newCountsPerDayCattegory[i].value.countSolvedTickets })
             }
         }
 
