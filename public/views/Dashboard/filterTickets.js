@@ -12,6 +12,7 @@ function filterTickets(value, dataset) {
 
 
     if (value != 'All'){
+
         returnArray = _.where(dataset,{Group: value})
 
         var countsPerDay = d3.nest()
@@ -137,20 +138,12 @@ function filterTickets(value, dataset) {
             if(r.key.length ==  10){
                 newCountsPerDayCattegory.push(r)
             }
-            else {
-                console.info('ignore')
-            }
         })
 
-
-
         newCountsPerDayCattegory.sort(function(a,b){
-            // Turn your strings into dates, and then subtract them
-            // to get a value that is either negative, positive, or zero.
             return moment(a.key,'DD-MM-YYYY').toDate() - moment(b.key, 'DD-MM-YYYY').toDate();
         })
 
-        console.info(newCountsPerDayCattegory)
 
 
 
