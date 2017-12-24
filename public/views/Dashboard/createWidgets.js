@@ -48,7 +48,7 @@ function getTickets() {
             console.info(stockValues)
 
 
-            var vandaag = moment(data.snapshots[0], 'DD-MM-YYYY').format('DD-MM-YYYY')
+            var vandaag = moment(data.snapshots[data.snapshots.length -1], 'DD-MM-YYYY').format('DD-MM-YYYY')
             console.info('vandaag:')
             console.info(vandaag)
 
