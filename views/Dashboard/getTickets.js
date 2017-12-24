@@ -486,3 +486,20 @@ exports.updateGeneric = function (req, res, next) {
         })
     })
 }
+
+
+
+function filterSnapshot(dataset){
+    var returnSet = []
+    var perSnapshot = d3.nest()
+        .key(function (d) {
+            return d.snapshotDate
+        })
+        .entries(dataset)
+
+    console.info(perSnapshot)
+
+
+
+    //return returnSet
+}
