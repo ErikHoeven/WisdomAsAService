@@ -143,6 +143,13 @@ function filterTickets(value, dataset) {
         })
 
 
+
+        newCountsPerDayCattegory.sort(function(a,b){
+            // Turn your strings into dates, and then subtract them
+            // to get a value that is either negative, positive, or zero.
+            return moment(b.key,'DD-MM-YYYY').toDate() - moment(a.key, 'DD-MM-YYYY').toDate();
+        })
+
         console.info(newCountsPerDayCattegory)
 
 
