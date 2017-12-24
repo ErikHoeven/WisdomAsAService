@@ -52,7 +52,7 @@ function getTickets() {
             console.info('vandaag:')
             console.info(vandaag)
 
-            $('#createdTickets').text(stockValues.createdTickets).click(function () {
+            $('#createdTickets').text(stockValues.createdTickets / 2).click(function () {
                 console.info('click createdTickets:')
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                     State: 'Classification',
@@ -60,7 +60,7 @@ function getTickets() {
                 })
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Classification', snapshotDate: vandaag})
             })
-            $('#openTickets').text(stockValues.opentTickets).click(function () {
+            $('#openTickets').text(stockValues.opentTickets / 2).click(function () {
                 console.info('click openTickets')
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                     State: 'In progress',
@@ -69,7 +69,7 @@ function getTickets() {
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'In progress', snapshotDate: vandaag})
 
             })
-            $('#closedTickets').text(stockValues.solvedTickets).click(function () {
+            $('#closedTickets').text(stockValues.solvedTickets / 2).click(function () {
                 console.info('click SolvedTickets')
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
@@ -101,7 +101,7 @@ function getTickets() {
                         console.info(stockValues)
 
                         console.info('----- Change ----------')
-                        $('#createdTickets').text(stockValues.createdTickets).click(function () {
+                        $('#createdTickets').text(stockValues.createdTickets / 2).click(function () {
                             console.info('click createdTickets')
                             createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                                 State: 'Classification',
@@ -155,7 +155,7 @@ function getTickets() {
                             })
                         })
 
-                        $('#openTickets').text(stockValues.opentTickets).click(function () {
+                        $('#openTickets').text(stockValues.opentTickets / 2).click(function () {
                             console.info('click createdTickets')
                             createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                                 State: 'Classification',
@@ -168,7 +168,7 @@ function getTickets() {
                                 snapshotDate: vandaag
                             })
                         })
-                        $('#closedTickets').text(stockValues.solvedTickets).click(function () {
+                        $('#closedTickets').text(stockValues.solvedTickets / 2).click(function () {
                             console.info('click createdTickets')
                             createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                                 State: 'Classification',
@@ -181,7 +181,7 @@ function getTickets() {
                                 snapshotDate: vandaag
                             })
                         })
-                        $('#stock').text(stockValues.ticketStock)
+                        $('#stock').text(stockValues.ticketStock / 2)
                     }
                 })
             })
