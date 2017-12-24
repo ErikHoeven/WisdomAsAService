@@ -135,9 +135,22 @@ function filterTickets(value, dataset) {
 
 
         var countsPerDayCattegory =  _.sortBy(countsPerDayCattegory, function (o){ return moment(o.key,'DD-MM-YYYY')})
+        var newCountsPerDayCattegory = []
+
+        countsPerDayCattegory.forEach(function (r) {
+            if(r.key != null){
+                newCountsPerDayCattegory.push(r)
+            }
+        })
+
+
         console.info(countsPerDayCattegory)
 
-        for(var i = 0; i < countsPerDayCattegory.length; i++ ){
+
+
+
+
+        for(var i = 0; i < newCountsPerDayCattegory.length; i++ ){
             if (i == 0){
 
                 stockCalulations.push({datum: countsPerDayCattegory[i].key, createdTickets: countsPerDayCattegory[i].value.countCreatedTickets, opentTickets: countsPerDayCattegory[i].value.countOpenTickets, ticketStock: 0 , solvedTickets: countsPerDayCattegory[i].value.countSolvedTickets })
@@ -171,7 +184,7 @@ function filterTickets(value, dataset) {
             countsPerDayCattegory[0].value.createdTickets = countsPerDayCattegory[0].value.countCreatedTickets
             countsPerDayCattegory[0].value.solvedTickets = countsPerDayCattegory[0].value.countSolvedTickets
             countsPerDayCattegory[0].value.openTickets = countsPerDayCattegory[0].value.countOpenTickets
-            returnObject.stockValues = countsPerDayCattegory[0].value
+            returnObject.stockValues = newCountsPerDayCattegory[0].value
             returnObject.fltrData = returnArray
             returnObject.countPerDay = countsPerDay
 
