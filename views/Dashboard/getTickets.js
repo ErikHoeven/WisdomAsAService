@@ -49,7 +49,7 @@ exports.getTickets = function (req, res, next) {
 
             })
 
-            filterSnapshot(tickets)
+            var persnapshot = filterSnapshot(tickets)
 
             var countsPerDay = d3.nest()
                 .key(function (d) {
@@ -328,7 +328,9 @@ exports.getTickets = function (req, res, next) {
                 legendaSpider: legenda,
                 allTickets: tickets,
                 snapshots: snapshots,
-                ticketsPerUser: aggCountTicketsPerUser
+                ticketsPerUser: aggCountTicketsPerUser,
+                perSnapshot:  persnapshot
+
 
             })
         })
@@ -499,10 +501,49 @@ function filterSnapshot(dataset){
         })
         .entries(dataset)
 
+    var totalDetail = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}
+
+
     console.info('----------PER SNAPSHOT-------')
-    console.info(perSnapshot[0])
+    perSnapshot.forEach(function (s) {
+        snapshotObject = {}
+        snapshotObject.snapshot = s.key
+        snapshotObject.snapshotDetails = []
+        snapshotObject.snapshotMeasures = []
+
+        // values per snapshot
+        s.values.forEach(function (v) {
+            valueObject = {}
+
+            // Dimensions
+            valueObject.number = v.Number
+            valueObject.title = v.title
+            valueObject.state = v.State
+            valueObject.ResponsibleUser = v['Responsible User']
+            valueObject.ticketType = v.ticketType
+            valueObject.lastChange = v.lastChange
+            valueObject.creationDate =  v['Creation Date']
+            valueObject.responsibleGroup = v['Responsible Group']
+            valueObject.affectedUser = v['Affected Person ']
+
+            snapshotObject.snapshotDetails.push(valueObject)
+
+            // Measures
+            measureObject.cpfCount = v['EPS - CPF_Count']
+            measureObject.srlCount = v['EPS - SRL_Count']
+            measureObject.cognosCount = v['EPS - Cognos_Count']
+            measureObject.esoftCount = v['EPS - E-Soft_Count']
+            measureObject.firstLineServiceDeskCount = v['Service desk 1st line_Count']
+            measureObject.secondLineServiceDeskCount = v['EPS Apps 2nd line_Count']
+            measureObject.infraCount = v['EPS - Infra_Count']
+
+            snapshotObject.snapshotMeasures.push(measureObject)
+        })
+
+        returnSet.push(snapshotObject)
+    })
 
 
 
-    //return returnSet
+    return returnSet
 }
