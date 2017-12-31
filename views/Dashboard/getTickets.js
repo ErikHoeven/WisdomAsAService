@@ -501,15 +501,16 @@ function filterSnapshot(dataset){
         })
         .entries(dataset)
 
-    var totalDetail = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}
+    var totalDetail = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}, measureSet = []
 
 
     console.info('----------PER SNAPSHOT-------')
     perSnapshot.forEach(function (s) {
         snapshotObject = {}
+        measureSet = []
         snapshotObject.snapshot = s.key
         snapshotObject.snapshotDetails = []
-        snapshotObject.snapshotMeasures = []
+        snapshotObject.aggCountsPerDayCattegory = []
 
         // values per snapshot
         s.values.forEach(function (v) {
@@ -529,16 +530,53 @@ function filterSnapshot(dataset){
             snapshotObject.snapshotDetails.push(valueObject)
 
             // Measures
-            measureObject.cpfCount = v['EPS - CPF_Count']
+            measureObject.key = 'key'
             measureObject.srlCount = v['EPS - SRL_Count']
+            measureObject.cpfCount = v['EPS - CPF_Count']
             measureObject.cognosCount = v['EPS - Cognos_Count']
             measureObject.esoftCount = v['EPS - E-Soft_Count']
             measureObject.firstLineServiceDeskCount = v['Service desk 1st line_Count']
             measureObject.secondLineServiceDeskCount = v['EPS Apps 2nd line_Count']
             measureObject.infraCount = v['EPS - Infra_Count']
 
-            snapshotObject.snapshotMeasures.push(measureObject)
+
+            measureSet.push(measureObject)
+
         })
+
+        snapshotObject.aggCountsPerDayCattegory = d3.nest()
+            .key(function(d) { return d.key; })
+            .rollup(function (v) {
+                return {
+                   'cpf': d3.sum(v, function (d) {
+                        return d.cpfCount
+                    }),
+                    'esoft': d3.sum(v, function (d) {
+                        return d.esoftCount;
+                    }),
+                    'firstLine': d3.sum(v, function (d) {
+                        return d.firstLineServiceDeskCount;
+                    }),
+                    'srl': d3.sum(v, function (d) {
+                        return d.srlCount;
+                    }),
+                    'secondLineApps': d3.sum(v, function (d) {
+                        return d.secondLineServiceDeskCount;
+                    }),
+                    'infra': d3.sum(v, function (d) {
+                        return d.infraCount;
+                    }),
+                    'cognos': d3.sum(v, function (d) {
+                        return d.cognosCount;
+                    }),
+                };
+            })
+            .entries(measureSet)
+        snapshotObject.aggCountsPerDayCattegory = snapshotObject.aggCountsPerDayCattegory.values
+
+
+
+
 
         returnSet.push(snapshotObject)
     })
