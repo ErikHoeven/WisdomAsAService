@@ -572,7 +572,7 @@ function filterSnapshot(dataset){
                 };
             })
             .entries(measureSet)
-        snapshotObject.aggCountsPerDayCattegory = snapshotObject.aggCountsPerDayCattegory.values
+
 
 
 
