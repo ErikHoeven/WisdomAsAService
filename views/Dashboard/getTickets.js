@@ -526,6 +526,7 @@ function filterSnapshot(dataset){
             valueObject.creationDate =  v['Creation Date']
             valueObject.responsibleGroup = v['Responsible Group']
             valueObject.affectedUser = v['Affected Person ']
+            valueObject.count = v.count
 
             snapshotObject.snapshotDetails.push(valueObject)
 
