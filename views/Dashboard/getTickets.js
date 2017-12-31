@@ -530,15 +530,33 @@ function filterSnapshot(dataset){
             snapshotObject.snapshotDetails.push(valueObject)
 
             // Measures
-            measureObject.key = 'key'
-            measureObject.srlCount = v['EPS - SRL_Count']
-            measureObject.cpfCount = v['EPS - CPF_Count']
-            measureObject.cognosCount = v['EPS - Cognos_Count']
-            measureObject.esoftCount = v['EPS - E-Soft_Count']
-            measureObject.firstLineServiceDeskCount = v['Service desk 1st line_Count']
-            measureObject.secondLineServiceDeskCount = v['EPS Apps 2nd line_Count']
-            measureObject.infraCount = v['EPS - Infra_Count']
-
+            if (v['Responsible Group'] == 'EPS - CPF') {
+                measureObject.cpf = v.count
+            }
+            if (v['Responsible Group'] == 'EPS - E-Soft') {
+                measureObject.esoft = v.count
+            }
+            if (v['Responsible Group'] == 'EPS - SRL') {
+                measureObject.srl = v.count
+            }
+            if (v['Responsible Group'] == 'Service desk 1st line') {
+                measureObject.firstLine = v.count
+            }
+            if (v['Responsible Group'] == 'EPS Apps 2nd line') {
+                measureObject.secondLineApps = v.count
+            }
+            if (v['Responsible Group'] == 'EPS - Cognos') {
+                measureObject.cognos = v.count
+            }
+            if (v['Responsible Group'] == 'EPS - Infra') {
+                measureObject.infra = v.count
+            }
+            if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
+                measureObject.desktopVirtualisatie = v.count
+            }
+            if (v['Responsible Group'] == "EPS - DWH") {
+                measureObject.dwh = v.count
+            }
 
             measureSet.push(measureObject)
 
