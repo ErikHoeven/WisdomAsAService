@@ -511,6 +511,7 @@ function filterSnapshot(dataset){
         snapshotObject.snapshot = s.key
         snapshotObject.snapshotDetails = []
         snapshotObject.aggCountsPerDayCattegory = []
+        snapshotObject.totalTickets
 
         // values per snapshot
         s.values.forEach(function (v) {
@@ -531,6 +532,9 @@ function filterSnapshot(dataset){
             snapshotObject.snapshotDetails.push(valueObject)
 
             // Measures
+            measureObject = {}
+            measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
+
             if (v['Responsible Group'] == 'EPS - CPF') {
                 measureObject.cpf = v.count
             }
@@ -564,38 +568,38 @@ function filterSnapshot(dataset){
         })
 
         snapshotObject.aggCountsPerDayCattegory = d3.nest()
-            .key(function(d) { return d.key; })
+            .key(function (d) {
+                return d.key
+            })
             .rollup(function (v) {
                 return {
-                   'cpf': d3.sum(v, function (d) {
-                        return d.cpfCount
+                    'cpf': d3.sum(v, function (d) {
+                        return d.cpf
                     }),
                     'esoft': d3.sum(v, function (d) {
-                        return d.esoftCount;
+                        return d.esoft
                     }),
                     'firstLine': d3.sum(v, function (d) {
-                        return d.firstLineServiceDeskCount;
+                        return d.firstLine;
                     }),
                     'srl': d3.sum(v, function (d) {
-                        return d.srlCount;
+                        return d.srl;
                     }),
                     'secondLineApps': d3.sum(v, function (d) {
-                        return d.secondLineServiceDeskCount;
+                        return d.secondLineApps;
                     }),
                     'infra': d3.sum(v, function (d) {
-                        return d.infraCount;
+                        return d.infra;
                     }),
                     'cognos': d3.sum(v, function (d) {
-                        return d.cognosCount;
+                        return d.cognos;
                     }),
+                    'dwh': d3.sum(v, function (d) {
+                        return d.dwh;
+                    })
                 };
             })
             .entries(measureSet)
-
-
-
-
-
 
         returnSet.push(snapshotObject)
     })
