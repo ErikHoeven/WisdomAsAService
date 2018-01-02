@@ -566,7 +566,7 @@ function filterSnapshot(dataset){
             measureSet.push(measureObject)
 
         })
-
+        // Aggegrate to state per snapshot
         snapshotObject.aggCountsPerDayCattegory = d3.nest()
             .key(function (d) {
                 return d.key
