@@ -213,7 +213,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
         //Check if it is a Backlog dataset
         if (row.Number){
             if (!row.hide_input){
-                var option1 = '', option2 = '', sla = SLA(row.row.Title, row['Nr Of Open Calendar Days'], row.Number )
+                var option1 = '', option2 = '', performanceIndicator = SLA(row.row.Title, row['Nr Of Open Calendar Days'], row.Number )
                 option1 = setOptionList(optionlist1,row.Number, 'sprint')
                 option2 = setOptionList(optionlist2,row.Number, 'developer')
 
@@ -222,7 +222,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td>'+ sla.SLA+'</td>'
+                                        '<td>'+ performanceIndicator +'</td>'
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
                                         '<td>'+ option2 +'</td>' +
@@ -233,7 +233,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td>'+ sla.SLA+'</td>'
+                                        '<td>'+ performanceIndicator +'</td>'
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +
                                         '<td>'+ row.developer +'</td>' +
@@ -307,5 +307,5 @@ function SLA(title, days, number){
         }
     })
 
- return {SLA:returnString}
+ return returnString
 }
