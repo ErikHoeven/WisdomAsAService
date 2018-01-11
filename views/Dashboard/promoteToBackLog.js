@@ -222,7 +222,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td>' + sla.html if(sla.SLA = 'GREEN'){ $('#SLA' + row.Number ).css('color',"green")   } +' </td>'
+                                        '<td>'+ sla.SLA+'</td>'
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
                                         '<td>'+ option2 +'</td>' +
@@ -233,7 +233,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td> + sla.html if(sla.SLA = 'GREEN'){ $('#SLA' + row.Number ).css('color',"green")   } +</td>'
+                                        '<td>'+ sla.SLA+'</td>'
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +
                                         '<td>'+ row.developer +'</td>' +
@@ -282,30 +282,30 @@ function SLA(title, days, number){
 
     titleArray.forEach(function (t) {
         if (t == '00'  && type == 'INC' && days == 0 ){
-            returnString = 'GREEN'
+            returnString = '<img src="/images/performance_green.png" height="42" width="42">'
         }
         if (t == '00'  && type == 'INC' && days > 0 ){
-            returnString = 'RED'
+            returnString = '<img src="/images/performance_red.jpg" height="42" width="42">'
         }
         if (t == '01'  && type == 'INC' && days <= 1 ){
-            returnString = 'GREEN'
+            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
         }
         if (t == '01'  && type == 'INC' && days > 1 ){
-            returnString = 'RED'
+            returnString = '<img src="/images/performance_red.jpg" height="42" width="42">'
         }
         if (t == '02'  && type == 'INC' && days <= 2 ){
-            returnString = 'GREEN'
+            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
         }
         if (t == '02'  && type == 'INC' && days > 2 ){
-            returnString = 'RED'
+            returnString = '<img src="/images/performance_red.jpg"  height="42" width="42">'
         }
         if (t == '03'  && type == 'INC' && days <= 3 ){
-            returnString = 'GREEN'
+            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
         }
         if (t == '03'  && type == 'INC' && days >  3 ){
-            returnString = 'RED'
+            returnString = '<img src="/images/performance_red.jpg"  height="42" width="42">'
         }
     })
 
- return {SLA:returnString, number: number, html:'<span id="SLA'+ number +'" class="glyphicon glyphicon-one-fine-dot"></span>'}
+ return {SLA:returnString}
 }
