@@ -69,9 +69,9 @@ exports.getBackLogList = function (req,res,next) {
                 developers.push(dev.developer)
             })
 
-            backlog.forEach(function (b) {
+           /* backlog.forEach(function (b) {
                 row['Nr Of Open Calendar Days'] =
-            })
+            })*/
 
 
 
