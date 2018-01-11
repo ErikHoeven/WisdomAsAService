@@ -19,7 +19,7 @@ exports.promoteToBackLog = function (req, res, next) {
         dataset.forEach(function (row) {
             arrBackLog.push({Number: row.Number
                             ,Title: row['Title']
-                           ,'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]|| row['Creation Date']})
+                           ,'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]|| Math.abs(moment() - row['Creation Date']) / 36e5  })
         })
         console.info(arrBackLog)
 
