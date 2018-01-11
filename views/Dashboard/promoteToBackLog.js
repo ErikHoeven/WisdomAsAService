@@ -69,11 +69,6 @@ exports.getBackLogList = function (req,res,next) {
                 developers.push(dev.developer)
             })
 
-           /* backlog.forEach(function (b) {
-                row['Nr Of Open Calendar Days'] =
-            })*/
-
-
 
             var   backlogBody = setBody(locals.backlog, sprints, developers)
                 , backlogHeader = setHeader(backlogColumns)
