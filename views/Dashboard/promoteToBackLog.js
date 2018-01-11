@@ -17,7 +17,9 @@ exports.promoteToBackLog = function (req, res, next) {
         var arrBackLog = [], dataset = req.body.dataset
 
         dataset.forEach(function (row) {
-            arrBackLog.push({Number: row.Number,Title: row['Title'],'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]})
+            arrBackLog.push({Number: row.Number
+                            ,Title: row['Title']
+                           ,'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]|| row['Creation Date']})
         })
         console.info(arrBackLog)
 
@@ -57,7 +59,8 @@ exports.getBackLogList = function (req,res,next) {
                 });
             }
         ];
-        //console.info('--------------- START ASYNC ------------------------')
+
+
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
@@ -66,10 +69,19 @@ exports.getBackLogList = function (req,res,next) {
                 developers.push(dev.developer)
             })
 
+            backlog.forEach(function (b) {
+                row['Nr Of Open Calendar Days'] =
+            })
+
+
+
             var   backlogBody = setBody(locals.backlog, sprints, developers)
                 , backlogHeader = setHeader(backlogColumns)
                 , devHeader = setHeader(devColumns)
                 , devBody = setBody(locals.businessrules)
+
+
+
 
 
             res.status(200).json({backlogBody: backlogBody, backlogHeader: backlogHeader, devHeader: devHeader, devBody: devBody,  message: 'Succesful '})
@@ -87,7 +99,7 @@ exports.updateBacklog = function (req,res,next) {
         , collection = 'backlog'
         , backlogColumns = ['Number', 'Title', 'Open Days', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['48 - 49 : 2017', '50 - 51 : 2017', '51 - 52 : 2017', '01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
+        , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , updateFields = req.body.updateFields
         , connection = db.get(collection)
         , updateObject = {developer: updateFields.developer ,storypoints: updateFields.storyPoints, sprints: updateFields.sprints, hide_save: 'yes' , hide_input: 'yes'}
@@ -240,9 +252,6 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                            StoryPoints.push({developer: row.developer, storyPoints: row.storypoints })
                         }
                     })
-
-
-
                 }
 
             }

@@ -318,7 +318,6 @@ exports.getTickets = function (req, res, next) {
             })
 
             snapshots = Array.from(new Set(snapshots))
-            console.info(snapshots)
 
             res.status(200).json({
                 aggCountsPerDayCattegory: aggCountsPerDayCattegory,
@@ -511,7 +510,12 @@ function filterSnapshot(dataset){
         snapshotObject.snapshot = s.key
         snapshotObject.snapshotDetails = []
         snapshotObject.aggCountsPerDayCattegory = []
-        snapshotObject.totalTickets
+        snapshotObject.totActualTickets = {}
+        snapshotObject.totActualTickets.columns = []
+        snapshotObject.totActualTickets.values = []
+        snapshotObject.totActualTickets.title = ""
+        snapshotObject.totActualTickets.underTitle = ""
+
 
         // values per snapshot
         s.values.forEach(function (v) {
@@ -601,8 +605,28 @@ function filterSnapshot(dataset){
             })
             .entries(measureSet)
 
+
+
+        snapshotObject.totActualTickets.columns.push('Weeknumber')
+        var colls = Object.keys(snapshotObject.aggCountsPerDayCattegory[0].values)
+        colls.forEach(function (c) {
+            snapshotObject.totActualTickets.columns.push(c)
+        })
+
+        snapshotObject.totActualTickets.values.push(measureObject.key)
+        colls.forEach(function (c) {
+            snapshotObject.totActualTickets.values.push(snapshotObject.aggCountsPerDayCattegory[0].values[c])
+        })
+
+        snapshotObject.totActualTickets.title = "Total Actual tickets week" + measureObject.key
+        snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
+
+
         returnSet.push(snapshotObject)
     })
+
+
+
 
 
 

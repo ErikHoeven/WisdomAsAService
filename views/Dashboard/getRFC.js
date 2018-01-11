@@ -48,9 +48,6 @@ exports.getRFC = function (req, res, next) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
-            console.info(tickets)
-
-
             var countsPerDay = d3.nest()
                 .key(function (d) {
                     return d['Creation Date']
