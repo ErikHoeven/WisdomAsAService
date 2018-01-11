@@ -223,7 +223,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td>'+ performanceIndicator +'</td>'
+                                        '<td>'+ performanceIndicator +'</td>' +
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
                                         '<td>'+ option2 +'</td>' +
@@ -234,7 +234,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
-                                        '<td>'+ performanceIndicator +'</td>'
+                                        '<td>'+ performanceIndicator +'</td>' +
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +
                                         '<td>'+ row.developer +'</td>' +
