@@ -37,7 +37,7 @@ exports.getBackLogList = function (req,res,next) {
         , tbody = ''
         , optionlist = ''
         , table = ''
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
         , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , developers = []
@@ -93,7 +93,7 @@ exports.updateBacklog = function (req,res,next) {
         , optionlist = ''
         , table = ''
         , collection = 'backlog'
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
         , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , updateFields = req.body.updateFields
@@ -213,14 +213,16 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
         //Check if it is a Backlog dataset
         if (row.Number){
             if (!row.hide_input){
-                var option1 = '', option2 = ''
+                var option1 = '', option2 = '', sla = SLA(row.row.Title, row['Nr Of Open Calendar Days'], row.Number )
                 option1 = setOptionList(optionlist1,row.Number, 'sprint')
                 option2 = setOptionList(optionlist2,row.Number, 'developer')
+
 
 
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
+                                        '<td>' + sla.html if(sla.SLA = 'GREEN'){ $('#SLA' + row.Number ).css('color',"green")   } +' </td>'
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
                                         '<td>'+ option2 +'</td>' +
@@ -231,6 +233,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
+                                        '<td> + sla.html if(sla.SLA = 'GREEN'){ $('#SLA' + row.Number ).css('color',"green")   } +</td>'
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +
                                         '<td>'+ row.developer +'</td>' +
@@ -271,3 +274,38 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
 
 
 
+function SLA(title, days, number){
+    var typeArray = number.split('-')
+    var type = typeArray[0]
+    var titleArray = title.split(' ')
+    var returnString = ''
+
+    titleArray.forEach(function (t) {
+        if (t == '00'  && type == 'INC' && days == 0 ){
+            returnString = 'GREEN'
+        }
+        if (t == '00'  && type == 'INC' && days > 0 ){
+            returnString = 'RED'
+        }
+        if (t == '01'  && type == 'INC' && days <= 1 ){
+            returnString = 'GREEN'
+        }
+        if (t == '01'  && type == 'INC' && days > 1 ){
+            returnString = 'RED'
+        }
+        if (t == '02'  && type == 'INC' && days <= 2 ){
+            returnString = 'GREEN'
+        }
+        if (t == '02'  && type == 'INC' && days > 2 ){
+            returnString = 'RED'
+        }
+        if (t == '03'  && type == 'INC' && days <= 3 ){
+            returnString = 'GREEN'
+        }
+        if (t == '03'  && type == 'INC' && days >  3 ){
+            returnString = 'RED'
+        }
+    })
+
+ return {SLA:returnString, number: number, html:'<span id="SLA'+ number +'" class="glyphicon glyphicon-one-fine-dot"></span>'}
+}
