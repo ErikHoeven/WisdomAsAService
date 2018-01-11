@@ -281,30 +281,31 @@ function SLA(title, days, number){
     var titleArray = title.split(' ')
     var returnString = ''
 
+
     titleArray.forEach(function (t) {
         if (t == '00'  && type == 'INC' && days == 0 ){
-            returnString = '<img src="/images/performance_green.png" height="42" width="42">'
+            returnString = '<img src="/images/performance_green.png" height="21" width="21">'
         }
         if (t == '00'  && type == 'INC' && days > 0 ){
-            returnString = '<img src="/images/performance_red.jpg" height="42" width="42">'
+            returnString = '<img src="/images/performance_red.jpg" height="21" width="21">'
         }
         if (t == '01'  && type == 'INC' && days <= 1 ){
-            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
+            returnString = '<img src="/images/performance_green.png"  height="21" width="21">'
         }
         if (t == '01'  && type == 'INC' && days > 1 ){
-            returnString = '<img src="/images/performance_red.jpg" height="42" width="42">'
+            returnString = '<img src="/images/performance_red.jpg" height="21" width="21">'
         }
         if (t == '02'  && type == 'INC' && days <= 2 ){
-            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
+            returnString = '<img src="/images/performance_green.png"  height="21" width="21">'
         }
         if (t == '02'  && type == 'INC' && days > 2 ){
-            returnString = '<img src="/images/performance_red.jpg"  height="42" width="42">'
+            returnString = '<img src="/images/performance_red.jpg"  height="21" width="21">'
         }
         if (t == '03'  && type == 'INC' && days <= 3 ){
-            returnString = '<img src="/images/performance_green.png"  height="42" width="42">'
+            returnString = '<img src="/images/performance_green.png"  height="21" width="21">'
         }
         if (t == '03'  && type == 'INC' && days >  3 ){
-            returnString = '<img src="/images/performance_red.jpg"  height="42" width="42">'
+            returnString = '<img src="/images/performance_red.jpg"  height="21" width="21">'
         }
     })
 
