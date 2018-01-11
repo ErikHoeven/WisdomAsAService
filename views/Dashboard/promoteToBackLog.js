@@ -38,7 +38,7 @@ exports.getBackLogList = function (req,res,next) {
         , table = ''
         , backlogColumns = ['Number', 'Title', 'Open Days', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['48 - 49 : 2017', '50 - 51 : 2017', '51 - 52 : 2017', '01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
+        , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , developers = []
 
     mongo.connect(uri, function (err, db) {
