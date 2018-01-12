@@ -57,6 +57,8 @@ function updateBackLog(id) {
     updatedFields.sprints = $('#sprint' + id + ' option:selected').text()
     updatedFields.developer = $('#developer' + id + ' option:selected').text()
 
+    console.info(updatedFields)
+
     $.ajax({
         url: '/Dashboard/updateBackLog',
         type: 'POST',
