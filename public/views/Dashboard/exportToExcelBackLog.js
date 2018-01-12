@@ -76,7 +76,7 @@ function updateBackLog(id) {
 
             //update Story points per dev
             var developers = [], storypoints = [], data = [], row = {}
-            $('#planboard tbody tr td:nth-child(6)').each( function(){
+            $('#planboard tbody tr td:nth-child(7)').each( function(){
                 //add item to array
                 developers.push( $(this).text() );
             });
