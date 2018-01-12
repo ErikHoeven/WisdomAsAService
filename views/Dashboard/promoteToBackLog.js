@@ -283,28 +283,28 @@ function SLA(title, days, number){
 
 
     titleArray.forEach(function (t) {
-        if (t == '00'  && type == 'INC' && days == 0 ){
+        if (t == '00'  && days == 0 ){
             returnString = '<img src="/images/performance_green.png" height="21" width="21"></img>'
         }
-        if (t == '00'  && type == 'INC' && days > 0 ){
+        if (t == '00'  && days > 0 ){
             returnString = '<img src="/images/performance_red.jpg" height="21" width="21"></img>'
         }
-        if (t == '01'  && type == 'INC' && days <= 1 ){
+        if (t == '01'  && days <= 1 ){
             returnString = '<img src="/images/performance_green.png"  height="21" width="21"></img>'
         }
-        if (t == '01'  && type == 'INC' && days > 1 ){
+        if (t == '01'  && days > 1 ){
             returnString = '<img src="/images/performance_red.jpg" height="21" width="21"></img>'
         }
-        if (t == '02'  && type == 'INC' && days <= 2 ){
+        if (t == '02'  && days <= 2 ){
             returnString = '<img src="/images/performance_green.png"  height="21" width="21"></img>'
         }
-        if (t == '02'  && type == 'INC' && days > 2 ){
+        if (t == '02'  && days > 2 ){
             returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
         }
-        if (t == '03'  && type == 'INC' && days <= 3 ){
+        if (t == '03'  && days <= 3 ){
             returnString = '<img src="/images/performance_green.png"  height="21" width="21"></img>'
         }
-        if (t == '03'  && type == 'INC' && days >  3 ){
+        if (t == '03'  && days >  3 ){
             returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
         }
     })
