@@ -105,6 +105,9 @@ function updateBackLog(id) {
 
             var devpointskeys = Object.keys(totalAssigntStoryPointsDeveloper)
 
+            console.info('devpoints')
+            console.info(devpointskeys)
+
             devpointskeys.forEach(function (dev) {
                 var currentvalue = $("#" + dev).html()
                    ,newValue =  currentvalue -  totalAssigntStoryPointsDeveloper[dev]
