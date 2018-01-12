@@ -81,7 +81,7 @@ function updateBackLog(id) {
                 developers.push( $(this).text() );
             });
 
-            $('#planboard tbody tr td:nth-child(4)').each( function(){
+            $('#planboard tbody tr td:nth-child(5)').each( function(){
                 //add item to array
                 storypoints.push( $(this).text() );
             });
