@@ -263,8 +263,13 @@ function correctionOfDate(inputDate){
            //console.info(dateCorrection[2])
 
             console.info(dateCorrection[2])
+            if(dateCorrection[2].indexOf('-') == 5){
+                var temp = dateCorrection[2].split('-')
+            }
+            else{
+                var temp = dateCorrection[2].split(' ')
+            }
 
-            var temp = dateCorrection[2].split('-')
 
 
 
