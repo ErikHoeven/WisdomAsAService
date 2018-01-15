@@ -267,7 +267,7 @@ function correctionOfDate(inputDate){
            // --------------------CORECTION OF HH -------------------------
            // st
 
-
+            console.info(temp)
             if( temp[1].indexOf(':') >= 0 ){
                 hourstrip = temp[1].split(':')
             }
