@@ -268,7 +268,16 @@ function correctionOfDate(inputDate){
            // st
 
 
-           hourstrip = temp[1].split(':')
+            if( temp[1].indexOf(':') >= 0 ){
+                hourstrip = temp[1].split(':')
+            }
+            else {
+                hourstrip = temp[1].split(' ')
+            }
+
+
+
+
            if (hourstrip[0].trim.length == 1){
                timeStr = '0' + hourstrip[0].trim + ':'
            }
