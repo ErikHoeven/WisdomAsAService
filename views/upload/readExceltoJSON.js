@@ -262,7 +262,7 @@ function correctionOfDate(inputDate){
 
            //console.info(dateCorrection[2])
 
-            console.info(dateCorrection)
+            console.info(dateCorrection[2])
 
             var temp = dateCorrection[2].split('-')
 
