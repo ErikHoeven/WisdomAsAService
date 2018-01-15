@@ -261,20 +261,21 @@ function correctionOfDate(inputDate){
            }
 
            //console.info(dateCorrection[2])
-           var temp = dateCorrection[2].split('-')
-           dateString = dateString + temp[0]
+
+            console.info(temp)
+
+            var temp = dateCorrection[2].split('-')
+
+
+
+            dateString = dateString + temp[0]
 
            // --------------------CORECTION OF HH -------------------------
            // st
 
-            //console.info(temp)
-            if( temp[1].indexOf(':') == 5 ){
-                hourstrip = temp[1].split(':')
-            }
-            else {
-                hourstrip = temp[1].split(' ')
-            }
 
+
+           hourstrip = temp[1].split(':')
 
 
 
