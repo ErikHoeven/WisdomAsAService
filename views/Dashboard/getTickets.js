@@ -641,7 +641,7 @@ function filterSnapshot(dataset){
             }
         })
 
-        snapshotDetails.mTotCreatedTickets = mTotCreatedTickets
+        snapshotObject.mTotCreatedTickets = mTotCreatedTickets
         snapshotObject.totCreatedTickets = d3.nest()
             .key(function (d) {
                 return d.week
