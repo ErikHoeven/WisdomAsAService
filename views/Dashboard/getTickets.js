@@ -519,6 +519,7 @@ function filterSnapshot(dataset){
         snapshotObject.totActualTickets.underTitle = ""
 
 
+
         // values per snapshot
         s.values.forEach(function (v) {
             valueObject = {}
@@ -639,7 +640,7 @@ function filterSnapshot(dataset){
             }
         })
 
-        snapshotObject.aggCountsPerDayCattegory = d3.nest()
+        snapshotObject.totCreatedTickets = d3.nest()
             .key(function (d) {
                 return d.week
             })
@@ -655,7 +656,7 @@ function filterSnapshot(dataset){
 
 
 
-    snapshotObject.totCreatedTickets = mTotCreatedTickets
+    //snapshotObject.totCreatedTickets = mTotCreatedTickets
 
 
 
