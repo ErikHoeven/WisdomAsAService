@@ -517,6 +517,7 @@ function filterSnapshot(dataset){
         snapshotObject.totActualTickets.values = []
         snapshotObject.totActualTickets.title = ""
         snapshotObject.totActualTickets.underTitle = ""
+        snapshotDetails.mTotCreatedTickets = []
 
 
 
