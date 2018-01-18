@@ -573,15 +573,9 @@ function filterSnapshot(dataset){
              if (v['Responsible Group'] == "EPS - DWH") {
              measureObject.dwh = v.count
              }
+
+            measureSet.push(measureObject)
         })
-
-
-        measureSet.push(measureObject)
-
-
-
-
-
 
         // Aggegrate to state per snapshot
         snapshotObject.aggCountsPerDayCattegory = d3.nest()
@@ -619,7 +613,6 @@ function filterSnapshot(dataset){
             .entries(measureSet)
 
 
-
         snapshotObject.totActualTickets.columns.push('Weeknumber')
         var colls = Object.keys(snapshotObject.aggCountsPerDayCattegory[0].values)
         colls.forEach(function (c) {
@@ -636,7 +629,33 @@ function filterSnapshot(dataset){
 
 
         returnSet.push(snapshotObject)
+        //Tickets created total
+        var mTotCreatedTickets = [], mObjectTotCreatedTickets = {}
+        snapshotDetails.forEach(function (v) {
+            if (v.state == 'Classification') {
+                mObjectTotCreatedTickets.count = v.count
+                mObjectTotCreatedTickets.week = moment(v.creationDate,'DD-MM-YYYY').week()
+                mTotCreatedTickets.push(mObjectTotCreatedTickets)
+            }
+        })
+
+        snapshotObject.aggCountsPerDayCattegory = d3.nest()
+            .key(function (d) {
+                return d.week
+            })
+            .rollup(function (v) {
+                return {
+                    'count': d3.sum(v, function (d) {
+                        return d.count
+                    })
+                };
+            })
+            .entries(mTotCreatedTickets)
     })
+
+
+
+    snapshotObject.totCreatedTickets = mTotCreatedTickets
 
 
 
