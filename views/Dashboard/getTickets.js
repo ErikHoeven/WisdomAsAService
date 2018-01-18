@@ -540,39 +540,43 @@ function filterSnapshot(dataset){
 
         snapshotDetails =  underscore.uniq(snapshotDetails)
 
-        // Measures
-        measureObject = {}
-        measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
 
-      /*  if (v['Responsible Group'] == 'EPS - CPF') {
-            measureObject.cpf = v.count
-        }
-        if (v['Responsible Group'] == 'EPS - E-Soft') {
-            measureObject.esoft = v.count
-        }
-        if (v['Responsible Group'] == 'EPS - SRL') {
-            measureObject.srl = v.count
-        }
-        if (v['Responsible Group'] == 'Service desk 1st line') {
-            measureObject.firstLine = v.count
-        }
-        if (v['Responsible Group'] == 'EPS Apps 2nd line') {
-            measureObject.secondLineApps = v.count
-        }
-        if (v['Responsible Group'] == 'EPS - Cognos') {
-            measureObject.cognos = v.count
-        }
-        if (v['Responsible Group'] == 'EPS - Infra') {
-            measureObject.infra = v.count
-        }
-        if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
-            measureObject.desktopVirtualisatie = v.count
-        }
-        if (v['Responsible Group'] == "EPS - DWH") {
-            measureObject.dwh = v.count
-        }
+        snapshotDetails.forEach(function (v) {
+            // Measures
+            measureObject = {}
+            measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
 
-        measureSet.push(measureObject)*/
+             if (v['Responsible Group'] == 'EPS - CPF') {
+             measureObject.cpf = v.count
+             }
+             if (v['Responsible Group'] == 'EPS - E-Soft') {
+             measureObject.esoft = v.count
+             }
+             if (v['Responsible Group'] == 'EPS - SRL') {
+             measureObject.srl = v.count
+             }
+             if (v['Responsible Group'] == 'Service desk 1st line') {
+             measureObject.firstLine = v.count
+             }
+             if (v['Responsible Group'] == 'EPS Apps 2nd line') {
+             measureObject.secondLineApps = v.count
+             }
+             if (v['Responsible Group'] == 'EPS - Cognos') {
+             measureObject.cognos = v.count
+             }
+             if (v['Responsible Group'] == 'EPS - Infra') {
+             measureObject.infra = v.count
+             }
+             if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
+             measureObject.desktopVirtualisatie = v.count
+             }
+             if (v['Responsible Group'] == "EPS - DWH") {
+             measureObject.dwh = v.count
+             }
+        })
+
+
+        measureSet.push(measureObject)
 
 
 
