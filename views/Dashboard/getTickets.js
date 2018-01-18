@@ -539,7 +539,7 @@ function filterSnapshot(dataset){
         })
 
         snapshotDetails =  underscore.uniq(snapshotDetails)
-
+        snapshotObject.snapshotDetails = snapshotDetails
 
         snapshotDetails.forEach(function (v) {
             // Measures
