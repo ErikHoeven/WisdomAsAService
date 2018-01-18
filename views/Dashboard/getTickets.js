@@ -536,7 +536,6 @@ function filterSnapshot(dataset){
             valueObject.count = v.count
 
             snapshotDetails.push(valueObject)
-
         })
 
         snapshotDetails =  underscore.uniq(snapshotDetails)
@@ -545,7 +544,7 @@ function filterSnapshot(dataset){
         measureObject = {}
         measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
 
-        if (v['Responsible Group'] == 'EPS - CPF') {
+      /*  if (v['Responsible Group'] == 'EPS - CPF') {
             measureObject.cpf = v.count
         }
         if (v['Responsible Group'] == 'EPS - E-Soft') {
@@ -573,7 +572,7 @@ function filterSnapshot(dataset){
             measureObject.dwh = v.count
         }
 
-        measureSet.push(measureObject)
+        measureSet.push(measureObject)*/
 
 
 
