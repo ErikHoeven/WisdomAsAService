@@ -637,6 +637,7 @@ function filterSnapshot(dataset){
             if (v.state == 'Classification') {
                 mObjectTotCreatedTickets.count = v.count
                 mObjectTotCreatedTickets.week = moment(v.creationDate,'YYYY-MM-DD').week()
+                mObjectTotCreatedTickets.creationDate = v.creationDate
                 mTotCreatedTickets.push(mObjectTotCreatedTickets)
             }
         })
