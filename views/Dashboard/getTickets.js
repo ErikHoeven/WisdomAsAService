@@ -494,13 +494,15 @@ exports.updateGeneric = function (req, res, next) {
 
 function filterSnapshot(dataset){
     var returnSet = []
+    var ds =
+
     var perSnapshot = d3.nest()
         .key(function (d) {
             return d.snapshotDate
         })
         .entries(dataset)
 
-    var totalDetail = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}, measureSet = []
+    var snapshotDetails = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}, measureSet = []
 
 
     console.info('----------PER SNAPSHOT-------')
@@ -533,43 +535,51 @@ function filterSnapshot(dataset){
             valueObject.affectedUser = v['Affected Person ']
             valueObject.count = v.count
 
-            snapshotObject.snapshotDetails.push(valueObject)
-
-            // Measures
-            measureObject = {}
-            measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
-
-            if (v['Responsible Group'] == 'EPS - CPF') {
-                measureObject.cpf = v.count
-            }
-            if (v['Responsible Group'] == 'EPS - E-Soft') {
-                measureObject.esoft = v.count
-            }
-            if (v['Responsible Group'] == 'EPS - SRL') {
-                measureObject.srl = v.count
-            }
-            if (v['Responsible Group'] == 'Service desk 1st line') {
-                measureObject.firstLine = v.count
-            }
-            if (v['Responsible Group'] == 'EPS Apps 2nd line') {
-                measureObject.secondLineApps = v.count
-            }
-            if (v['Responsible Group'] == 'EPS - Cognos') {
-                measureObject.cognos = v.count
-            }
-            if (v['Responsible Group'] == 'EPS - Infra') {
-                measureObject.infra = v.count
-            }
-            if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
-                measureObject.desktopVirtualisatie = v.count
-            }
-            if (v['Responsible Group'] == "EPS - DWH") {
-                measureObject.dwh = v.count
-            }
-
-            measureSet.push(measureObject)
+            snapshotDetails.push(valueObject)
 
         })
+
+        snapshotDetails =  underscore.uniq(snapshotDetails)
+
+        // Measures
+        measureObject = {}
+        measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
+
+        if (v['Responsible Group'] == 'EPS - CPF') {
+            measureObject.cpf = v.count
+        }
+        if (v['Responsible Group'] == 'EPS - E-Soft') {
+            measureObject.esoft = v.count
+        }
+        if (v['Responsible Group'] == 'EPS - SRL') {
+            measureObject.srl = v.count
+        }
+        if (v['Responsible Group'] == 'Service desk 1st line') {
+            measureObject.firstLine = v.count
+        }
+        if (v['Responsible Group'] == 'EPS Apps 2nd line') {
+            measureObject.secondLineApps = v.count
+        }
+        if (v['Responsible Group'] == 'EPS - Cognos') {
+            measureObject.cognos = v.count
+        }
+        if (v['Responsible Group'] == 'EPS - Infra') {
+            measureObject.infra = v.count
+        }
+        if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
+            measureObject.desktopVirtualisatie = v.count
+        }
+        if (v['Responsible Group'] == "EPS - DWH") {
+            measureObject.dwh = v.count
+        }
+
+        measureSet.push(measureObject)
+
+
+
+
+
+
         // Aggegrate to state per snapshot
         snapshotObject.aggCountsPerDayCattegory = d3.nest()
             .key(function (d) {
