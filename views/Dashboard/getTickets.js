@@ -654,14 +654,7 @@ function filterSnapshot(dataset){
             .entries(mTotCreatedTickets)
     })
 
-
-
     //snapshotObject.totCreatedTickets = mTotCreatedTickets
-
-
-
-
-
 
     return returnSet
 }
