@@ -494,7 +494,7 @@ exports.updateGeneric = function (req, res, next) {
 
 function filterSnapshot(dataset){
     var returnSet = []
-    var ds =
+
 
     var perSnapshot = d3.nest()
         .key(function (d) {
