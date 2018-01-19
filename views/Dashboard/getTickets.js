@@ -517,7 +517,11 @@ function filterSnapshot(dataset){
         snapshotObject.totActualTickets.values = []
         snapshotObject.totActualTickets.title = ""
         snapshotObject.totActualTickets.underTitle = ""
-        snapshotDetails.mTotCreatedTickets = []
+        snapshotDetails.totCreateTicketsperWeek.Data = []
+        snapshotDetails.totCreateTicketsperWeek.title = 'Trend running year created tickets per week'
+        snapshotDetails.totCreateTicketsperWeek.columns = ['Week', 'CreatedTickets']
+        snapshotDetails.totCreateTicketsperWeekSRL.Data = []
+
 
 
 
@@ -548,31 +552,31 @@ function filterSnapshot(dataset){
             measureObject = {}
             measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
 
-             if (v['Responsible Group'] == 'EPS - CPF') {
+             if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week() ) {
              measureObject.cpf = v.count
              }
-             if (v['Responsible Group'] == 'EPS - E-Soft') {
+             if ( (v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.esoft = v.count
              }
-             if (v['Responsible Group'] == 'EPS - SRL') {
+             if ( (v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week() ) {
              measureObject.srl = v.count
              }
-             if (v['Responsible Group'] == 'Service desk 1st line') {
+             if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.firstLine = v.count
              }
-             if (v['Responsible Group'] == 'EPS Apps 2nd line') {
+             if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.secondLineApps = v.count
              }
-             if (v['Responsible Group'] == 'EPS - Cognos') {
+             if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.cognos = v.count
              }
-             if (v['Responsible Group'] == 'EPS - Infra') {
+             if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.infra = v.count
              }
-             if (v['Responsible Group'] == 'Desktop Virtualisation 2nd line') {
+             if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.desktopVirtualisatie = v.count
              }
-             if (v['Responsible Group'] == "EPS - DWH") {
+             if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
              measureObject.dwh = v.count
              }
 
@@ -633,16 +637,18 @@ function filterSnapshot(dataset){
         returnSet.push(snapshotObject)
         //Tickets created total
         var mTotCreatedTickets = [], mObjectTotCreatedTickets = {}
+
         snapshotDetails.forEach(function (v) {
-            if (v.state == 'Classification') {
+            if (v.state == 'Classification' ) {
                 mObjectTotCreatedTickets.count = v.count
-                mObjectTotCreatedTickets.week = moment(v.creationDate,"YYYY-MM-DD").week()
-                mObjectTotCreatedTickets.creationDate = v.creationDate
+                mObjectTotCreatedTickets.week = moment(v.creationDate,"DD/MM/YYYY").week()
                 mTotCreatedTickets.push(mObjectTotCreatedTickets)
+                mObjectTotCreatedTickets = {}
             }
         })
 
-        snapshotObject.mTotCreatedTickets = mTotCreatedTickets
+
+
         snapshotObject.totCreatedTickets = d3.nest()
             .key(function (d) {
                 return d.week
@@ -656,6 +662,13 @@ function filterSnapshot(dataset){
             })
             .entries(mTotCreatedTickets)
     })
+
+    var totCreateTicketsperWeek = []
+    snapshotObject.totCreatedTickets.forEach(function (k) {
+        totCreateTicketsperWeek.push([k.key, k.values.count])
+    })
+
+    snapshotDetails.totCreateTicketsperWeek.Data = totCreateTicketsperWeek
 
     //snapshotObject.totCreatedTickets = mTotCreatedTickets
 

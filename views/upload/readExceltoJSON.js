@@ -96,7 +96,6 @@ exports.readExceltoJSON = function (req,res,next) {
         var XLSX = require('xlsx');
         var workbook = XLSX.readFile(filename);
         var sheet_name_list = workbook.SheetNames;
-        var cleanData = []
         sheet_name_list.forEach(function(y) {
             var worksheet = workbook.Sheets[y];
             var headers = {};
@@ -116,7 +115,7 @@ exports.readExceltoJSON = function (req,res,next) {
                 var value = worksheet[z].v;
 
                 //store header names
-                if(row == 4 && value) {
+                if(row == 1 && value) {
                     headers[col] = value;
                     continue;
                 }
@@ -128,96 +127,8 @@ exports.readExceltoJSON = function (req,res,next) {
             data.shift();
             data.shift();
 
-            //Clean Data
-            for (i = 3; i < data.length; i++){
-                if (data[i] != 'undefined '){
-                    cleanData.push(data[i])
-                }
-            }
-
-            //EnrichData
-            cleanData.forEach(function (r) {
-                console.info(r.length)
-
-                if(r) {
-                    console.info('CleanData: ' + r['Number'])
-                    var datumFormat
-                    //var input = '01/01/1997'- Creation Date
-                    dateString = correctionOfDate(r['Creation Date'])
-                    creationDate = dateStringtoDate(dateString)
-                    console.info('CreationDate:' + r['Number'] + '  | ' + dateString)
-                    console.info(creationDate)
-
-                    dateString = correctionOfDate(r['Last Change'])
-                    lastChange = dateStringtoDate(dateString)
-                    console.info('lastChange:' + r['Number'] + '  | ' + dateString)
-                    console.info(lastChange)
-
-                    if (r['Solved Date']) {
-                        if (r['Solved Date'].length == 19) {
-                            console.info('solvedDate:' + r['Number'])
-                            dateString = correctionOfDate(r['Solved Date'])
-                            solvedDate = dateStringtoDate(dateString)
-                            console.info(solvedDate)
-                            r.SolvedDate = solvedDate
-                        }
-                        else {
-                            r.SolvedDate = ''
-                        }
-
-                    }
-                    else {
-                        r.SolvedDate = ''
-                    }
-
-                    if (r['Closed Date']) {
-                        if (r['Closed Date'].length == 19) {
-                            console.info('closedDate:' + r['Number'])
-                            console.info(r['Closed Date'].length)
-                            dateString = correctionOfDate(r['Closed Date'])
-                            closedDate = dateStringtoDate(dateString)
-                            console.info(closedDate)
-                            r.closedDate = closedDate
-                        }
-                        else {
-                            r.closedDate = ''
-                        }
-
-                    }
-                    else {
-                        r.closedDate = ''
-                    }
-
-
-                    //datumFormat =  dateStringtoDate(dateString)
-                    //r['Creation Date'] = datumFormat
-
-                    // Ticket Type
-                    if (r.Number.substring(0, 3) == 'INC') {
-                        ticketType = 'Incident'
-                    }
-                    if (r.Number.substring(0, 3) == 'SRQ') {
-                        ticketType = 'Service Request'
-                    }
-                    if (r.Number.substring(0, 3) == 'RFC') {
-                        ticketType = 'Change'
-                    }
-
-                    r['Creation Date'] = creationDate
-                    r.count = 1
-                    var groupCount = r['Responsible Group'] + '_Count'
-                    r[groupCount] = 1
-                    r.ticketType = ticketType
-                    r.snapshotDate = snapshotDate
-                    r.lastChange = lastChange
-                    r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
-
-
-                    stgOmniTracker.insert(r)
-            }
-        })
-
-                console.info(data.length)
+                insertSTGOmniTracker(data)
+                //console.info(data.length)
                 res.status(201).json({message: 'Succesfull uploaded'});
 
         });
@@ -262,24 +173,20 @@ function correctionOfDate(inputDate){
 
            //console.info(dateCorrection[2])
 
-            console.info(dateCorrection[2])
-            if(dateCorrection[2].indexOf('-') == 5){
+            //console.info(dateCorrection[2])
+            if(dateCorrection[2].indexOf('-') == 4){
                 var temp = dateCorrection[2].split('-')
             }
             else{
                 var temp = dateCorrection[2].split(' ')
             }
-
+            //console.info(temp)
 
 
 
             dateString = dateString + temp[0]
 
            // --------------------CORECTION OF HH -------------------------
-           // st
-
-
-
            hourstrip = temp[1].split(':')
 
 
@@ -318,7 +225,12 @@ function dateStringtoDate(dateString) {
     if (dateString.indexOf('-') > 0){
         checkDate = dateString.split('-')
 
-        if (parseInt(checkDate[0]) <= 31 && parseInt(checkDate[1]) <= 12 && parseInt(checkDate[1]) <= moment().month() + 1) {
+        if (parseInt(checkDate[0]) <= 31
+            && parseInt(checkDate[1]) <= 12
+            && ( parseInt(checkDate[1]) <= moment().month() + 1
+               || parseInt(checkDate[1]) > moment().month() + 1
+                  && parseInt(checkDate[2]) < moment().year())
+        ) {
             returnDate = moment(dateString, 'DD-MM-YYYY').toDate()
         }
         else {
@@ -337,4 +249,104 @@ function dateStringtoDate(dateString) {
         }
     }
     return returnDate
+}
+
+function insertSTGOmniTracker(data){
+    console.info('---- START FUNCTION ---')
+    var cleanData = []
+    //Clean Data
+    for (i = 2; i < data.length; i++){
+        if (data[i] != 'undefined '){
+            cleanData.push(data[i])
+        }
+    }
+
+    //EnrichData
+    console.info('Length Clean Data')
+    console.info(cleanData.length)
+    if(cleanData.length > 0){
+        cleanData.forEach(function (r) {
+            //console.info(r.length)
+
+            if(r) {
+
+                //var input = '01/01/1997'- Creation Date
+                if (r['Creation Date']) {
+                    dateString = correctionOfDate(r['Creation Date'])
+                    creationDate = dateStringtoDate(dateString)
+                }
+                else{
+                    creationDate = ''
+                }
+
+
+                if(r['Last Change']){
+                    dateString = correctionOfDate(r['Last Change'])
+                    lastChange = dateStringtoDate(dateString)
+                }
+                else{
+                    lastChange = ''
+                }
+
+
+                if (r['Solved Date']) {
+                    if (r['Solved Date'].length == 19) {
+                        dateString = correctionOfDate(r['Solved Date'])
+                        solvedDate = dateStringtoDate(dateString)
+                    }
+                    else {
+                        r.SolvedDate = ''
+                    }
+
+                }
+                else {
+                    r.SolvedDate = ''
+                }
+
+                if (r['Closed Date']) {
+                    if (r['Closed Date'].length == 19) {
+                        dateString = correctionOfDate(r['Closed Date'])
+                        closedDate = dateStringtoDate(dateString)
+                    }
+                    else {
+                        r.closedDate = ''
+                    }
+
+                }
+                else {
+                    r.closedDate = ''
+                }
+
+
+                //datumFormat =  dateStringtoDate(dateString)
+                //r['Creation Date'] = datumFormat
+
+                // Ticket Type
+                if (r.Number.substring(0, 3) == 'INC') {
+                    ticketType = 'Incident'
+                }
+                if (r.Number.substring(0, 3) == 'SRQ') {
+                    ticketType = 'Service Request'
+                }
+                if (r.Number.substring(0, 3) == 'RFC') {
+                    ticketType = 'Change'
+                }
+
+                //r['Creation Date'] = creationDate
+                r.count = 1
+                var groupCount = r['Responsible Group'] + '_Count'
+                r[groupCount] = 1
+                r.ticketType = ticketType
+                r.snapshotDate = snapshotDate
+                r.lastChange = lastChange
+                r.creationDate = creationDate
+                r.solvedDate = solvedDate
+                r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
+
+
+                stgOmniTracker.insert(r)
+            }
+        })
+    }
+console.info('---- END FUNCTION ---')
 }
