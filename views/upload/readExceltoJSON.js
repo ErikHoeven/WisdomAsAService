@@ -339,7 +339,11 @@ function insertSTGOmniTracker(data){
                 r.ticketType = ticketType
                 r.snapshotDate = snapshotDate
                 r.lastChange = lastChange
+                r.lastChangeYear = moment(lastChange).year()
+                r.lastChangeWeek = moment(lastChange).week()
                 r.creationDate = creationDate
+                r.creationYear = moment(creationDate).year()
+                r.creationWeek = moment(creationDate).week()
                 r.solvedDate = solvedDate
                 r.aggGrain = creationDate + '|' + r['Responsible Group'] + '|' + r.State + '|' + snapshotDate + '|' + ticketType + '|' + lastChange + '|' + r['Affected Person']
 

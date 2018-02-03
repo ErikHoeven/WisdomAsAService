@@ -17,7 +17,12 @@ var  request = require("request")
 
 exports.getTickets = function (req, res, next) {
 
-        console.info('-------------------Get Tickets --------------------------------------------------------')
+        console.info('-------------------Start Tickets Parameters--------------------------------------------------------')
+         var snapshot = moment(req.body.snapshot) //--> add as filter to the queries except the trends.
+         console.info(snapshot)
+         var snapshotweek = moment(req.body.snapshot,'YYYY-MM-DD').week()
+         console.info(snapshotweek)
+        console.info('-------------------End Tickets Parameters--------------------------------------------------------')
 
     mongo.connect(uri, function (err, db) {
         console.info('MONGODB START CHECK COLLECTIONS')
@@ -29,11 +34,91 @@ exports.getTickets = function (req, res, next) {
                     callback();
                 });
             },
-            // Load stgOmniTracker
+            // Load stgOmniTracker - prepare measureSet
             function (callback) {
-                db.collection('stgOmniTracker').find({}).toArray(function (err, tickets) {
+                db.collection('stgOmniTracker').find({$and:[{creationWeek: {$lte: snapshotweek}},{creationYear:moment().year()},{snapshotDate:new Date(snapshot)}]}).toArray(function (err, rawMeasureSet) {
                     if (err) return callback(err);
-                    locals.tickets = tickets;
+                    locals.rawMeasureSet = rawMeasureSet;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeek
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([ { $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }} }]).toArray(function (err, rawtotCreatedPerWeek) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeek = rawtotCreatedPerWeek;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeek
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {State:"Closed" }},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]) .toArray(function (err, rawtotSolvedPerWeek) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeek = rawtotSolvedPerWeek;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeekSRL
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match:{$and: [ {State:"Closed"},{"Responsible Group": "EPS - SRL"}]}},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotSolvedPerWeekSRL) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeekSRL = rawtotSolvedPerWeekSRL;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeekSRL
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {"Responsible Group": "EPS - SRL" }},{ $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotCreatedPerWeekSRL) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekSRL = rawtotCreatedPerWeekSRL;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeekCPF
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match:{$and: [ {State:"Closed" },{"Responsible Group": "EPS - CPF"}]}},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotSolvedPerWeekCPF) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeekCPF = rawtotSolvedPerWeekCPF;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeekCPF
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {"Responsible Group": "EPS - CPF" } },{ $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotCreatedPerWeekCPF) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekCPF = rawtotCreatedPerWeekCPF;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeekCognos
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match:{$and: [ {State:"Closed" },{"Responsible Group": "EPS - Cognos"}]}},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotSolvedPerWeekCognos) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeekCognos = rawtotSolvedPerWeekCognos;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeekCognos
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {"Responsible Group": "EPS - Cognos" } },{ $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotCreatedPerWeekCognos) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekCognos = rawtotCreatedPerWeekCognos;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeekDWH
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match:{$and: [ {State:"Closed" },{"Responsible Group": "EPS - DWH"}]}},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotSolvedPerWeekDWH) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeekDWH = rawtotSolvedPerWeekDWH;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeekDWH
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {"Responsible Group": "EPS - DWH" } },{ $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotCreatedPerWeekDWH) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekDWH = rawtotCreatedPerWeekDWH;
                     callback();
                 });
             }
@@ -41,202 +126,30 @@ exports.getTickets = function (req, res, next) {
         console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
             if (err) return next(err);
-            var businessrules = locals.businessrules, tickets = locals.tickets, resultSet = {}, aggCountsPerDayCattegory = []
+            var   businessrules = locals.businessrules
+                , rawMeasureSet = locals.rawMeasureSet
+                , resultSet = {}
+                , aggCountsPerDayCattegory = []
+                , group = locals.group
             db.close()
 
-            tickets.forEach(function (ticket) {
+            console.info('---------------------CLOSE-------------------------')
+            rawMeasureSet.forEach(function (ticket) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
 
-            var persnapshot = filterSnapshot(tickets)
-
-            var countsPerDay = d3.nest()
-                .key(function (d) {
-                    return d['Creation Date']
-                })
-                .rollup(function (v) {
-                    return {
-                        count: d3.sum(v, function (d) {
-                            return d.count;
-                        }),
-                    };
-                })
-                .entries(tickets)
-
-
-            var countsPerDayCattegory = d3.nest()
-                .key(function (d) {
-                    return d.aggGrain
-                })
-                .rollup(function (v) {
-                    return {
-                        count: d3.sum(v, function (d) {
-                            return d.count;
-                        }),
-                        'cpf': d3.sum(v, function (d) {
-                            return d['EPS - CPF_Count']
-                        }),
-                        'esoft': d3.sum(v, function (d) {
-                            return d['EPS - E-Soft_Count'];
-                        }),
-                        'firstLine': d3.sum(v, function (d) {
-                            return d['Service desk 1st line_Count'];
-                        }),
-                        'srl': d3.sum(v, function (d) {
-                            return d['EPS - SRL_Count'];
-                        }),
-                        'secondLineApps': d3.sum(v, function (d) {
-                            return d['EPS Apps 2nd line_Count'];
-                        }),
-                        'infra': d3.sum(v, function (d) {
-                            return d['EPS - Infra_Count'];
-                        }),
-                        'cognos': d3.sum(v, function (d) {
-                            return d['EPS - Cognos_Count'];
-                        }),
-                        'desktopVirtualisatie': d3.sum(v, function (d) {
-                            return d['Desktop Virtualisation 2nd line_Count'];
-                        }),
-
-                    };
-                })
-                .entries(tickets)
-
-
-
-            var countsPerUser = d3.nest()
-                .key(function (d) {
-                    return d['Affected Person']
-                })
-                .rollup(function (v) {
-                    return {
-                        count: d3.sum(v, function (d) {
-                            return d.count;
-                        }),
-                    };
-                })
-                .entries(tickets)
-
-
-
-
-            countsPerDayCattegory.forEach(function (row) {
-                var key = row.key.split('|')
-                var CreationDate = key[0],
-                    Group = key[1],
-                    State = key[2],
-                    count = row.values.count,
-                    countOpenTickets = 0,
-                    countCreatedTickets = 0,
-                    countSolvedTickets = 0,
-                    snapshot = moment(key[3]).format('DD-MM-YYYY'),
-                    snapshotDate = moment(snapshot, 'DD-MM-YYYY').toDate(),
-                    lastChange = moment(key[5]).format('DD-MM-YYYY'),
-                    lastChangeDate = moment(lastChange, 'DD-MM-YYYY').toDate(),
-                    cpf = row.values['EPS-CPF'],
-                    esoft = row.values['EPS-E-Soft'],
-                    firstLine = row.values['Service desk 1st line'],
-                    srl = row.values['EPS-SRL'],
-                    secondLineApps = row.values['EPS Apps 2nd line'],
-                    cognos = row.values['EPS-Cognos'],
-                    infra = row.values['EPS-Infra'],
-                    desktopVirtualisatie = row.values['Desktop Virtualisation 2nd line'],
-                    leadTime,
-                    pushObject = {}
-                pushObject.CreationDate = moment(CreationDate).toDate()
-                pushObject.Group = Group
-                pushObject.State = State
-
-
-                if (State == 'Classification') {
-                    countCreatedTickets = count
-                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-                }
-
-                if (State == 'In progress') {
-                    countOpenTickets = count
-                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-                }
-
-                if (State == 'Classification') {
-                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-                }
-
-                if (State == 'Waiting') {
-                    countOpenTickets = count
-                    leadTime = daydiff(moment(CreationDate).toDate(), snapshotDate)
-                }
-
-                if (State == 'Solved') {
-                    countSolvedTickets = count
-                    leadTime = daydiff(moment(CreationDate).toDate(), lastChangeDate)
-                }
-
-
-                pushObject.count = row.values.count
-                pushObject.countOpenTickets = countOpenTickets
-                pushObject.countCreatedTickets = countCreatedTickets
-                pushObject.countSolvedTickets = countSolvedTickets
-                pushObject.snapshotDate = snapshotDate
-                pushObject.leadTime = leadTime
-
-                // "Service desk 2nd line",
-                // "EPS Infra 2nd line",
-                // "Operating Systems 2nd line",
-                // "Realdolmen Apps 2nd line",
-                // "Operations 1st line",
-                // "EPS - DWH",
-                // "Field Back End HW 2nd line",
-                //"Realdolmen Infra 2nd Line"
-
-                if (key[1] == 'EPS - CPF') {
-                    pushObject.cpf = row.values.count
-                }
-                if (key[1] == 'EPS - E-Soft') {
-                    pushObject.esoft = row.values.count
-                }
-                if (key[1] == 'EPS - SRL') {
-                    pushObject.srl = row.values.count
-                }
-                if (key[1] == 'Service desk 1st line') {
-                    pushObject.firstLine = row.values.count
-                }
-                if (key[1] == 'EPS Apps 2nd line') {
-                    pushObject.secondLineApps = row.values.count
-                }
-                if (key[1] == 'EPS - Cognos') {
-                    pushObject.cognos = row.values.count
-                }
-                if (key[1] == 'EPS - Infra') {
-                    pushObject.infra = row.values.count
-                }
-                if (key[1] == 'Desktop Virtualisation 2nd line') {
-                    pushObject.desktopVirtualisatie = row.values.count
-                }
-
-                aggCountsPerDayCattegory.push(pushObject)
-
-            });
-
             console.info('----------------------------------------------')
             ftlrGroup.push('All')
-            fltrState.push('All')
+            var groupList = []
 
-            aggCountsPerDayCattegory.forEach(function (row) {
-                if (row.Group != compareWordGroup) {
-                    ftlrGroup.push(row.Group)
-                    compareWordGroup = row.Group
-                }
-                if (row.State != compareWordState) {
-                    fltrState.push(row.State)
-                    compareWordState = row.State
-                }
+            rawMeasureSet.forEach(function (t) {
+                groupList.push(t['Responsible Group'])
             })
 
-            ftlrGroup = underscore.uniq(ftlrGroup)
-            fltrState = underscore.uniq(fltrState)
-
+            underscore.uniq(groupList).forEach(function (t) {
+                ftlrGroup.push(t)
+            })
 
             // Aggegrate to Group
             var titleList = []
@@ -245,92 +158,27 @@ exports.getTickets = function (req, res, next) {
                 .key(function (d) {
                     return d['Responsible Group'];
                 })
-                .entries(tickets);
+                .entries(rawMeasureSet);
 
-            var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong'], temp = []
-
-            businessrules.forEach(function (row) {
-                exceptions.push(row.lookupValue)
-            })
-
-            aggTicketsGroup.forEach(function (group) {
-                var values = group.values, innerArray = []
-                values.forEach(function (value) {
-
-                    var titleWords = value.Title.split(' ')
-                    titleWords.forEach(function (word) {
-                        innerArray.push(word)
-                    })
-                });
-
-                var wordList = fltrWordCountList(innerArray,3, null)
-                var fltrWordList = wordList.filter(function( o) {
-                    return exceptions.indexOf(o.word) == -1;
-                })
-                temp = []
-
-                if (fltrWordList.length > 0){
-                    fltrWordList.forEach(function (w) {
-                        temp.push({axis: w.word, value: w.count})
-                    })
-                    titleList.push(temp)
-                    legenda.push(group.key)
-                }
-            })
-
-            temp = []
-            titleList.forEach(function (t) {
-                t.forEach(function (row) {
-                    temp.push(row.value)
-                })
-
-            })
-            temp = underscore.uniq(temp)
-            var max = d3.max(temp)
-
-            temp = []
-            titleList.forEach(function (set) {
-                set.forEach(function (row) {
-                    row.value =  Math.round((row.value / max) * 100) / 100
-                })
-            })
-
+            // -------------------------- snapshots ------------------------------------------------------
             var snapshots = [], snapshotDate
 
-            tickets.forEach(function (ticket) {
+            rawMeasureSet.forEach(function (ticket) {
                 snapshots.push(ticket.snapshotDate)
             })
 
-
             snapshots = underscore.sortBy(snapshots,function (node) {
                 return + (moment(node,'DD-MM-YYYY'))
-
-            })
-
-
-
-            var aggCountTicketsPerUser = []
-
-            countsPerUser.forEach(function (r) {
-                if (r.values.count > 4){
-                    aggCountTicketsPerUser.push({user: r.key, countTickets: r.values.count})
-                }
             })
 
             snapshots = Array.from(new Set(snapshots))
 
             res.status(200).json({
-                aggCountsPerDayCattegory: aggCountsPerDayCattegory,
                 fltrGroup: ftlrGroup,
-                fltrState: fltrState,
                 dataSpider: titleList,
                 legendaSpider: legenda,
-                allTickets: tickets,
                 snapshots: snapshots,
-                ticketsPerUser: aggCountTicketsPerUser,
-                perSnapshot:  persnapshot
-
-
+                perSnapshot:  filterSnapshot(locals,snapshot)
             })
         })
     })
@@ -379,71 +227,12 @@ function actualMonth() {
 
 }
 
-
-
 function daydiff(first, second) {
     return Math.round((second-first)/(1000*60*60*24));
 }
 
 
-function fltrWordCountList(wordCloud, filterCount, fltrList) {
-    var returnList = [], wordCloudDef = [], compareWord = null, count = 0
-    // (1) Sort the words
-    wordCloud.sort();
-    // (2) Count the words
-    wordCloud.forEach(function (word) {
 
-        if(word != compareWord && count == 0){
-            compareWord = word
-        }
-
-        if(word == compareWord){
-            if (count == 0){
-                count++
-            }
-            else {
-                count++
-            }
-        }
-
-        if (word != compareWord && count > 0){
-            wordCloudDef.push({word: word, count: count + 1})
-            count = 0
-            compareWord = word
-        }
-    })
-
-    wordCloudDef.forEach(function (word) {
-        if(word.count >= filterCount){
-            returnList.push(word)
-        }
-
-    })
-
-    wordCloud = [], compareWord = 0
-
-    if (fltrList != null){
-        returnList.forEach(function (rrl) {
-            fltrList.forEach(function (frl) {
-                //console.info(rrl.word + ' =! ' + frl.lookupValue)
-                if (rrl.word != frl.lookupValue){
-                    compareWord = 1
-                }
-            })
-            if (compareWord == 1){
-                wordCloud.push(rrl)
-                compareWord = 0
-                //console.info(rrl)
-            }
-
-
-        })
-        return wordCloud
-    }
-    else {
-        return returnList
-    }
-}
 
 exports.updateGeneric = function (req, res, next) {
     var  parameters = req.body.updateSet
@@ -462,10 +251,6 @@ exports.updateGeneric = function (req, res, next) {
         }
     })
 
-
-    //console.info(updateObject)
-
-
     connection.update({_id: id}, {$set: updateObject}, false, true)
 
     mongo.connect(test, function (err, db) {
@@ -480,7 +265,6 @@ exports.updateGeneric = function (req, res, next) {
                 });
             }
         ];
-        //console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
@@ -492,54 +276,75 @@ exports.updateGeneric = function (req, res, next) {
 
 
 
-function filterSnapshot(dataset){
-    var returnSet = []
+function filterSnapshot(dataset, snapshot){
 
 
-    var perSnapshot = d3.nest()
-        .key(function (d) {
-            return d.snapshotDate
-        })
-        .entries(dataset)
+    var  returnSet = []
+        , tickets = dataset.rawMeasureSet
+        , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
+        , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
+        , rawtotSolvedPerWeekSRL = dataset.rawtotSolvedPerWeekSRL
+        , rawtotCreatedPerWeekSRL = dataset.rawtotCreatedPerWeekSRL
+        , rawtotSolvedPerWeekCPF = dataset.rawtotSolvedPerWeekCPF
+        , rawtotCreatedPerWeekCPF = dataset.rawtotCreatedPerWeekCPF
+        , rawtotSolvedPerWeekCognos = dataset.rawtotSolvedPerWeekCognos
+        , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
+        , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
+        , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+        , snapshotDetails = []
+        , AggCountPerDay = []
+        , AggCountPerDayPerUser = []
+        , DataSpider = []
+        , snapshots = []
+        , snapshotObject  = {}
+        , valueObject = {}
+        , measureObject = {}
+        , measureSet = []
+        , perSnapshot = []
 
-    var snapshotDetails = [], AggCountPerDay = [],  AggCountPerDayPerUser = [], DataSpider = [], snapshots = [], snapshotObject  ={} , valueObject = {}, measureObject = {}, measureSet = []
-
-
-    console.info('----------PER SNAPSHOT-------')
-    perSnapshot.forEach(function (s) {
-        snapshotObject = {}
-        measureSet = []
-        snapshotObject.snapshot = s.key
+        snapshotObject.snapshot = snapshot
         snapshotObject.snapshotDetails = []
-        snapshotObject.aggCountsPerDayCattegory = []
         snapshotObject.totActualTickets = {}
         snapshotObject.totActualTickets.columns = []
         snapshotObject.totActualTickets.values = []
         snapshotObject.totActualTickets.title = ""
         snapshotObject.totActualTickets.underTitle = ""
-        snapshotDetails.totCreateTicketsperWeek.Data = []
-        snapshotDetails.totCreateTicketsperWeek.title = 'Trend running year created tickets per week'
-        snapshotDetails.totCreateTicketsperWeek.columns = ['Week', 'CreatedTickets']
-        snapshotDetails.totCreateTicketsperWeekSRL.Data = []
 
+        snapshotObject.totTicketsperWeek = {}
+        snapshotObject.totTicketsperWeek.title = 'Trend running year tickets per week'
+        snapshotObject.totTicketsperWeek.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
 
+        snapshotObject.totTicketsperWeekSRL = {}
+        snapshotObject.totTicketsperWeekSRL.title = 'Trend running year tickets per week SRL'
+        snapshotObject.totTicketsperWeekSRL.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
+
+        snapshotObject.totTicketsperWeekCPF = {}
+        snapshotObject.totTicketsperWeekCPF.title = 'Trend running year created tickets per week CPF'
+        snapshotObject.totTicketsperWeekCPF.columns = ['Week', 'CreatedTickets','TicketsClosed']
+
+        snapshotObject.mDashboardTickets = []
 
 
         // values per snapshot
-        s.values.forEach(function (v) {
+        tickets.forEach(function (v) {
             valueObject = {}
 
             // Dimensions
             valueObject.number = v.Number
-            valueObject.title = v.title
+            valueObject.title = v.Title
             valueObject.state = v.State
             valueObject.ResponsibleUser = v['Responsible User']
             valueObject.ticketType = v.ticketType
-            valueObject.lastChange = v.lastChange
+            valueObject.lastChange     = v.lastChange
+            valueObject.lastChangeWeek = v.lastChangeWeek
+            valueObject.lastChangeYear = v.lastChangeYear
+            valueObject.creationWeek =   v.creationWeek
+            valueObject.creationYear =   v.creationYear
             valueObject.creationDate =  v['Creation Date']
             valueObject.responsibleGroup = v['Responsible Group']
             valueObject.affectedUser = v['Affected Person ']
             valueObject.count = v.count
+            valueObject.openDays = Number(v['Nr Of Open Calendar Days'])
 
             snapshotDetails.push(valueObject)
         })
@@ -547,36 +352,36 @@ function filterSnapshot(dataset){
         snapshotDetails =  underscore.uniq(snapshotDetails)
         snapshotObject.snapshotDetails = snapshotDetails
 
-        snapshotDetails.forEach(function (v) {
+        tickets.forEach(function (v) {
             // Measures
             measureObject = {}
-            measureObject.key = moment(snapshotObject.snapshot,'DD-MM-YYYY').week()
 
-             if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week() ) {
+
+             if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')  ) {
              measureObject.cpf = v.count
              }
-             if ( (v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ( (v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft') ) {
              measureObject.esoft = v.count
              }
-             if ( (v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week() ) {
+             if ( (v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')) {
              measureObject.srl = v.count
              }
-             if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line') ) {
              measureObject.firstLine = v.count
              }
-             if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line') ) {
              measureObject.secondLineApps = v.count
              }
-             if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos') ) {
              measureObject.cognos = v.count
              }
-             if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra') && moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra') ) {
              measureObject.infra = v.count
              }
-             if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')) {
              measureObject.desktopVirtualisatie = v.count
              }
-             if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")&& moment().week() == moment(v.creationDate,"DD/MM/YYYY").week()) {
+             if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
              measureObject.dwh = v.count
              }
 
@@ -618,7 +423,6 @@ function filterSnapshot(dataset){
             })
             .entries(measureSet)
 
-
         snapshotObject.totActualTickets.columns.push('Weeknumber')
         var colls = Object.keys(snapshotObject.aggCountsPerDayCattegory[0].values)
         colls.forEach(function (c) {
@@ -633,44 +437,81 @@ function filterSnapshot(dataset){
         snapshotObject.totActualTickets.title = "Total Actual tickets week" + measureObject.key
         snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
 
+        //Tickets total
+        snapshotObject.totTicketsperWeek.Data = datasetsPerSubject(rawtotCreatedPerWeek, rawtotSolvedPerWeek )
+        //Tickets created SRL
+        snapshotObject.totTicketsperWeekSRL.Data = datasetsPerSubject(rawtotCreatedPerWeekSRL,rawtotSolvedPerWeekSRL)
+        //Tickets created CPF
+        snapshotObject.totTicketsperWeekCPF.Data = datasetsPerSubject(rawtotCreatedPerWeekCPF,rawtotSolvedPerWeekCPF)
 
-        returnSet.push(snapshotObject)
-        //Tickets created total
-        var mTotCreatedTickets = [], mObjectTotCreatedTickets = {}
+        var ObjectDashboardTickets = {}
+          , mDashboardTickets = [],snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
 
         snapshotDetails.forEach(function (v) {
-            if (v.state == 'Classification' ) {
-                mObjectTotCreatedTickets.count = v.count
-                mObjectTotCreatedTickets.week = moment(v.creationDate,"DD/MM/YYYY").week()
-                mTotCreatedTickets.push(mObjectTotCreatedTickets)
-                mObjectTotCreatedTickets = {}
+            // If the creation week is the same as the snapshot week then count all the tickets in this week
+            // as created
+            if (v.creationWeek == snapshotweek) {
+
+                v.IndCreated = 1
+                v.IndSolved = 0
+                v.IndProgress = 0
+                v.IndStock = 0
+                v.IndSpider = 1
+
+                if (v.state == "In Progress") {
+                    v.IndProgress = 1
+                }
+
+                if (v.state == "Closed" || v.state == "Solved") {
+                    v.IndSolved = 1
+                }
+            }
+            // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
+            // as stock
+            if (v.creationWeek < snapshotweek) {
+                v.IndCreated = 0
+                v.IndSolved = 0
+                v.IndProgress = 0
+                v.IndStock = 1
+                v.IndSpider = 0
+
+                if (v.state == "In Progress") {
+                    v.IndProgress = 1
+                }
+
+                if (v.state == "Closed" || v.state == "Solved") {
+                    v.IndSolved = 1
+                }
+
+                if(v.creationWeek == snapshotweek){
+                    v.IndSpider = 1
+                }
             }
         })
-
-
-
-        snapshotObject.totCreatedTickets = d3.nest()
-            .key(function (d) {
-                return d.week
-            })
-            .rollup(function (v) {
-                return {
-                    'count': d3.sum(v, function (d) {
-                        return d.count
-                    })
-                };
-            })
-            .entries(mTotCreatedTickets)
-    })
-
-    var totCreateTicketsperWeek = []
-    snapshotObject.totCreatedTickets.forEach(function (k) {
-        totCreateTicketsperWeek.push([k.key, k.values.count])
-    })
-
-    snapshotDetails.totCreateTicketsperWeek.Data = totCreateTicketsperWeek
-
-    //snapshotObject.totCreatedTickets = mTotCreatedTickets
-
+    snapshotObject.mDashboardTickets = mDashboardTickets
+    returnSet.push(snapshotObject)
     return returnSet
+}
+
+
+// ------------------------------------------   FUNCTIONS ----------------------------------------------------------------------------
+function datasetsPerSubject(creat, closed ) {
+    var currentYear = Number(moment().year()) - 1
+       ,totTicketsperWeek =  joinAgg(closed,creat,currentYear)
+
+    return totTicketsperWeek
+}
+
+function joinAgg(lookupTable, mainTable, fltrYear) {
+    var  outputArray = []
+    mainTable.forEach(function (m) {
+        lookupTable.forEach(function (lkp) {
+            if(lkp._id.lastChangeWeek == m._id.creationWeek && lkp._id.lastChangeYear == m._id.creationYear && m._id.creationYear == fltrYear ){
+                outputArray.push([lkp._id.lastChangeWeek, m.totalCount, lkp.totalCount])
+            }
+        })
+    })
+    outputArray.sort(function(a,b) {
+        return a[0] - b[0]})
+    return outputArray
 }

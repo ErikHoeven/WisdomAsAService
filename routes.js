@@ -49,7 +49,7 @@ exports = module.exports = function(app, passport) {
     //Peronal dashboard
     app.get('/Dashboard/', require('./views/Dashboard/index').init);
     app.get('/Dashboard/getTweets', require('./views/Dashboard/index').getTweets);
-    app.get('/Dashboard/getTickets', require('./views/Dashboard/getTickets').getTickets);
+    app.post('/Dashboard/getTickets', require('./views/Dashboard/getTickets').getTickets);
     app.get('/Dashboard/update', require('./views/Dashboard/getTickets').updateGeneric);
     app.post('/Dashboard/removeWordfromSpider', require('./views/Dashboard/addException').addSpiderException);
     app.post('/Dashboard/promoteToBackLog', require('./views/Dashboard/promoteToBackLog').promoteToBackLog);
@@ -58,6 +58,8 @@ exports = module.exports = function(app, passport) {
     app.get('/Dashboard/clearBacklog',require('./views/Dashboard/promoteToBackLog').clearBacklog);
     app.get('/Dashboard/addBacklogPPT',require('./views/Dashboard/promoteToBackLog').exportBacklogToPowerpoint);
     app.get('/Dashboard/getRFC',require('./views/Dashboard/getRFC').getRFC);
+    app.get('/Dashboard/getSnapshots',require('./views/Dashboard/getSnapshots').getSnapshot);
+
 
 
     //Dashboard socialGraph routes

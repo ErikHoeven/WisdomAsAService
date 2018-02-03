@@ -2,25 +2,25 @@
 //google.charts.setOnLoadCallback(d3GraphPlot);
 function d3GraphPlot(div, ds) {
 
-    var   allCols = Object.keys(ds[0].value)
-        , tableCols = []
+    var   tableCols = []
         , tableData = []
         , curentDate = moment().toISOString()
         , currentWeek = moment(curentDate,"YYYY-MM-DD").week()
         , setTable = []
 
 
-    tableCols.push('Weeknumber')
-    tableData.push(currentWeek -1)
 
-    allCols.forEach(function (row) {
+    //tableData.push(currentWeek -1)
+
+ /*   allCols.forEach(function (row) {
         if(ds[0].value[row] > 0){
             tableCols.push(row)
             tableData.push(ds[0].value[row])
         }
-    })
-    setTable.push(tableCols)
-    setTable.push(tableData)
+    })*/
+
+    setTable.push(ds.columns)
+    setTable.push(ds.values)
 
     console.info('--------------setTable ----------------------')
     console.info(setTable)
@@ -30,8 +30,8 @@ function d3GraphPlot(div, ds) {
 
     var options = {
         chart: {
-            title: 'Total actual tickets',
-            subtitle: 'Europool System BI & DM team',
+            title: ds.title,
+            subtitle: ds.underTitle,
         },
         width:550,
         height:300,

@@ -17,16 +17,16 @@ function setUserProfile(user) {
         '<h4 class="fg-gray font-bold">'+ username + '</h4></div></div></div></div></div>')
 }
 
-function getTickets() {
+function getTickets(snapshot) {
 
     $.ajax({
         url: '/Dashboard/getTickets',
-        type: 'GET',
+        type: 'POST',
         contentType: 'application/json',
+        data: JSON.stringify({snapshot: snapshot}),
         success: function (data) {
             console.info('succes getTickets')
             console.info(data)
-
             // Intialize variables filters
             fltrGroup = data.fltrGroup
             fltrGroupString = '<select class="selectpicker" id="selectFltrGroup">'
@@ -36,31 +36,25 @@ function getTickets() {
             })
             fltrGroupString = fltrGroupString + '</select>'
 
-
             $('#fltrListCattegory').html(fltrGroupString)
 
-            // Calculate Stock
+            // Calculate Stock parameters
+            var snapshot = moment(data.snapshots[data.snapshots.length -1], 'DD-MM-YYYY').format('DD-MM-YYYY')
             var values = [], stock = 0, stockValues = {}
-            values = filterTickets('All', data.aggCountsPerDayCattegory)
+            values = filterTickets('All', data.perSnapshot, snapshot).stockValue
 
             console.info('-----------  Funnel values------------')
-            stockValues = values.stockValues
-            console.info(stockValues)
+            stockValues = values[0].value
 
-
-            var vandaag = moment(data.snapshots[data.snapshots.length -1], 'DD-MM-YYYY').format('DD-MM-YYYY')
-            console.info('vandaag:')
-            console.info(vandaag)
-
-            $('#createdTickets').text(stockValues.createdTickets / 2).click(function () {
-                console.info('click createdTickets:')
-                createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                    State: 'Classification',
-                    snapshotDate: vandaag
-                })
-                createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Classification', snapshotDate: vandaag})
+            $('#createdTickets').text(stockValues.createdTickets).click(function () {
+                //console.info('click createdTickets:')
+                //createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
+                //    State: 'Classification',
+                //    snapshotDate: vandaag
+                //})
+                //createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Classification', snapshotDate: vandaag})
             })
-            $('#openTickets').text(stockValues.opentTickets / 2).click(function () {
+            $('#openTickets').text(stockValues.ticketsInProgress ).click(function () {
                 console.info('click openTickets')
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
                     State: 'In progress',
@@ -69,183 +63,125 @@ function getTickets() {
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'In progress', snapshotDate: vandaag})
 
             })
-            $('#closedTickets').text(stockValues.solvedTickets / 2).click(function () {
+            $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
                 console.info('click SolvedTickets')
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
             })
-            $('#stock').text(stockValues.ticketStock)
+            $('#stock').text(stockValues.ticketsInStock)
 
-            d3GraphPlot('ticketChart2', values.countPerDay)
-            setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
-            console.info('data.aggCountsPerDayCattegory')
-            console.info(data.aggCountsPerDayCattegory)
+            var countPerDay = data.perSnapshot[0].totActualTickets
+            snapshot = moment(snapshot,'DD-MM-YYYY').format('YYYY-MM-DD')
 
+            d3GraphPlot('ticketChart2', countPerDay)
+            //setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
 
             $('#selectFltrGroup').change(function () {
                 $.ajax({
                     url: '/Dashboard/getTickets',
-                    type: 'GET',
+                    type: 'POST',
                     contentType: 'application/json',
-                    success: function (data) {
+                    data: JSON.stringify({snapshot: snapshot}),
+                    success: function (data){
 
                         console.info('Change')
-                        console.info(data.aggCountsPerDayCattegory)
-
                         var fltrValue = $('#selectFltrGroup option:selected').text()
-                        //newDataArray = _.where(data.aggCountsPerDayCattegory,{})
-                        newvalues = filterTickets(fltrValue, data.aggCountsPerDayCattegory)
+                        newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 
                         console.info('Funnel values Change')
-                        stockValues = newvalues.stockValues
-                        console.info(stockValues)
+                        stockValues = newvalues[0].value
+                        filteredTickets = filterTickets(fltrValue, data.perSnapshot, snapshot).filteredTickets
 
                         console.info('----- Change ----------')
-                        $('#createdTickets').text(stockValues.createdTickets / 2).click(function () {
+                        $('#createdTickets').text(stockValues.createdTickets).click(function () {
                             console.info('click createdTickets')
-                            createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
-                                'Responsible Group': fltrValue,
-                                snapshotDate: vandaag
+                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                state: 'Classification',
+                                'Responsible Group': fltrValue
                             })
 
                             // Incidenten to PowerPoint
                             $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
                             $('#cmdCreateUserStories').click(function () {
-                                createBackLog(data.allTickets, {
-                                    State: 'Classification',
-                                    'Responsible Group': fltrValue,
-                                    snapshotDate: vandaag
+                                createBackLog(filteredTickets, {
+                                    state: 'Classification'
                                 }, 'Incident')
                             })
                             //Incidenten to Planning & Prio Collection
                             $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
                             $('#cmdToPlanning').click(function () {
-                                promotoToBackLog(data.allTickets, {
-                                    State: 'Classification',
-                                    'Responsible Group': fltrValue,
-                                    snapshotDate: vandaag
-                                }, 'Incident')
+                                promotoToBackLog(filteredTickets, {state: 'Classification'})
                             })
 
-                            createfunnelRepportSRQ(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
-                                'Responsible Group': fltrValue,
-                                snapshotDate: vandaag
-                            })
+                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
 
                             // Service Requests to Powerpoint
                             $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
                             $('#cmdSRQCreateUserStories').click(function () {
-                                createBackLog(data.allTickets, {
-                                    State: 'Classification',
-                                    'Responsible Group': fltrValue,
-                                    snapshotDate: vandaag
+                                createBackLog(filteredTickets, {
+                                    state: 'Classification'
                                 }, 'Service Request')
                             })
 
                             //Service Request to Planning & Prio Collection
                             $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
                             $('#cmdSRQToPlanning').click(function () {
-                                promotoToBackLog(data.allTickets, {
-                                    State: 'Classification',
-                                    'Responsible Group': fltrValue,
-                                    snapshotDate: vandaag
+                                promotoToBackLog(filteredTickets, {
+                                    state: 'Classification'
                                 }, 'Service Request')
                             })
                         })
 
-                        $('#openTickets').text(stockValues.opentTickets / 2).click(function () {
+                        $('#openTickets').text(stockValues.ticketsInProgress).click(function () {
                             console.info('click createdTickets')
-                            createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
+                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                state: 'Classification',
                                 'In progress': fltrValue,
-                                snapshotDate: vandaag
+                                snapshotDate: snapshot
                             })
-                            createfunnelRepportSRQ(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
+                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                state: 'Classification',
                                 'In progress': fltrValue,
-                                snapshotDate: vandaag
+                                snapshotDate: snapshot
                             })
                         })
-                        $('#closedTickets').text(stockValues.solvedTickets / 2).click(function () {
+                        $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
                             console.info('click createdTickets')
-                            createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
+                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                state: 'Classification',
                                 'Solved': fltrValue,
-                                snapshotDate: vandaag
+                                snapshotDate: snapshot
                             })
-                            createfunnelRepportSRQ(data.allTickets, 'ticketsList', {
-                                State: 'Classification',
+                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                state: 'Classification',
                                 'Solved': fltrValue,
-                                snapshotDate: vandaag
+                                snapshotDate: snapshot
                             })
                         })
-                        $('#stock').text(stockValues.ticketStock / 2)
+                        $('#stock').text(stockValues.ticketsInStock)
                     }
                 })
             })
             // Ticket Trends on Amount
-            ticketsCreatedPerWeek(data.aggCountsPerDayCattegory)
-            ticketsSolvedPerWeek(data.allTickets)
-            ticketsCreatedSRL(data.aggCountsPerDayCattegory)
-            ticketsSolvedSRL(data.allTickets)
-            ticketsCreatedCPF(data.aggCountsPerDayCattegory)
-            ticketsSolvedCPF(data.allTickets)
-            ticketsCreatedCognos(data.aggCountsPerDayCattegory)
-            ticketsSolvedCognos(data.allTickets)
+            ticketsPerWeek(data.perSnapshot[0].totTicketsperWeek)
+            ticketsSRL(data.perSnapshot[0].totTicketsperWeekSRL)
+            ticketsCPF(data.perSnapshot[0].totTicketsperWeekCPF)
+            //ticketsCreatedCPF(data.perSnapshot[0].totCreateTicketsperWeekCPF)
+            //ticketsSolvedCPF(data.perSnapshot[0].totSolvedTicketsperWeekCPF)
+            //ticketsCreatedCognos(data.perSnapshot[0].totCreateTicketsperWeekCognos)
+            //ticketsSolvedCognos(data.perSnapshot[0].totSolvedTicketsperWeekCognos)
 
             //Tickets per user
-            ticketsPerUser(data.ticketsPerUser)
+            //ticketsPerUser(data.ticketsPerUser)
 
             // Ticket Trends on Time
             //ticketLeadTime(data.allTickets)
 
-
-    }})
-
-function getWordCloud(div, lstWord) {
-    console.info('WordCloud')
-    console.info(lstWord)
-
-    var cloud = d3.layout.cloud;
-    var fill = d3.schemeCategory20
-    var layout = cloud()
-        .size([500, 500])
-        .words(lstWord.map(function (d) {
-            return {text: d, size: 10 + Math.random() * 90, test: "haha"};
-        }))
-        .padding(5)
-        .rotate(function () {
-            return ~~(Math.random() * 1) * 90;
-        })
-        .font("Impact")
-        .fontSize(function (d) {
-            return d.size;
-        })
-        .on("end", draw);
-
-    layout.start();
+        }})
 }
 
-    function draw(words) {
-        d3.select(div).append("svg")
-            .attr("width", layout.size()[0])
-            .attr("height", layout.size()[1])
-            .append("g")
-            .attr("transform", "translate(" + layout.size()[0] / 2 + "," + layout.size()[1] / 2 + ")")
-            .selectAll("text")
-            .data(words)
-            .enter().append("text")
-            .style("font-size", function(d) { return d.size + "px"; })
-            .style("font-family", "Impact")
-            .style("fill", function(d, i) { return '#000'; })
-            .attr("text-anchor", "middle")
-            .attr("transform", function(d) {
-                return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
-            })
-            .text(function(d) { return d.text; });
-    }}
+
+
 
 
 

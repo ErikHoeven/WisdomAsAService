@@ -4,6 +4,8 @@
 
 function createfunnelRepportIncidents(ds, div, filter){
     filter.ticketType =  "Incident"
+    console.info('createfunnelRepportIncidents')
+    console.info(ds)
     var dataset = _.where(ds,filter)
     var columns = Object.keys(ds[0])
     var rows = []
@@ -12,48 +14,19 @@ function createfunnelRepportIncidents(ds, div, filter){
     console.info(dataset)
 
 
-    columns = _.without(columns, '_id'
-                                , ''
-                                , 'count'
-                                , 'EPS - CPF_Count'
-                                , 'aggGrain'
-                                , 'Customer Reference'
-                                , 'Reason for waiting'
-                                , 'Planned Date / Time'
-                                , 'Customer Free Text'
-                                , 'EPS - Cognos_Count'
-                                , 'EPS - SRL_Count'
-                                , 'Responsible User'
-                                , 'Company'
-                                , 'ticketType'
-                                , "Process"
-                                , "Category"
-                                , "Category Path"
-                                , "Last Change"
-                                , "Solved Date"
-                                , "Closed Date"
-                                , "Contract ID"
-                                , "Intervention Target Date/Time"
-                                , "Intervention Actual Date/Time"
-                                , "Intervention SLA State"
-                                , "Resolution Actual Date/Time"
-                                , "Resolution SLA State"
-                                , "Reopened"
-                                , "Applicant"
-                                , "Source"
-                                , "Category Reporting Title "
-                                , "Overall Status"
-                                , "SolvedDate"
-                                , "closedDate"
-                                , "EPS Infra 2nd line_Count"
-                                , "snapshotDate"
-                                , "lastChange"
-                                , "SLA"
-                                , "Solution Description"
-                                , "Contract Name"
-                                , "Your Reference"
-                                ,"Service desk 3rd line_Count"
-                                ,"Responsible Group"
+    columns = _.without(columns,
+        ''
+        , 'IndCreated'
+        , 'IndProgress'
+        , 'IndSolved'
+        , 'IndSpider'
+        , 'IndStock'
+        , 'ResponsibleUser'
+        , 'count'
+        , 'creationWeek'
+        , 'lastChangeWeek'
+        , 'lastChangeYear'
+        , 'creationYear'
     )
     var dataset2 = []
     console.info(columns)
@@ -115,55 +88,31 @@ function createfunnelRepportIncidents(ds, div, filter){
 }
 
 function createfunnelRepportSRQ(ds, div, filter){
-
+    console.info('createfunnelRepportSRQ')
     filter.ticketType =  "Service Request"
     var dataset = _.where(ds,filter)
+    console.info(_.where(ds,{state:"Classification"}))
+    console.info(filter)
+    console.info(dataset)
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
 
-    columns = _.without(columns, '_id'
+    columns = _.without(columns
         , ''
+        , 'IndCreated'
+        , 'IndProgress'
+        , 'IndSolved'
+        , 'IndSpider'
+        , 'IndStock'
+        , 'ResponsibleUser'
         , 'count'
-        , 'EPS - CPF_Count'
-        , 'aggGrain'
-        , 'Customer Reference'
-        , 'Reason for waiting'
-        , 'Planned Date / Time'
-        , 'Customer Free Text'
-        , 'EPS - Cognos_Count'
-        , 'EPS - SRL_Count'
-        , 'Responsible User'
-        , 'Company'
-        , 'ticketType'
-        , "Process"
-        , "Category"
-        , "Category Path"
-        , "Last Change"
-        , "Solved Date"
-        , "Closed Date"
-        , "Contract ID"
-        , "Intervention Target Date/Time"
-        , "Intervention Actual Date/Time"
-        , "Intervention SLA State"
-        , "Resolution Actual Date/Time"
-        , "Resolution SLA State"
-        , "Reopened"
-        , "Applicant"
-        , "Source"
-        , "Category Reporting Title "
-        , "Overall Status"
-        , "SolvedDate"
-        , "closedDate"
-        , "EPS Infra 2nd line_Count"
-        , "snapshotDate"
-        , "lastChange"
-        , "SLA"
-        , "Solution Description"
-        , "Contract Name"
-        , "Your Reference"
-        , "Service desk 3rd line_Count"
-        , "Responsible Group"
+        , 'creationWeek'
+        , 'lastChangeWeek'
+        , 'lastChangeYear'
+        , 'creationYear'
+
+
 
     )
     var dataset2 = []

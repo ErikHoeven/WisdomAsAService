@@ -25,8 +25,6 @@ block head
     script(type="text/javascript", src="/bower_components/pptxgenjs/dist/pptxgen.bundle.js")
     script(type="text/javascript", src="/bower_components/underscore/underscore.js")
 
-
-
     // Custom styles for this template
     link(href='/stylesheets/theme.css', rel='stylesheet')
     link(href='/stylesheets/style-responsive.css', rel='stylesheet')
@@ -43,7 +41,6 @@ block head
     link(href='/stylesheets/colors/alizarin.css', rel='stylesheet')
     link(href='/stylesheets/colors/concrete.css', rel='stylesheet')
     link(href='/stylesheets/colors/wet-asphalt.css', rel='stylesheet')
-
 
     // Fonts
     link(href='/fonts/Indie-Flower/indie-flower.css', rel='stylesheet')
@@ -62,7 +59,7 @@ block head
     link(rel='stylesheet', href='../../views/Dashboard/graph.css')
     script(src="/views/Dashboard/exportToPowerPoint.js")
     script(src="/views/Dashboard/exportToExcelBackLog.js")
-    script(src="/views/Dashboard/rfcDashBoard.js")
+    //script(src="/views/Dashboard/rfcDashBoard.js")
     style.
         .glyphicon.glyphicon-one-fine-dot:before {
             content: "\25cf";
@@ -81,8 +78,7 @@ block head
                 $('#2a').show()
                 $('#3a').hide()
                 $('#4a').hide()
-
-            })
+                 })
             $('#Dashboard').click(function () {
                 $('#1a').show()
                 $('#2a').hide()
@@ -207,20 +203,26 @@ block body
                                     #pagnation
                                     #toolbarTicketList
                                     script.
-                                        getTickets()
+                                        $.ajax({
+                                            url: '/Dashboard/getSnapshots',
+                                            type: 'GET',
+                                            contentType: 'application/json',
+                                            success: function (data) {
+                                                console.info('succes getTickets')
+                                                console.info(data)
+
+                                                getTickets(data.snapshot)
+                                            }})
                                         //var auto_refresh_Tickets = setInterval(function () {
                                         //    getTickets()
                                         //}, 15000)
                     #2a.tab-pane.fade
                         .row
-                            .col-md-6
+                            .col-md-12
                                 .widget
                                     #ticketsCreatedPerWeek
-                            .col-md-6
-                                .widget
-                                    #ticketsSolvedPerWeek
                         .row
-                            .col-md-6
+                            .col-md-12
                                 .widget
                                     #ticketsCreatedSRL
                             .col-md-6
@@ -317,7 +319,7 @@ block body
                                     #pagnationRFC
                                     #toolbarRFCList
                                     script.
-                                        getAllRFC()
+                                        //getAllRFC()
 
                     #5a.tab-pane.fade
                         .row
