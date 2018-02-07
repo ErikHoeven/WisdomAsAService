@@ -13,7 +13,6 @@ function createfunnelRepportIncidents(ds, div, filter){
     console.info(filter)
     console.info(dataset)
 
-
     columns = _.without(columns,
         ''
         , 'IndCreated'
@@ -33,12 +32,9 @@ function createfunnelRepportIncidents(ds, div, filter){
     ds.forEach(function (r) {
         columns.forEach(function (c) {
         })
-
     })
 
     console.info('----------  DATASET --------------------')
-    //console.info(dataset[0])
-    //console.info(dataset)
     dataset.forEach(function (r) {
         var keys = Object.keys(r)
         // (1) Loop trhoug keys of the rows from the dataset
@@ -54,10 +50,7 @@ function createfunnelRepportIncidents(ds, div, filter){
                     else{
                         row.push(r[k].toString())
                     }
-
-
                 }
-
             })
         })
         //console.info(row)
@@ -111,16 +104,12 @@ function createfunnelRepportSRQ(ds, div, filter){
         , 'lastChangeWeek'
         , 'lastChangeYear'
         , 'creationYear'
-
-
-
     )
     var dataset2 = []
     console.info(columns)
     ds.forEach(function (r) {
         columns.forEach(function (c) {
         })
-
     })
 
     console.info('----------  DATASET --------------------')
@@ -140,10 +129,8 @@ function createfunnelRepportSRQ(ds, div, filter){
                         row.push(r[k].toString())
                     }
                 }
-
             })
         })
-        //console.info(row)
         rows.push(row)
         row = []
     })

@@ -19,7 +19,8 @@ exports.promoteToBackLog = function (req, res, next) {
         dataset.forEach(function (row) {
             arrBackLog.push({Number: row.number
                             ,Title: row.title
-                           ,'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]|| Math.floor((Math.abs(moment().toDate() - moment(row['Creation Date']).toDate()) / 36e5 ) /24) })
+                           ,'Nr Of Open Calendar Days': row["Nr Of Open Calendar Days"]|| Math.floor((Math.abs(moment().toDate() - moment(row['Creation Date']).toDate()) / 36e5 ) /24)
+                           , responsibleGroup: row.responsibleGroup})
 
         })
         console.info(arrBackLog)
@@ -37,9 +38,9 @@ exports.getBackLogList = function (req,res,next) {
         , tbody = ''
         , optionlist = ''
         , table = ''
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
+        , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , developers = []
 
     mongo.connect(uri, function (err, db) {
@@ -93,9 +94,9 @@ exports.updateBacklog = function (req,res,next) {
         , optionlist = ''
         , table = ''
         , collection = 'backlog'
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['01 - 02 : 2018', '03 - 04 : 2018', '05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
+        , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , updateFields = req.body.updateFields
         , connection = db.get(collection)
         , updateObject = {developer: updateFields.developer ,storypoints: updateFields.storyPoints, sprints: updateFields.sprints, hide_save: 'yes' , hide_input: 'yes'}
@@ -223,6 +224,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
+                                        '<td>'+ row.responsibleGroup +'</td>' +
                                         '<td>'+ performanceIndicator +'</td>' +
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
@@ -234,6 +236,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
+                                        '<td>'+ row.responsibleGroup +'</td>' +
                                         '<td>'+ performanceIndicator +'</td>' +
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +

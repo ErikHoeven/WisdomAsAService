@@ -27,7 +27,7 @@ function exportToPowerPoint(ds, filter){
 
     dataset.forEach(function (row) {
         var slide = pptx.addNewSlide();
-        slide.addText('User Story: ' + row.Number + '                 Responsible Group: ' + row['Responsible Group'], { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
+        slide.addText('User Story: ' + row.Number + '      Responsible Group: ' + row.responsibleGroup  +'', { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
 
         // TABLE 1: Simple array (if there is only one row of data, you can just use a simple array)
         var arrRows = [ row.Title ];
@@ -74,18 +74,18 @@ function exportToPowerPointBacklog(dataset){
 
     dataset.forEach(function (row) {
         var slide = pptx.addNewSlide();
-        slide.addText('User Story: ' + row.Number + '               Responsible Group: ' + row['Responsible Group'], { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
+        slide.addText('User Story: ' + row.Number + '           Responsible Group: ' + row.responsibleGroup, { x:0.8, y:0.25, font_size:18, font_face:'Arial', color:'0088CC' });
 
         // TABLE 1: Simple array (if there is only one row of data, you can just use a simple array)
         var arrRows = [ row.Title ];
         var tabOpts = { x:0.5, y:1.0, w:9.0 };
         var celOpts = { color:'363636', fill:'F7F7F7', font_size:14, border:{pt:1,color:'FFFFFF'} };
         slide.addTable( arrRows, tabOpts, celOpts );
-
+        console.info(row)
         // TABLE 2: Multi-row Array (data structure: rows are arrays of cells)
         var rows = [
-            ['Impedement: J/N', 'Escalated: J/N', 'Resonsible:...'],
-            ['_____', '______', '_______']
+            ['Impedement: J/N', 'Open Days', 'Resonsible:...'],
+            ['_____',  row["Nr Of Open Calendar Days"].toString(),'_______']
         ];
         var tabOpts = { x:0.5, y:2.0, w:9.0 };
         var celOpts = {
@@ -96,6 +96,7 @@ function exportToPowerPointBacklog(dataset){
 
         // TABLE 3: Formatting can be done on a cell-by-cell basis
         // TIP: Use this to selectively override table style options
+
         var rows = [
             [
                 { text: 'Story Points: ' + row.storypoints, opts: { valign:'t', align:'l', font_face:'Arial'   } },

@@ -74,122 +74,115 @@ function getTickets(snapshot) {
             snapshot = moment(snapshot,'DD-MM-YYYY').format('YYYY-MM-DD')
 
             d3GraphPlot('ticketChart2', countPerDay)
-            //setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
 
-            $('#selectFltrGroup').change(function () {
-                $.ajax({
-                    url: '/Dashboard/getTickets',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({snapshot: snapshot}),
-                    success: function (data){
+        /*    $.ajax({
+                url: '/Dashboard/getSpider',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({: snapshot}),
+                success: function (data) {*/
 
-                        console.info('Change')
-                        var fltrValue = $('#selectFltrGroup option:selected').text()
-                        newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 
-                        console.info('Funnel values Change')
-                        stockValues = newvalues[0].value
-                        filteredTickets = filterTickets(fltrValue, data.perSnapshot, snapshot).filteredTickets
+                    //setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
 
-                        console.info('----- Change ----------')
-                        $('#createdTickets').text(stockValues.createdTickets).click(function () {
-                            console.info('click createdTickets')
-                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                state: 'Classification',
-                                'Responsible Group': fltrValue
-                            })
+                    $('#selectFltrGroup').change(function () {
+                        $.ajax({
+                            url: '/Dashboard/getTickets',
+                            type: 'POST',
+                            contentType: 'application/json',
+                            data: JSON.stringify({snapshot: snapshot}),
+                            success: function (data) {
 
-                            // Incidenten to PowerPoint
-                            $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
-                            $('#cmdCreateUserStories').click(function () {
-                                createBackLog(filteredTickets, {
-                                    state: 'Classification'
-                                }, 'Incident')
-                            })
-                            //Incidenten to Planning & Prio Collection
-                            $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
-                            $('#cmdToPlanning').click(function () {
-                                promotoToBackLog(filteredTickets, {state: 'Classification'})
-                            })
+                                console.info('Change')
+                                var fltrValue = $('#selectFltrGroup option:selected').text()
+                                newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 
-                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
+                                console.info('Funnel values Change')
+                                stockValues = newvalues[0].value
+                                filteredTickets = filterTickets(fltrValue, data.perSnapshot, snapshot).filteredTickets
 
-                            // Service Requests to Powerpoint
-                            $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
-                            $('#cmdSRQCreateUserStories').click(function () {
-                                createBackLog(filteredTickets, {
-                                    state: 'Classification'
-                                }, 'Service Request')
-                            })
+                                console.info('----- Change ----------')
+                                $('#createdTickets').text(stockValues.createdTickets).click(function () {
+                                    console.info('click createdTickets')
+                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                        state: 'Classification',
+                                        'Responsible Group': fltrValue
+                                    })
 
-                            //Service Request to Planning & Prio Collection
-                            $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
-                            $('#cmdSRQToPlanning').click(function () {
-                                promotoToBackLog(filteredTickets, {
-                                    state: 'Classification'
-                                }, 'Service Request')
-                            })
+                                    // Incidenten to PowerPoint
+                                    $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                                    $('#cmdCreateUserStories').click(function () {
+                                        createBackLog(filteredTickets, {
+                                            state: 'Classification'
+                                        }, 'Incident')
+                                    })
+                                    //Incidenten to Planning & Prio Collection
+                                    $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                    $('#cmdToPlanning').click(function () {
+                                        promotoToBackLog(filteredTickets, {state: 'Classification'})
+                                    })
+
+                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
+
+                                    // Service Requests to Powerpoint
+                                    $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                                    $('#cmdSRQCreateUserStories').click(function () {
+                                        createBackLog(filteredTickets, {
+                                            state: 'Classification'
+                                        }, 'Service Request')
+                                    })
+
+                                    //Service Request to Planning & Prio Collection
+                                    $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                    $('#cmdSRQToPlanning').click(function () {
+                                        promotoToBackLog(filteredTickets, {
+                                            state: 'Classification'
+                                        }, 'Service Request')
+                                    })
+                                })
+
+                                $('#openTickets').text(stockValues.ticketsInProgress).click(function () {
+                                    console.info('click createdTickets')
+                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                        state: 'Classification',
+                                        'In progress': fltrValue,
+                                        snapshotDate: snapshot
+                                    })
+                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                        state: 'Classification',
+                                        'In progress': fltrValue,
+                                        snapshotDate: snapshot
+                                    })
+                                })
+                                $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
+                                    console.info('click createdTickets')
+                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                        state: 'Classification',
+                                        'Solved': fltrValue,
+                                        snapshotDate: snapshot
+                                    })
+                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                        state: 'Classification',
+                                        'Solved': fltrValue,
+                                        snapshotDate: snapshot
+                                    })
+                                })
+                                $('#stock').text(stockValues.ticketsInStock)
+                            }
                         })
+                    })
+                    // Ticket Trends on Amount
+                    ticketsSRL(data.perSnapshot[0].totTicketsperWeekSRL)
+                    ticketsCPF(data.perSnapshot[0].totTicketsperWeekCPF)
+                    ticketsCognos(data.perSnapshot[0].totTicketsperWeekCognos)
+                    ticketsDWH(data.perSnapshot[0].totTicketsperWeekDWH)
 
-                        $('#openTickets').text(stockValues.ticketsInProgress).click(function () {
-                            console.info('click createdTickets')
-                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                state: 'Classification',
-                                'In progress': fltrValue,
-                                snapshotDate: snapshot
-                            })
-                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
-                                state: 'Classification',
-                                'In progress': fltrValue,
-                                snapshotDate: snapshot
-                            })
-                        })
-                        $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
-                            console.info('click createdTickets')
-                            createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                state: 'Classification',
-                                'Solved': fltrValue,
-                                snapshotDate: snapshot
-                            })
-                            createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
-                                state: 'Classification',
-                                'Solved': fltrValue,
-                                snapshotDate: snapshot
-                            })
-                        })
-                        $('#stock').text(stockValues.ticketsInStock)
-                    }
-                })
-            })
-            // Ticket Trends on Amount
-            ticketsPerWeek(data.perSnapshot[0].totTicketsperWeek)
-            ticketsSRL(data.perSnapshot[0].totTicketsperWeekSRL)
-            ticketsCPF(data.perSnapshot[0].totTicketsperWeekCPF)
-            //ticketsCreatedCPF(data.perSnapshot[0].totCreateTicketsperWeekCPF)
-            //ticketsSolvedCPF(data.perSnapshot[0].totSolvedTicketsperWeekCPF)
-            //ticketsCreatedCognos(data.perSnapshot[0].totCreateTicketsperWeekCognos)
-            //ticketsSolvedCognos(data.perSnapshot[0].totSolvedTicketsperWeekCognos)
+                    //Tickets per user
+                    //ticketsPerUser(data.ticketsPerUser)
 
-            //Tickets per user
-            //ticketsPerUser(data.ticketsPerUser)
-
-            // Ticket Trends on Time
-            //ticketLeadTime(data.allTickets)
-
-        }})
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
+                    // Ticket Trends on Time
+                    //ticketLeadTime(data.allTickets)
+                }
+        })
+    }
 

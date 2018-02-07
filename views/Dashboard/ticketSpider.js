@@ -17,15 +17,56 @@ var  request = require("request")
     ,compareWordState = null
     ,locals = {}
 
+mongo.connect(uri, function (err, db) {
+    console.info('MONGODB START CHECK COLLECTIONS')
+    var tasks = [   // Load businessrules
+        function (callback) {
+            db.collection('businessrules').find({typeBusinessRule: 'SpiderGraphExeption'}).toArray(function (err, businessrules) {
+                if (err) return callback(err);
+                locals.businessrules = businessrules;
+                callback();
+            });
+        },
+        // Load stgOmniTracker - prepare measureSet
+        function (callback) {
+            db.collection('stgOmniTracker').find({$and:[{creationWeek: {$lte: snapshotweek}},{creationYear:moment().year()},{snapshotDate:new Date(snapshot)}]}).toArray(function (err, rawMeasureSet) {
+                if (err) return callback(err);
+                locals.rawMeasureSet = rawMeasureSet;
+                callback();
+            });
+        }
+    ]
+    console.info('--------------- START ASYNC ------------------------')
+    async.parallel(tasks, function (err) {
+        if (err) return next(err);
+        var   businessrules = locals.businessrules
+            , rawMeasureSet = locals.rawMeasureSet
 
 
 
-function filterTitleList(titleArray, businessRules){
+
+    })
+}
+
+
+
+
+function filterTitleList(tickets, businessRules){
     // ------------------------------------  wordcloud ----------------------------------------------------------------------
-    var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong'], temp = []
+    var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong']
+       ,temp = []
+       ,objectTicket = {}
+       ,arrayTickets = []
 
     businessrules.forEach(function (row) {
         exceptions.push(row.lookupValue)
+    })
+
+    tickets.forEach(function (t) {
+        objectTicket.Title = t.Title
+        objectTicket.Group = t["Responsible Group"]
+        columns.push(objectTicket)
+        objectTicket = {}
     })
 
     aggTicketsGroup.forEach(function (group) {

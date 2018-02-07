@@ -132,14 +132,15 @@ exports.getTickets = function (req, res, next) {
                 , aggCountsPerDayCattegory = []
                 , group = locals.group
             db.close()
+            console.info('---------------------CLOSE ASYNC-------------------------')
 
-            console.info('---------------------CLOSE-------------------------')
             rawMeasureSet.forEach(function (ticket) {
                 ticket.snapshotDate = moment(ticket.snapshotDate).format("DD-MM-YYYY")
 
             })
 
             console.info('----------------------------------------------')
+            // --------------------------FLTR Responsible Group ------------------------------------------------------
             ftlrGroup.push('All')
             var groupList = []
 
@@ -160,7 +161,7 @@ exports.getTickets = function (req, res, next) {
                 })
                 .entries(rawMeasureSet);
 
-            // -------------------------- snapshots ------------------------------------------------------
+            // -------------------------- Snapshots ------------------------------------------------------
             var snapshots = [], snapshotDate
 
             rawMeasureSet.forEach(function (ticket) {
@@ -173,6 +174,7 @@ exports.getTickets = function (req, res, next) {
 
             snapshots = Array.from(new Set(snapshots))
 
+            //------------------------ Send Data to Client ------------------------------------------------
             res.status(200).json({
                 fltrGroup: ftlrGroup,
                 dataSpider: titleList,
@@ -276,31 +278,31 @@ exports.updateGeneric = function (req, res, next) {
 
 
 
-function filterSnapshot(dataset, snapshot){
+function filterSnapshot(dataset, snapshot) {
 
-
-    var  returnSet = []
-        , tickets = dataset.rawMeasureSet
-        , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
-        , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
-        , rawtotSolvedPerWeekSRL = dataset.rawtotSolvedPerWeekSRL
-        , rawtotCreatedPerWeekSRL = dataset.rawtotCreatedPerWeekSRL
-        , rawtotSolvedPerWeekCPF = dataset.rawtotSolvedPerWeekCPF
-        , rawtotCreatedPerWeekCPF = dataset.rawtotCreatedPerWeekCPF
-        , rawtotSolvedPerWeekCognos = dataset.rawtotSolvedPerWeekCognos
-        , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
-        , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
-        , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
-        , snapshotDetails = []
-        , AggCountPerDay = []
-        , AggCountPerDayPerUser = []
-        , DataSpider = []
-        , snapshots = []
-        , snapshotObject  = {}
-        , valueObject = {}
-        , measureObject = {}
-        , measureSet = []
-        , perSnapshot = []
+    if (locals != null || !locals) {
+        var returnSet = []
+            , tickets = dataset.rawMeasureSet
+            , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
+            , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
+            , rawtotSolvedPerWeekSRL = dataset.rawtotSolvedPerWeekSRL
+            , rawtotCreatedPerWeekSRL = dataset.rawtotCreatedPerWeekSRL
+            , rawtotSolvedPerWeekCPF = dataset.rawtotSolvedPerWeekCPF
+            , rawtotCreatedPerWeekCPF = dataset.rawtotCreatedPerWeekCPF
+            , rawtotSolvedPerWeekCognos = dataset.rawtotSolvedPerWeekCognos
+            , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
+            , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
+            , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+            , snapshotDetails = []
+            , AggCountPerDay = []
+            , AggCountPerDayPerUser = []
+            , DataSpider = []
+            , snapshots = []
+            , snapshotObject = {}
+            , valueObject = {}
+            , measureObject = {}
+            , measureSet = []
+            , perSnapshot = []
 
         snapshotObject.snapshot = snapshot
         snapshotObject.snapshotDetails = []
@@ -320,10 +322,17 @@ function filterSnapshot(dataset, snapshot){
 
         snapshotObject.totTicketsperWeekCPF = {}
         snapshotObject.totTicketsperWeekCPF.title = 'Trend running year created tickets per week CPF'
-        snapshotObject.totTicketsperWeekCPF.columns = ['Week', 'CreatedTickets','TicketsClosed']
+        snapshotObject.totTicketsperWeekCPF.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
+
+        snapshotObject.totTicketsperWeekCognos = {}
+        snapshotObject.totTicketsperWeekCognos.title = 'Trend running year created tickets per week Cognos'
+        snapshotObject.totTicketsperWeekCognos.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
+
+        snapshotObject.totTicketsperWeekDWH = {}
+        snapshotObject.totTicketsperWeekDWH.title = 'Trend running year created tickets per week DWH'
+        snapshotObject.totTicketsperWeekDWH.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
 
         snapshotObject.mDashboardTickets = []
-
 
         // values per snapshot
         tickets.forEach(function (v) {
@@ -335,12 +344,12 @@ function filterSnapshot(dataset, snapshot){
             valueObject.state = v.State
             valueObject.ResponsibleUser = v['Responsible User']
             valueObject.ticketType = v.ticketType
-            valueObject.lastChange     = v.lastChange
+            valueObject.lastChange = v.lastChange
             valueObject.lastChangeWeek = v.lastChangeWeek
             valueObject.lastChangeYear = v.lastChangeYear
-            valueObject.creationWeek =   v.creationWeek
-            valueObject.creationYear =   v.creationYear
-            valueObject.creationDate =  v['Creation Date']
+            valueObject.creationWeek = v.creationWeek
+            valueObject.creationYear = v.creationYear
+            valueObject.creationDate = v['Creation Date']
             valueObject.responsibleGroup = v['Responsible Group']
             valueObject.affectedUser = v['Affected Person ']
             valueObject.count = v.count
@@ -349,41 +358,40 @@ function filterSnapshot(dataset, snapshot){
             snapshotDetails.push(valueObject)
         })
 
-        snapshotDetails =  underscore.uniq(snapshotDetails)
+        snapshotDetails = underscore.uniq(snapshotDetails)
         snapshotObject.snapshotDetails = snapshotDetails
 
         tickets.forEach(function (v) {
             // Measures
             measureObject = {}
 
-
-             if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')  ) {
-             measureObject.cpf = v.count
-             }
-             if ( (v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft') ) {
-             measureObject.esoft = v.count
-             }
-             if ( (v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')) {
-             measureObject.srl = v.count
-             }
-             if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line') ) {
-             measureObject.firstLine = v.count
-             }
-             if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line') ) {
-             measureObject.secondLineApps = v.count
-             }
-             if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos') ) {
-             measureObject.cognos = v.count
-             }
-             if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra') ) {
-             measureObject.infra = v.count
-             }
-             if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')) {
-             measureObject.desktopVirtualisatie = v.count
-             }
-             if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
-             measureObject.dwh = v.count
-             }
+            if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')) {
+                measureObject.cpf = v.count
+            }
+            if ((v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft')) {
+                measureObject.esoft = v.count
+            }
+            if ((v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')) {
+                measureObject.srl = v.count
+            }
+            if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line')) {
+                measureObject.firstLine = v.count
+            }
+            if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line')) {
+                measureObject.secondLineApps = v.count
+            }
+            if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos')) {
+                measureObject.cognos = v.count
+            }
+            if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra')) {
+                measureObject.infra = v.count
+            }
+            if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')) {
+                measureObject.desktopVirtualisatie = v.count
+            }
+            if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
+                measureObject.dwh = v.count
+            }
 
             measureSet.push(measureObject)
         })
@@ -438,14 +446,18 @@ function filterSnapshot(dataset, snapshot){
         snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
 
         //Tickets total
-        snapshotObject.totTicketsperWeek.Data = datasetsPerSubject(rawtotCreatedPerWeek, rawtotSolvedPerWeek )
+        snapshotObject.totTicketsperWeek.Data = datasetsPerSubject(rawtotCreatedPerWeek, rawtotSolvedPerWeek)
         //Tickets created SRL
-        snapshotObject.totTicketsperWeekSRL.Data = datasetsPerSubject(rawtotCreatedPerWeekSRL,rawtotSolvedPerWeekSRL)
+        snapshotObject.totTicketsperWeekSRL.Data = datasetsPerSubject(rawtotCreatedPerWeekSRL, rawtotSolvedPerWeekSRL)
         //Tickets created CPF
-        snapshotObject.totTicketsperWeekCPF.Data = datasetsPerSubject(rawtotCreatedPerWeekCPF,rawtotSolvedPerWeekCPF)
+        snapshotObject.totTicketsperWeekCPF.Data = datasetsPerSubject(rawtotCreatedPerWeekCPF, rawtotSolvedPerWeekCPF)
+        //Tickets created Cognos
+        snapshotObject.totTicketsperWeekCognos.Data = datasetsPerSubject(rawtotCreatedPerWeekCognos, rawtotSolvedPerWeekCognos)
+        //Tickets created DWH
+        snapshotObject.totTicketsperWeekDWH.Data = datasetsPerSubject(rawtotCreatedPerWeekDWH, rawtotSolvedPerWeekDWH)
 
         var ObjectDashboardTickets = {}
-          , mDashboardTickets = [],snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
+            , mDashboardTickets = [], snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
 
         snapshotDetails.forEach(function (v) {
             // If the creation week is the same as the snapshot week then count all the tickets in this week
@@ -483,20 +495,24 @@ function filterSnapshot(dataset, snapshot){
                     v.IndSolved = 1
                 }
 
-                if(v.creationWeek == snapshotweek){
+                if (v.creationWeek == snapshotweek) {
                     v.IndSpider = 1
                 }
             }
         })
-    snapshotObject.mDashboardTickets = mDashboardTickets
-    returnSet.push(snapshotObject)
-    return returnSet
+        snapshotObject.mDashboardTickets = mDashboardTickets
+        returnSet.push(snapshotObject)
+        return returnSet
+    }
+else{
+    returnSet = null
+    }
 }
 
 
-// ------------------------------------------   FUNCTIONS ----------------------------------------------------------------------------
+// ------------------------------------------   GENERIC FUNCTIONS ----------------------------------------------------------------------------
 function datasetsPerSubject(creat, closed ) {
-    var currentYear = Number(moment().year()) - 1
+    var currentYear = Number(moment().year())
        ,totTicketsperWeek =  joinAgg(closed,creat,currentYear)
 
     return totTicketsperWeek

@@ -287,7 +287,6 @@ function searchDefiniton(KeyColumn, rowId) {
 
 }
 
-
 function setPagnation(data, pagnationStep, actualStep, filter ) {
     if (filter != 'All'){
         tickets = _.where(data,{'Responsible Group': filter.Group, State: filter.State})
