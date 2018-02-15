@@ -15,9 +15,6 @@ var async = require('async'),
     snapshotDate = ''
 
 
-
-
-
 exports.readExceltoJSON = function (req,res,next) {
      filename = './uploads/' + req.body.selectedFiles[0]
      snapshot = moment(req.body.uploadDate,'MM/DD/YYYY').format('DD-MM-YYYY')
@@ -91,7 +88,7 @@ exports.readExceltoJSON = function (req,res,next) {
     if (filesplit[2] == 'xlsx') {
         console.info('xlsx')
         console.info(filename)
-
+        stgOmniTracker.remove({})
 
         var XLSX = require('xlsx');
         var workbook = XLSX.readFile(filename);
@@ -252,6 +249,8 @@ function dateStringtoDate(dateString) {
 }
 
 function insertSTGOmniTracker(data){
+
+
     console.info('---- START FUNCTION ---')
     var cleanData = []
     //Clean Data

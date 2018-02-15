@@ -76,15 +76,17 @@ function updateBackLog(id) {
 
             //update Story points per dev
             var developers = [], storypoints = [], data = [], row = {}
-            $('#planboard tbody tr td:nth-child(7)').each( function(){
+            $('#planboard tbody tr td:nth-child(8)').each( function(){
                 //add item to array
                 developers.push( $(this).text() );
             });
+            console.info(developers)
 
-            $('#planboard tbody tr td:nth-child(5)').each( function(){
+            $('#planboard tbody tr td:nth-child(6)').each( function(){
                 //add item to array
                 storypoints.push( $(this).text() );
             });
+            console.info(storypoints)
 
             for(var i = 0; i < developers.length; i++){
 

@@ -22,6 +22,10 @@ exports.getTickets = function (req, res, next) {
          console.info(snapshot)
          var snapshotweek = moment(req.body.snapshot,'YYYY-MM-DD').week()
          console.info(snapshotweek)
+        if(req.body.filter){
+            var filter = req.body.filter
+        }
+
         console.info('-------------------End Tickets Parameters--------------------------------------------------------')
 
     mongo.connect(uri, function (err, db) {
@@ -180,7 +184,7 @@ exports.getTickets = function (req, res, next) {
                 dataSpider: titleList,
                 legendaSpider: legenda,
                 snapshots: snapshots,
-                perSnapshot:  filterSnapshot(locals,snapshot)
+                perSnapshot:  filterSnapshot(locals,snapshot,filter)
             })
         })
     })
@@ -278,11 +282,12 @@ exports.updateGeneric = function (req, res, next) {
 
 
 
-function filterSnapshot(dataset, snapshot) {
+function filterSnapshot(dataset, snapshot,filter) {
 
-    if (locals != null || !locals) {
-        var returnSet = []
-            , tickets = dataset.rawMeasureSet
+    var processHit = 0
+    if (dataset != null && ( filter == null || !filter)) {
+
+            var tickets = dataset.rawMeasureSet
             , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
             , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
             , rawtotSolvedPerWeekSRL = dataset.rawtotSolvedPerWeekSRL
@@ -293,6 +298,32 @@ function filterSnapshot(dataset, snapshot) {
             , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
             , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+
+        processHit = 1
+
+    }
+    if (dataset != null && ( filter != null && filter)){
+
+        var tickets = dataset.rawMeasureSet
+            , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
+            , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
+            , rawtotSolvedPerWeekSRL = dataset.rawtotSolvedPerWeekSRL
+            , rawtotCreatedPerWeekSRL = dataset.rawtotCreatedPerWeekSRL
+            , rawtotSolvedPerWeekCPF = dataset.rawtotSolvedPerWeekCPF
+            , rawtotCreatedPerWeekCPF = dataset.rawtotCreatedPerWeekCPF
+            , rawtotSolvedPerWeekCognos = dataset.rawtotSolvedPerWeekCognos
+            , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
+            , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
+            , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+
+
+            tickets = underscore.filter(tickets,{"Responsible Group": filter})
+            processHit = 1
+    }
+
+
+    if ( processHit == 1 ){
+        var returnSet = []
             , snapshotDetails = []
             , AggCountPerDay = []
             , AggCountPerDayPerUser = []

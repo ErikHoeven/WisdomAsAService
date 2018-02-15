@@ -2,6 +2,7 @@ function setUserProfile(user) {
     console.info('setUserProfile')
     var url = user.profilePictureURI, username = user.username
     if (!url) {
+        console.info('User unknown')
         url = '/images/users/img2.jpg'
     }
 
@@ -13,7 +14,7 @@ function setUserProfile(user) {
         '<div class="header-cover bg-green">' +
         '</div>' +
         '<div class="user-profile-inner padding-top-17">' +
-        '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true">' +
+        '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true" height="75" width="75">' +
         '<h4 class="fg-gray font-bold">'+ username + '</h4></div></div></div></div></div>')
 }
 
@@ -86,15 +87,17 @@ function getTickets(snapshot) {
                     //setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
 
                     $('#selectFltrGroup').change(function () {
+                        var fltrValue = $('#selectFltrGroup option:selected').text()
+
                         $.ajax({
                             url: '/Dashboard/getTickets',
                             type: 'POST',
                             contentType: 'application/json',
-                            data: JSON.stringify({snapshot: snapshot}),
+                            data: JSON.stringify({snapshot: snapshot, filter: fltrValue}),
                             success: function (data) {
 
                                 console.info('Change')
-                                var fltrValue = $('#selectFltrGroup option:selected').text()
+
                                 newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 
                                 console.info('Funnel values Change')
