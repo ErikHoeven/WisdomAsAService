@@ -1,6 +1,7 @@
 function setUserProfile(user) {
     console.info('setUserProfile')
     var url = user.profilePictureURI, username = user.username
+    console.info(user)
     if (!url) {
         console.info('User unknown')
         url = '/images/users/img2.jpg'
@@ -15,7 +16,7 @@ function setUserProfile(user) {
         '</div>' +
         '<div class="user-profile-inner padding-top-17">' +
         '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true" height="75" width="75">' +
-        '<h4 class="fg-gray font-bold">'+ username + '</h4></div></div></div></div></div>')
+        '<h3  id="blockTitle" class="fg-gray font-bold">'+ user.name + ' - Incidents and Service Requests week: '+  moment().week() +' </h3></div></div></div></div></div>')
 }
 
 function getTickets(snapshot) {
@@ -66,12 +67,14 @@ function getTickets(snapshot) {
             })
             $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
                 console.info('click SolvedTickets')
+
                 createfunnelRepportIncidents(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
                 createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
             })
             $('#stock').text(stockValues.ticketsInStock)
 
             var countPerDay = data.perSnapshot[0].totActualTickets
+            console.info(countPerDay)
             snapshot = moment(snapshot,'DD-MM-YYYY').format('YYYY-MM-DD')
 
             d3GraphPlot('ticketChart2', countPerDay)
@@ -107,6 +110,7 @@ function getTickets(snapshot) {
                                 console.info('----- Change ----------')
                                 $('#createdTickets').text(stockValues.createdTickets).click(function () {
                                     console.info('click createdTickets')
+                                    console.info(_.where(filteredTickets,{state: 'Classification'}))
                                     createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
                                         state: 'Classification',
                                         'Responsible Group': fltrValue

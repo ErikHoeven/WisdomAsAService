@@ -78,6 +78,8 @@ block head
                 $('#2a').show()
                 $('#3a').hide()
                 $('#4a').hide()
+
+                $('#blockTitle').html(user.name + ' - Trends on Service Requests and Incidents')
                  })
             $('#Dashboard').click(function () {
                 $('#1a').show()
@@ -91,6 +93,7 @@ block head
                 $('#2a').hide()
                 $('#3a').show()
                 $('#4a').hide()
+                $('#blockTitle').html(user.name + ' - Amount of tickets per User')
             })
             $('#TabBacklog').click(function () {
                 $('#1a').hide()
