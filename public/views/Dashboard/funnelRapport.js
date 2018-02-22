@@ -11,7 +11,7 @@ function createfunnelRepportIncidents(ds, div, filter){
     var rows = []
     var row = []
     console.info(filter)
-    console.info(dataset)
+    console.info(_.where(ds,{responsibleGroup:"EPS - SRL", state:"In Progress"}))
 
     columns = _.without(columns,
         ''
@@ -84,9 +84,8 @@ function createfunnelRepportSRQ(ds, div, filter){
     console.info('createfunnelRepportSRQ')
     filter.ticketType =  "Service Request"
     var dataset = _.where(ds,filter)
-    console.info(_.where(ds,{state:"Classification"}))
-    console.info(filter)
     console.info(dataset)
+
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
@@ -122,7 +121,7 @@ function createfunnelRepportSRQ(ds, div, filter){
             columns.forEach(function (c) {
                 // (c) Compare the keys with the columsn if matched then add to row
                 if (k == c){
-                    if (c = 'Creation Date'){
+                    if (c = 'creationDate'){
                         row.push(r[k].toString().substring(0,10))
                     }
                     else{

@@ -2,20 +2,22 @@
  * Created by erik on 12/2/17.
  */
 function promotoToBackLog(ds, filter, ticketType) {
-
+    console.info("promotoToBackLog: " + ticketType)
     if (ticketType == "Incident") {
+        console.info('promotoToBackLog Incident')
         filter.ticketType = "Incident"
         postPlanningtoServer(ds, filter)
     }
     if (ticketType == "Service Request") {
         filter.ticketType = "Service Request"
+        console.info('promotoToBackLog SRQ')
         postPlanningtoServer(ds, filter)
     }
 }
 
 
 function postPlanningtoServer(ds, filter) {
-
+    console.info('postPlanningtoServer')
 
 var dataset = _.where(ds,filter)
     console.info('dataset ppt')

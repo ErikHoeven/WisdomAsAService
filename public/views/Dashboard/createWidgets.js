@@ -20,7 +20,7 @@ function setUserProfile(user) {
 }
 
 function getTickets(snapshot) {
-
+    var changed = 0
     $.ajax({
         url: '/Dashboard/getTickets',
         type: 'POST',
@@ -58,18 +58,18 @@ function getTickets(snapshot) {
             })
             $('#openTickets').text(stockValues.ticketsInProgress ).click(function () {
                 console.info('click openTickets')
-                createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                    State: 'In progress',
-                    snapshotDate: vandaag
-                })
-                createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'In progress', snapshotDate: vandaag})
+                if (changed == 0){
+                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "In Progress"})
+                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: "In Progress"})
+                }
 
             })
             $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
                 console.info('click SolvedTickets')
-
-                createfunnelRepportIncidents(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
-                createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Solved', snapshotDate: vandaag})
+                if (changed == 0) {
+                    createfunnelRepportIncidents(data.allTickets, 'ticketsList', { state: 'Solved'})
+                    createfunnelRepportSRQ(data.allTickets, 'ticketsList', {state: 'Solved'})
+                }
             })
             $('#stock').text(stockValues.ticketsInStock)
 
@@ -100,6 +100,7 @@ function getTickets(snapshot) {
                             success: function (data) {
 
                                 console.info('Change')
+                                changed = 1
 
                                 newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 
@@ -110,69 +111,64 @@ function getTickets(snapshot) {
                                 console.info('----- Change ----------')
                                 $('#createdTickets').text(stockValues.createdTickets).click(function () {
                                     console.info('click createdTickets')
-                                    console.info(_.where(filteredTickets,{state: 'Classification'}))
-                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                        state: 'Classification',
-                                        'Responsible Group': fltrValue
-                                    })
+                                    if (changed == 1) {
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                            state: "Classification",
+                                            responsibleGroup: fltrValue
+                                        })
 
-                                    // Incidenten to PowerPoint
-                                    $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
-                                    $('#cmdCreateUserStories').click(function () {
-                                        createBackLog(filteredTickets, {
-                                            state: 'Classification'
-                                        }, 'Incident')
-                                    })
-                                    //Incidenten to Planning & Prio Collection
-                                    $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
-                                    $('#cmdToPlanning').click(function () {
-                                        promotoToBackLog(filteredTickets, {state: 'Classification'})
-                                    })
+                                        // Incidenten to PowerPoint
+                                        $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                                        $('#cmdCreateUserStories').click(function () {
 
-                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
+                                            createBackLog(filteredTickets, {state: 'Classification'}, 'Incident')
+                                        })
+                                        //Incidenten to Planning & Prio Collection
+                                        $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                        $('#cmdToPlanning').click(function () {
+                                            console.info("cmdIncident")
+                                            promotoToBackLog(filteredTickets, {state: 'Classification'}, "Incident")
+                                        })
 
-                                    // Service Requests to Powerpoint
-                                    $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
-                                    $('#cmdSRQCreateUserStories').click(function () {
-                                        createBackLog(filteredTickets, {
-                                            state: 'Classification'
-                                        }, 'Service Request')
-                                    })
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
 
-                                    //Service Request to Planning & Prio Collection
-                                    $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
-                                    $('#cmdSRQToPlanning').click(function () {
-                                        promotoToBackLog(filteredTickets, {
-                                            state: 'Classification'
-                                        }, 'Service Request')
-                                    })
+                                        // Service Requests to Powerpoint
+                                        $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                                        $('#cmdSRQCreateUserStories').click(function () {
+                                            createBackLog(filteredTickets, {state: 'Classification'}, 'Service Request')
+                                        })
+
+                                        //Service Request to Planning & Prio Collection
+                                        $('#SRQTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                        $('#cmdSRQToPlanning').click(function () {
+                                            promotoToBackLog(filteredTickets, {
+                                                state: 'Classification'
+                                            }, 'Service Request')
+                                        })
+                                    }
                                 })
 
                                 $('#openTickets').text(stockValues.ticketsInProgress).click(function () {
                                     console.info('click createdTickets')
-                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                        state: 'Classification',
-                                        'In progress': fltrValue,
-                                        snapshotDate: snapshot
-                                    })
-                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
-                                        state: 'Classification',
-                                        'In progress': fltrValue,
-                                        snapshotDate: snapshot
-                                    })
+                                    if (changed == 1) {
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue})
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue})
+                                    }
                                 })
+
+
                                 $('#closedTickets').text(stockValues.ticketsSolved).click(function () {
                                     console.info('click createdTickets')
-                                    createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                        state: 'Classification',
-                                        'Solved': fltrValue,
-                                        snapshotDate: snapshot
-                                    })
-                                    createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
-                                        state: 'Classification',
-                                        'Solved': fltrValue,
-                                        snapshotDate: snapshot
-                                    })
+                                    if (changed == 1) {
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                            state: 'Solved',
+                                            responsibleGroup: fltrValue
+                                        })
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                            state: 'Solved',
+                                            responsibleGroup: fltrValue
+                                        })
+                                    }
                                 })
                                 $('#stock').text(stockValues.ticketsInStock)
                             }
