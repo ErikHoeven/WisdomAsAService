@@ -26,6 +26,8 @@ function filterTickets(value, dataset, snapshot) {
             stockArray.push(stockObject)
         })
 
+
+
         stockValue = d3.nest()
             .key(function (d) {
                 return d.key
@@ -47,6 +49,10 @@ function filterTickets(value, dataset, snapshot) {
                 };
             })
             .entries(stockArray)
+
+        console.info(' ---- > stockArray <--------')
+        console.info(stockValue)
+        console.info(' ---- > stockArray <--------')
         return {stockValue: stockValue, filteredTickets: filteredTickets}
     }
     else {

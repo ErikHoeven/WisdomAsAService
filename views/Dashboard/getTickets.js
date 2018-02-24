@@ -511,24 +511,20 @@ function filterSnapshot(dataset, snapshot,filter) {
             }
             // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
             // as stock
-            if (v.creationWeek < snapshotweek) {
+            if (v.creationWeek < snapshotweek && (v.state == "In Progress" || v.state == "Classification" )) {
                 v.IndCreated = 0
                 v.IndSolved = 0
                 v.IndProgress = 0
                 v.IndStock = 1
                 v.IndSpider = 0
+            }
 
-                if (v.state == "In Progress") {
-                    v.IndProgress = 1
-                }
-
-                if (v.state == "Closed" || v.state == "Solved") {
-                    v.IndSolved = 1
-                }
-
-                if (v.creationWeek == snapshotweek) {
-                    v.IndSpider = 1
-                }
+            if (v.creationWeek < snapshotweek && (v.state == "Closed" || v.state == "Solved" )) {
+                v.IndCreated = 0
+                v.IndSolved = 0
+                v.IndProgress = 0
+                v.IndStock = 0
+                v.IndSpider = 0
             }
         })
         snapshotObject.mDashboardTickets = mDashboardTickets

@@ -109,6 +109,7 @@ function getTickets(snapshot) {
                                 filteredTickets = filterTickets(fltrValue, data.perSnapshot, snapshot).filteredTickets
 
                                 console.info('----- Change ----------')
+                                // Created Tickets
                                 $('#createdTickets').text(stockValues.createdTickets).click(function () {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
@@ -161,16 +162,28 @@ function getTickets(snapshot) {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
                                         createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                            state: 'Solved',
+                                            IndSolved: 1,
                                             responsibleGroup: fltrValue
                                         })
                                         createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
-                                            state: 'Solved',
+                                            IndSolved: 1,
                                             responsibleGroup: fltrValue
                                         })
                                     }
                                 })
-                                $('#stock').text(stockValues.ticketsInStock)
+                                $('#stock').text(stockValues.ticketsInStock).click(function () {
+                                    console.info('click createdTickets')
+                                    if (changed == 1) {
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
+                                            IndStock: 1,
+                                            responsibleGroup: fltrValue
+                                        })
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
+                                            IndStock: 1,
+                                            responsibleGroup: fltrValue
+                                        })
+                                    }
+                                })
                             }
                         })
                     })
