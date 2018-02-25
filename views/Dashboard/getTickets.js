@@ -285,7 +285,8 @@ exports.updateGeneric = function (req, res, next) {
 function filterSnapshot(dataset, snapshot,filter) {
 
     var processHit = 0
-    if (dataset != null && ( filter == null || !filter)) {
+    if (dataset.rawMeasureSet.length > 0 && ( filter == null || !filter)) {
+        console.info('Datset is not null & filter does not exist')
 
             var tickets = dataset.rawMeasureSet
             , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
@@ -299,11 +300,14 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
 
+        console.info('DataSet Length: ' + tickets.length)
+        var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
+        console.info('snapshotWeek: '+ snapshotWeek.toString() )
         processHit = 1
 
     }
-    if (dataset != null && ( filter != null && filter)){
-
+    if (dataset.rawMeasureSet.length > 0 && ( filter != null && filter)){
+        console.info('Datset is not null & filter exist')
         var tickets = dataset.rawMeasureSet
             , rawtotCreatedPerWeek = dataset.rawtotCreatedPerWeek
             , rawtotSolvedPerWeek = dataset.rawtotSolvedPerWeek
@@ -316,8 +320,12 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
 
-
-            tickets = underscore.filter(tickets,{"Responsible Group": filter})
+            console.info('DataSet Length: ' + tickets.length)
+            var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
+            console.info('snapshotWeek: '+ snapshotWeek.toString() )
+            if (filter != 'All'){
+                tickets = underscore.filter(tickets,{"Responsible Group": filter})
+            }
             processHit = 1
     }
 
@@ -392,40 +400,44 @@ function filterSnapshot(dataset, snapshot,filter) {
         snapshotDetails = underscore.uniq(snapshotDetails)
         snapshotObject.snapshotDetails = snapshotDetails
 
+        console.info('tickets length before loop: ' + tickets.length)
         tickets.forEach(function (v) {
             // Measures
+
             measureObject = {}
+            if( v.creationYear == moment().year() && v.creationWeek == snapshotWeek){
+                if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')) {
+                    measureObject.cpf = v.count
+                }
+                if ((v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft')) {
+                    measureObject.esoft = v.count
+                }
+                if ((v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')) {
+                    measureObject.srl = v.count
+                }
+                if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line')) {
+                    measureObject.firstLine = v.count
+                }
+                if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line')) {
+                    measureObject.secondLineApps = v.count
+                }
+                if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos')) {
+                    measureObject.cognos = v.count
+                }
+                if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra')) {
+                    measureObject.infra = v.count
+                }
+                if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')) {
+                    measureObject.desktopVirtualisatie = v.count
+                }
+                if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
+                    measureObject.dwh = v.count
+                }
 
-            if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')) {
-                measureObject.cpf = v.count
+                measureSet.push(measureObject)
             }
-            if ((v['Responsible Group'] == 'EPS - E-Soft' || v['responsibleGroup'] == 'EPS - E-Soft')) {
-                measureObject.esoft = v.count
-            }
-            if ((v['Responsible Group'] == 'EPS - SRL' || v['responsibleGroup'] == 'EPS - SRL')) {
-                measureObject.srl = v.count
-            }
-            if ((v['Responsible Group'] == 'Service desk 1st line' || v['responsibleGroup'] == 'Service desk 1st line')) {
-                measureObject.firstLine = v.count
-            }
-            if ((v['Responsible Group'] == 'EPS Apps 2nd line' || v['responsibleGroup'] == 'EPS Apps 2nd line')) {
-                measureObject.secondLineApps = v.count
-            }
-            if ((v['Responsible Group'] == 'EPS - Cognos' || v['responsibleGroup'] == 'EPS - Cognos')) {
-                measureObject.cognos = v.count
-            }
-            if ((v['Responsible Group'] == 'EPS - Infra' || v['responsibleGroup'] == 'EPS - Infra')) {
-                measureObject.infra = v.count
-            }
-            if ((v['Responsible Group'] == 'Desktop Virtualisation 2nd line' || v['responsibleGroup'] == 'Desktop Virtualisation 2nd line')) {
-                measureObject.desktopVirtualisatie = v.count
-            }
-            if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
-                measureObject.dwh = v.count
-            }
-
-            measureSet.push(measureObject)
         })
+        console.info('MeasureSet: ' + measureSet.length)
 
         // Aggegrate to state per snapshot
         snapshotObject.aggCountsPerDayCattegory = d3.nest()
@@ -473,7 +485,7 @@ function filterSnapshot(dataset, snapshot,filter) {
             snapshotObject.totActualTickets.values.push(snapshotObject.aggCountsPerDayCattegory[0].values[c])
         })
 
-        snapshotObject.totActualTickets.title = "Total Actual tickets week" + measureObject.key
+        snapshotObject.totActualTickets.title = "Total Actual tickets week " + moment().week()
         snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
 
         //Tickets total
@@ -493,6 +505,13 @@ function filterSnapshot(dataset, snapshot,filter) {
         snapshotDetails.forEach(function (v) {
             // If the creation week is the same as the snapshot week then count all the tickets in this week
             // as created
+            if (v.responsibleGroup == "EPS - CPF" ||
+                v.responsibleGroup == "EPS - SRL" ||
+                v.responsibleGroup == "EPS - Cognos" ||
+                v.responsibleGroup == "EPS - DWH" ||
+                v.responsibleGroup == "E-Soft" ){
+                v.IndEPS = 1
+            }
             if (v.creationWeek == snapshotweek) {
 
                 v.IndCreated = 1

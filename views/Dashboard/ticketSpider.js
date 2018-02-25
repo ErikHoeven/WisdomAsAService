@@ -9,65 +9,76 @@ var  request = require("request")
     ,uri = 'mongodb://localhost:27017/commevents'
     ,moment = require('moment')
     ,underscore = require('underscore')
-    ,actWeek = actualWeek()
-    ,actMonth =  actualMonth()
     ,ftlrGroup = []
     ,fltrState = []
     ,compareWordGroup = null
     ,compareWordState = null
     ,locals = {}
 
-mongo.connect(uri, function (err, db) {
-    console.info('MONGODB START CHECK COLLECTIONS')
-    var tasks = [   // Load businessrules
-        function (callback) {
-            db.collection('businessrules').find({typeBusinessRule: 'SpiderGraphExeption'}).toArray(function (err, businessrules) {
-                if (err) return callback(err);
-                locals.businessrules = businessrules;
-                callback();
-            });
-        },
-        // Load stgOmniTracker - prepare measureSet
-        function (callback) {
-            db.collection('stgOmniTracker').find({$and:[{creationWeek: {$lte: snapshotweek}},{creationYear:moment().year()},{snapshotDate:new Date(snapshot)}]}).toArray(function (err, rawMeasureSet) {
-                if (err) return callback(err);
-                locals.rawMeasureSet = rawMeasureSet;
-                callback();
-            });
-        }
-    ]
-    console.info('--------------- START ASYNC ------------------------')
-    async.parallel(tasks, function (err) {
-        if (err) return next(err);
-        var   businessrules = locals.businessrules
-            , rawMeasureSet = locals.rawMeasureSet
+exports.getSpiderWords = function (req,res,next) {
+    var data = req.body.data;
+    console.info('getSpiderWords')
+    console.info('data: ' + data.length)
 
 
+    mongo.connect(uri, function (err, db) {
+        console.info('MONGODB START CHECK COLLECTIONS')
+        var tasks = [   // Load businessrules
+            function (callback) {
+                db.collection('businessrules').find({typeBusinessRule: 'SpiderGraphExeption'}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ]
+        console.info('--------------- START ASYNC ------------------------')
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            var businessrules = locals.businessrules
+            db.close()
 
 
+            //console.info(filterTitleList(data,businessrules))
+
+            res.status(200).json(filterTitleList(data,businessrules))
+        })
     })
+
+
+
 }
 
 
 
 
-function filterTitleList(tickets, businessRules){
+function filterTitleList(tickets, businessRules) {
     // ------------------------------------  wordcloud ----------------------------------------------------------------------
-    var exceptions = [' - ','q','fk','','fw','is','not','working','-','any','from','info','/','bij','get','match','Day','Wrong']
-       ,temp = []
-       ,objectTicket = {}
-       ,arrayTickets = []
+    var exceptions = [' - ', 'q', 'fk', '', 'fw', 'is', 'not', 'working', '-', 'any', 'from', 'info', '/', 'bij', 'get', 'match', 'Day', 'Wrong']
+        , temp = []
+        , objectTicket = {}
+        , arrayTickets = []
+        , columns = []
+        , titleList = []
+        , legenda = []
 
-    businessrules.forEach(function (row) {
+    businessRules.forEach(function (row) {
         exceptions.push(row.lookupValue)
     })
 
     tickets.forEach(function (t) {
-        objectTicket.Title = t.Title
-        objectTicket.Group = t["Responsible Group"]
+        objectTicket.Title = t.title
+        objectTicket.Group = t.responsibleGroup
         columns.push(objectTicket)
         objectTicket = {}
     })
+
+    var aggTicketsGroup = d3.nest()
+        .key(function (d) {
+            return d.Group;
+        })
+        .entries(columns);
+
 
     aggTicketsGroup.forEach(function (group) {
         var values = group.values, innerArray = []
@@ -79,13 +90,13 @@ function filterTitleList(tickets, businessRules){
             })
         });
 
-        var wordList = fltrWordCountList(innerArray,3, null)
-        var fltrWordList = wordList.filter(function( o) {
+        var wordList = fltrWordCountList(innerArray, 1, null)
+        var fltrWordList = wordList.filter(function (o) {
             return exceptions.indexOf(o.word) == -1;
         })
         temp = []
 
-        if (fltrWordList.length > 0){
+        if (fltrWordList.length > 0) {
             fltrWordList.forEach(function (w) {
                 temp.push({axis: w.word, value: w.count})
             })
@@ -107,12 +118,16 @@ function filterTitleList(tickets, businessRules){
     temp = []
     titleList.forEach(function (set) {
         set.forEach(function (row) {
-            row.value =  Math.round((row.value / max) * 100) / 100
+            row.value = Math.round((row.value / max) * 100) / 100
         })
     })
 
+return {Data: titleList, Legenda: legenda }
 
 }
+
+
+
 
 
 

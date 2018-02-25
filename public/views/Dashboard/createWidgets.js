@@ -74,20 +74,28 @@ function getTickets(snapshot) {
             $('#stock').text(stockValues.ticketsInStock)
 
             var countPerDay = data.perSnapshot[0].totActualTickets
+            console.info('data.perSnapshot[0].totActualTickets')
             console.info(countPerDay)
             snapshot = moment(snapshot,'DD-MM-YYYY').format('YYYY-MM-DD')
 
             d3GraphPlot('ticketChart2', countPerDay)
+            console.info('SpiderData')
+            console.info()
 
-        /*    $.ajax({
+            $.ajax({
                 url: '/Dashboard/getSpider',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({: snapshot}),
-                success: function (data) {*/
+                data: JSON.stringify({data: _.where(data.perSnapshot[0].snapshotDetails,{IndSpider:1, IndEPS : 1})}),
+                success: function (spider) {
+                console.info('succes')
+                    console.info(spider)
+                    setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                }
+            })
 
 
-                    //setSpiderChart('ticketChart', data.dataSpider, data.legendaSpider)
+
 
                     $('#selectFltrGroup').change(function () {
                         var fltrValue = $('#selectFltrGroup option:selected').text()
@@ -113,25 +121,22 @@ function getTickets(snapshot) {
                                 $('#createdTickets').text(stockValues.createdTickets).click(function () {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
-                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {
-                                            state: "Classification",
-                                            responsibleGroup: fltrValue
-                                        })
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "Classification", IndCreated:1, responsibleGroup: fltrValue})
 
                                         // Incidenten to PowerPoint
                                         $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
                                         $('#cmdCreateUserStories').click(function () {
 
-                                            createBackLog(filteredTickets, {state: 'Classification'}, 'Incident')
+                                            createBackLog(filteredTickets, {state: 'Classification', IndCreated: 1}, 'Incident')
                                         })
                                         //Incidenten to Planning & Prio Collection
                                         $('#INCTicketBackLogButton').append('<button type="button" id="cmdToPlanning" class="btn btn-primary">Promote to Planning</button>')
                                         $('#cmdToPlanning').click(function () {
                                             console.info("cmdIncident")
-                                            promotoToBackLog(filteredTickets, {state: 'Classification'}, "Incident")
+                                            promotoToBackLog(filteredTickets, {state: 'Classification',  IndCreated: 1}, "Incident")
                                         })
 
-                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification'})
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: 'Classification',  IndCreated: 1})
 
                                         // Service Requests to Powerpoint
                                         $('#SRQTicketBackLogButton').html('<button type="button" id="cmdSRQCreateUserStories" class="btn btn-primary">Create User Stories</button>')
@@ -152,8 +157,8 @@ function getTickets(snapshot) {
                                 $('#openTickets').text(stockValues.ticketsInProgress).click(function () {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
-                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue})
-                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue})
+                                        createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue, IndProgress: 1})
+                                        createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue,IndProgress: 1})
                                     }
                                 })
 
@@ -186,6 +191,32 @@ function getTickets(snapshot) {
                                 })
                             }
                         })
+                        if (fltrValue != 'All'){
+                            $.ajax({
+                                url: '/Dashboard/getSpider',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({data: _.where(data.perSnapshot[0].snapshotDetails,{IndSpider:1, IndEPS : 1, responsibleGroup: fltrValue})}),
+                                success: function (spider) {
+                                    console.info('succes')
+                                    console.info(spider)
+                                    setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                                }
+                            })
+                        }else{
+
+                            $.ajax({
+                                url: '/Dashboard/getSpider',
+                                type: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify({data: _.where(data.perSnapshot[0].snapshotDetails,{IndSpider:1, IndEPS : 1})}),
+                                success: function (spider) {
+                                    console.info('succes')
+                                    console.info(spider)
+                                    setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                                }
+                            })
+                        }
                     })
                     // Ticket Trends on Amount
                     ticketsSRL(data.perSnapshot[0].totTicketsperWeekSRL)

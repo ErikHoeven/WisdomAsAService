@@ -4,8 +4,6 @@ function d3GraphPlot(div, ds) {
 
     var   tableCols = []
         , tableData = []
-        , curentDate = moment().toISOString()
-        , currentWeek = moment(curentDate,"YYYY-MM-DD").week()
         , setTable = []
 
 

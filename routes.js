@@ -59,6 +59,7 @@ exports = module.exports = function(app, passport) {
     app.get('/Dashboard/addBacklogPPT',require('./views/Dashboard/promoteToBackLog').exportBacklogToPowerpoint);
     app.get('/Dashboard/getRFC',require('./views/Dashboard/getRFC').getRFC);
     app.get('/Dashboard/getSnapshots',require('./views/Dashboard/getSnapshots').getSnapshot);
+    app.post('/Dashboard/getSpider',require('./views/Dashboard/ticketSpider').getSpiderWords);
 
 
 
