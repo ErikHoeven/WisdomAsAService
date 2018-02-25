@@ -38,7 +38,7 @@ exports.getBackLogList = function (req,res,next) {
         , tbody = ''
         , optionlist = ''
         , table = ''
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA KPI', 'LocalOffice','SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
         , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , developers = []
@@ -94,7 +94,7 @@ exports.updateBacklog = function (req,res,next) {
         , optionlist = ''
         , table = ''
         , collection = 'backlog'
-        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
+        , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'KPI', 'LocalOffice', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
         , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , updateFields = req.body.updateFields
@@ -220,12 +220,16 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
 
 
                 var performanceIndicator = SLA(row.Title, row['Nr Of Open Calendar Days'], row.Number )
+                var localOffice = getLocalOffice(row.Title)
+                var sla = getSLA(row.Title)
 
                 strBody = strBody + '<tr><td>'+ row.Number + '</td>' +
                                         '<td>'+ row.Title +'</td>' +
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
                                         '<td>'+ row.responsibleGroup +'</td>' +
                                         '<td>'+ performanceIndicator +'</td>' +
+                                        '<td>'+ localOffice +'</td>' +
+                                        '<td>'+ sla +'</td>' +
                                         '<td><input type="text" id="txtStoryPoints'+ row.Number +'"></input></td>' +
                                         '<td>'+ option1 +'</td>' +
                                         '<td>'+ option2 +'</td>' +
@@ -238,6 +242,8 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                                         '<td>'+ row['Nr Of Open Calendar Days'] +'</td>' +
                                         '<td>'+ row.responsibleGroup +'</td>' +
                                         '<td>'+ performanceIndicator +'</td>' +
+                                        '<td>'+ localOffice +'</td>' +
+                                        '<td>'+ sla +'</td>' +
                                         '<td>'+ row.storypoints +'</td>' +
                                         '<td>'+ row.sprints +'</td>' +
                                         '<td>'+ row.developer +'</td>' +
@@ -310,7 +316,76 @@ function SLA(title, days, number){
         if (t == '03'  && days >  3 ){
             returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
         }
+        if (t == '04'  && days <= 4 ){
+            returnString = '<img src="/images/performance_green.png"  height="21" width="21"></img>'
+        }
+        if (t == '04'  && days >  4 ){
+            returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
+        }
+        if (t == '05'  && days <= 5 ){
+            returnString = '<img src="/images/performance_green.png"  height="21" width="21"></img>'
+        }
+        if (t == '05'  && days >  5 ){
+            returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
+        }
     })
 
  return returnString
+}
+
+function getLocalOffice(title) {
+    var titleArray = title.split(' ')
+        ,returnString = ''
+        , hit = 0
+    titleArray.forEach(function (t) {
+
+        if (t.trim() == 'LOES' && hit == 0 ){
+            returnString = 'Local Office Spain'
+            hit = 1
+        }
+        if (t.trim() == 'LOBE' && hit == 0){
+            returnString = 'Local Office Belgium'
+            hit = 1
+        }
+        if (t.trim() == 'LODE' && hit == 0){
+            returnString = 'Local Office Germany'
+            hit = 1
+        }
+        })
+        if(hit == 0 ){
+            returnString = 'Unknown'
+            hit = 1
+        }
+
+    return returnString
+
+}
+
+function getSLA(title) {
+    var titleArray = title.split(' ')
+    var returnString = ''
+
+
+    titleArray.forEach(function (t) {
+        if (t == '00' ){
+            returnString = '00: Solve it the same day'
+        }
+        if (t == '01' ){
+            returnString = '01: Solve it within 1 day'
+        }
+        if (t == '02' ) {
+            returnString = '02: Solve it within 2 day'
+        }
+        if (t == '03' ){
+            returnString = '03: Solve it within 3 day'
+        }
+        if (t == '04'  ) {
+            returnString = '04: Solve it within 4 day'
+        }
+        if (t == '05'  ) {
+            returnString = '05: Solve it within 5 day'
+        }
+    })
+
+    return returnString
 }
