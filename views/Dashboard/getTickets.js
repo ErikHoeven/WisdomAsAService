@@ -302,7 +302,20 @@ function filterSnapshot(dataset, snapshot,filter) {
 
         console.info('DataSet Length: ' + tickets.length)
         var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
-        console.info('snapshotWeek: '+ snapshotWeek.toString() )
+        var dayinWeek = moment(snapshot,'YYYY-MM-DD').day()
+
+        console.info('snapshotWeek: ' + snapshotWeek)
+        console.info('dayinWeek: ' + dayinWeek)
+        console.info(typeof 123)
+        console.info(typeof dayinWeek)
+        console.info(typeof snapshotWeek)
+
+        if (dayinWeek == 1){
+            console.info('dayinweek:1' )
+            snapshotWeek = snapshotWeek -1
+        }
+
+        console.info('snapshotWeekAfter: ' + snapshotWeek)
         processHit = 1
 
     }
@@ -326,6 +339,15 @@ function filterSnapshot(dataset, snapshot,filter) {
             if (filter != 'All'){
                 tickets = underscore.filter(tickets,{"Responsible Group": filter})
             }
+            var dayinWeek = moment(snapshot,'YYYY-MM-DD').day()
+            console.info('dayinWeek: ' + dayinWeek)
+
+            if (dayinWeek == 1){
+                console.info('dayinweek:1' )
+                snapshotWeek = snapshotWeek -1
+            }
+
+            console.info('snapshotWeekAfter: ' + snapshotWeek)
             processHit = 1
     }
 
