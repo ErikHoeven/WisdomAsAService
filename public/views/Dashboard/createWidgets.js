@@ -89,13 +89,13 @@ function getTickets(snapshot) {
                 data: JSON.stringify({data: _.where(data.perSnapshot[0].snapshotDetails,{IndSpider:1, IndEPS : 1})}),
                 success: function (spider) {
                 console.info('succes')
-                    console.info(spider)
-                    setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                    console.info(spider.Data.length)
+                    if ( spider.Data.length > 0  ){
+                        setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                    }
+
                 }
             })
-
-
-
 
                     $('#selectFltrGroup').change(function () {
                         var fltrValue = $('#selectFltrGroup option:selected').text()
@@ -200,7 +200,9 @@ function getTickets(snapshot) {
                                 success: function (spider) {
                                     console.info('succes')
                                     console.info(spider)
-                                    setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                                    if ( spider.Data.length > 0  ) {
+                                        setSpiderChart('ticketChart', spider.Data, spider.Legenda)
+                                    }
                                 }
                             })
                         }else{
@@ -218,11 +220,13 @@ function getTickets(snapshot) {
                             })
                         }
                     })
+
                     // Ticket Trends on Amount
                     ticketsSRL(data.perSnapshot[0].totTicketsperWeekSRL)
                     ticketsCPF(data.perSnapshot[0].totTicketsperWeekCPF)
                     ticketsCognos(data.perSnapshot[0].totTicketsperWeekCognos)
                     ticketsDWH(data.perSnapshot[0].totTicketsperWeekDWH)
+                    ticketsESOFT(data.perSnapshot[0].totTicketsperWeekESOFT)
 
                     //Tickets per user
                     //ticketsPerUser(data.ticketsPerUser)

@@ -125,7 +125,24 @@ exports.getTickets = function (req, res, next) {
                     locals.rawtotCreatedPerWeekDWH = rawtotCreatedPerWeekDWH;
                     callback();
                 });
-            }
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotSolvedPerWeekDWH
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match:{$and: [ {State:"Closed" },{"Responsible Group": "EPS - E-Soft"}]}},{ $group: {_id: {lastChangeWeek: "$lastChangeWeek", lastChangeYear: "$lastChangeYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotSolvedPerWeekESOFT) {
+                    if (err) return callback(err);
+                    locals.rawtotSolvedPerWeekESOFT = rawtotSolvedPerWeekESOFT;
+                    callback();
+                });
+            },
+            // Load stgOmniTracker - prepare measureSet rawtotCreatedPerWeekDWH
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{ $match: {"Responsible Group": "EPS - E-Soft" } },{ $group: {_id: {creationWeek: "$creationWeek", creationYear: "$creationYear"},totalCount: { $sum: "$count" }}}]).toArray(function (err, rawtotCreatedPerWeekESOFT) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekESOFT = rawtotCreatedPerWeekESOFT;
+                    callback();
+                });
+            },
+
         ];
         console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
@@ -299,6 +316,8 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
             , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+            , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
+            , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
 
         console.info('DataSet Length: ' + tickets.length)
         var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -332,6 +351,8 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotCreatedPerWeekCognos = dataset.rawtotCreatedPerWeekCognos
             , rawtotSolvedPerWeekDWH = dataset.rawtotSolvedPerWeekDWH
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
+            , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
+            , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
 
             console.info('DataSet Length: ' + tickets.length)
             var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -392,6 +413,10 @@ function filterSnapshot(dataset, snapshot,filter) {
         snapshotObject.totTicketsperWeekDWH = {}
         snapshotObject.totTicketsperWeekDWH.title = 'Trend running year created tickets per week DWH'
         snapshotObject.totTicketsperWeekDWH.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
+
+        snapshotObject.totTicketsperWeekESOFT = {}
+        snapshotObject.totTicketsperWeekESOFT.title = 'Trend running year created tickets per week ESOFT'
+        snapshotObject.totTicketsperWeekESOFT.columns = ['Week', 'CreatedTickets', 'TicketsClosed']
 
         snapshotObject.mDashboardTickets = []
 
@@ -520,7 +545,8 @@ function filterSnapshot(dataset, snapshot,filter) {
         snapshotObject.totTicketsperWeekCognos.Data = datasetsPerSubject(rawtotCreatedPerWeekCognos, rawtotSolvedPerWeekCognos)
         //Tickets created DWH
         snapshotObject.totTicketsperWeekDWH.Data = datasetsPerSubject(rawtotCreatedPerWeekDWH, rawtotSolvedPerWeekDWH)
-
+        //Tickets created ESOFT
+        snapshotObject.totTicketsperWeekESOFT.Data = datasetsPerSubject(rawtotCreatedPerWeekESOFT, rawtotSolvedPerWeekESOFT)
         var ObjectDashboardTickets = {}
             , mDashboardTickets = [], snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
 

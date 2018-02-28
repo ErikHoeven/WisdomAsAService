@@ -152,3 +152,41 @@ function ticketsDWH(ds){
         document.getElementById('ticketsDWH'));
     chart.draw(dataNew, options);
 }
+
+
+function ticketsESOFT(ds) {
+    console.info('Start ticketsSolvedPerWeek ESOFT')
+    console.info(ds.Data)
+    // (A)Define column headers
+    var dataNew = new google.visualization.DataTable()
+    dataNew.addColumn('number', 'Weeknumber');
+    dataNew.addColumn('number', 'TicketsCreated');
+    dataNew.addColumn('number', 'TicketsClosed');
+    dataNew.addRows(ds.Data)
+
+    //(3) Set graph options
+    var options = {
+        title: ds.title,
+        hAxis: {
+            title: 'Weeknumber'
+        },
+        vAxis: {
+            title: 'Tickets'
+        },
+        trendlines: {
+            0: {
+                type: 'polynomial',
+                degree: 3,
+                visibleInLegend: true,
+                pointSize: 20, // Set the size of the trendline dots.
+                opacity: 0.1
+            }
+        },
+        width: 1000,
+        height: 500,
+    };
+
+    //(4) Draw Graph
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('ticketsESOFT'));
+}

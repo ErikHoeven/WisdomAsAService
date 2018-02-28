@@ -329,7 +329,6 @@ function SLA(title, days, number){
             returnString = '<img src="/images/performance_red.jpg"  height="21" width="21"></img>'
         }
     })
-
  return returnString
 }
 
