@@ -87,6 +87,19 @@ block head
                 $('#3a').hide()
                 $('#4a').hide()
 
+                //Get snapshots
+                $.ajax({
+                    url: '/Dashboard/getSnapshots',
+                    type: 'GET',
+                    contentType: 'application/json',
+                    success: function (data) {
+                        console.info('succes getTickets')
+                        console.info(data)
+                        // Get Tickets
+                        getTickets(data.snapshot, user.name)
+                    }
+                })
+
             })
             $('#TabTicketsPerUser').click(function () {
                 $('#1a').hide()
@@ -206,6 +219,7 @@ block body
                                     #pagnation
                                     #toolbarTicketList
                                     script.
+                                        //Get snapshots
                                         $.ajax({
                                             url: '/Dashboard/getSnapshots',
                                             type: 'GET',
@@ -213,8 +227,8 @@ block body
                                             success: function (data) {
                                                 console.info('succes getTickets')
                                                 console.info(data)
-
-                                                getTickets(data.snapshot)
+                                                // Get Tickets
+                                                getTickets(data.snapshot, user.name)
                                             }})
                                         //var auto_refresh_Tickets = setInterval(function () {
                                         //    getTickets()

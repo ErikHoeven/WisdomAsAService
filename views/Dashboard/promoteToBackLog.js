@@ -219,7 +219,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
                 option2 = setOptionList(optionlist2,row.Number, 'developer')
 
 
-                var performanceIndicator = SLA(row.Title, row['Nr Of Open Calendar Days'], row.Number )
+                var performanceIndicator = SLA(row.Title, row['Nr Of Open Calendar Days'])
                 var localOffice = getLocalOffice(row.Title)
                 var sla = getSLA(row.Title)
 
@@ -284,9 +284,7 @@ function setBody(ds,optionlist1, optionlist2, dev, points) {
 
 
 
-function SLA(title, days, number){
-    var typeArray = number.split('-')
-    var type = typeArray[0]
+function SLA(title, days){
     var titleArray = title.split(' ')
     var returnString = ''
 

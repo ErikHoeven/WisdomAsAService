@@ -10,7 +10,8 @@ var multer  =   require('multer'),
     url = 'mongodb://localhost:27017/commevents',
     sys = require('sys'),
     businessRules = db.get('businessrules'),
-    userWaas = db.get('user_waas')
+    userWaas = db.get('user_waas'),
+    moment = require('moment')
 
 
 
@@ -48,7 +49,7 @@ exports.fileupload = function (req, res, next) {
             },
             filename: function (req, file, callback) {
                 originalFileName = file.originalname.split('.')
-                callback(null, originalFileName[0] + '-' + Date.now());
+                callback(null, originalFileName[0] + '-' + moment().format('YYYYMMDD'));
             }
         }),
     upload = multer({ storage : storage}).single('uploadFile')
@@ -67,7 +68,7 @@ exports.fileupload = function (req, res, next) {
         frmUser.username = req.body.username
         frmUser.password = req.body.password
         frmUser.confirmpassword = req.body.confirm
-        frmUser.profilePictureURI = uploadFolder + '/' + originalFileName[0] + '-' + Date.now()
+        frmUser.profilePictureURI = '.' + uploadFolder + '/' + originalFileName[0] + '-' + moment().format('YYYYMMDD')
 
         userWaas.findOne({username: frmUser.username}, function (err, user) {
             if (err) {

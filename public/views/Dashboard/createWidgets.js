@@ -2,6 +2,7 @@ function setUserProfile(user) {
     console.info('setUserProfile')
     var url = user.profilePictureURI, username = user.username
     console.info(user)
+    console.info(url)
     if (!url) {
         console.info('User unknown')
         url = '/images/users/img2.jpg'
@@ -15,12 +16,14 @@ function setUserProfile(user) {
         '<div class="header-cover bg-green">' +
         '</div>' +
         '<div class="user-profile-inner padding-top-17">' +
-        '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true" height="75" width="75">' +
-        '<h3  id="blockTitle" class="fg-gray font-bold">'+ user.name + ' - Incidents and Service Requests week: '+  moment().week() +' </h3></div></div></div></div></div>')
+        '<img src="'+ url +'" class="img-circle profile-avatar" data-pin-nopin="true" height="100" width="175">' +
+        '<h3  id="blockTitle" class="fg-gray font-bold"></h3></div></div></div></div></div>')
 }
 
-function getTickets(snapshot) {
-    var changed = 0
+function getTickets(snapshot,username) {
+    var changed = 0, nSnapshotWeek = moment(snapshot, 'YYYY-MM-DD').week() -1
+
+    $('#blockTitle').html(username + ' - Incidents and Service Requests week: '+  nSnapshotWeek )
     $.ajax({
         url: '/Dashboard/getTickets',
         type: 'POST',
@@ -42,19 +45,18 @@ function getTickets(snapshot) {
 
             // Calculate Stock parameters
             var snapshot = moment(data.snapshots[data.snapshots.length -1], 'DD-MM-YYYY').format('DD-MM-YYYY')
+            console.info(snapshot)
             var values = [], stock = 0, stockValues = {}
             values = filterTickets('All', data.perSnapshot, snapshot).stockValue
 
+
             console.info('-----------  Funnel values------------')
+            console.info(values)
             stockValues = values[0].value
+            console.info(stockValues)
 
             $('#createdTickets').text(stockValues.createdTickets).click(function () {
-                //console.info('click createdTickets:')
-                //createfunnelRepportIncidents(data.allTickets, 'ticketsList', {
-                //    State: 'Classification',
-                //    snapshotDate: vandaag
-                //})
-                //createfunnelRepportSRQ(data.allTickets, 'ticketsList', {State: 'Classification', snapshotDate: vandaag})
+
             })
             $('#openTickets').text(stockValues.ticketsInProgress ).click(function () {
                 console.info('click openTickets')
@@ -109,6 +111,7 @@ function getTickets(snapshot) {
 
                                 console.info('Change')
                                 changed = 1
+                                console.info(_.where(data.perSnapshot[0].snapshotDetails,{creationWeek: 9}))
 
                                 newvalues = filterTickets(fltrValue, data.perSnapshot, snapshot).stockValue
 

@@ -560,7 +560,8 @@ function filterSnapshot(dataset, snapshot,filter) {
                 v.responsibleGroup == "E-Soft" ){
                 v.IndEPS = 1
             }
-            if (v.creationWeek == snapshotweek) {
+            if (v.creationWeek == snapshotWeek) {
+
 
                 v.IndCreated = 1
                 v.IndSolved = 0
@@ -578,7 +579,7 @@ function filterSnapshot(dataset, snapshot,filter) {
             }
             // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
             // as stock
-            if (v.creationWeek < snapshotweek && (v.state == "In Progress" || v.state == "Classification" )) {
+            if (v.creationWeek < snapshotWeek && (v.state == "In Progress" || v.state == "Classification" )) {
                 v.IndCreated = 0
                 v.IndSolved = 0
                 v.IndProgress = 0
@@ -586,7 +587,7 @@ function filterSnapshot(dataset, snapshot,filter) {
                 v.IndSpider = 0
             }
 
-            if (v.creationWeek < snapshotweek && (v.state == "Closed" || v.state == "Solved" )) {
+            if (v.creationWeek < snapshotWeek && (v.state == "Closed" || v.state == "Solved" )) {
                 v.IndCreated = 0
                 v.IndSolved = 0
                 v.IndProgress = 0

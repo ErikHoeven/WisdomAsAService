@@ -95,7 +95,7 @@ exports = module.exports = function(app, passport) {
 
     app.post('/login/post', passport.authenticate('local'
         , {
-            successRedirect:'/'
+            successRedirect:'/Dashboard/'
           , failureRedirect:'/login/'
           , failureFlash: true
 
