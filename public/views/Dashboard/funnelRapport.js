@@ -154,6 +154,89 @@ function createfunnelRepportSRQ(ds, div, filter){
 
 }
 
+function createfunnelRepportChanges(ds, div, filter){
+    console.info('createfunnelRepportChanges')
+    filter.Process =  "RFCS"
+    var dataset = _.where(ds,filter)
+    console.info(dataset)
+
+    var columns = Object.keys(ds[0])
+    var rows = []
+    var row = []
+
+    columns = _.without(columns
+        , ''
+        , 'IndCreated'
+        , 'IndProgress'
+        , 'IndSolved'
+        , 'IndSpider'
+        , 'IndStock'
+        , 'ResponsibleUser'
+        , 'count'
+        , 'creationWeek'
+        , 'lastChangeWeek'
+        , 'lastChangeYear'
+        , 'creationYear'
+    )
+    var dataset2 = []
+    console.info(columns)
+    ds.forEach(function (r) {
+        columns.forEach(function (c) {
+        })
+    })
+
+    console.info('----------  DATASET --------------------')
+    console.info(dataset[0])
+    dataset.forEach(function (r) {
+        var keys = Object.keys(r)
+        // (1) Loop trhoug keys of the rows from the dataset
+        keys.forEach(function (k) {
+            // (a) Loop throug the columns
+            columns.forEach(function (c) {
+                // (c) Compare the keys with the columsn if matched then add to row
+                if (k == c){
+                    if (c = 'creationDate'){
+                        row.push(r[k].toString().substring(0,10))
+                    }
+                    else{
+                        row.push(r[k].toString())
+                    }
+                }
+            })
+        })
+        rows.push(row)
+        row = []
+    })
+
+    rows = _.uniq(rows, function(x){
+        return x[0];
+    });
+    console.info('-------------------  ROWS ---------------')
+    console.info(rows)
+    var dataNew = new google.visualization.DataTable()
+
+    columns.forEach(function (c) {
+        dataNew.addColumn('string', c)
+    })
+
+    dataNew.addRows(rows)
+
+    var table = new google.visualization.Table(document.getElementById('ChangeTicketList'));
+
+    table.draw(dataNew, {showRowNumber: true, width: '100%', height: '100%'});
+    $('#ChangeTicketListHeader').html('<h4>Change Requests</h4>')
+
+}
+
+
+
+
+
+
+
+
+
+
 // Tickets per User
 //google.charts.setOnLoadCallback(ticketsPerUser);
 function ticketsPerUser(ds) {

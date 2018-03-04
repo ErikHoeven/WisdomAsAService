@@ -125,6 +125,7 @@ function getTickets(snapshot,username) {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
                                         createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "Classification", IndCreated:1, responsibleGroup: fltrValue})
+                                        createfunnelRepportChanges(filteredTickets, 'ticketsList', {state: "Classification", IndCreated:1, responsibleGroup: fltrValue})
 
                                         // Incidenten to PowerPoint
                                         $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
@@ -154,6 +155,21 @@ function getTickets(snapshot,username) {
                                                 state: 'Classification'
                                             }, 'Service Request')
                                         })
+
+                                        // Changes to PowerPoint
+                                        $('#ChangeTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
+                                        $('#ChangeCreateUserStories').click(function () {
+                                            //console.info(filteredTickets[0])
+                                            //createBackLog(filteredTickets, {state: 'Classification', IndCreated: 1, Process: }, 'Incident')
+                                        })
+                                        //Change Request to Planning & Prio Collection
+                                        $('#ChangeTicketBackLogButton').append('<button type="button" id="cmdSRQToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                        $('#ChangeToPlanning').click(function () {
+                                            promotoToBackLog(filteredTickets, {
+                                                state: 'Classification'
+                                            }, 'Service Request')
+                                        })
+
                                     }
                                 })
 
