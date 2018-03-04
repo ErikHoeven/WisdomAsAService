@@ -117,12 +117,8 @@ function updateBackLog(id) {
                    ,newValue =  currentvalue -  totalAssigntStoryPointsDeveloper[dev]
                     $("#" + dev).html(newValue)
             })
-
-
-
         }
     });
-
 }
 
 function clearBacklog(){
