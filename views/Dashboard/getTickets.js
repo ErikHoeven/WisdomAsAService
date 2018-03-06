@@ -485,119 +485,120 @@ function filterSnapshot(dataset, snapshot,filter) {
             }
         })
         console.info('MeasureSet: ' + measureSet.length)
+        if (measureSet.length > 0 ) {
+            // Aggegrate to state per snapshot
+            snapshotObject.aggCountsPerDayCattegory = d3.nest()
+                .key(function (d) {
+                    return d.key
+                })
+                .rollup(function (v) {
+                    return {
+                        'cpf': d3.sum(v, function (d) {
+                            return d.cpf
+                        }),
+                        'esoft': d3.sum(v, function (d) {
+                            return d.esoft
+                        }),
+                        'firstLine': d3.sum(v, function (d) {
+                            return d.firstLine;
+                        }),
+                        'srl': d3.sum(v, function (d) {
+                            return d.srl;
+                        }),
+                        'secondLineApps': d3.sum(v, function (d) {
+                            return d.secondLineApps;
+                        }),
+                        'infra': d3.sum(v, function (d) {
+                            return d.infra;
+                        }),
+                        'cognos': d3.sum(v, function (d) {
+                            return d.cognos;
+                        }),
+                        'dwh': d3.sum(v, function (d) {
+                            return d.dwh;
+                        })
+                    };
+                })
+                .entries(measureSet)
 
-        // Aggegrate to state per snapshot
-        snapshotObject.aggCountsPerDayCattegory = d3.nest()
-            .key(function (d) {
-                return d.key
+            snapshotObject.totActualTickets.columns.push('Weeknumber')
+            var colls = Object.keys(snapshotObject.aggCountsPerDayCattegory[0].values)
+            colls.forEach(function (c) {
+                snapshotObject.totActualTickets.columns.push(c)
             })
-            .rollup(function (v) {
-                return {
-                    'cpf': d3.sum(v, function (d) {
-                        return d.cpf
-                    }),
-                    'esoft': d3.sum(v, function (d) {
-                        return d.esoft
-                    }),
-                    'firstLine': d3.sum(v, function (d) {
-                        return d.firstLine;
-                    }),
-                    'srl': d3.sum(v, function (d) {
-                        return d.srl;
-                    }),
-                    'secondLineApps': d3.sum(v, function (d) {
-                        return d.secondLineApps;
-                    }),
-                    'infra': d3.sum(v, function (d) {
-                        return d.infra;
-                    }),
-                    'cognos': d3.sum(v, function (d) {
-                        return d.cognos;
-                    }),
-                    'dwh': d3.sum(v, function (d) {
-                        return d.dwh;
-                    })
-                };
+
+            snapshotObject.totActualTickets.values.push(measureObject.key)
+            colls.forEach(function (c) {
+                snapshotObject.totActualTickets.values.push(snapshotObject.aggCountsPerDayCattegory[0].values[c])
             })
-            .entries(measureSet)
 
-        snapshotObject.totActualTickets.columns.push('Weeknumber')
-        var colls = Object.keys(snapshotObject.aggCountsPerDayCattegory[0].values)
-        colls.forEach(function (c) {
-            snapshotObject.totActualTickets.columns.push(c)
-        })
+            snapshotObject.totActualTickets.title = "Total Actual tickets week " + moment().week()
+            snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
 
-        snapshotObject.totActualTickets.values.push(measureObject.key)
-        colls.forEach(function (c) {
-            snapshotObject.totActualTickets.values.push(snapshotObject.aggCountsPerDayCattegory[0].values[c])
-        })
+            //Tickets total
+            snapshotObject.totTicketsperWeek.Data = datasetsPerSubject(rawtotCreatedPerWeek, rawtotSolvedPerWeek)
+            //Tickets created SRL
+            snapshotObject.totTicketsperWeekSRL.Data = datasetsPerSubject(rawtotCreatedPerWeekSRL, rawtotSolvedPerWeekSRL)
+            //Tickets created CPF
+            snapshotObject.totTicketsperWeekCPF.Data = datasetsPerSubject(rawtotCreatedPerWeekCPF, rawtotSolvedPerWeekCPF)
+            //Tickets created Cognos
+            snapshotObject.totTicketsperWeekCognos.Data = datasetsPerSubject(rawtotCreatedPerWeekCognos, rawtotSolvedPerWeekCognos)
+            //Tickets created DWH
+            snapshotObject.totTicketsperWeekDWH.Data = datasetsPerSubject(rawtotCreatedPerWeekDWH, rawtotSolvedPerWeekDWH)
+            //Tickets created ESOFT
+            snapshotObject.totTicketsperWeekESOFT.Data = datasetsPerSubject(rawtotCreatedPerWeekESOFT, rawtotSolvedPerWeekESOFT)
+            var ObjectDashboardTickets = {}
+                , mDashboardTickets = [], snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
 
-        snapshotObject.totActualTickets.title = "Total Actual tickets week " + moment().week()
-        snapshotObject.totActualTickets.underTitle = "Europool System BI & DM Team"
-
-        //Tickets total
-        snapshotObject.totTicketsperWeek.Data = datasetsPerSubject(rawtotCreatedPerWeek, rawtotSolvedPerWeek)
-        //Tickets created SRL
-        snapshotObject.totTicketsperWeekSRL.Data = datasetsPerSubject(rawtotCreatedPerWeekSRL, rawtotSolvedPerWeekSRL)
-        //Tickets created CPF
-        snapshotObject.totTicketsperWeekCPF.Data = datasetsPerSubject(rawtotCreatedPerWeekCPF, rawtotSolvedPerWeekCPF)
-        //Tickets created Cognos
-        snapshotObject.totTicketsperWeekCognos.Data = datasetsPerSubject(rawtotCreatedPerWeekCognos, rawtotSolvedPerWeekCognos)
-        //Tickets created DWH
-        snapshotObject.totTicketsperWeekDWH.Data = datasetsPerSubject(rawtotCreatedPerWeekDWH, rawtotSolvedPerWeekDWH)
-        //Tickets created ESOFT
-        snapshotObject.totTicketsperWeekESOFT.Data = datasetsPerSubject(rawtotCreatedPerWeekESOFT, rawtotSolvedPerWeekESOFT)
-        var ObjectDashboardTickets = {}
-            , mDashboardTickets = [], snapshotweek = moment(snapshot, "DD-MM-YYYY").week()
-
-        snapshotDetails.forEach(function (v) {
-            // If the creation week is the same as the snapshot week then count all the tickets in this week
-            // as created
-            if (v.responsibleGroup == "EPS - CPF" ||
-                v.responsibleGroup == "EPS - SRL" ||
-                v.responsibleGroup == "EPS - Cognos" ||
-                v.responsibleGroup == "EPS - DWH" ||
-                v.responsibleGroup == "E-Soft" ){
-                v.IndEPS = 1
-            }
-            if (v.creationWeek == snapshotWeek) {
+            snapshotDetails.forEach(function (v) {
+                // If the creation week is the same as the snapshot week then count all the tickets in this week
+                // as created
+                if (v.responsibleGroup == "EPS - CPF" ||
+                    v.responsibleGroup == "EPS - SRL" ||
+                    v.responsibleGroup == "EPS - Cognos" ||
+                    v.responsibleGroup == "EPS - DWH" ||
+                    v.responsibleGroup == "E-Soft") {
+                    v.IndEPS = 1
+                }
+                if (v.creationWeek == snapshotWeek) {
 
 
-                v.IndCreated = 1
-                v.IndSolved = 0
-                v.IndProgress = 0
-                v.IndStock = 0
-                v.IndSpider = 1
+                    v.IndCreated = 1
+                    v.IndSolved = 0
+                    v.IndProgress = 0
+                    v.IndStock = 0
+                    v.IndSpider = 1
 
-                if (v.state == "In Progress") {
-                    v.IndProgress = 1
+                    if (v.state == "In Progress") {
+                        v.IndProgress = 1
+                    }
+
+                    if (v.state == "Closed" || v.state == "Solved") {
+                        v.IndSolved = 1
+                    }
+                }
+                // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
+                // as stock
+                if (v.creationWeek < snapshotWeek && (v.state == "In Progress" || v.state == "Classification" )) {
+                    v.IndCreated = 0
+                    v.IndSolved = 0
+                    v.IndProgress = 0
+                    v.IndStock = 1
+                    v.IndSpider = 0
                 }
 
-                if (v.state == "Closed" || v.state == "Solved") {
-                    v.IndSolved = 1
+                if (v.creationWeek < snapshotWeek && (v.state == "Closed" || v.state == "Solved" )) {
+                    v.IndCreated = 0
+                    v.IndSolved = 0
+                    v.IndProgress = 0
+                    v.IndStock = 0
+                    v.IndSpider = 0
                 }
-            }
-            // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
-            // as stock
-            if (v.creationWeek < snapshotWeek && (v.state == "In Progress" || v.state == "Classification" )) {
-                v.IndCreated = 0
-                v.IndSolved = 0
-                v.IndProgress = 0
-                v.IndStock = 1
-                v.IndSpider = 0
-            }
-
-            if (v.creationWeek < snapshotWeek && (v.state == "Closed" || v.state == "Solved" )) {
-                v.IndCreated = 0
-                v.IndSolved = 0
-                v.IndProgress = 0
-                v.IndStock = 0
-                v.IndSpider = 0
-            }
-        })
-        snapshotObject.mDashboardTickets = mDashboardTickets
-        returnSet.push(snapshotObject)
-        return returnSet
+            })
+            snapshotObject.mDashboardTickets = mDashboardTickets
+            returnSet.push(snapshotObject)
+            return returnSet
+        }
     }
 else{
     returnSet = null
