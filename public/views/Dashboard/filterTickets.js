@@ -13,7 +13,7 @@ function filterTickets(value, dataset, snapshot) {
             stockValue = dataset[0].snapshotDetails
         } else {
             stockValue = _.where(dataset[0].snapshotDetails, {responsibleGroup: value})
-            console.info(stockValue)
+
         }
 
         filteredTickets = stockValue

@@ -125,7 +125,7 @@ function getTickets(snapshot,username) {
                                     console.info('click createdTickets')
                                     if (changed == 1) {
                                         createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "Classification", IndCreated:1, responsibleGroup: fltrValue})
-                                        createfunnelRepportChanges(filteredTickets, 'ticketsList', {state: "Classification", IndCreated:1, responsibleGroup: fltrValue})
+                                        createfunnelRepportChanges(filteredTickets, 'ticketsList', {IndCreated:1, responsibleGroup: fltrValue})
 
                                         // Incidenten to PowerPoint
                                         $('#INCTicketBackLogButton').html('<button type="button" id="cmdCreateUserStories" class="btn btn-primary">Create User Stories</button>')
@@ -178,6 +178,7 @@ function getTickets(snapshot,username) {
                                     if (changed == 1) {
                                         createfunnelRepportIncidents(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue, IndProgress: 1})
                                         createfunnelRepportSRQ(filteredTickets, 'ticketsList', {state: "In Progress", responsibleGroup: fltrValue,IndProgress: 1})
+                                        createfunnelRepportChanges(filteredTickets, 'ticketsList', {IndCreated:1, responsibleGroup: fltrValue})
                                     }
                                 })
 
@@ -205,6 +206,21 @@ function getTickets(snapshot,username) {
                                         createfunnelRepportSRQ(filteredTickets, 'ticketsList', {
                                             IndStock: 1,
                                             responsibleGroup: fltrValue
+                                        })
+
+                                        createfunnelRepportChanges(filteredTickets, 'ticketsList', {
+                                            IndStock: 1,
+                                            responsibleGroup: fltrValue
+                                        })
+
+                                        //Change Request to Planning & Prio Collection
+                                        $('#ChangeTicketBackLogButton').html('')
+                                        $('#ChangeTicketBackLogButton').append('<button type="button" id="cmdChangeToPlanning" class="btn btn-primary">Promote to Planning</button>')
+                                        $('#cmdChangeToPlanning').click(function () {
+                                            promotoToBackLog(filteredTickets, {
+                                                IndStock: 1,
+                                                responsibleGroup: fltrValue,
+                                            }, 'Change')
                                         })
                                     }
                                 })

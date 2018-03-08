@@ -5,13 +5,11 @@
 function createfunnelRepportIncidents(ds, div, filter){
     filter.ticketType =  "Incident"
     console.info('createfunnelRepportIncidents')
-    console.info(ds)
     var dataset = _.where(ds,filter)
     var columns = Object.keys(ds[0])
     var rows = []
     var row = []
     console.info(filter)
-    console.info(_.where(ds,{responsibleGroup:"EPS - SRL", state:"In Progress"}))
 
     columns = _.without(columns,
         ''
@@ -28,13 +26,11 @@ function createfunnelRepportIncidents(ds, div, filter){
         , 'creationYear'
     )
     var dataset2 = []
-    console.info(columns)
     ds.forEach(function (r) {
         columns.forEach(function (c) {
         })
     })
 
-    console.info('----------  DATASET --------------------')
     dataset.forEach(function (r) {
         var keys = Object.keys(r)
         // (1) Loop trhoug keys of the rows from the dataset
@@ -53,7 +49,6 @@ function createfunnelRepportIncidents(ds, div, filter){
                 }
             })
         })
-        //console.info(row)
         rows.push(row)
         row = []
     })
@@ -63,9 +58,6 @@ function createfunnelRepportIncidents(ds, div, filter){
         return x[0];
     });
 
-
-    console.info('-------------------  ROWS ---------------')
-    console.info(rows)
     var dataNew = new google.visualization.DataTable()
 
     columns.forEach(function (c) {
@@ -81,7 +73,7 @@ function createfunnelRepportIncidents(ds, div, filter){
 }
 
 function createfunnelRepportSRQ(ds, div, filter){
-    console.info('createfunnelRepportSRQ')
+
     filter.ticketType =  "Service Request"
     var dataset = _.where(ds,filter)
     console.info(dataset)
@@ -105,14 +97,12 @@ function createfunnelRepportSRQ(ds, div, filter){
         , 'creationYear'
     )
     var dataset2 = []
-    console.info(columns)
+
     ds.forEach(function (r) {
         columns.forEach(function (c) {
         })
     })
 
-    console.info('----------  DATASET --------------------')
-    console.info(dataset[0])
     dataset.forEach(function (r) {
         var keys = Object.keys(r)
         // (1) Loop trhoug keys of the rows from the dataset
@@ -137,8 +127,6 @@ function createfunnelRepportSRQ(ds, div, filter){
     rows = _.uniq(rows, function(x){
         return x[0];
     });
-    console.info('-------------------  ROWS ---------------')
-    console.info(rows)
     var dataNew = new google.visualization.DataTable()
 
     columns.forEach(function (c) {
@@ -156,7 +144,8 @@ function createfunnelRepportSRQ(ds, div, filter){
 
 function createfunnelRepportChanges(ds, div, filter){
     console.info('createfunnelRepportChanges')
-    filter.Process =  "RFCS"
+    filter.ticketType = "Change"
+    console.info(ds)
     var dataset = _.where(ds,filter)
     console.info(dataset)
 

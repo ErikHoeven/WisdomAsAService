@@ -450,7 +450,6 @@ function filterSnapshot(dataset, snapshot,filter) {
         console.info('tickets length before loop: ' + tickets.length)
         tickets.forEach(function (v) {
             // Measures
-
             measureObject = {}
             if( v.creationYear == moment().year() && v.creationWeek == snapshotWeek){
                 if ((v['Responsible Group'] == 'EPS - CPF' || v['responsibleGroup'] == 'EPS - CPF')) {
@@ -479,6 +478,24 @@ function filterSnapshot(dataset, snapshot,filter) {
                 }
                 if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
                     measureObject.dwh = v.count
+                }
+                if (getSLA(v.Title) == '00'){
+                    measureObject['00'] == v.count
+                }
+                if (getSLA(v.Title) == '01'){
+                    measureObject['01'] == v.count
+                }
+                if (getSLA(v.Title) == '02'){
+                    measureObject['02'] == v.count
+                }
+                if (getSLA(v.Title) == '03'){
+                    measureObject['03'] == v.count
+                }
+                if (getSLA(v.Title) == '04'){
+                    measureObject['04'] == v.count
+                }
+                if (getSLA(v.Title) == '05'){
+                    measureObject['05'] == v.count
                 }
 
                 measureSet.push(measureObject)
@@ -579,7 +596,7 @@ function filterSnapshot(dataset, snapshot,filter) {
                 }
                 // If the creation week is less then same as the snapshot week then count all the tickets in previous weeks
                 // as stock
-                if (v.creationWeek < snapshotWeek && (v.state == "In Progress" || v.state == "Classification" )) {
+                if (v.creationWeek < snapshotWeek && (v.state == "In Progress" || v.state == "Classification"  || v.state == "Acceptance")) {
                     v.IndCreated = 0
                     v.IndSolved = 0
                     v.IndProgress = 0
@@ -626,4 +643,35 @@ function joinAgg(lookupTable, mainTable, fltrYear) {
     outputArray.sort(function(a,b) {
         return a[0] - b[0]})
     return outputArray
+}
+
+
+//  ------------------------------------  GET SRL PRIORITIES --------------------------------------------------------------------------------------
+function getSLA(title) {
+    var titleArray = title.split(' ')
+    var returnString = ''
+
+
+    titleArray.forEach(function (t) {
+        if (t == '00' ){
+            returnString = '00'
+        }
+        if (t == '01' ){
+            returnString = '01'
+        }
+        if (t == '02' ) {
+            returnString = '02'
+        }
+        if (t == '03' ){
+            returnString = '03'
+        }
+        if (t == '04'  ) {
+            returnString = '04'
+        }
+        if (t == '05'  ) {
+            returnString = '05'
+        }
+    })
+
+    return returnString
 }

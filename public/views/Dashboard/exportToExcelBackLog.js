@@ -13,6 +13,11 @@ function promotoToBackLog(ds, filter, ticketType) {
         console.info('promotoToBackLog SRQ')
         postPlanningtoServer(ds, filter)
     }
+    if (ticketType == "Change"){
+        console.info('promoteToBackLog Change')
+        filter.ticketType = "Change"
+        postPlanningtoServer(ds, filter)
+    }
 }
 
 
