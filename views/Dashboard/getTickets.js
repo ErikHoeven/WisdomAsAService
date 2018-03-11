@@ -393,6 +393,10 @@ function filterSnapshot(dataset, snapshot,filter) {
         snapshotObject.totActualTickets.values = []
         snapshotObject.totActualTickets.title = ""
         snapshotObject.totActualTickets.underTitle = ""
+        snapshotObject.countSLATicketsperWeek = {}
+        snapshotObject.countSLATicketsperWeek.Data = []
+        snapshotObject.countSLATicketsperWeek.Columns = ['Week','00','01','03','04','05']
+        snapshotObject.countSLATicketsperWeek.title = "SRL Tickets against SLA per week " + moment().year()
 
         snapshotObject.totTicketsperWeek = {}
         snapshotObject.totTicketsperWeek.title = 'Trend running year tickets per week'
@@ -479,28 +483,82 @@ function filterSnapshot(dataset, snapshot,filter) {
                 if ((v['Responsible Group'] == "EPS - DWH" || v['responsibleGroup'] == "EPS - DWH")) {
                     measureObject.dwh = v.count
                 }
-                if (getSLA(v.Title) == '00'){
-                    measureObject['00'] == v.count
-                }
-                if (getSLA(v.Title) == '01'){
-                    measureObject['01'] == v.count
-                }
-                if (getSLA(v.Title) == '02'){
-                    measureObject['02'] == v.count
-                }
-                if (getSLA(v.Title) == '03'){
-                    measureObject['03'] == v.count
-                }
-                if (getSLA(v.Title) == '04'){
-                    measureObject['04'] == v.count
-                }
-                if (getSLA(v.Title) == '05'){
-                    measureObject['05'] == v.count
-                }
-
                 measureSet.push(measureObject)
             }
         })
+
+
+        var slaArray = []
+        var filteredTickets =  underscore.where(tickets, { creationYear: moment(snapshot,'YYYY-MM-DD').year()})
+
+        filteredTickets.forEach(function (v) {
+
+            if (getSLA(v.Title) == '00'){
+                slaArray.push({'00': v.count, creationWeek: v.creationWeek})
+            }
+            if (getSLA(v.Title) == '01'){
+                slaArray.push({'01': v.count, creationWeek: v.creationWeek})
+            }
+            if (getSLA(v.Title) == '02'){
+                slaArray.push({'02': v.count, creationWeek: v.creationWeek})
+            }
+            if (getSLA(v.Title) == '03'){
+                slaArray.push({'03': v.count, creationWeek: v.creationWeek})
+            }
+            if (getSLA(v.Title) == '04'){
+                slaArray.push({'04': v.count, creationWeek: v.creationWeek})
+            }
+            if (getSLA(v.Title) == '05'){
+                slaArray.push({'05': v.count, creationWeek: v.creationWeek})
+            }
+        })
+
+        var slaTicketsPerWeek = []
+        slaTicketsPerWeek = d3.nest()
+            .key(function (d) {
+                return d.creationWeek
+            })
+            .rollup(function (v) {
+                return {
+                    '00': d3.sum(v, function (d) {
+                        return d['00']
+                    }),
+                    '01': d3.sum(v, function (d) {
+                        return d['01']
+                    }),
+                    '02': d3.sum(v, function (d) {
+                        return d['02'];
+                    }),
+                    '03': d3.sum(v, function (d) {
+                        return d['03'];
+                    }),
+                    '04': d3.sum(v, function (d) {
+                        return d['04'];
+                    }),
+                    '05': d3.sum(v, function (d) {
+                        return d['05'];
+                    })
+                };
+            })
+            .entries(slaArray)
+
+        var countSLAItemsPerWeek = []
+        var countSLAPerWeek = []
+        slaTicketsPerWeek.forEach(function (i) {
+            countSLAItemsPerWeek = []
+            countSLAItemsPerWeek.push(Number(i.key))
+            countSLAItemsPerWeek.push(i.values['00'])
+            countSLAItemsPerWeek.push(i.values['01'])
+            countSLAItemsPerWeek.push(i.values['02'])
+            countSLAItemsPerWeek.push(i.values['03'])
+            countSLAItemsPerWeek.push(i.values['04'])
+            countSLAItemsPerWeek.push(i.values['05'])
+
+            countSLAPerWeek.push(countSLAItemsPerWeek)
+        })
+
+        snapshotObject.countSLATicketsperWeek.Data = countSLAPerWeek
+
         console.info('MeasureSet: ' + measureSet.length)
         if (measureSet.length > 0 ) {
             // Aggegrate to state per snapshot

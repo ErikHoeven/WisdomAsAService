@@ -219,13 +219,6 @@ function createfunnelRepportChanges(ds, div, filter){
 
 
 
-
-
-
-
-
-
-
 // Tickets per User
 //google.charts.setOnLoadCallback(ticketsPerUser);
 function ticketsPerUser(ds) {

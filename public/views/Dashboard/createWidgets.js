@@ -262,6 +262,7 @@ function getTickets(snapshot,username) {
                     ticketsCognos(data.perSnapshot[0].totTicketsperWeekCognos)
                     ticketsDWH(data.perSnapshot[0].totTicketsperWeekDWH)
                     ticketsESOFT(data.perSnapshot[0].totTicketsperWeekESOFT)
+                    ticketChartSLA(data.perSnapshot[0].countSLATicketsperWeek)
 
                     //Tickets per user
                     //ticketsPerUser(data.ticketsPerUser)

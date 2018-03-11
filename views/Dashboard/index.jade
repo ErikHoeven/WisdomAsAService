@@ -7,9 +7,12 @@ block head
     meta(name='viewport', content='width=device-width, initial-scale=1')
     //script(src='https://www.gstatic.com/charts/loader.js')
     script(src='../../views/jquery-2.2.3.min.js')
+    // Google Chart
     script(type='text/javascript', src="https://www.google.com/jsapi?autoload= \
     {'modules':[{'name':'visualization','version':'1.1','packages':\
     ['corechart', 'bar', 'table']}]}")
+
+    // Bootstrap, D3JS, Underscore
     script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
     script(src="https://d3js.org/d3.v4.js")
     link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
@@ -236,11 +239,15 @@ block body
                                         //var auto_refresh_Tickets = setInterval(function () {
                                         //    getTickets()
                                         //}, 15000)
+
                     #2a.tab-pane.fade
                         .row
-                            .col-md-12
+                            .col-md-6
                                 .widget
                                     #ticketsSRL
+                            .col-md-6
+                                .widget
+                                    #ticketsSLA
                         .row
                             .col-md-6
                                 .widget

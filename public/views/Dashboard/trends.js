@@ -1,5 +1,4 @@
 // (1) --- ticketSRL -------------------------------------------------------------------------------------------------------------
-//google.charts.setOnLoadCallback(ticketsCreatedSRL);
 function ticketsSRL(ds) {
 
     var data = new google.visualization.DataTable()
@@ -25,7 +24,7 @@ function ticketsSRL(ds) {
                 opacity: 0.1
             }
         },
-        width:1000,
+        width:750,
         height:500,
     };
     var chart = new google.visualization.ColumnChart(
@@ -189,4 +188,48 @@ function ticketsESOFT(ds) {
     //(4) Draw Graph
     var chart = new google.visualization.ColumnChart(
         document.getElementById('ticketsESOFT'));
+        chart.draw(dataNew, options);
+}
+
+function ticketChartSLA(ds) {
+    console.info('Start ticketsSolvedPerWeek SLA')
+    console.info(ds.Data)
+    // (A)Define column headers
+    var dataNew = new google.visualization.DataTable()
+    dataNew.addColumn('number', 'Weeknumber');
+    dataNew.addColumn('number', '00');
+    dataNew.addColumn('number', '01');
+    dataNew.addColumn('number', '02');
+    dataNew.addColumn('number', '03');
+    dataNew.addColumn('number', '04');
+    dataNew.addColumn('number', '05');
+
+    dataNew.addRows(ds.Data)
+
+    //(3) Set graph options
+    var options = {
+        title: ds.title,
+        hAxis: {
+            title: 'Weeknumber'
+        },
+        vAxis: {
+            title: 'Tickets'
+        },
+        trendlines: {
+            0: {
+                type: 'polynomial',
+                degree: 3,
+                visibleInLegend: true,
+                pointSize: 20, // Set the size of the trendline dots.
+                opacity: 0.1
+            }
+        },
+        width: 750,
+        height: 500,
+    };
+
+    //(4) Draw Graph
+    var slaChart = new google.visualization.ColumnChart(
+    document.getElementById('ticketsSLA'));
+    slaChart.draw(dataNew, options);
 }
