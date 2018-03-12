@@ -40,8 +40,12 @@ exports.getBackLogList = function (req,res,next) {
         , table = ''
         , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'SLA KPI', 'LocalOffice','SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
         , developers = []
+        , sprints = []
+
+        sprints.push(moment().week() + ' - ' + (moment().week()+ 1) +  ' : ' + moment().year())
+        sprints.push((moment().week() + 1) + ' - ' + (moment().week()+ 2) +  ' : ' + moment().year())
+
 
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
@@ -89,20 +93,23 @@ exports.getBackLogList = function (req,res,next) {
 }
 
 exports.updateBacklog = function (req,res,next) {
-    var theader = ''
+
+
+
+        var theader = ''
         , tbody = ''
         , optionlist = ''
         , table = ''
         , collection = 'backlog'
         , backlogColumns = ['Number', 'Title', 'Open Days', 'ResponsibleGroup', 'KPI', 'LocalOffice', 'SLA', 'StoryPoints', 'Sprint', 'Developer']
         , devColumns = ['Developer', 'percentage available', 'Affective Story points', 'StoryPoints left']
-        , sprints = ['05 - 06 : 2018', '07 - 08 : 2018', '09 -10 : 2018']
+        , sprints = []
         , updateFields = req.body.updateFields
         , connection = db.get(collection)
         , updateObject = {developer: updateFields.developer ,storypoints: updateFields.storyPoints, sprints: updateFields.sprints, hide_save: 'yes' , hide_input: 'yes'}
         , developers = []
 
-
+        sprints.push('0' + moment().week() + ' - ' + '0' + moment().week()+ 1 +  ' - ' + moment().year())
         console.info(updateFields)
 
         connection.update({Number: updateFields.id}, {$set: updateObject}, false, true)
