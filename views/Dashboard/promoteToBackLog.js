@@ -81,10 +81,6 @@ exports.getBackLogList = function (req,res,next) {
                 , devHeader = setHeader(devColumns)
                 , devBody = setBody(locals.businessrules)
 
-
-
-
-
             res.status(200).json({backlogBody: backlogBody, backlogHeader: backlogHeader, devHeader: devHeader, devBody: devBody,  message: 'Succesful '})
 
 
@@ -93,8 +89,6 @@ exports.getBackLogList = function (req,res,next) {
 }
 
 exports.updateBacklog = function (req,res,next) {
-
-
 
         var theader = ''
         , tbody = ''
