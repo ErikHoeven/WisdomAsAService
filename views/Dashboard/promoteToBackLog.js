@@ -109,7 +109,8 @@ exports.updateBacklog = function (req,res,next) {
         , updateObject = {developer: updateFields.developer ,storypoints: updateFields.storyPoints, sprints: updateFields.sprints, hide_save: 'yes' , hide_input: 'yes'}
         , developers = []
 
-        sprints.push('0' + moment().week() + ' - ' + '0' + moment().week()+ 1 +  ' - ' + moment().year())
+        sprints.push(moment().week() + ' - ' + (moment().week()+ 1) +  ' : ' + moment().year())
+        sprints.push((moment().week() + 1) + ' - ' + (moment().week()+ 2) +  ' : ' + moment().year())
         console.info(updateFields)
 
         connection.update({Number: updateFields.id}, {$set: updateObject}, false, true)
