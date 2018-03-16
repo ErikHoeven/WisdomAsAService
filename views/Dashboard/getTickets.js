@@ -142,7 +142,23 @@ exports.getTickets = function (req, res, next) {
                     callback();
                 });
             },
+            // Load stgOmniTracker - prepare measureSet perUser
+            function (callback) {
+                db.collection('stgOmniTracker').aggregate([{$match: {"creationYear": moment().year()}}, {
+                    $group: {
+                        _id: {
+                            creationWeek: "$creationWeek",
+                            "Affected Person": "$Affected Person",
+                            "Responsible Group" : "$Responsible Group"
+                        }, totalCount: {$sum: "$count"}
+                    }
+                }]).toArray(function (err, rawtotCreatedPerWeekUsers) {
+                    if (err) return callback(err);
+                    locals.rawtotCreatedPerWeekUsers = rawtotCreatedPerWeekUsers;
+                    callback();
+                });
 
+            }
         ];
         console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
@@ -318,6 +334,17 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
             , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
             , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
+            , rawtotCreatedPerWeekUsers = []
+
+
+
+            dataset.rawtotCreatedPerWeekUsers.forEach(function (r) {
+                if (r.totalCount > 3 &&  r._id["Affected Person"] != 'Administration, Server'){
+                    rawtotCreatedPerWeekUsers.push({User:r._id["Affected Person"], count: r.totalCount})
+                }
+            })
+
+
 
         console.info('DataSet Length: ' + tickets.length)
         var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -353,6 +380,16 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotCreatedPerWeekDWH = dataset.rawtotCreatedPerWeekDWH
             , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
             , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
+            , rawtotCreatedPerWeekUsers = []
+
+
+        dataset.rawtotCreatedPerWeekUsers.forEach(function (r) {
+            if (r.totalCount > 3 && r._id["Responsible Group"] == filter && r._id["Affected Person"] != 'Administration, Server'){
+                rawtotCreatedPerWeekUsers.push({User:r._id["Affected Person"], count: r.totalCount})
+            }
+        })
+        //console.info('rawtotCreatedPerWeekUsers')
+        //console.info(rawtotCreatedPerWeekUsers)
 
             console.info('DataSet Length: ' + tickets.length)
             var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -670,6 +707,31 @@ function filterSnapshot(dataset, snapshot,filter) {
                     v.IndSpider = 0
                 }
             })
+
+
+            var aggTotCreatedPerWeekUsers = d3.nest()
+                .key(function (d) {
+                    return d.User
+                })
+                .rollup(function (v) {
+                    return {
+                        'count': d3.sum(v, function (d) {
+                            return d.count
+                        })
+                    };
+                })
+                .entries(rawtotCreatedPerWeekUsers)
+
+            var arrTotCreatedPerWeekUserColumns = []
+            var arrTotCreatedPerWeekData = []
+            aggTotCreatedPerWeekUsers.forEach(function (r) {
+                arrTotCreatedPerWeekData.push([r.key,r.values.count])
+            })
+
+            snapshotObject.totCreatedPerWeekUser = {}
+            snapshotObject.totCreatedPerWeekUser.Data = arrTotCreatedPerWeekData
+            snapshotObject.totCreatedPerWeekUser.title = 'Ticket per affected user ' + moment().year()
+
             snapshotObject.mDashboardTickets = mDashboardTickets
             returnSet.push(snapshotObject)
             return returnSet

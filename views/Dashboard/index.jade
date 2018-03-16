@@ -119,14 +119,6 @@ block head
                 $('#5a').show()
                 getBackLogTable('tblBacklog')
             })
-            $('#RFCDashBoard').click(function () {
-                $('#1a').hide()
-                $('#2a').hide()
-                $('#3a').hide()
-                $('#4a').show()
-                $('#5a').hide()
-                getBackLogTable('tblBacklog')
-            })
 
         })
 block body
@@ -151,9 +143,7 @@ block body
                     li
                         a(href='#3a', data-toggle='tab' id='TabTicketsPerUser') Tickets per User
                     li
-                        a(href='#4a', data-toggle='tab' id='RFCDashBoard') RFC Dashboard
-                    li
-                        a(href='#5a', data-toggle='tab' id='TabBacklog') BackLog
+                        a(href='#4a', data-toggle='tab' id='TabBacklog') BackLog
                 .tab-content
                     #1a.fade.in.active
                         .row
@@ -279,71 +269,8 @@ block body
                                         //}, 15000)
                             .col-md-6
                                 #wordcloud
-                    //---------------    RFC Dashboard  --------------------- //
-                    #4a.tab-pane.active.fade
-                        .row
-                            .col-md-3
-                                #fltrRFCListCattegory
-                                br
-                            .col-md-3
-                                #fltrRFCListState
-                        .row
-                            .col-md-6
-                                .widget
-                                    .widget-content.bg-belize-hole
-                                        .text-center
-                                            #createdRFC.span.font-size-40.counter No RFC found
-                                            p Created RFC
-                                            i.fa.fa-code.fa-3x
-                            .col-md-6
-                                .widget
-                                    .widget-content.bg-pumpkin
-                                        .text-center
-                                            #openRFC.span.font-size-40.counter No RFC found
-                                            p Open RFC
-                                            i.fa.fa-tasks.fa-3x
-                        .row
-                            #clickNewRFC.col-md-6
-                                .widget
-                                    .widget-content.bg-green-sea
-                                        .text-center
-                                            #stockRFC.span.font-size-40.counter No RFC found
-                                            p RFC stock
-                                            i.fa.fa-plus-circle.fa-3x
-                            .col-md-6
-                                .widget
-                                    .widget-content.bg-peter-river
-                                        .text-center
-                                            #closedRFC.span.font-size-40.counter No RFC found
-                                            p RFC Tickets
-                                            i.fa.fa-envelope.fa-3x
-                        .row
-                            .col-md-6
-                                .widget
-                                    #tRFCChart2
-                            .col-md-6
-                                .widget
-                                    #RFCChart
-                        .row
-                            .col-md-6
-                                .widget
-                                    #RFCtest
-                            .col-md-6
-                                .widget
-                                    #removeWordRFC
-                                    #removeButtonRFC
-                        .row
-                            .col-md-12
-                                .widget
-                                    #RFCListHeader
-                                    #RFCList
-                                    #RFCBackLogButton
-                                    #pagnationRFC
-                                    #toolbarRFCList
-                                    script.
-                                        //getAllRFC()
 
-                    #5a.tab-pane.fade
+                    #4a.tab-pane.fade
                         .row
                             .col-md-6
                                 h3 Storypoints per developer

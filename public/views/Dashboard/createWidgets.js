@@ -1,8 +1,6 @@
 function setUserProfile(user) {
     console.info('setUserProfile')
     var url = user.profilePictureURI, username = user.username
-    console.info(user)
-    console.info(url)
     if (!url) {
         console.info('User unknown')
         url = '/images/users/img2.jpg'
@@ -265,7 +263,7 @@ function getTickets(snapshot,username) {
                     ticketChartSLA(data.perSnapshot[0].countSLATicketsperWeek)
 
                     //Tickets per user
-                    //ticketsPerUser(data.ticketsPerUser)
+                    ticketsPerUser(data.perSnapshot[0].totCreatedPerWeekUser)
 
                     // Ticket Trends on Time
                     //ticketLeadTime(data.allTickets)

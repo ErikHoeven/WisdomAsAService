@@ -226,31 +226,23 @@ function ticketsPerUser(ds) {
     console.info(ds)
     // (A)Define column headers
     var dataNew = new google.visualization.DataTable()
-    dataNew.addColumn('string', 'User');
-    dataNew.addColumn('number', 'Tickets');
+    dataNew.addColumn('string', 'User')
+    dataNew.addColumn('number', 'amount of tickets')
 
-
-    // (2.A)Define table rows
-    var rowsSolved = []
-
-    //(2.B) Group ds on Last Change
-    ds.forEach(function (r) {
-        rowsSolved.push([r.user, r.countTickets])
-    })
-
-    dataNew.addRows(rowsSolved)
+    console.info(ds.Data)
+    dataNew.addRows(ds.Data)
 
     //(3) Set graph options
     var options = {
-        title: 'Tickets created per User',
+        title: ds.title,
         hAxis: {
             title: 'User'
         },
         vAxis: {
             title: 'Tickets'
         },
-        width:550,
-        height:300,
+        width:800,
+        height:500,
     };
 
 

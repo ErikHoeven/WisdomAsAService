@@ -10,10 +10,13 @@ function ticketsSRL(ds) {
     var options = {
         title: ds.title,
         hAxis: {
-            title: 'Weeknumber'
+            title: 'Weeknumber',
+            ticks: data.getDistinctValues(0)
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25, 30, 35, 40]
         },
         trendlines: {
             0: {
@@ -24,7 +27,7 @@ function ticketsSRL(ds) {
                 opacity: 0.1
             }
         },
-        width:750,
+        width:500,
         height:500,
     };
     var chart = new google.visualization.ColumnChart(
@@ -47,10 +50,13 @@ function ticketsCPF(ds) {
     var options = {
         title: ds.title,
         hAxis: {
+            ticks: data.getDistinctValues(0),
             title: 'Weeknumber'
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25,  30, 35, 40]
         },
         trendlines: {
             0: {
@@ -88,10 +94,13 @@ function ticketsCognos(ds) {
     var options = {
         title: ds.title,
         hAxis: {
+            ticks: data.getDistinctValues(0),
             title: 'Weeknumber'
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25, 30, 35, 40]
         },
         trendlines: {
             0: {
@@ -128,10 +137,13 @@ function ticketsDWH(ds){
     var options = {
         title: ds.title,
         hAxis: {
+            ticks: dataNew.getDistinctValues(0),
             title: 'Weeknumber'
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25,  30, 35, 40]
         },
         trendlines: {
             0: {
@@ -167,10 +179,13 @@ function ticketsESOFT(ds) {
     var options = {
         title: ds.title,
         hAxis: {
+            ticks: dataNew.getDistinctValues(0),
             title: 'Weeknumber'
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25,  30, 35, 40]
         },
         trendlines: {
             0: {
@@ -210,10 +225,13 @@ function ticketChartSLA(ds) {
     var options = {
         title: ds.title,
         hAxis: {
+            ticks: dataNew.getDistinctValues(0),
             title: 'Weeknumber'
         },
         vAxis: {
-            title: 'Tickets'
+            title: 'Tickets',
+            minValue: 0,
+            ticks: [0, 5, 10, 15, 20, 25,  30, 35, 40]
         },
         trendlines: {
             0: {
@@ -224,7 +242,7 @@ function ticketChartSLA(ds) {
                 opacity: 0.1
             }
         },
-        width: 750,
+        width: 500,
         height: 500,
     };
 
