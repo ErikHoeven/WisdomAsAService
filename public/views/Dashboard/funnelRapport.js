@@ -220,7 +220,6 @@ function createfunnelRepportChanges(ds, div, filter){
 
 
 // Tickets per User
-//google.charts.setOnLoadCallback(ticketsPerUser);
 function ticketsPerUser(ds) {
     console.info('Start tickets created per enduser')
     console.info(ds)
@@ -250,8 +249,36 @@ function ticketsPerUser(ds) {
     var chart = new google.visualization.ColumnChart(
         document.getElementById('ticketsPerUser'));
     chart.draw(dataNew, options);
-
 }
 
 
+function ticketsPerReportingUser(ds) {
+    console.info('Start tickets created per Reporting Person')
+    console.info(ds)
+    // (A)Define column headers
+    var dataNew = new google.visualization.DataTable()
+    dataNew.addColumn('string', 'User')
+    dataNew.addColumn('number', 'amount of tickets')
 
+    console.info(ds.Data)
+    dataNew.addRows(ds.Data)
+
+    //(3) Set graph options
+    var options = {
+        title: ds.title,
+        hAxis: {
+            title: 'User'
+        },
+        vAxis: {
+            title: 'Tickets'
+        },
+        width:800,
+        height:500,
+    };
+
+
+    //(4) Draw Graph
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('ticketsPerUser'));
+    chart.draw(dataNew, options);
+}

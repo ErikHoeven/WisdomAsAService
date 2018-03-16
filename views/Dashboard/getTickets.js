@@ -335,16 +335,22 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
             , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
             , rawtotCreatedPerWeekUsers = []
+           // , rawtotCreatedPerWeekReportingUsers = []
+            , rawCreatedPerWeekReportingUsers = []
 
 
-
+            // (A)
             dataset.rawtotCreatedPerWeekUsers.forEach(function (r) {
                 if (r.totalCount > 3 &&  r._id["Affected Person"] != 'Administration, Server'){
                     rawtotCreatedPerWeekUsers.push({User:r._id["Affected Person"], count: r.totalCount})
                 }
             })
 
-
+            dataset.rawtotCreatedPerWeekReportingUsers.forEach(function (r) {
+            if (r.totalCount > 3 &&  r._id["Reporting Person"] != 'Administration, Server'){
+                rawCreatedPerWeekReportingUsers.push({User:r._id["Reporting Person"], count: r.totalCount})
+            }
+        })
 
         console.info('DataSet Length: ' + tickets.length)
         var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -388,8 +394,9 @@ function filterSnapshot(dataset, snapshot,filter) {
                 rawtotCreatedPerWeekUsers.push({User:r._id["Affected Person"], count: r.totalCount})
             }
         })
-        //console.info('rawtotCreatedPerWeekUsers')
-        //console.info(rawtotCreatedPerWeekUsers)
+
+
+
 
             console.info('DataSet Length: ' + tickets.length)
             var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
@@ -722,7 +729,20 @@ function filterSnapshot(dataset, snapshot,filter) {
                 })
                 .entries(rawtotCreatedPerWeekUsers)
 
-            var arrTotCreatedPerWeekUserColumns = []
+            var aggTotCreatedPerWeekReporingUsers = d3.nest()
+                .key(function (d) {
+                    return d.User
+                })
+                .rollup(function (v) {
+                    return {
+                        'count': d3.sum(v, function (d) {
+                            return d.count
+                        })
+                    };
+                })
+                .entries(rawCreatedPerWeekReportingUsers)
+
+
             var arrTotCreatedPerWeekData = []
             aggTotCreatedPerWeekUsers.forEach(function (r) {
                 arrTotCreatedPerWeekData.push([r.key,r.values.count])
@@ -731,6 +751,23 @@ function filterSnapshot(dataset, snapshot,filter) {
             snapshotObject.totCreatedPerWeekUser = {}
             snapshotObject.totCreatedPerWeekUser.Data = arrTotCreatedPerWeekData
             snapshotObject.totCreatedPerWeekUser.title = 'Ticket per affected user ' + moment().year()
+
+            var LocalUSerPerLocalOffice = [{user:"Juarez Martinez, Javier", office: "Local Office Spain"}
+                                         , {user:"De Prins, Frank", office: "Local Office Belgium"}
+                                         , {user:"Fraai, Juny", office: "Central Office"}
+                                         , {user:"Angosto, Carmen", office: "Local Office Spain"}
+                                         , {user:"Rien, Wolfgang", office: "Local Office Germany"}
+                                         , {user:"Muenzberg, Simone", office: "Local Office Germany"}
+                                         , {user: "Oláh, Barbara", office: "Local Office Budapest"}
+                                         , {user: "Janssens, Jeroen", office: "Central Office"}
+                                         , {user: "de Zeeuw, Lucia",  office: "Central Office"}
+                                         , {user: "Van Dessel, Kenny", office: "Local Office Belgium"}
+                                         , {user: "Rahn, Ruth", office: "Local Office Germany"}
+                                         , {user: "van Alphen, Margit", office:"Central Office"}]
+
+
+
+
 
             snapshotObject.mDashboardTickets = mDashboardTickets
             returnSet.push(snapshotObject)
