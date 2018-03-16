@@ -313,8 +313,6 @@ exports.updateGeneric = function (req, res, next) {
     })
 }
 
-
-
 function filterSnapshot(dataset, snapshot,filter) {
 
     var processHit = 0
@@ -335,9 +333,6 @@ function filterSnapshot(dataset, snapshot,filter) {
             , rawtotSolvedPerWeekESOFT = dataset.rawtotSolvedPerWeekESOFT
             , rawtotCreatedPerWeekESOFT = dataset.rawtotCreatedPerWeekESOFT
             , rawtotCreatedPerWeekUsers = []
-           // , rawtotCreatedPerWeekReportingUsers = []
-            , rawCreatedPerWeekReportingUsers = []
-
 
             // (A)
             dataset.rawtotCreatedPerWeekUsers.forEach(function (r) {
@@ -345,12 +340,6 @@ function filterSnapshot(dataset, snapshot,filter) {
                     rawtotCreatedPerWeekUsers.push({User:r._id["Affected Person"], count: r.totalCount})
                 }
             })
-
-            dataset.rawtotCreatedPerWeekReportingUsers.forEach(function (r) {
-            if (r.totalCount > 3 &&  r._id["Reporting Person"] != 'Administration, Server'){
-                rawCreatedPerWeekReportingUsers.push({User:r._id["Reporting Person"], count: r.totalCount})
-            }
-        })
 
         console.info('DataSet Length: ' + tickets.length)
         var snapshotWeek = moment(snapshot,'YYYY-MM-DD').week()
