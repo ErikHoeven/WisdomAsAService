@@ -718,20 +718,6 @@ function filterSnapshot(dataset, snapshot,filter) {
                 })
                 .entries(rawtotCreatedPerWeekUsers)
 
-            var aggTotCreatedPerWeekReporingUsers = d3.nest()
-                .key(function (d) {
-                    return d.User
-                })
-                .rollup(function (v) {
-                    return {
-                        'count': d3.sum(v, function (d) {
-                            return d.count
-                        })
-                    };
-                })
-                .entries(rawCreatedPerWeekReportingUsers)
-
-
             var arrTotCreatedPerWeekData = []
             aggTotCreatedPerWeekUsers.forEach(function (r) {
                 arrTotCreatedPerWeekData.push([r.key,r.values.count])
