@@ -741,9 +741,36 @@ function filterSnapshot(dataset, snapshot,filter) {
                                          , {user: "van Alphen, Margit", office:"Central Office"}]
 
 
+            var arrLocalOfficePerUser = []
+            arrTotCreatedPerWeekData.forEach(function (r) {
+                LocalUSerPerLocalOffice.forEach(function (u) {
+                    if ( r[0] == u.user){
+                        arrLocalOfficePerUser.push({office: u.office, count: r[1]})
+                    }
+                })
+            })
 
+            var aggTotCreatedPerWeekOffice = d3.nest()
+                .key(function (d) {
+                    return d.office
+                })
+                .rollup(function (v) {
+                    return {
+                        'count': d3.sum(v, function (d) {
+                            return d.count
+                        })
+                    };
+                })
+                .entries(arrLocalOfficePerUser)
 
+            var arrLocalOffice = []
+            aggTotCreatedPerWeekOffice.forEach(function (r) {
+                arrLocalOffice.push([r.key,r.values.count])
+            })
 
+            snapshotObject.totCreatedPerWeekOffice = {}
+            snapshotObject.totCreatedPerWeekOffice.Data = arrLocalOffice
+            snapshotObject.totCreatedPerWeekOffice.title = 'Ticket per Office ' + moment().year()
             snapshotObject.mDashboardTickets = mDashboardTickets
             returnSet.push(snapshotObject)
             return returnSet

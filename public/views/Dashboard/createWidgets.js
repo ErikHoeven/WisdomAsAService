@@ -264,6 +264,7 @@ function getTickets(snapshot,username) {
 
                     //Tickets per user
                     ticketsPerUser(data.perSnapshot[0].totCreatedPerWeekUser)
+                    ticketsPerOffice(data.perSnapshot[0].totCreatedPerWeekOffice)
 
                     // Ticket Trends on Time
                     //ticketLeadTime(data.allTickets)

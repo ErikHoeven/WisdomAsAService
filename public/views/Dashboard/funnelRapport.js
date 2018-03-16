@@ -240,7 +240,7 @@ function ticketsPerUser(ds) {
         vAxis: {
             title: 'Tickets'
         },
-        width:800,
+        width:500,
         height:500,
     };
 
@@ -252,12 +252,12 @@ function ticketsPerUser(ds) {
 }
 
 
-function ticketsPerReportingUser(ds) {
+function ticketsPerOffice(ds) {
     console.info('Start tickets created per Reporting Person')
     console.info(ds)
     // (A)Define column headers
     var dataNew = new google.visualization.DataTable()
-    dataNew.addColumn('string', 'User')
+    dataNew.addColumn('string', 'Office')
     dataNew.addColumn('number', 'amount of tickets')
 
     console.info(ds.Data)
@@ -267,18 +267,18 @@ function ticketsPerReportingUser(ds) {
     var options = {
         title: ds.title,
         hAxis: {
-            title: 'User'
+            title: 'Office'
         },
         vAxis: {
             title: 'Tickets'
         },
-        width:800,
+        width:500,
         height:500,
     };
 
 
     //(4) Draw Graph
     var chart = new google.visualization.ColumnChart(
-        document.getElementById('ticketsPerUser'));
+        document.getElementById('ticketsPerOffice'));
     chart.draw(dataNew, options);
 }
