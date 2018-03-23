@@ -13,12 +13,12 @@ function menuHandler(user){
     }
     else{
         console.info('user found')
-        $(".nav.navbar-nav").append('<li><a href="/">Home</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/contact/">Contact</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/events/">Events </a></li>')
         $(".nav.navbar-nav").append('<li><a href="/BusinessRules/">Zoekmachine</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Dashboard</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/admin/">Admin</a></li>')
     }
 
 }

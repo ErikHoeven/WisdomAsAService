@@ -213,7 +213,7 @@ exports.getTickets = function (req, res, next) {
 
             //------------------------ Send Data to Client ------------------------------------------------
             res.status(200).json({
-                fltrGroup: ftlrGroup,
+                fltrGroup: underscore.uniq(ftlrGroup),
                 dataSpider: titleList,
                 legendaSpider: legenda,
                 snapshots: snapshots,

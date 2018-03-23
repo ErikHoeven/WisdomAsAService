@@ -14,6 +14,7 @@ html
     script(src="/javascripts/moment.js")
     script(src='/views/home/homepageHandler.js')
     script.
+      console.info(user)
       var user = {}
       console.info(jQuery.isEmptyObject(!{JSON.stringify(user)}))
         if (jQuery.isEmptyObject(!{JSON.stringify(user)}) == false){
@@ -34,6 +35,7 @@ html
         div.navbar-collapse.my-navbar-collapse.collapse
           ul.nav.navbar-nav
           script.
+            console.info(user)
             menuHandler(user);
           ul.nav.navbar-nav.navbar-right
           script.

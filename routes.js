@@ -61,6 +61,11 @@ exports = module.exports = function(app, passport) {
     app.get('/Dashboard/getSnapshots',require('./views/Dashboard/getSnapshots').getSnapshot);
     app.post('/Dashboard/getSpider',require('./views/Dashboard/ticketSpider').getSpiderWords);
 
+    //Admin
+    app.get('/admin/', require('./views/admin/index').init);
+    app.get('/admin/start', require('./views/admin/index').start);
+
+
 
 
     //Dashboard socialGraph routes

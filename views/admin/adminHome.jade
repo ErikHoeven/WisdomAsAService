@@ -1,0 +1,117 @@
+extends ../../layouts/default
+block head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1.0')
+    title Admin Dashboard
+    link(href='/stylesheets/bootstrap.css', rel='stylesheet')
+    link(href='/vendor/font-awesome/css/font-awesome.css', rel='stylesheet')
+    // CUSTOM STYLES
+    link(href='/stylesheets/custom-admin.css', rel='stylesheet')
+    // GOOGLE FONTS
+    link(href='http://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
+    // Custom scripts
+    script(href="/views/admin/search.js")
+
+block body
+    .container-fluid
+        .row
+            br
+            br
+            #wrapper
+                nav.navbar-default.navbar-side(role='navigation')
+                    .sidebar-collapse
+                        ul#main-menu.nav
+                            #menuHome.li
+                                a.active-menu
+                                    i.fa.fa-dashboard.fa-3x
+                                    |  Dashboard
+                            #menuSearch.li
+                                a
+                                    i.fa.fa-search.fa-3x
+                                    |  Zoek Criteria
+                            #menuCategory.li
+                                a
+                                    i.fa.fa-list.fa-3x
+                                    |  Categorien
+                            #menuDictonary.li
+                                a
+                                    i.fa.fa-book.fa-3x
+                                    |  Woordenboek
+                            #menuSentiment.li
+                                a
+                                    i.fa.fa-edit.fa-3x
+                                    |  Sentiment score
+                            #menuEmployee.li
+                                a
+                                    i.fa.fa-address-card.fa-3x
+                                    |  toevoegen medewerker
+                            #menuContent.li
+                                a
+                                    i.fa.fa-laptop.fa-3x
+                                    |  Content Administration
+                        br
+                #page-wrapper
+                    .row
+                        .col-md-12
+                            h2 Admin Dashboard
+                            h5 Hier kunt uw persoonlijke dashboard configureren.
+                    // /. ROW
+                    hr
+                    .row
+                        .col-md-3.col-sm-6.col-xs-6
+                            .panel.panel-back.noti-box
+                                span.icon-box.bg-color-red.set-icon
+                                    i.fa.fa-envelope-o
+                                .text-box
+                                    #tweets.p.main-text
+                                    p.text-muted Berichten
+                        .col-md-3.col-sm-6.col-xs-6
+                            .panel.panel-back.noti-box
+                                span.icon-box.bg-color-green.set-icon
+                                    i.fa.fa-bars
+                                .text-box
+                                    #tickets.p.main-text
+                                    p.text-muted Open tickets
+                        .col-md-3.col-sm-6.col-xs-6
+                            .panel.panel-back.noti-box
+                                span.icon-box.bg-color-blue.set-icon
+                                    i.fa.fa-bell-o
+                                .text-box
+                                    #words.p.main-text
+                                    p.text-muted Woorden
+                        .col-md-3.col-sm-6.col-xs-6
+                            .panel.panel-back.noti-box
+                                span.icon-box.bg-color-brown.set-icon
+                                    i.fa.fa-rocket
+                                .text-box
+                                    #employees.p.main-text
+                                    p.text-muted Medewerkers
+
+                    .row
+                        .col-md-6.col-sm-12.col-xs-12
+                            .panel.panel-back.noti-box
+                                span.icon-box.bg-color-blue
+                                    i.fa.fa-warning
+                                .text-box
+                                    p.main-text Beta version
+                                    p.text-muted Somige functionaliteiten werken nog niet!
+        script.
+            $.ajax({
+                url: '/admin/start',
+                type: 'GET',
+                contentType: 'application/json',
+                success: function (response) {
+                    console.info(response)
+
+                    $('#tweets').html(response.counts.totalFeeds)
+                    $('#tickets').html(response.counts.totTickets)
+                    $('#words').html(response.counts.totalWordsinCorpus)
+                    $('#employees').html(response.counts.totEmployees)
+
+                }
+            });
+
+
+
+
+
