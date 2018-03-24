@@ -70,7 +70,10 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/editSearchResults',require('./views/admin/editSearchCriteria').editSearchResults);
     app.post('/admin/removeSearchResults',require('./views/admin/editSearchCriteria').removeSearchResults);
     //Admin Cattegory
-
+    app.get('/admin/getCattegoryResults', require('./views/admin/getCattegoryResults').getCattegoryResults);
+    //app.post('/admin/addCattegoryResults',require('./views/admin/addCattegoryCriteria').addSearchResults);
+    //app.post('/admin/editCattegoryResults',require('./views/admin/editCattegoryCriteria').editSearchResults);
+    //app.post('/admin/removeCattegoryResults',require('./views/admin/editCattegoryCriteria').removeSearchResults);
 
 
 

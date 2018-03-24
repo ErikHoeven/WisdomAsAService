@@ -10,7 +10,10 @@ block head
     // GOOGLE FONTS
     link(href='http://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
     // Custom scripts
+    script(src='https://code.jquery.com/jquery-3.2.1.min.js')
+    script(src='/views/BusinessRules/jscolor-custom-look/jscolor.js')
     script(src="/views/admin/searchRules.js")
+    script(src="/views/admin/cattegoryRules.js")
 
 
 block body
@@ -31,7 +34,7 @@ block body
                                     i.fa.fa-search.fa-3x
                                     |  Zoek Criteria
                             li
-                                a
+                                a(id='category')
                                     i.fa.fa-list.fa-3x
                                     |  Categorien
                             li
@@ -108,9 +111,11 @@ block body
                         selectSearchMenu()
                         setSearchTitle()
                         getSearchResults(user)
-
-
-
+                    })
+                    $('#category').click(function () {
+                        selectCategoryMenu()
+                        setCategoryTitle()
+                        getCategoryResults(user)
                     })
                 }
             });
