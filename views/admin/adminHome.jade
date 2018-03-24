@@ -10,7 +10,8 @@ block head
     // GOOGLE FONTS
     link(href='http://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
     // Custom scripts
-    script(href="/views/admin/search.js")
+    script(src="/views/admin/searchRules.js")
+
 
 block body
     .container-fluid
@@ -21,31 +22,31 @@ block body
                 nav.navbar-default.navbar-side(role='navigation')
                     .sidebar-collapse
                         ul#main-menu.nav
-                            #menuHome.li
-                                a.active-menu
+                            li
+                                a.active-menu(id='home')
                                     i.fa.fa-dashboard.fa-3x
                                     |  Dashboard
-                            #menuSearch.li
-                                a
+                            li
+                                a(id="search")
                                     i.fa.fa-search.fa-3x
                                     |  Zoek Criteria
-                            #menuCategory.li
+                            li
                                 a
                                     i.fa.fa-list.fa-3x
                                     |  Categorien
-                            #menuDictonary.li
+                            li
                                 a
                                     i.fa.fa-book.fa-3x
                                     |  Woordenboek
-                            #menuSentiment.li
+                            li
                                 a
                                     i.fa.fa-edit.fa-3x
                                     |  Sentiment score
-                            #menuEmployee.li
+                            li
                                 a
                                     i.fa.fa-address-card.fa-3x
                                     |  toevoegen medewerker
-                            #menuContent.li
+                            li
                                 a
                                     i.fa.fa-laptop.fa-3x
                                     |  Content Administration
@@ -53,11 +54,11 @@ block body
                 #page-wrapper
                     .row
                         .col-md-12
-                            h2 Admin Dashboard
-                            h5 Hier kunt uw persoonlijke dashboard configureren.
+                            h2(id="title") Admin Dashboard
+                            h5(id="subtitle") Hier kunt uw persoonlijke dashboard configureren.
                     // /. ROW
                     hr
-                    .row
+                    .row(id='contentElement')
                         .col-md-3.col-sm-6.col-xs-6
                             .panel.panel-back.noti-box
                                 span.icon-box.bg-color-red.set-icon
@@ -87,15 +88,10 @@ block body
                                     #employees.p.main-text
                                     p.text-muted Medewerkers
 
-                    .row
-                        .col-md-6.col-sm-12.col-xs-12
-                            .panel.panel-back.noti-box
-                                span.icon-box.bg-color-blue
-                                    i.fa.fa-warning
-                                .text-box
-                                    p.main-text Beta version
-                                    p.text-muted Somige functionaliteiten werken nog niet!
         script.
+
+            var user =
+
             $.ajax({
                 url: '/admin/start',
                 type: 'GET',
@@ -108,6 +104,14 @@ block body
                     $('#words').html(response.counts.totalWordsinCorpus)
                     $('#employees').html(response.counts.totEmployees)
 
+                    $('#search').click(function () {
+                        selectSearchMenu()
+                        setSearchTitle()
+                        getSearchResults(user)
+
+
+
+                    })
                 }
             });
 

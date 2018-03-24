@@ -64,6 +64,13 @@ exports = module.exports = function(app, passport) {
     //Admin
     app.get('/admin/', require('./views/admin/index').init);
     app.get('/admin/start', require('./views/admin/index').start);
+    //Admin Search
+    app.get('/admin/getSearchResults', require('./views/admin/getSearchResults').getSearchResults);
+    app.post('/admin/addSearchResults',require('./views/admin/addSearchCriteria').addSearchResults);
+    app.post('/admin/editSearchResults',require('./views/admin/editSearchCriteria').editSearchResults);
+    app.post('/admin/removeSearchResults',require('./views/admin/editSearchCriteria').removeSearchResults);
+    //Admin Cattegory
+
 
 
 
