@@ -71,11 +71,15 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/removeSearchResults',require('./views/admin/editSearchCriteria').removeSearchResults);
     //Admin Cattegory
     app.get('/admin/getCattegoryResults', require('./views/admin/getCattegoryResults').getCattegoryResults);
-    //app.post('/admin/addCattegoryResults',require('./views/admin/addCattegoryCriteria').addSearchResults);
-    //app.post('/admin/editCattegoryResults',require('./views/admin/editCattegoryCriteria').editSearchResults);
-    //app.post('/admin/removeCattegoryResults',require('./views/admin/editCattegoryCriteria').removeSearchResults);
-
-
+    app.post('/admin/addCategoryResults',require('./views/admin/addCategoryResults').addCategoryResults);
+    app.post('/admin/editCategoryResults',require('./views/admin/editCategoryResults').editCategoryResults);
+    app.post('/admin/removeCategoryResults',require('./views/admin/editCategoryResults').removeCategoryResults);
+    app.get('/admin/test',require('./views/admin/editCategoryResults').testAdmin);
+    //Admin Dictionary
+    app.post('/admin/getDictionaryResults', require('./views/admin/getDictionaryResults').getDictionaryResults);
+    app.post('/admin/addDictionaryResults',require('./views/admin/addDictionaryResults').addDictionaryResults);
+    app.post('/admin/editDictionaryResults',require('./views/admin/editDictionaryResults').editDictionaryResults);
+    app.post('/admin/removeDictionaryResults',require('./views/admin/editDictionaryResults').removeDictionaryResults);
 
 
     //Dashboard socialGraph routes

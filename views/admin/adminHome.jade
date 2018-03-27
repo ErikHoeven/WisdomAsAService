@@ -5,15 +5,22 @@ block head
     title Admin Dashboard
     link(href='/stylesheets/bootstrap.css', rel='stylesheet')
     link(href='/vendor/font-awesome/css/font-awesome.css', rel='stylesheet')
-    // CUSTOM STYLES
     link(href='/stylesheets/custom-admin.css', rel='stylesheet')
-    // GOOGLE FONTS
     link(href='http://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
-    // Custom scripts
-    script(src='https://code.jquery.com/jquery-3.2.1.min.js')
-    script(src='/views/BusinessRules/jscolor-custom-look/jscolor.js')
+    link(href='/views/admin/pick-a-color-1.2.3.min.css', rel='stylesheet')
+    style(type='text/css').
+        .pick-a-color-markup {
+            margin: 20px 0px;
+        }
+
+        .container {
+            margin: 0px 5px;
+            width: 50%;
+        }
+    //Custom Scripts
     script(src="/views/admin/searchRules.js")
     script(src="/views/admin/cattegoryRules.js")
+    script(src="/views/admin/DictionaryRules.js")
 
 
 block body
@@ -38,11 +45,11 @@ block body
                                     i.fa.fa-list.fa-3x
                                     |  Categorien
                             li
-                                a
+                                a(id='dictionary')
                                     i.fa.fa-book.fa-3x
                                     |  Woordenboek
                             li
-                                a
+                                a(id='sentiment')
                                     i.fa.fa-edit.fa-3x
                                     |  Sentiment score
                             li
@@ -90,11 +97,10 @@ block body
                                 .text-box
                                     #employees.p.main-text
                                     p.text-muted Medewerkers
+                        .col-md-3.col-sm-6.col-xs-6
+                            //input.pick-a-color.form-control(type='text', value='222', name='border-color')
 
         script.
-
-            var user =
-
             $.ajax({
                 url: '/admin/start',
                 type: 'GET',
@@ -117,8 +123,20 @@ block body
                         setCategoryTitle()
                         getCategoryResults(user)
                     })
+                    $('#dictionary').click(function () {
+                        selectDictionaryMenu()
+                        setDictionaryTitle()
+                        getDictionaryResults(user)
+                    })
                 }
             });
+        // Scripts required for color palet. Scripts needed by loaded at the end of the page
+        script(src = '/views/admin/tinycolor-0.9.15.min.js')
+        script(src = '/views/admin/pick-a-color-1.2.3.min.js')
+
+
+
+
 
 
 

@@ -1,12 +1,3 @@
-/**
- * Created by erik on 3/24/18.
- */
-
-/**
- * Created by erik on 3/24/18.
- */
-
-
 // A. change menu Zoek criteria red the rest blue.
 function selectCategoryMenu() {
     $('#home').removeClass()
@@ -27,16 +18,88 @@ function getCategoryResults(user) {
         type: 'GET',
         contentType: 'application/json',
         success: function (response) {
-            console.info(response)
+
+            var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
+                ,tblBody = '<tbody>'
+                ,clear = 0
+                ,catValueList = []
+                ,catValueStr
+                ,table
+
+
             if (response.count == 0 ){
                 //1. Form show
-                $('#contentElement').html('<div class=\"container\"><div class=\"col-md-5\"><div class=\"form-area\"><br style=\"clear:both\"><h4 style=\"margin-bottom: 25px; text-align: left;\">Toevoegen zoeken criteria<\/h4><div class=\"form-group\"><input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" placeholder=\"Name\" required><button type=\"button\" id=\"add\" name=\"add\" class=\"btn btn-primary pull-left\">Toevoegen<\/button><\/form><\/div><\/div><\/div>')
+                $('#contentElement').html('<div class=\"col-lg-6\">' +
+                    '<div class="form-group">' +
+                       '<label>Categorie</label>' +
+                    '<div class="input-group">' +
+                       '<input type="text" class="form-control" name="Categorie" id="Categorie" placeholder="Categorie">' +
+                    '</div></div>' +
+                    '<div class="form-group">' +
+                      '<label>Cattegoie waarde</label>' +
+                      '<div class="input-group">' +
+                        '<input type="email" class="form-control" id="CatValue" name="CatValue" placeholder="Categorie waarde">' +
+                        '<button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
+                        '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
+                     '<\/div>' +
+                    '<div class="form-group"><label>Kleur</label>' +
+                    '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control">' +
+                    '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">')
 
-                //2. add search criteria when press add
-                $('#add').click(function () {
-                    var searchName =  $('#name').val()
+                //2. Add category value
+                $('#addCatValue').click(function () {
+                    if($('#CatValue').val().length > 0){
+                        catValueList.push($('#CatValue').val())
+                        console.info(catValueList)
+                        catValueStr = ''
+                        tblBody = '<tbody>'
+                        catValueList.forEach(function (r) {
+                            catValueStr = catValueStr + '<tr><td>'+ r +'</td></tr>'
+                        })
 
-                    addSearchCriteria(searchName)
+                        tblBody = tblBody + catValueStr + '</tbody>'
+                        table = '<table class="table table-hover">' + tblHeader + tblBody + '</table>'
+
+                        $('#CatValueTable').html(table)
+                        $('#CatValue').val('')
+                    }
+
+                    })
+                //3. Clear category value
+                $('#clearCatValue').click(function () {
+                    console.info(catValueList)
+                    //clear = 1
+                    catValueList = []
+                    table = ''
+                    tblBody = ''
+                    tblHeader = ''
+                   $('#CatValueTable').html('')
+                   $('#CatValue').val('')
+
+                   console.info(catValueList.length)
+                })
+
+                //4. Colour Control
+                $(".pick-a-color").pickAColor({
+                    showSpectrum            : true,
+                    showSavedColors         : true,
+                    saveColorsPerElement    : true,
+                    fadeMenuToggle          : true,
+                    showAdvanced			: true,
+                    showBasicColors         : true,
+                    showHexInput            : true,
+                    allowBlank				: true,
+                    inlineDropdown			: true
+                });
+
+                //5. Submit
+                $('#addCattegory').click(function () {
+                    var category = $('#Categorie').val()
+                       ,categoryColor = $('#txtKleur').val()
+
+                    addCategoryResults(category,categoryColor, catValueList)
+
+
                 })
             }
             else {
@@ -47,82 +110,63 @@ function getCategoryResults(user) {
 
             }}})}
 
-// function addSearchCriteria(name, user) {
-//     $.ajax({
-//         url: '/admin/addSearchResults',
-//         type: 'POST',
-//         contentType: 'application/json',
-//         data: JSON.stringify({name: name}),
-//         success: function (response) {
-//             console.info(response)
-//             getSearchResults(user)
-//         }
-//     })}
-//
- function updateCategoryField(id, Category, Color){
-     console.info(id)
-     console.info(Category)
-     console.info(Color)
-     $('#Cattegory' + id).html('<input type="text" id="editCategory' + id +'" placeholder="'+ Category +'"></input>')
-     $('#Color' + id).html('<input type="text" value="' + Color + '" name="editColor"' + id +' id="editColor' + id  +'" autocomplete="off" style="background-image: none; background-color: rgb(15, 167, 194); color: rgb(0, 0, 0);">')
-     $('#editColor' + id).addClass('jscolor{width:101, padding:0, shadow:false, borderWidth:0, backgroundColor:"transparent", insetColor:"#000"}')
-
-     var field = 'edit' + id
-     //console.info(field)
-     $('#cmd' + id).html('')
-     $('#cmd' + id).append('<button id="cmd'+ id+'" type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + id + '\',\'' + field + '\')"><span class="glyphicon glyphicon-save"></span> Edit</button>')
-
-     $('#editColor' + id).focusout(function () {
-         teller = teller + 1;
-         console.info(teller)
-         if (teller == 1 ){
-             datasetvb = [];
-             datasetvb.push({
-                 color: "#" + $(this).val()
-                 , label: $('#txtTagCattegory').val()
-                 , value: 50
-             });
-
-             datasetvb.push({
-                 color: "#333333"
-                 , label: "Overige"
-                 , value: 100
-             });
-             console.info(datasetvb);
+ function addCategoryResults(category, color, catValues) {
+          $.ajax({
+             url: '/admin/addCategoryResults',
+             type: 'POST',
+             contentType: 'application/json',
+             data: JSON.stringify({category: category, color: color, catValues:catValues }),
+             success: function (response) {
+                 console.info(response)
+                 getCategoryResults(user)
          }
+     })
+}
+
+ function updateCategoryField(id, Category, Color){
+
+     //a. Change field Cattegory in page to input fields (works)
+     $('#Cattegory' + id).html('<input type="text" id="editCategory' + id +'" placeholder="'+ Category +'" class="form-control"></input>')
+     //b. Change field Color in page to input fields (works)
+     $('#Color' + id).html('<input type="text" value="' + Color + '" name="editColor"' + id +' id="editColor' + id  +'" class="pick-a-color form-control" ;">')
+
+     //c. Change color input field to a color picker (does not work)
+     $(".pick-a-color").pickAColor({
+         showSpectrum            : true,
+         showSavedColors         : true,
+         saveColorsPerElement    : true,
+         fadeMenuToggle          : true,
+         showAdvanced			 : true,
+         showBasicColors         : true,
+         showHexInput            : true,
+         allowBlank				 : true,
+         inlineDropdown			 : true
      });
-
-     $('#editColor' + id).focusin(function () {
-         console.info('focus in')
-         teller = 0;
-     });
-
-
+     // d. Change button to save functionality
+     $('#edit' + id).html('')
+     $('#edit' + id).append('<button id="edit'+ id+'" type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + id + '\')"><span class="glyphicon glyphicon-save"></span> Edit</button>')
  }
-//
-//
-// function updateValue (id, field) {
-//     var newValue = $('#' + field).val()
-//     $.ajax({
-//         url: '/admin/editSearchResults',
-//         type: 'POST',
-//         contentType: 'application/json',
-//         data: JSON.stringify({id: id, field: 'lookupValue', value: newValue}),
-//         success: function (response) {
-//             console.info(response)
-//             getSearchResults(user)
-//         }
-//     })}
-//
-//
-// function removeValue(id) {
-//     $.ajax({
-//         url: '/admin/removeSearchResults',
-//         type: 'POST',
-//         contentType: 'application/json',
-//         data: JSON.stringify({id: id}),
-//         success: function (response) {
-//             console.info(response)
-//             getSearchResults(user)
-//         }
-//     })}
+
+ function updateCategoryValue (id) {
+     var newValueCategory = $('#editCategory' + id).val()
+     var newValueColor = $('#editColor' + id).val()
+     $.ajax({
+         url: '/admin/editCategoryResults',
+         type: 'POST',
+         contentType: 'application/json',
+         data: JSON.stringify({id: id, Color: newValueColor , Category: newValueCategory}),
+         success: function (response) {
+             getCategoryResults(user)
+         }
+     })}
+
+ function removeCategoryValue(id) {
+     $.ajax({
+         url: '/admin/removeCategoryResults',
+         type: 'POST',
+         contentType: 'application/json',
+         data: JSON.stringify({id: id}),
+         success: function (response) {
+             getCategoryResults(user)
+         }
+     })}

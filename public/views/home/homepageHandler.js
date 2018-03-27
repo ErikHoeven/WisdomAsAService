@@ -19,6 +19,7 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Dashboard</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/admin/">Admin</a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/admin/test">test</a></li>')
     }
 
 }

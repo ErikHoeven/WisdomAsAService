@@ -178,8 +178,8 @@ function createNewTableData (data, tableDefinition, pagnationStep, actualStep){
 }
 
 var term = [], lastKnownPos = 0
-
 function autocompletionLookupValue(val, pos) {
+    console.info(term)
     arrayLenght = term.length
     console.info('execute autocompletion:')
 

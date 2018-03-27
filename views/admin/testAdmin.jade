@@ -1,0 +1,47 @@
+extends ../../layouts/default
+html
+   block head
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
+        meta(http-equiv='x-ua-compatible', content='IE=10')
+        link(rel='stylesheet', href='/views/admin/bootstrap-3.0.0.min.css')
+        link(rel='stylesheet', href='/views/admin/pick-a-color-1.2.3.min.css')
+
+
+        style(type='text/css').
+            .pick-a-color-markup {
+                margin:20px 0px;
+            }
+            .container {
+                margin: 0px 5px;
+                width: 50%;
+            }
+
+    block body
+        .container
+            input.pick-a-color.form-control(type='text', value='222', name='border-color')
+            input.pick-a-color.form-control(type='text', value='aaa', name='font-color')
+            input.pick-a-color.form-control(type='text', value='a1beef', name='backgound-color')
+            input.pick-a-color.form-control(type='text', value='551033', name='highlight-color')
+            input.pick-a-color.form-control(type='text', value='eee', name='contrast-color')
+            input.pick-a-color.form-control(type='text', disabled='')
+            input.pick-a-color.form-control(type='text')
+
+        script(src='/views/admin/tinycolor-0.9.15.min.js')
+        script(src='/views/admin/pick-a-color-1.2.3.min.js')
+
+
+        script(type='text/javascript').
+
+                $(".pick-a-color").pickAColor({
+                    showSpectrum: true,
+                    showSavedColors: true,
+                    saveColorsPerElement: true,
+                    fadeMenuToggle: true,
+                    showAdvanced: true,
+                    showBasicColors: true,
+                    showHexInput: true,
+                    allowBlank: true,
+                    inlineDropdown: true
+                })
+
+
