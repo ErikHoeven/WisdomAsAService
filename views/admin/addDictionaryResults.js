@@ -19,7 +19,8 @@ exports.addDictionaryResults = function(req, res, next) {
                             "typeWoord" : typeWord,
                             "woord" : word,
                             "volgLetter" : word.substring(0,1),
-                            "URL" : "handmatig"}
+                            "URL" : "handmatig",
+                            "username": user}
         console.info(DictionaryObject)
         dbCorpus.insert(DictionaryObject)
 

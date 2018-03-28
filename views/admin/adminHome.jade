@@ -21,6 +21,8 @@ block head
     script(src="/views/admin/searchRules.js")
     script(src="/views/admin/cattegoryRules.js")
     script(src="/views/admin/DictionaryRules.js")
+    script(src="/views/admin/SentimentRules.js")
+    script(src="/views/admin/EmployeeRules.js")
 
 
 block body
@@ -53,11 +55,11 @@ block body
                                     i.fa.fa-edit.fa-3x
                                     |  Sentiment score
                             li
-                                a
+                                a(id='employee')
                                     i.fa.fa-address-card.fa-3x
                                     |  toevoegen medewerker
                             li
-                                a
+                                a(id='content')
                                     i.fa.fa-laptop.fa-3x
                                     |  Content Administration
                         br
@@ -127,6 +129,16 @@ block body
                         selectDictionaryMenu()
                         setDictionaryTitle()
                         getDictionaryResults(user)
+                    })
+                    $('#sentiment').click(function () {
+                        selectSentimentMenu()
+                        setSentimentTitle()
+                        getSentimentResults(user)
+                    })
+                    $('#employee').click(function () {
+                        selectEmployeeMenu()
+                        setEmployeeTitle()
+                        getEmployeeResults(user)
                     })
                 }
             });

@@ -81,6 +81,18 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/editDictionaryResults',require('./views/admin/editDictionaryResults').editDictionaryResults);
     app.post('/admin/removeDictionaryResults',require('./views/admin/editDictionaryResults').removeDictionaryResults);
 
+    //Admin SentimentScore
+    app.post('/admin/getSentimentResults', require('./views/admin/getSentimentResults').getSentimentResults);
+    app.post('/admin/addSentimentResults',require('./views/admin/addSentimentResults').addSentimentResults);
+    app.post('/admin/editSentimentResults',require('./views/admin/editSentimentResults').editSentimentResults);
+    app.post('/admin/removeSentimentResults',require('./views/admin/editSentimentResults').removeSentimentResults);
+
+    //Admin EmployeeAssignment
+    app.post('/admin/getEmployeeResults', require('./views/admin/getEmployeeResults').getEmployeeResults);
+    app.post('/admin/addEmployeeResults',require('./views/admin/addEmployeeResults').addEmployeeResults);
+    app.post('/admin/editEmployeeResults',require('./views/admin/editEmployeeResults').editEmployeeResults);
+    app.post('/admin/removeEmployeeResults',require('./views/admin/editEmployeeResults').removeEmployeeResults);
+
 
     //Dashboard socialGraph routes
     //app.get('/Dashboard/socialGraph', require('./views/Dashboard/socialGraph/index').find);
