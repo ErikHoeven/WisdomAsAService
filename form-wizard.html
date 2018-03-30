@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+</head>
+
+    <!--sidebar end-->
+
+    <!-- /menu footer buttons -->
+    
+    <!--<div class="sidebar-footer hidden-small">
+        <a class="tooltip-settings" title="Settings">
+            <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
+        </a>
+        <a class="tooltip-fullscreen" title="Full Screen">
+            <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
+        </a>
+        <a class="tooltip-resize-fullscreen" title="Resize Screen" style='display:none'>
+            <span class="glyphicon glyphicon-resize-full" aria-hidden="true"></span>
+        </a>
+        <a class="tooltip-lock" title="Lock">
+            <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+        </a>
+        <a class="tooltip-logout" title="Logout">
+            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+        </a>
+    </div>-->    <!-- /menu footer buttons -->
+
+    <!--main content start-->
+    <section id="main-content">
+            <!--======== Form Wizard Content Start End ========-->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="c_panel">
+                        <div class="c_title">
+                            <h2>Form Wizards</h2>
+                            <div class="clearfix"></div>
+                        </div><!--/.c_title-->
+                        <div class="c_content">
+
+                            <!--=========== START HORIZONTAL FORM WIZARD ===========-->
+                            <h5 class="head-style-1">
+                                <span class="head-text-green">
+                                    <strong>Horizontal Form Wizard</strong>
+                                </span>
+                            </h5>
+
+                            <div id="wizard1">
+                                <ul class="nav nav-tabs" role="tablist">
+                                    <li role="presentation" class="active">
+                                        <a href="#tab1" data-toggle="tab">
+                                            <i class="fa fa-user m-r-xs"></i> Personal Info
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#tab2" data-toggle="tab">
+                                            <i class="fa fa-shopping-cart m-r-xs"></i> Product Info
+                                        </a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#tab3" data-toggle="tab">
+                                            <i class="fa fa-cc-visa m-r-xs"></i> Payment</a>
+                                    </li>
+                                    <li role="presentation">
+                                        <a href="#tab4" data-toggle="tab">
+                                            <i class="fa fa-check m-r-xs"></i> Finish
+                                        </a>
+                                    </li>
+                                </ul>
+                                <div class="progress progress-sm m-t-sm margin-top-15">
+                                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                    </div>
+                                </div>
+                                <form id="wizardForm1" class="validator">
+                                    <div class="tab-content">
+                                        <div class="tab-pane active fade in" id="tab1">
+                                            <div class="row margin-bottom-10">
+                                                <div class="col-md-6">
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label for="fullname">Full Name</label>
+                                                            <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Full Name">
+                                                        </div>
+                                                        <div class="form-group  col-md-6">
+                                                            <label for="email">Email Address</label>
+                                                            <input type="text" class="form-control" name="email" id="email" placeholder="Email Address" >
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label for="pass1">Password</label>
+                                                            <input type="password" class="form-control" name="pass1" id="pass1" placeholder="Password" >
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label for="passa">Confirm Password</label>
+                                                            <input type="password" class="form-control" name="pass2" id="passa" placeholder="Confirm Password">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h3>Personal Info</h3>
+                                                    <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam dictum felis eu pede mollis pretium. Integer tincidunt. Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate eleifend tellus.</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab2">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <img src="../../../assets/images/google-logo.png" width="250" alt="image">
+                                                    <div class="m-t-md">
+                                                        <address>
+                                                            <strong>Google, Inc.</strong><br>
+                                                            123 Abc Ave, Street 100<br>
+                                                            My City, ST 99999<br>
+                                                            <abbr title="Phone">P:</abbr> (123) 456-7890
+                                                        </address>
+                                                        <address>
+                                                            <strong>Full Name</strong><br>
+                                                            <a href="mailto:#">first.last@example.com</a>
+                                                        </address>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-9">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="productName">Product Name</label>
+                                                        <input type="text" class="form-control" name="productName" id="productName" placeholder="Product Name" >
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="productId">Product ID</label>
+                                                        <input type="text" class="form-control" name="productId" id="productId" placeholder="Product ID">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="quantity">Quantity</label>
+                                                        <input type="number" min="1" max="5" class="form-control" name="quantity" id="quantity" placeholder="Quantity">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab3">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group col-md-12">
+                                                        <label for="exampleInputCard">Card Number</label>
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <input type="text" class="form-control" name="exampleInputCard" id="exampleInputCard" placeholder="Card Number">
+                                                            </div>
+                                                            <div class="col-md-4">
+                                                                <input type="text" class="form-control col-md-4" name="exampleInputSecurity" id="exampleInputSecurity" placeholder="Security Code">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="exampleInputHolder">Card Holders Name</label>
+                                                        <input type="text" class="form-control" name="exampleInputHolder" id="exampleInputHolder" placeholder="Card Holders Name">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="exampleInputExpiration">Expiration</label>
+                                                        <input type="text" class="form-control date-picker" name="exampleInputExpiration" id="exampleInputExpiration" placeholder="Expiration">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label for="exampleInputCsv">CSV</label>
+                                                        <input type="text" class="form-control" name="exampleInputCsv" id="exampleInputCsv" placeholder="CSV">
+                                                    </div>
+                                                    <div class="form-group col-md-12">
+                                                        <label class="f-s-12">By pressing Next You will Agree to the Payment <a href="#">Terms & Conditions</a></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="tab4">
+                                            <h2 class="no-s">Thank You !</h2>
+                                            <div class="alert alert-info m-t-sm m-b-lg" role="alert">
+                                                Congratulations ! You got the last step.
+                                            </div>
+                                        </div>
+                                        <ul class="pager wizard">
+                                            <li class="previous"><a href="#" class="btn btn-default"><i class="fa fa-long-arrow-left"></i> Previous</a></li>
+                                            <li class="next"><a href="#" class="btn btn-default">Next <i class="fa fa-long-arrow-right"></i></a></li>
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div><!--/#wizard1-->
+                            <!--=========== END HORIZONTAL FORM WIZARD ===========-->
+                        </div><!--/.c_content-->
+
+                    </div><!--/.c_panels-->
+
+                </div>
+
+            </div>
+            </div>
+            <!--======== Form Wizard Content Start End ========-->
+
+
+        </section>
+    </section>
+    <!--======== Main Content End ========-->
+
+
+    <!--===== Right sidebar nofications start ========-->
+        <aside>
+            <div id="right-sidebar" class="right-sidebar-notifcations nav-collapse hide-right-bar-notifications">
+                <div class="bs-example bs-example-tabs right-sidebar-tab-notification" data-example-id="togglable-tabs">
+                    <ul id="right-sidebar-tabs" class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#activities" id="activities-tab" role="tab" data-toggle="tab" aria-controls="activities" aria-expanded="true">Activities</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#tasks" role="tab" id="tasks-tab" data-toggle="tab" aria-controls="tasks">Tasks</a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#settings" role="tab" id="settings-tab" data-toggle="tab" aria-controls="settings">Settings</a>
+                        </li>
+                        
+                    </ul>
+                    <div id="right-sidebar-tab-content" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade in active" id="activities" aria-labelledBy="activities-tab">
+                            <div class="right-sidebar-panel-content-heading">
+                                <h4><span class="icon-user"></span> Latest user activities</h4>
+                                <small>10 Latest Activities</small>
+                            </div>
+                            <div class="right-sidebar-panel-content animated fadeInRight">
+                                
+                                <ul class="right-sidebar-list">
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image" />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - User Login...</h5>
+                                            <p>Accessing the system...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img3.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating...</h5>
+                                            <p>Updating user ID 1 ...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img2.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting...</h5>
+                                            <p>Deleting user message...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img5.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Accessing...</h5>
+                                            <p>User accessing the sys...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Viewing...</h5>
+                                            <p>Viewing the user...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Reading...</h5>
+                                            <p>Reading user message...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Registering...</h5>
+                                            <p>Registering new user...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Registering...</h5>
+                                            <p>Registering new user...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Registering...</h5>
+                                            <p>Registering new user...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Registering...</h5>
+                                            <p>Registering new user...</p>
+                                        </div>
+                                    </li>
+                                    
+                                </ul>    
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="tasks" aria-labelledBy="tasks-tab">
+                            <div class="right-sidebar-panel-content-heading">
+                                <h4><span class="icon-list"></span> Recent tasks</h4>
+                                <small>15 Ongoing tasks</small>
+                            </div>
+                            <div class="right-sidebar-panel-content animated fadeInRight">
+                                
+                                <ul class="right-sidebar-list">
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5><a href="#">John Doe - Creating Tasks</a></h5>
+                                            <p>To update the sidebar...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img2.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img3.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img4.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img5.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/users/img4.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Updating Tasks</h5>
+                                            <p>To update the header UI...</p>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div class="pull-left thumbnail-hover">
+                                            <div class="overflow-hidden">
+                                                <img src="../../../assets/images/profile.jpg" width="80" alt="image"/>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h5>John Doe - Deleting Tasks</h5>
+                                            <p>Change the content UI...</p>
+                                        </div>
+                                    </li>
+                                    
+                                </ul>
+
+                            </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="settings" aria-labelledBy="settings-tab">
+                            <div class="right-sidebar-panel-content-heading">
+                                <h4><span class="icon-list"></span> System Settins</h4>
+                                <small>80% Completed Settings</small>
+                            </div>
+                            <div class="right-sidebar-panel-content animated fadeInRight">
+                                <ul class="right-sidebar-list">
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox" checked="">
+                                            <i data-on="YES" data-off="NO"></i> Email Notifications
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox">
+                                            <i data-on="YES" data-off="NO"></i> Daily Email Notifiactions
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox" checked="">
+                                            <i data-on="YES" data-off="NO"></i> Show user visitors
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox" checked="">
+                                            <i data-on="YES" data-off="NO"></i> Show birthdate
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox">
+                                            <i data-on="YES" data-off="NO"></i> Show address
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox">
+                                            <i data-on="YES" data-off="NO"></i> Payment Recurring
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label class="switch-input success">
+                                            <input type="checkbox" name="switch-checkbox">
+                                            <i data-on="YES" data-off="NO"></i> SMS Notifications
+                                        </label>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- /example -->
+                <div class="btn-bottom-right-sidebar-close">
+                    <span class="fa fa-times"></span>
+                </div>
+                    
+            </div>
+        </aside>    
+        <!--===== Right sidebar nofications end ========-->
+
+
+</section><!--/.container-->
+
+    <!--===== Footer Start ========-->
+
+    <!-- Placed js at the end of the document so the pages load faster -->
+
+    <!--##################################################################################
+    #
+    # Thema GLOBAL JS PLUGINS
+    # 
+    # NOTE: These libraries are neccessary to run the template so don't remove one of these libraries. 
+    # You can uncomment the following libraries commented and comment the global-plugins.js but it will may cause slow performance of the template because of many links should be load from the server.
+    #
+    ##################################################################################-->
+    <script src="../../../assets/js/global-plugins.js"></script>
+
+
+    <!--##################################################################################
+    #
+    # COMMON SCRIPT FOR THIS PAGE
+    #
+    ##################################################################################-->
+
+    <!--common script init for all pages-->
+    <script src="../../../assets/js/theme.js" type="text/javascript" ></script>
+
+    <!-- For the page has tooltipslter only -->
+    <script src="../../../assets/js/tooltipster.js" type="text/javascript" ></script>
+
+
+    <!-- For for the page that has form only -->
+    <script src="../../../assets/js/forms.js"></script>
+    <script src="../../../assets/js/form-validation.js"></script>
+    <script src="../../../assets/js/form-wizard.js"></script>
+    <script src="../../../assets/js/form-plupload.js"></script>
+    <script src="../../../assets/js/form-x-editable.js"></script>
+
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function(){
+            new WOW().init();
+
+            App.initPage();
+            App.initLeftSideBar();
+            App.initCounter();
+            App.initNiceScroll();
+            App.initPanels();
+            App.initProgressBar();
+            App.initSlimScroll();
+            App.initNotific8();
+            App.initTooltipster();
+            App.initStyleSwitcher();
+            App.initMenuSelected();
+            App.initRightSideBar();
+            App.initSummernote();
+            App.initAccordion();
+            App.initModal();
+            App.initPopover();
+
+        });
+    </script>
+
+
+</body>
+
+</html>
+
+<!--===== Footer End ========-->

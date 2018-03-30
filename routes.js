@@ -93,6 +93,13 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/editEmployeeResults',require('./views/admin/editEmployeeResults').editEmployeeResults);
     app.post('/admin/removeEmployeeResults',require('./views/admin/editEmployeeResults').removeEmployeeResults);
 
+    //Admin Content
+    app.post('/admin/getContentResults', require('./views/admin/getContentResults').getContentResults);
+    app.post('/admin/getContentResultsForm', require('./views/admin/getContentResults').getContentResultsForm);
+    //app.post('/admin/addEmployeeResults',require('./views/admin/addEmployeeResults').addEmployeeResults);
+    //app.post('/admin/editEmployeeResults',require('./views/admin/editEmployeeResults').editEmployeeResults);
+    //app.post('/admin/removeEmployeeResults',require('./views/admin/editEmployeeResults').removeEmployeeResults);
+
 
     //Dashboard socialGraph routes
     //app.get('/Dashboard/socialGraph', require('./views/Dashboard/socialGraph/index').find);
