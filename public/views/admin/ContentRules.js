@@ -64,9 +64,6 @@ function getContentResults(user) {
             log("Selected: " + ui.item.value + " aka " + ui.item.id);
         }
     })
-
-
-
 }
 
 
@@ -88,46 +85,57 @@ function updateContentField(name){
 
             $('#cmdSaveContent').click(function () {
 
-                var content = simplemde.val()
+                var content = simplemde.value()
                 var name = $('#txtPageName').val()
-                var section = $('#selSection option select').text()
+                var section = $('#selSection option:selected').text()
 
-                $.ajax({
-                    url: '/admin/saveContentResults',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({name: name, section: section, content: content}),
-                    success: function (response) {
-                        console.info(response)
+                 $.ajax({
+                     url: '/admin/saveContentResults',
+                     type: 'POST',
+                     contentType: 'application/json',
+                     data: JSON.stringify({name: name, section: section, content: content}),
+                     success: function (response) {
+                         console.info(response)
 
-                    }})
+
+                 }})
             })
 
             $('#selSection').on('change', function() {
-                console.info( this.value );
+
 
                 var name = $('#txtPageName').val()
                 var section = this.value
 
-                $.ajax({
-                    url: '/admin/getContentText',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({name: name, section: section}),
-                    success: function (response) {
-                        console.info(response)
+                console.info( section )
 
-                    }})
+                 $.ajax({
+                     url: '/admin/getContentText',
+                     type: 'POST',
+                     contentType: 'application/json',
+                     data: JSON.stringify({name: name, section: section}),
+                     success: function (response) {
+                         console.info(response)
+
+                         var txtArea = response.content
+                         simplemde.value(txtArea)
+
+
+                     }})
             })
 
 
-            })
+
+        }})
+
+
+
+
+            //})
 
 
 
         }
-    })
-}
 
   function addEmployeeResults(firstname, lastname,role, percFullTime, user) {
     console.info({firstname: firstname, lastname: lastname, role: role, percFullTime: percFullTime })

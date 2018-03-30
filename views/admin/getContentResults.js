@@ -82,6 +82,47 @@ exports.getContentResultsForm = function(req, res, next) {
 }
 
 
+exports.getContentText = function(req, res, next) {
+    console.info('----------- getgetContentText -----------------------')
+
+    var name = req.body.name, element = req.body.section
+    console.info(name)
+    console.info(element)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('content').find({"sections.element":element, "name":name},{_id: 0, sections: {$elemMatch: {element:element}}}).toArray(function (err, content) {
+                    if (err) return callback(err);
+                    locals.content = content;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+
+            console.info(locals.content)
+            var strContent = ""
+            if(locals.content[0].sections[0].content){
+                strContent = locals.content[0].sections[0].content
+            }
+
+            res.status(200).json({content: strContent} )});
+        })
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -129,7 +170,7 @@ function setBody(ds) {
 function setContentForm(sections,name, url) {
     var strOptions = '<select id="selSection">'
     sections.forEach(function (r) {
-          strOptions = strOptions + '<option value="'+ r +'">'+r  +'</option>'
+          strOptions = strOptions + '<option value="'+ r.element +'">'+r.element  +'</option>'
     })
     strOptions = strOptions + '</select>'
 

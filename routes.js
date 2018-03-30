@@ -96,6 +96,10 @@ exports = module.exports = function(app, passport) {
     //Admin Content
     app.post('/admin/getContentResults', require('./views/admin/getContentResults').getContentResults);
     app.post('/admin/getContentResultsForm', require('./views/admin/getContentResults').getContentResultsForm);
+    app.post('/admin/saveContentResults', require('./views/admin/addContentResults').saveContentResults);
+    app.post('/admin/getContentText', require('./views/admin/getContentResults').getContentText);
+
+    //getContentText
     //app.post('/admin/addEmployeeResults',require('./views/admin/addEmployeeResults').addEmployeeResults);
     //app.post('/admin/editEmployeeResults',require('./views/admin/editEmployeeResults').editEmployeeResults);
     //app.post('/admin/removeEmployeeResults',require('./views/admin/editEmployeeResults').removeEmployeeResults);
