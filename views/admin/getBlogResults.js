@@ -139,8 +139,6 @@ exports.getBlogEmployees = function(req, res, next) {
     })
 }
 
-
-
 //  ------------------------- Generic Functions --------------------------------------------------------------------
 function setHeader(lstColumns) {
     var strHeader = '<theader>'
