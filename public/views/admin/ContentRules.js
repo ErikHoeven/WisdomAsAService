@@ -68,7 +68,7 @@ function getContentResults(user) {
 
 
 // 2.A. Update row to editable fields
-function updateContentField(name){
+function updateContentField(name) {
     $.ajax({
         url: '/admin/getContentResultsForm',
         type: 'POST',
@@ -80,116 +80,54 @@ function updateContentField(name){
             //3 Show results
             $('#contentElement').html('')
             $('#contentElement').html(response.form)
+            console.info(response.content)
 
-            var simplemde = new SimpleMDE({ element: document.getElementById("txtContent") });
+            CKEDITOR.replace('txtContent')
+            CKEDITOR.instances['txtContent'].setData(response.content)
+
 
             $('#cmdSaveContent').click(function () {
 
-                var content = simplemde.value()
+
                 var name = $('#txtPageName').val()
                 var section = $('#selSection option:selected').text()
 
-                 $.ajax({
-                     url: '/admin/saveContentResults',
-                     type: 'POST',
-                     contentType: 'application/json',
-                     data: JSON.stringify({name: name, section: section, content: content}),
-                     success: function (response) {
-                         console.info(response)
+                $.ajax({
+                    url: '/admin/saveContentResults',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({name: name, section: section, content: CKEDITOR.instances['txtContent'].getData()}),
+                    success: function (response) {
 
 
-                 }})
+
+                    }
+                })
             })
 
-            $('#selSection').on('change', function() {
-
+            $('#selSection').on('change', function () {
 
                 var name = $('#txtPageName').val()
                 var section = this.value
 
-                console.info( section )
+                $.ajax({
+                    url: '/admin/getContentText',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({name: name, section: section}),
+                    success: function (response) {
+                        console.info(response)
 
-                 $.ajax({
-                     url: '/admin/getContentText',
-                     type: 'POST',
-                     contentType: 'application/json',
-                     data: JSON.stringify({name: name, section: section}),
-                     success: function (response) {
-                         console.info(response)
+                        CKEDITOR.instances['txtContent'].setData(response.content)
 
-                         var txtArea = response.content
-                         simplemde.value(txtArea)
-
-
-                     }})
+                    }
+                })
             })
-
-
-
-        }})
-
-
-
-
-            //})
-
-
-
         }
-
-  function addEmployeeResults(firstname, lastname,role, percFullTime, user) {
-    console.info({firstname: firstname, lastname: lastname, role: role, percFullTime: percFullTime })
-     $.ajax({
-         url: '/admin/addEmployeeResults',
-         type: 'POST',
-         contentType: 'application/json',
-         data: JSON.stringify({firstname: firstname, lastname: lastname, role: role, percFullTime: percFullTime }),
-         success: function (response) {
-             console.info(response)
-             getEmployeeResults(user)
-         }
-     })
- }
-
- function updateEmployeeValue (id) {
-     var  firstname = $('#editFirstname' + id).val()
-         , lastname = $('#editLastName' + id).val()
-         , role = $('#editSelRole' + id + ' option:selected').text()
-         , percFullTime = $('#editPercFullTime' + id).val()
-
-     var empObject = {
-         "firstname": firstname,
-         "lastname": lastname,
-         "role": role,
-         "percFullTime": percFullTime,
-         "id": id
-     }
-
-     console.info(empObject)
-
-    $.ajax({
-         url: '/admin/editEmployeeResults',
-         type: 'POST',
-         contentType: 'application/json',
-         data: JSON.stringify(empObject),
-         success: function (response) {
-            console.info(response)
-            getContentResults(user)
-     }})
+    })
 }
 
 
-function removeEmployeeValue(id) {
-    $.ajax({
-        url: '/admin/removeEmployeeResults',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({id: id}),
-        success: function (response) {
-            console.info(response)
-            getContentResults(user)
-        }})
-}
 
 
 

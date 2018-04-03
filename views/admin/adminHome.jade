@@ -5,13 +5,10 @@ block head
     title Admin Dashboard
     link(href='/stylesheets/bootstrap.css', rel='stylesheet')
     link(href='/vendor/font-awesome/css/font-awesome.css', rel='stylesheet')
+    script(defer='', src='https://use.fontawesome.com/releases/v5.0.9/js/all.js', integrity='sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl', crossorigin='anonymous')
     link(href='/stylesheets/custom-admin.css', rel='stylesheet')
     link(href='http://fonts.googleapis.com/css?family=Open+Sans', rel='stylesheet', type='text/css')
     link(href='/views/admin/pick-a-color-1.2.3.min.css', rel='stylesheet')
-    script(src="/views/admin/searchRules.js")
-    script(src="/views/admin/simplemde/simplemde.min.js")
-    link(href='/views/admin/simplemde/simplemde.min.css', rel='stylesheet')
-
     style(type='text/css').
         .pick-a-color-markup {
             margin: 20px 0px;
@@ -21,6 +18,8 @@ block head
             margin: 0px 5px;
             width: 50%;
         }
+
+
     //Custom Scripts
     script(src="/views/admin/searchRules.js")
     script(src="/views/admin/cattegoryRules.js")
@@ -28,6 +27,7 @@ block head
     script(src="/views/admin/SentimentRules.js")
     script(src="/views/admin/EmployeeRules.js")
     script(src="/views/admin/ContentRules.js")
+    script(src="/views/admin/BloggerRules.js")
 
 
 block body
@@ -41,7 +41,7 @@ block body
                         ul#main-menu.nav
                             li
                                 a.active-menu(id='home')
-                                    i.fa.fa-dashboard.fa-3x
+                                    i.fas.fa-tachometer-alt.fa-3x
                                     |  Dashboard
                             li
                                 a(id="search")
@@ -53,7 +53,7 @@ block body
                                     |  Categorien
                             li
                                 a(id='dictionary')
-                                    i.fa.fa-book.fa-3x
+                                    i.fas.fa-file-word.fa-4x
                                     |  Woordenboek
                             li
                                 a(id='sentiment')
@@ -62,11 +62,15 @@ block body
                             li
                                 a(id='employee')
                                     i.fa.fa-address-card.fa-3x
-                                    |  toevoegen medewerker
+                                    |  Toevoegen medewerker
                             li
                                 a(id='content')
                                     i.fa.fa-laptop.fa-3x
                                     |  Content Administration
+                            li
+                                a(id='blogs')
+                                    i.fab.fa-blogger.fa-3x
+                                    |  Artikelen publiceren
                         br
                 #page-wrapper
                     .row
@@ -79,7 +83,7 @@ block body
                         .col-md-3.col-sm-6.col-xs-6
                             .panel.panel-back.noti-box
                                 span.icon-box.bg-color-red.set-icon
-                                    i.fa.fa-envelope-o
+                                    i.far.fa-envelope
                                 .text-box
                                     #tweets.p.main-text
                                     p.text-muted Berichten
@@ -93,14 +97,14 @@ block body
                         .col-md-3.col-sm-6.col-xs-6
                             .panel.panel-back.noti-box
                                 span.icon-box.bg-color-blue.set-icon
-                                    i.fa.fa-bell-o
+                                    i.fas.fa-file-word
                                 .text-box
                                     #words.p.main-text
                                     p.text-muted Woorden
                         .col-md-3.col-sm-6.col-xs-6
                             .panel.panel-back.noti-box
                                 span.icon-box.bg-color-brown.set-icon
-                                    i.fa.fa-rocket
+                                    i.fas.fa-user
                                 .text-box
                                     #employees.p.main-text
                                     p.text-muted Medewerkers
@@ -150,11 +154,19 @@ block body
                         setContentTitle()
                         getContentResults(user)
                     })
+                    $('#blogs').click(function () {
+                        selectBlogMenu()
+                        setBlogTitle()
+                        getBlogResults(user)
+                    })
                 }
             });
         // Scripts required for color palet. Scripts needed by loaded at the end of the page
         script(src = '/views/admin/tinycolor-0.9.15.min.js')
         script(src = '/views/admin/pick-a-color-1.2.3.min.js')
+        script(src='/views/admin/ckeditor/ckeditor.js')
+
+
 
 
 

@@ -7,6 +7,8 @@
     "update": "david update"
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-balloon": "^1.0.0-beta.1",
+    "@ckeditor/ckeditor5-build-classic": "^1.0.0-beta.1",
     "async": "*",
     "backbone": "^1.x.x",
     "bcrypt": "*",

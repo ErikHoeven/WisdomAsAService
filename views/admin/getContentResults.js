@@ -74,9 +74,10 @@ exports.getContentResultsForm = function(req, res, next) {
             var sections = locals.content[0].sections
             var name = locals.content[0].name
             var url = locals.content[0].url
+            var content = locals.content[0].sections[0].content
 
             console.info(url)
-            res.status(200).json({form: setContentForm(sections, name, url)});
+            res.status(200).json({form: setContentForm(sections, name, url), content: content, message: 'succes'});
         })
     })
 }
@@ -115,7 +116,33 @@ exports.getContentText = function(req, res, next) {
         })
 }
 
+exports.getSectionsContent = function(req, res, next) {
+    console.info('----------- getSectionsContent -----------------------')
 
+    var name = req.body.name
+    console.info(name)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('content').find({ name:name}).toArray(function (err, content) {
+                    if (err) return callback(err);
+                    locals.content = content;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+
+
+            var content = locals.content[0].sections
+            res.status(200).json({content: content} )});
+    })
+}
 
 
 
@@ -175,7 +202,7 @@ function setContentForm(sections,name, url) {
     strOptions = strOptions + '</select>'
 
    var strForm = '<div class="row">'+
-    '<div class="col-md-6">'+
+    '<div class="col-md-12">'+
     '<div class="c_panel">' +
     '<div class="clearfix"></div>' +
     '</div><!--/.c_title-->' +

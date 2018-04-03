@@ -3,9 +3,10 @@
 exports = module.exports = function(app, passport) {
     //front end
     app.get('/', require('./views/index').init);
+    app.get('/', require('./views/index').init);
     app.get('/about/', require('./views/about/index').init);
     app.get('/contact/', require('./views/contact/index').init);
-    app.post('/contact/', require('./views/contact/index').sendMessage);
+    app.post('/home/getContentResults/', require('./views/admin/getContentResults').getSectionsContent);
 
     //event routes
     app.get('/events/', require('./views/events/index').find);
@@ -98,6 +99,14 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/getContentResultsForm', require('./views/admin/getContentResults').getContentResultsForm);
     app.post('/admin/saveContentResults', require('./views/admin/addContentResults').saveContentResults);
     app.post('/admin/getContentText', require('./views/admin/getContentResults').getContentText);
+
+    //Admin Blog
+    app.post('/admin/getBlogResults', require('./views/admin/getBlogResults').getBlogResults);
+    app.get('/admin/getBlogEmployees', require('./views/admin/getBlogResults').getBlogEmployees);
+    app.post('/admin/addBlogResults',require('./views/admin/addBlogResults').addBlogResults);
+    //app.post('/admin/getBlogResultsForm', require('./views/admin/getBlogResults').getBlogResultsForm);
+   // app.post('/admin/saveBlogResults', require('./views/admin/addBlogResults').saveBlogResults);
+    //app.get('/admin/getBlogText', require('./views/admin/getBlogResults').getBlogText);
 
     //getContentText
     //app.post('/admin/addEmployeeResults',require('./views/admin/addEmployeeResults').addEmployeeResults);

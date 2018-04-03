@@ -3,6 +3,7 @@ extends ../layouts/default
 block head
     title Wisdom as a Service
 
+
 block neck
     link(rel='stylesheet', href='/views/index.min.css?#{cacheBreaker}')
 
@@ -18,27 +19,27 @@ block body
             .item.active
                 img(src='../images/Big Data 01 WebSite.jpg')
                 .carousel-caption
-                    h1 Big Data Platform advies
-                    p
+                    #c1.h1 Big Data Platform advies
+                    #c1a.p
                         | Kan uw huidige systemen het niet meer aan of voldoet het niet meer aan de behoefte van uw klanten
                     p
-                        a.btn.btn-lg.btn-primary(href='#', role='button') Sign up today
+                        a.btn.btn-lg.btn-primary(href='/consultancy', role='button') Lees verder
             .item
                 img(src='../images/Big Data 02 WebSite.jpg')
                 .carousel-caption
-                    h1 Big Data/ Hybryde Architectuur
-                    p
+                    #c2.h1 Big Data/ Hybryde Architectuur
+                    #c2a.p
                         | Samen orchistreren we de samenwerking tussen de verschillende systemen zodat alles naadloos met elkaar kan communniceren
                     p
-                        a.btn.btn-lg.btn-primary(href='#', role='button') Learn more
+                        a.btn.btn-lg.btn-primary(href='/biaudit', role='button') Lees verder
             .item
                 img(src='../images/Big Data 03 WebSite.jpg')
                 .carousel-caption
-                    h1 IoT Apps
-                    p
+                    #c3.h1 IoT Apps
+                    #c3a.p
                         | Wij helpen u met het bedenken, ontwerpen en realiseren van inovatieve IoT data apps in uw IT landschap
                     p
-                        a.btn.btn-lg.btn-primary(href='#', role='button') Browse gallery
+                        a.btn.btn-lg.btn-primary(href='#', role='button') Lees verder
         a.left.carousel-control(href='#carousel-myCarousel', role='button', data-slide='prev')
             span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
             span.sr-only Previous
@@ -54,55 +55,54 @@ block body
             .col-lg-4
                 img.img-circle(src='../images/Consultancy.jpg', alt='Generic placeholder image', width='140', height='140')
                 h2 Consultancy
-                p
+                #consultancy.p
                     | Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.
                 p
-                    a.btn.btn-default(href='#', role='button') View details »
+                    a.btn.btn-default(href='/consultancy', role='button') Lees verder
             .col-lg-4
                 img.img-circle(src='../images/BI AUDIT.jpg', alt='Generic placeholder image', width='140', height='140')
-                h2 BI Audit
-                p
+                h2 Datawarehouse Audit
+                #biaudit.p
                     | Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.
                 p
-                    a.btn.btn-default(href='#', role='button') View details »
+                    a.btn.btn-default(href='/biaudit', role='button') Lees verder
             .col-lg-4
                 img.img-circle(src='../images/Big Data Platform 02.jpg', alt='Generic placeholder image', width='140', height='140')
-                h2  IoT Architectuur
-                p
+                h2  BI Hybryde Architectuur
+                #iotarchitectuur.p
                     | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
                 p
-                    a.btn.btn-default(href='#', role='button') View details »
+                    a.btn.btn-default(href='/iotarchitectuur', role='button') Lees verder
         // START THE FEATURETTES
         hr.featurette-divider
         .row.featurette
             .col-md-7
                 h2.featurette-heading
-                    | Zijn uw systemen al klaar voor de toekomst?
-                    span.text-muted Laat uw systemen nu doorlichten.
-                p.lead
+                    | Is uw Data Warehouse al klaar voor de toekomst?
+                #auditcheck.p.lead
                     | Veel gebruikte technologien zijn niet geschikt voor de toekomst! Wanneer moet u over gaan om een ander Big Data Platform, of zijn aanpassingen ook voldoende...
+                p
+                    a.btn.btn-default(href='/auditcheck', role='button') Start audit pre check
             .col-md-5
                 img.featurette-image.img-responsive.center-block(src='../images/BI AUDIT.jpg', alt='Generic placeholder image')
         hr.featurette-divider
         .row.featurette
             .col-md-7.col-md-push-5
                 h2.featurette-heading
-                    | Oh yeah, it's that good.
-                    span.text-muted See for yourself.
-                p.lead
+                    | Big Data / IoT leveranciers en producten
+                #bigdatavendors.p.lead
                     | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
             .col-md-5.col-md-pull-7
-                img.featurette-image.img-responsive.center-block(src='../images/featurette2.jpg', alt='Generic placeholder image')
+                img.featurette-image.img-responsive.center-block(src='../images/BigData-Platform.jpg', alt='Generic placeholder image')
         hr.featurette-divider
         .row.featurette
             .col-md-7
                 h2.featurette-heading
-                    | And lastly, this one.
-                    span.text-muted Checkmate.
-                p.lead
+                    | Over ons
+                #Overmij.p.lead
                     | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
             .col-md-5
-                img.featurette-image.img-responsive.center-block(src='../images/featurette3.jpg', alt='Generic placeholder image')
+                img.featurette-image.img-responsive.center-block(src='../images/LGWisdomSmallLettersBigImg.png' width="300" height="300")
         hr.featurette-divider
         // /END THE FEATURETTES
         // FOOTER
@@ -110,8 +110,49 @@ block body
             p.pull-right
                 a(href='#') Back to top
             p
-                | © 2014 Company, Inc. ·
+                | © 2018 Company, Inc. ·
                 a(href='#') Privacy
                 |  ·
                 a(href='#') Terms
+        script.
+            console.info('---  READY ----')
+
+            $.ajax({
+                url: '/home/getContentResults',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({name: 'landingPage'}),
+                    success: function (response) {
+                        var content = response.content
+
+                        content.forEach(function (r) {
+                            if (r.element == 'consultancy'){
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'biaudit') {
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'iotarchitectuur') {
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'iotarchitectuur') {
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'auditcheck') {
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'bigdatavendors') {
+                                $('#' + r.element).html(r.content)
+                            }
+                            if (r.element == 'Overmij') {
+                                $('#' + r.element).html(r.content)
+                            }
+                        })
+                }})
+                //$('#C1').removeClass()
+                $('#c1').css('color', '#75B5EA')
+                $('#c2').css('color', '#75B5EA')
+                $('#c3').css('color', '#75B5EA')
+
+
 
