@@ -10,6 +10,9 @@ function selectDictionaryMenu() {
     $('#category').removeClass()
     $('#sentiment').removeClass()
     $('#dictionary').addClass('active-menu')
+    $('#employee').removeClass()
+    $('#content').removeClass()
+    $('#blog').removeClass()
 }
 
 // B. Change title and subtitle

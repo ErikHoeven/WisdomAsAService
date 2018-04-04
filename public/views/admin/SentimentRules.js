@@ -8,8 +8,11 @@ function selectSentimentMenu() {
     $('#search').removeClass()
     $('#home').removeClass()
     $('#category').removeClass()
-    $('#dictionary').removeClass()
     $('#sentiment').addClass('active-menu')
+    $('#dictionary').removeClass()
+    $('#employee').removeClass()
+    $('#content').removeClass()
+    $('#blog').removeClass()
 }
 
 // B. Change title and subtitle

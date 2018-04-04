@@ -11,12 +11,9 @@ var async = require('async'),
     mongo = require('mongodb'),
     underscore = require('underscore')
 
-
-
 exports.getBlogResults = function(req, res, next) {
         console.info('------------------------- getSearchResults -------------------------')
         var lookupterm = req.body.term
-
 
         mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
@@ -42,27 +39,31 @@ exports.getBlogResults = function(req, res, next) {
                 , body = setBody(locals.content)
                 , header = setHeader(columns)
 
-            console.info(body)
-
             res.status(200).json({header: header, body: body, count: locals.count});
-
         })
     })
 }
 
 exports.getBlogResultsForm = function(req, res, next) {
-        console.info('----------- getContentResultsForm -----------------------')
+        console.info('----------- getBlogResultsForm -----------------------')
 
-        var name = req.body.name
-        console.info(name)
+        var titel = req.body.titel
+        console.info(titel)
 
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('content').find({name: name}).toArray(function (err, content) {
+                db.collection('blogs').find({titel: titel}).toArray(function (err, blogs) {
                     if (err) return callback(err);
-                    locals.content = content;
+                    locals.blogs = blogs;
+                    callback();
+                });
+            },
+            function (callback) {
+                db.collection('employees').find({}).toArray(function (err, employees) {
+                    if (err) return callback(err);
+                    locals.employees = employees;
                     callback();
                 });
             }
@@ -71,13 +72,9 @@ exports.getBlogResultsForm = function(req, res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
-            var sections = locals.content[0].sections
-            var name = locals.content[0].name
-            var url = locals.content[0].url
-            var content = locals.content[0].sections[0].content
-
-            console.info(url)
-            res.status(200).json({form: setContentForm(sections, name, url), content: content, message: 'succes'});
+            var artikel = locals.blogs[0].artikel
+            console.info(artikel)
+            res.status(200).json({artikel: artikel,form: addBlogForm(locals.employees, titel), message: 'succes'});
         })
     })
 }
@@ -182,44 +179,69 @@ function setBody(ds) {
     return strBody
 }
 
-function setContentForm(sections,name, url) {
-    var strOptions = '<select id="selSection">'
-    sections.forEach(function (r) {
-          strOptions = strOptions + '<option value="'+ r.element +'">'+r.element  +'</option>'
+function addBlogForm (employees, titel) {
+
+    var chanel = '<select id="selChanel">' +
+        '<option value="LinkedIn">LinkedIn</option>' +
+        '<option value="Facebook">Facebook</option>' +
+        '<option value="Instagram">Instagram</option>' +
+        '<option value="Twitter">Twitter</option>' +
+        '<option value="SQL-Central">SQL-Central</option>' +
+        '</select>'
+
+    console.info(chanel)
+
+    var auteur = ''
+    employees.forEach(function (r) {
+        auteur = auteur + '<option value="'+ r.firstname  +' '+  r.lastname + '">' + r.firstname  +' '+  r.lastname + '</option>'
     })
-    strOptions = strOptions + '</select>'
 
-   var strForm = '<div class="row">'+
-    '<div class="col-md-12">'+
-    '<div class="c_panel">' +
-    '<div class="clearfix"></div>' +
-    '</div>' +
-    '<div class="c_content">' +
-    '<div class="form-group">' +
-    '<label for="page">Pagina naam</label>' +
-    '<input type="text" class="form-control" id="txtPageName" placeholder="'+ name + '" disabled value="'+ name +'">' +
-    '</div>'+
-    '<div class="form-group">' +
-    '<label for="URL">URL</label>' +
-    '<input type="text" class="form-control" id="txtURL" placeholder="'+ url + '" disabled  value="'+ url +'">' +
-    '</div>'+
-    '<div class="form-group">'+
-    '<label for="Section">Section:</label>' +
-    strOptions +
-    '</div> ' +
-    '<div class="form-group">' +
-    '<label for="content">content</label>' +
-    '<textarea id="txtContent"></textarea>' +
-    '</div>'+
-    '<div>' +
-    '<button class="btn btn-primary btn-flat" id="cmdSaveContent">Opslaan</button>' +
-    '</div>' +
-    '</div>' +
-    '</div>'
-    '</div>'
-    '</div>'
+    console.info(auteur)
 
+    var addBlogform =
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<div class="form-group">' +
+        '<label for="Titel">Titel</label>' +
+        '<input type="text" class="form-control" id="txtTitel" value="'+  titel  +'" disabled="">' +
+        '</div>'+
+        '</div>' +
+        '</div>' +
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<div class="form-group">' +
+        '<label for="Publicatie kanaal">Publicatie kanaal</label>' +
+        '</div>'+
+        '</div>'+
+        '</div>' +
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        chanel +
+        '</div>'+
+        '</div>' +
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<div class="form-group">'+
+        '<label for="Auteur">Auteur</label>' +
+        '</div>'+
+        '</div>' +
+        '</div>' +
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<select id="selEmployee">' +
+        auteur +
+        '</select>' +
+        '</div> ' +
+        '</div>' +
+        '<div class="row">'+
+        '<div class="col-md-12">'+
+        '<div class="form-group">' +
+        '<label for="Artikel">Artikel</label>' +
+        '<div id="txtArtikel"></div>'+
+        '<div><button class="btn btn-primary btn-flat" id="cmdAddBlog">Opslaan</button></div>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
 
-return strForm
+    return addBlogform
 }
-

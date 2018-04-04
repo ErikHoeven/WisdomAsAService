@@ -104,8 +104,8 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/getBlogResults', require('./views/admin/getBlogResults').getBlogResults);
     app.get('/admin/getBlogEmployees', require('./views/admin/getBlogResults').getBlogEmployees);
     app.post('/admin/addBlogResults',require('./views/admin/addBlogResults').addBlogResults);
-    //app.post('/admin/getBlogResultsForm', require('./views/admin/getBlogResults').getBlogResultsForm);
-   // app.post('/admin/saveBlogResults', require('./views/admin/addBlogResults').saveBlogResults);
+    app.post('/admin/getBlogResultsForm', require('./views/admin/getBlogResults').getBlogResultsForm);
+    app.post('/admin/saveBlogResults', require('./views/admin/addBlogResults').saveBlogResults);
     //app.get('/admin/getBlogText', require('./views/admin/getBlogResults').getBlogText);
 
     //getContentText

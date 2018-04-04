@@ -87,12 +87,6 @@ function getBlogResults(user) {
                     var auteur = $('#selEmployee option:selected').text()
                     var artikel = CKEDITOR.instances['txtArtikel'].getData()
 
-
-                    console.info(titel)
-                    console.info(chanel)
-                    console.info(auteur)
-                    console.info(artikel)
-
                     $.ajax({
                         url: '/admin/addBlogResults',
                         type: 'POST',
@@ -107,44 +101,39 @@ function getBlogResults(user) {
     })
 }
 
-
 // 2.A. Update row to editable fields
-function updateBlogField(name) {
+function updateBlogField(titel) {
     $.ajax({
         url: '/admin/getBlogResultsForm',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({name: name}),
+        data: JSON.stringify({titel: titel}),
         success: function (response) {
+            console.info('getBlogResultsForm')
             console.info(response)
 
             //3 Show results
             $('#contentElement').html('')
             $('#contentElement').html(response.form)
-            console.info(response.content)
 
-            CKEDITOR.replace('txtBlog')
-            CKEDITOR.instances['txtBlog'].setData(response.content)
+
+            CKEDITOR.replace('txtArtikel')
+            CKEDITOR.instances['txtArtikel'].setData(response.artikel)
 
             $('#cmdAddBlog').click(function () {
 
                 var titel = $('#txtTitel').val()
                 var chanel = $('#selChanel option:selected').text()
                 var auteur = $('#selEmployee option:selected').text()
-                var artikel = CKEDITOR.instances['txtContent'].getData()
-
-                console.info(titel)
+                var artikel = CKEDITOR.instances['txtArtikel'].getData()
 
 
                 $.ajax({
                     url: '/admin/saveBlogResults',
                     type: 'POST',
                     contentType: 'application/json',
-                    data: JSON.stringify({name: name, section: section, content: CKEDITOR.instances['txtContent'].getData()}),
+                    data: JSON.stringify({titel: titel, chanel: chanel, artikel:artikel, auteur:auteur}),
                     success: function (response) {
-
-
-
                     }
                 })
             })

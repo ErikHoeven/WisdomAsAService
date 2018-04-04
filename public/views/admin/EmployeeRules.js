@@ -11,6 +11,8 @@ function selectEmployeeMenu() {
     $('#sentiment').removeClass()
     $('#dictionary').removeClass()
     $('#employee').addClass('active-menu')
+    $('#content').removeClass()
+    $('#blog').removeClass()
 }
 
 // B. Change title and subtitle

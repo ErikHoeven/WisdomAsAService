@@ -20,3 +20,15 @@ exports.addBlogResults = function(req, res, next) {
 
      res.status(200).json({message: 'Blog succesvol toegevoegd',route:'/admin/', menu:'blog'})
 }
+
+
+exports.saveBlogResults = function(req, res, next) {
+    console.info('---------------------  saveBlogResults --------------------------------')
+    var titel = req.body.titel, chanel = req.body.chanel, auteur = req.body.auteur, user = req.user, user = {}, artikel = req.body.artikel
+    user = req.user || {}
+
+    dbBlogs.update({titel: titel}, {$set: {artikel : artikel, chanel:chanel, auteur:auteur}}, false, true)
+
+    res.status(200).json({message: 'blog succesvol opgeslagen',route:'/admin/', menu:'blog'})
+
+}

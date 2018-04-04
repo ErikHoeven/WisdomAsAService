@@ -8,7 +8,10 @@ function selectContentMenu() {
     $('#dictionary').removeClass()
     $('#employee').removeClass()
     $('#content').addClass('active-menu')
+    $('#blog').removeClass()
 }
+
+
 
 // B. Change title and subtitle
 function setContentTitle() {

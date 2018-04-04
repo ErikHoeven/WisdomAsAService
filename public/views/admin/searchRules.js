@@ -5,8 +5,15 @@
 
  // A. change menu Zoek criteria red the rest blue.
 function selectSearchMenu() {
-    $('#home').removeClass()
+    console.info('setMenu')
     $('#search').addClass('active-menu')
+    $('#home').removeClass()
+    $('#category').removeClass()
+    $('#sentiment').removeClass()
+    $('#dictionary').removeClass()
+    $('#employee').removeClass()
+    $('#content').removeClass()
+    $('#blog').removeClass()
 }
 
 // B. Change title and subtitle
