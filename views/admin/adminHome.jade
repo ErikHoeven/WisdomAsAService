@@ -159,12 +159,15 @@ block body
                         setBlogTitle()
                         getBlogResults(user)
                     })
+                    $('#home').click(function () {
+                        location.reload();
+                    })
                 }
             });
         // Scripts required for color palet. Scripts needed by loaded at the end of the page
         script(src = '/views/admin/tinycolor-0.9.15.min.js')
         script(src = '/views/admin/pick-a-color-1.2.3.min.js')
-        script(src='/views/admin/ckeditor/ckeditor.js')
+        script(src = '/views/admin/ckeditor/ckeditor.js')
 
 
 

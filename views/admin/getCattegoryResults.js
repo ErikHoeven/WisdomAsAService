@@ -14,25 +14,17 @@ var async = require('async'),
 
 
 exports.getCattegoryResults = function(req, res, next) {
-        console.info('------------------------- getSearchResults -------------------------')
+        console.info('------------------------- getCattegoryResults -------------------------')
         mongo.connect(uri, function (err, db) {
-        var locals = {}, tokens = []
+        var locals = {}, tokens = [], lookupterm = req.body.term
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('businessrules').find({"typeBusinessRule": "Cattegorie"}).toArray(function (err, businessrules) {
+                db.collection('businessrules').find({$and: [{"tagCattegory": {$regex: ".*" + lookupterm + ".*"}}]}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
                     locals.businessrules = businessrules;
                     callback();
                 });
-            },
-            function (callback) {
-                db.collection('businessrules').find({"typeBusinessRule": "Cattegorie"}).count({},function (err, count) {
-                    if (err) return callback(err);
-                    locals.count = count;
-                    callback();
-                });
             }
-
         ];
 
         async.parallel(tasks, function (err) {
@@ -48,11 +40,100 @@ exports.getCattegoryResults = function(req, res, next) {
                 , body = setBody(locals.businessrules)
                 , header = setHeader(columns)
 
-            res.status(200).json({header: header, body: body, count: locals.count});
+            res.status(200).json({header: header, body: body});
 
         })
     })
 }
+
+exports.getCategoryResultsForm = function(req, res, next) {
+    console.info('----------- getBlogResultsForm -----------------------')
+
+    var tagCattegory = req.body.tagCattegory
+    console.info(tagCattegory)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('businessrules').find({tagCattegory: tagCattegory}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            res.status(200).json({form: addCategoryForm(locals.businessrules), message: 'succes'});
+        })
+    })
+}
+
+
+
+
+function addCategoryForm (businessrules) {
+    console.info('addCategoryForm')
+
+    // A initialize variable
+    var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
+        ,tblBody = '<tbody>'
+        ,clear = 0
+        ,catValueList = businessrules[0].cattegoryValue
+        ,catValueStr = ''
+        ,table
+
+    // B Create CatValue list
+    for(var i = 0; i <  catValueList.length; i++){
+        tblBody = tblBody + '<tr><td><input id="' + i + 'catVal" value="' + catValueList[i]+ '"></td><tr></tr>'
+    }
+
+    table = '<div class="form-group"><table><tbody class="table table-hover">' + tblHeader + tblBody + '</tbody></table>' +
+        '<div class="row"><div class="col-md-6>" </div> <button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
+        '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
+        '</div></div></div>'
+
+    //C Create form
+    var catform =
+        '<div class=\"col-lg-6\">' +
+        '<div class="form-group">' +
+        '<label>Categorie</label>' +
+        '<div class="input-group">' +
+        '<input type="text" class="form-control" name="Categorie" id="Categorie" value="'+ businessrules[0].tagCattegory  +'">' +
+        '</div>' +
+        '<div class="form-group">' +
+        '<\/div>' +
+        '<div class="form-group"><label>Kleur</label>' +
+        '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control" value="'+ businessrules[0].cattegorycolor  +'">' +
+        '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
+
+    return {form: catform, catValueForm: table}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -83,7 +164,7 @@ function setBody(ds) {
                 strBody = strBody + '<tr><td id="Cattegory' + row._id +'">'+ row.tagCattegory + '</td>' +
                     '<td id="Color' + row._id +'">'+ row.cattegorycolor + '</td>' +
                     '<td id="Value' + row._id +'">'+ row.cattegoryValue + '</td>' +
-                    '<td id="edit'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryField(\'' +row._id + '\',\'' + row.tagCattegory + '\',\''+  row.cattegorycolor +'\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="edit'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryField(\'' + row.tagCattegory + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
                     '<td id="del'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' +row._id + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                     '</tr>'
             }
