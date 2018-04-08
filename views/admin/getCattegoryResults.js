@@ -73,28 +73,15 @@ exports.getCategoryResultsForm = function(req, res, next) {
 }
 
 
-
-
+//  ------------------------- Generic Functions --------------------------------------------------------------------
 function addCategoryForm (businessrules) {
     console.info('addCategoryForm')
 
     // A initialize variable
-    var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
-        ,tblBody = '<tbody>'
+    var  tblBody = '<tbody>'
         ,clear = 0
         ,catValueList = businessrules[0].cattegoryValue
-        ,catValueStr = ''
-        ,table
 
-    // B Create CatValue list
-    for(var i = 0; i <  catValueList.length; i++){
-        tblBody = tblBody + '<tr><td><input id="' + i + 'catVal" value="' + catValueList[i]+ '"></td><tr></tr>'
-    }
-
-    table = '<div class="form-group"><table><tbody class="table table-hover">' + tblHeader + tblBody + '</tbody></table>' +
-        '<div class="row"><div class="col-md-6>" </div> <button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
-        '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
-        '</div></div></div>'
 
     //C Create form
     var catform =
@@ -110,35 +97,9 @@ function addCategoryForm (businessrules) {
         '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control" value="'+ businessrules[0].cattegorycolor  +'">' +
         '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
 
-    return {form: catform, catValueForm: table}
+    return {form: catform, catValueList: catValueList}
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  ------------------------- Generic Functions --------------------------------------------------------------------
 function setHeader(lstColumns) {
     var strHeader = '<theader>'
 

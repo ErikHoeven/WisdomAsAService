@@ -89,8 +89,9 @@ function getCategoryResults(user) {
 
                 tblBody = tblBody + catValueStr + '</tbody>'
                 table = '<table class="table table-hover">' + tblHeader + tblBody + '</table>'
-
                 $('#CatValueTable').html(table)
+
+
                 $('#CatValue').val('')
             }
         })
@@ -146,6 +147,7 @@ function addCategoryResults(category, color, catValues) {
 
 // 2.A. Update row to editable fields
 function updateCategoryField(tagCattegory) {
+
     $.ajax({
         url: '/admin/getCategoryResultsForm',
         type: 'POST',
@@ -158,63 +160,41 @@ function updateCategoryField(tagCattegory) {
             //3 Show results
             $('#contentElement').html('')
             $('#contentElement').html(response.form.form)
-            $('#CatValueTable').html(response.form.catValueForm)
+            var catValueList = response.form.catValueList
 
+            $('#CatValueTable').html(addCatValueForm(catValueList))
 
-            $('#cmdAddBlog').click(function () {
+        }
+    })
+}
 
-                var titel = $('#txtTitel').val()
-                var chanel = $('#selChanel option:selected').text()
-                var auteur = $('#selEmployee option:selected').text()
-                var artikel = CKEDITOR.instances['txtArtikel'].getData()
+function updateCategoryValueField(nr, oldValue, catValue) {
+    $('#' + nr).html('<input type="text" id="editedCatValue'+ nr +'" value="'+ oldValue  +'">')
+    $('#edit' + nr).html('<td id="save' + nr + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + nr + '\')"><span id="span"' + nr + ' class="glyphicon glyphicon-save"></span> save</button></td>')
+}
 
+function updateCategoryValue(pos ) {
+    var newValue = $('#editedCatValue' + pos).val()
+        ,cat = $('#Categorie').val()
+        ,color = $('#txtkleur').val()
 
-                $.ajax({
-                    url: '/admin/saveBlogResults',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({titel: titel, chanel: chanel, artikel:artikel, auteur:auteur}),
-                    success: function (response) {
-                    }
-                })
-            })
+    $.ajax({
+        url: '/admin/saveCatValue',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({category: cat ,pos: pos, value: newValue, color: color}),
+        success: function (response) {
+            console.info(response)
+            updateCategoryField(response.cat)
 
-            $('#selSection').on('change', function () {
-
-                var name = $('#txtPageName').val()
-                var section = this.value
-
-                $.ajax({
-                    url: '/admin/getBlogText',
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify({name: name, section: section}),
-                    success: function (response) {
-                        console.info(response)
-
-                        CKEDITOR.instances['txtBlog'].setData(response.content)
-
-                    }
-                })
-            })
         }
     })
 }
 
 
 
-
-
-
-
-
-
-
-
 //  SPECIFIC FUNCTIONS
-
 function addCatForm () {
-
     var catform =
         '<div class=\"col-lg-6\">' +
         '<div class="form-group">' +
@@ -233,7 +213,50 @@ function addCatForm () {
         '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control">' +
         '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
 
-
     return catform
 }
+
+function addCatValueForm(catValueList,editNr) {
+
+    var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
+        ,tblBody = '<tbody>'
+        ,clear = 0
+        ,catValueStr
+        ,table = '<table class="table table-hover">'
+
+    if(!editNr) {
+        for (var i = 0; i < catValueList.length; i++) {
+            tblBody = tblBody +
+                '<tr>' +
+                '<td id="' + i + '">' + catValueList[i] + '</td>' +
+                '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '</tr>'
+
+        }
+    }
+    else{
+        for (var i = 0; i < catValueList.length; i++) {
+            if (editNr == i){
+                tblBody = tblBody +
+                    '<tr>' +
+                    '<td id="' + i + '"><input type="text" id="'+ i +'" value="'+ catValueList[i]  +'"></td>' +
+                    '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                    '</tr>'
+            }
+            else{
+                tblBody = tblBody +
+                    '<tr>' +
+                    '<td id="' + i + '">' + catValueList[i] + '</td>' +
+                    '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                    '</tr>'
+            }
+
+        }
+    }
+    return table = table + tblHeader + tblBody
+}
+
 

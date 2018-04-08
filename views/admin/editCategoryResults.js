@@ -33,10 +33,45 @@ exports.removeCategoryResults = function(req, res, next) {
 
 }
 
-exports.testAdmin = function(req, res, next) {
-        console.info('-------------- Test ------------------------')
-        var user = {}
-        user = req.user || {}
-        res.render('admin/testAdmin', {user: user});
+exports.saveCatValue = function(req, res, next) {
+    console.info('----------- saveCatValue -----------------------')
 
+    var  category = req.body.category
+        ,pos = req.body.pos
+        ,value = req.body.value
+        ,color = req.body.color
+
+    console.info(category)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('businessrules').find({tagCattegory: category}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var cattegoryValue = locals.businessrules[0].cattegoryValue
+
+            for(var i = 0;i < cattegoryValue.length; i++){
+                if(i == pos){
+                    cattegoryValue[i] = value
+                }
+            }
+
+            dbBusinessrules.update({tagCattegory: category}, {$set: {cattegoryValue: cattegoryValue, Color: color }}, false, true)
+
+
+
+            res.status(200).json({message: 'succesvol opgeslagen', cat: category});
+        })
+    })
 }
+

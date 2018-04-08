@@ -70,15 +70,14 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/addSearchResults',require('./views/admin/addSearchCriteria').addSearchResults);
     app.post('/admin/editSearchResults',require('./views/admin/editSearchCriteria').editSearchResults);
     app.post('/admin/removeSearchResults',require('./views/admin/editSearchCriteria').removeSearchResults);
+
     //Admin Cattegory
     app.post('/admin/getCattegoryResults', require('./views/admin/getCattegoryResults').getCattegoryResults);
     app.post('/admin/addCategoryResults',require('./views/admin/addCategoryResults').addCategoryResults);
     app.post('/admin/editCategoryResults',require('./views/admin/editCategoryResults').editCategoryResults);
     app.post('/admin/removeCategoryResults',require('./views/admin/editCategoryResults').removeCategoryResults);
-    app.get('/admin/test',require('./views/admin/editCategoryResults').testAdmin);
     app.post('/admin/getCategoryResultsForm', require('./views/admin/getCattegoryResults').getCategoryResultsForm);
-
-
+    app.post('/admin/saveCatValue', require('./views/admin/editCategoryResults').saveCatValue);
 
     //Admin Dictionary
     app.post('/admin/getDictionaryResults', require('./views/admin/getDictionaryResults').getDictionaryResults);
