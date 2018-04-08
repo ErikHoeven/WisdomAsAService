@@ -147,6 +147,7 @@ function addCategoryResults(category, color, catValues) {
 
 // 2.A. Update row to editable fields
 function updateCategoryField(tagCattegory) {
+    var clickCount = 0
 
     $.ajax({
         url: '/admin/getCategoryResultsForm',
@@ -163,6 +164,12 @@ function updateCategoryField(tagCattegory) {
             var catValueList = response.form.catValueList
 
             $('#CatValueTable').html(addCatValueForm(catValueList))
+
+            $('#addCattegory').click(function () {
+                clickCount++
+                console.info(clickCount)
+                addCatValue(clickCount)
+            })
 
         }
     })
@@ -191,6 +198,42 @@ function updateCategoryValue(pos ) {
     })
 }
 
+function addCatValue(clickCount){
+
+    var cat =  $('#Categorie').val()
+
+    $.ajax({
+        url: '/admin/addCatValue',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({tagCattegory: cat }),
+        success: function (response) {
+            console.info(response)
+            $('#CatValueTable').html(addCatValueForm(response.catValues,clickCount))
+
+        }
+    })
+}
+function removeCategoryValue(pos) {
+    var cat =  $('#Categorie').val()
+
+    $.ajax({
+        url:
+            '/admin/removeCatValue',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({tagCattegory: cat, pos: pos }),
+        success: function (response) {
+            console.info(response)
+            $('#CatValueTable').html(addCatValueForm(response.cattegoryValue))
+
+        }
+    })
+
+}
+
+
+
 
 
 //  SPECIFIC FUNCTIONS
@@ -208,7 +251,7 @@ function addCatForm () {
         '<input type="email" class="form-control" id="CatValue" name="CatValue" placeholder="Categorie waarde">' +
         '<button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
         '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
-        '<\/div>' +
+        '</div>' +
         '<div class="form-group"><label>Kleur</label>' +
         '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control">' +
         '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
@@ -222,7 +265,7 @@ function addCatValueForm(catValueList,editNr) {
         ,tblBody = '<tbody>'
         ,clear = 0
         ,catValueStr
-        ,table = '<table class="table table-hover">'
+        ,table = '<table id="catValueTable" class="table table-hover">'
 
     if(!editNr) {
         for (var i = 0; i < catValueList.length; i++) {
@@ -236,20 +279,26 @@ function addCatValueForm(catValueList,editNr) {
         }
     }
     else{
-        for (var i = 0; i < catValueList.length; i++) {
-            if (editNr == i){
-                tblBody = tblBody +
-                    '<tr>' +
-                    '<td id="' + i + '"><input type="text" id="'+ i +'" value="'+ catValueList[i]  +'"></td>' +
-                    '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
-                    '</tr>'
-            }
-            else{
+
+        var catValueLength = catValueList.length + editNr
+
+        for (var i = 0; i < catValueLength; i++) {
+
+            if ( i <  catValueLength - 1){
+
                 tblBody = tblBody +
                     '<tr>' +
                     '<td id="' + i + '">' + catValueList[i] + '</td>' +
                     '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                    '</tr>'
+            }
+            if(i >= catValueLength -1 ) {
+                console.info('else: '   +i)
+                tblBody = tblBody +
+                    '<tr>' +
+                    '<td id="' + i + '"><input type="text" id="editedCatValue'+ i +'"></td>' +
+                    '<td id="save' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-save"></span> save</button></td>' +
                     '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                     '</tr>'
             }

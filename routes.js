@@ -78,6 +78,9 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/removeCategoryResults',require('./views/admin/editCategoryResults').removeCategoryResults);
     app.post('/admin/getCategoryResultsForm', require('./views/admin/getCattegoryResults').getCategoryResultsForm);
     app.post('/admin/saveCatValue', require('./views/admin/editCategoryResults').saveCatValue);
+    app.post('/admin/addCatValue', require('./views/admin/getCattegoryResults').addCatValue);
+    app.post('/admin/removeCatValue', require('./views/admin/editCategoryResults').removeCatValue);
+
 
     //Admin Dictionary
     app.post('/admin/getDictionaryResults', require('./views/admin/getDictionaryResults').getDictionaryResults);

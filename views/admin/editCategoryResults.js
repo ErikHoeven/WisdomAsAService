@@ -60,18 +60,58 @@ exports.saveCatValue = function(req, res, next) {
             db.close();
             var cattegoryValue = locals.businessrules[0].cattegoryValue
 
-            for(var i = 0;i < cattegoryValue.length; i++){
-                if(i == pos){
-                    cattegoryValue[i] = value
+            if (pos < cattegoryValue.length){
+                for(var i = 0;i < cattegoryValue.length; i++){
+                    if(i == pos){
+                        cattegoryValue[i] = value
+                    }
                 }
             }
-
+            else{
+                for(var i = 0;i <= pos; i++){
+                    if(i == pos){
+                        cattegoryValue[i] = value
+                    }
+                }
+            }
             dbBusinessrules.update({tagCattegory: category}, {$set: {cattegoryValue: cattegoryValue, Color: color }}, false, true)
-
-
 
             res.status(200).json({message: 'succesvol opgeslagen', cat: category});
         })
     })
 }
 
+exports.removeCatValue = function(req, res, next) {
+    console.info('----------- RemoveeCatValue -----------------------')
+
+    var  category = req.body.tagCattegory
+        ,pos = req.body.pos
+
+
+    console.info(category)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('businessrules').find({tagCattegory: category}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var cattegoryValue = locals.businessrules[0].cattegoryValue
+            cattegoryValue.splice(pos)
+
+
+            dbBusinessrules.update({tagCattegory: category}, {$set: {cattegoryValue: cattegoryValue}}, false, true)
+
+            res.status(200).json({message: 'succesvol verwijderd', cattegoryValue: cattegoryValue});
+        })
+    })
+}

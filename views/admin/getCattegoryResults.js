@@ -73,6 +73,36 @@ exports.getCategoryResultsForm = function(req, res, next) {
 }
 
 
+exports.addCatValue = function(req, res, next) {
+    console.info('----------- getBlogResultsForm -----------------------')
+
+    var tagCattegory = req.body.tagCattegory
+    console.info(tagCattegory)
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('businessrules').find({tagCattegory: tagCattegory}).toArray(function (err, businessrules) {
+                    if (err) return callback(err);
+                    locals.businessrules = businessrules;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var catValues = locals.businessrules[0].cattegoryValue
+
+            res.status(200).json({catValues: catValues, message: 'succes'});
+        })
+    })
+}
+
+
+
 //  ------------------------- Generic Functions --------------------------------------------------------------------
 function addCategoryForm (businessrules) {
     console.info('addCategoryForm')
