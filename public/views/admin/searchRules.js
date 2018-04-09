@@ -1,8 +1,3 @@
-/**
- * Created by erik on 3/24/18.
- */
-
-
  // A. change menu Zoek criteria red the rest blue.
 function selectSearchMenu() {
     console.info('setMenu')
@@ -118,7 +113,6 @@ function updateValue (id, field) {
         }
     })}
 
-
 function removeValue(id) {
     $.ajax({
         url: '/admin/removeSearchResults',
@@ -130,7 +124,6 @@ function removeValue(id) {
             getSearchResults(user)
         }
     })}
-
 
 function addSearchForm () {
     var searchForm =
