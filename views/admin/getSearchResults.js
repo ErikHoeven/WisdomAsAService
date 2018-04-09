@@ -15,11 +15,13 @@ var async = require('async'),
 
 exports.getSearchResults = function(req, res, next) {
         console.info('------------------------- getSearchResults -------------------------')
+        var lookupterm = req.body.term
+
         mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('businessrules').find({"typeBusinessRule": "Zoekwaarde"}).toArray(function (err, businessrules) {
+                db.collection('businessrules').find({$and:[{"typeBusinessRule":"Zoekwaarde"},{"lookupValue": {$regex: ".*" + lookupterm + ".*"}}]}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
                     locals.businessrules = businessrules;
                     callback();

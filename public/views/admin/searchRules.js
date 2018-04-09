@@ -24,30 +24,65 @@ function setSearchTitle() {
 
 // C. Get Search results from MongoDB if no results are available show form
 function getSearchResults(user) {
-    $.ajax({
-        url: '/admin/getSearchResults',
-        type: 'GET',
-        contentType: 'application/json',
-        success: function (response) {
-            console.info(response)
-            if (response.count == 0 ){
-                //1. Form show
-                $('#contentElement').html('<div class=\"container\"><div class=\"col-md-5\"><div class=\"form-area\"><br style=\"clear:both\"><h4 style=\"margin-bottom: 25px; text-align: left;\">Toevoegen zoeken criteria<\/h4><div class=\"form-group\"><input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" placeholder=\"Name\" required><button type=\"button\" id=\"add\" name=\"add\" class=\"btn btn-primary pull-left\">Toevoegen<\/button><\/form><\/div><\/div><\/div>')
 
-                //2. add search criteria when press add
-                $('#add').click(function () {
-                    var searchName =  $('#name').val()
+    //1. Form search for word
+    $('#contentElement').html(
+        '<div class="row">' +
+        '<div class="col-md-5">' +
+        '<h4 style="margin-bottom: 25px; text-align: left">Zoeken zoek criteria</h4>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="col-md-5">' +
+        '<input type="text" class="form-control" id="txtSearchWord" name="txtSearchWord" placeholder="zoekterm">' +
+        '</div>' +
+        '<div class="col-md-5">' +
+        '<button type="button" class="btn btn-primary btn-flat btn-raised btn-float" id="cmdSearchForm"><span class="fa fa-plus"></span></button>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="col-md-12">' +
+        '<div id="tblContentResults">' +
+        '</div>' +
+        '</div>'
+    )
 
-                    addSearchCriteria(searchName)
-                })
-            }
-            else {
-                console.info(response.businessrules)
-                $('#contentElement').html('')
-                var table = '<table class="table table-hover">' + response.header + response.body + '</table>'
-                $('#contentElement').html(table)
+    // 2. Search on term
+    $("#txtSearchWord").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: '/admin/getSearchResults',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({term: request.term}),
+                success: function (response) {
+                    console.info(response)
+                    //3 Show results
+                    $('#tblContentResults').html('')
+                    var table = '<table class="table table-hover">' + response.header + response.body + '</table>'
+                    $('#tblContentResults').html(table)
+                }
+            })
+        },
+        minLength: 2,
+        select: function (event, ui) {
+            log("Selected: " + ui.item.value + " aka " + ui.item.id);
+        }
+    })
+    //3. add Search Criteria form results when press + button
+    $('#cmdSearchForm').click(function () {
+        console.info('cmdSearchForm')
 
-            }}})}
+        $('#contentElement').html(addSearchForm())
+
+        //3.D Submit
+        $('#addSearchValue').click(function () {
+            var searchValue = $('#txtSearchValue').val()
+
+            addSearchCriteria(searchValue, user)
+        })
+    })
+}
 
 function addSearchCriteria(name, user) {
     $.ajax({
@@ -95,3 +130,21 @@ function removeValue(id) {
             getSearchResults(user)
         }
     })}
+
+
+function addSearchForm () {
+    var searchForm =
+        '<div class=\"col-lg-6\">' +
+        '<div class="form-group">' +
+        '<label>Zoek waarde</label>' +
+        '<div class="input-group">' +
+        '<input type="text" class="form-control" id="txtSearchValue" name="txtSearchValue" placeholder="search value">' +
+        '</div>' +
+        '</div><input type="submit" name="addSearchValue" id="addSearchValue" value="Toevoegen" class="btn btn-info pull-left">'
+
+    return searchForm
+}
+
+
+
+

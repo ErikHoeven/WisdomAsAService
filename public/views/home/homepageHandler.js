@@ -1,6 +1,3 @@
-/**
- * Created by erik on 8/3/17.
- */
 
 function menuHandler(user){
     console.info('start menu handling')
@@ -16,12 +13,10 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/contact/">Contact</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/events/">Events </a></li>')
         $(".nav.navbar-nav").append('<li><a href="/BusinessRules/">Zoekmachine</a></li>')
-        $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Dashboard</a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Agile Dashboard</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/admin/">Admin</a></li>')
-        $(".nav.navbar-nav").append('<li><a href="/admin/test">test</a></li>')
     }
-
 }
 
 function loginHander(user){
