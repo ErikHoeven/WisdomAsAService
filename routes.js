@@ -113,6 +113,14 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/saveBlogResults', require('./views/admin/addBlogResults').saveBlogResults);
     //app.get('/admin/getBlogText', require('./views/admin/getBlogResults').getBlogText);
 
+    //Admin CV
+    app.post('/admin/getCVS', require('./views/admin/getCVS').getCVS);
+    app.post('/admin/saveCVPeronalia', require('./views/admin/CV/saveCVPeronalia').saveCVPeronalia);
+    app.post('/admin/getPeronalia', require('./views/admin/CV/saveCVPeronalia').getPeronalia);
+    app.post('/admin/updateCVPeronalia', require('./views/admin/CV/saveCVPeronalia').updateCVPeronalia);
+
+
+
     //getContentText
     //app.post('/admin/addEmployeeResults',require('./views/admin/addEmployeeResults').addEmployeeResults);
     //app.post('/admin/editEmployeeResults',require('./views/admin/editEmployeeResults').editEmployeeResults);

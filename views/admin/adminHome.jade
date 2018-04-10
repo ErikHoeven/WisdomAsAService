@@ -28,7 +28,9 @@ block head
     script(src="/views/admin/EmployeeRules.js")
     script(src="/views/admin/ContentRules.js")
     script(src="/views/admin/BloggerRules.js")
-
+    script(src="/views/admin/cvRules.js")
+    script(src="/views/admin/cv/cvPersonaliaRules.js")
+    script(src="/views/admin/cv/cvProfielRules.js")
 
 block body
     .container-fluid
@@ -166,6 +168,11 @@ block body
                     })
                     $('#home').click(function () {
                         location.reload();
+                    })
+                    $('#cvBuilder').click(function () {
+                        selectCVMenu()
+                        setCVitle()
+                        getCVS(user)
                     })
                 }
             });
