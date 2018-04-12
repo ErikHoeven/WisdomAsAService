@@ -75,3 +75,13 @@ exports.updateCVPeronalia = function(req, res, next) {
     res.status(200).json({message: 'Succesvol bijgewerkt'});
 
 }
+
+
+exports.updateCVProfile = function (req, res, next) {
+     var roleProfiles =  req.body.roleProfiles
+     var brancheProfiles = req.body.brancheProfiles
+
+    dbCV.update({_id: id}, {$set: {roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, lastUpdateDate: Date()}}, false, true)
+    res.status(200).json({message: 'Succesvol bijgewerkt'});
+
+}

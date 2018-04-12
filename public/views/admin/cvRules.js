@@ -92,7 +92,6 @@ function getCVS(user) {
                     getSearchResults(user)
                 }
             })
-
         })
     })
 }
@@ -116,6 +115,14 @@ function updateField(id) {
                 var achternaam = $('#txtAchternaam').val()
                 var titel =  $('#txtTitel').val()
                 var woonplaats =  $('#txtWoonplaats').val()
+                var brancheArray = []
+                var roleArray = []
+                var changeBrancheHit = 0
+                var changeRoleHit = 0
+                var brancheArrayCount = 0
+                var roleArrayCount = 0
+                var changeHitBracheNummer
+                var changeHitRoleNummer
 
                 $.ajax({
                     url: '/admin/updateCVPeronalia',
@@ -124,32 +131,55 @@ function updateField(id) {
                     data: JSON.stringify({voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats, id:id }),
                     success: function (response) {
 
+                        //Profiel form
                         var profielBranche = formProfielBranche()
-                        $('#contentElement').html(cvWizzard + profielBranche)
+                        var profielRole = formProfielRole()
+                        $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
 
                         $('#Personalia').removeClass()
                         $('#Profiel').addClass('active')
 
+
                         CKEDITOR.replace('txtProfielBranche')
-                        //CKEDITOR.instances['txtContent'].setData(response.content)
+                        CKEDITOR.replace('txtRole')
 
-                        $('#saveBranche').click(function () {
-                            var branche = $('#selBranche option:selected').text()
-                               ,brancheProfiel = CKEDITOR.instances['txtContent'].getData()
-                               ,brancheArray = []
+                        //Profiel - Branche (add Branche )
+                        $('#saveBrance').click(function () {
+                            brancheArray = addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer)
+                        })
 
+                        //Profiel - Role (add Role )
+                        $('#saveRole').click(function () {
+                            roleArray = addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer)
+                        })
 
+                        //Profiel - Branche (change Branche )
+                        $('#selBranche').change(function () {
+                            var selBranche =  changeBrange(brancheArray, changeHitBracheNummer)
+                            if(selBranche){
+                                changeBrancheHit = selBranche.changeBrancheHit
+                                changeHitBracheNummer = selBranche.changeHitBracheNummer
+                            }
 
                         })
 
-
+                        //Profiel - Role (change Role )
+                        $('#selRole').change(function () {
+                            var selRole = changeRole(roleArray,changeHitRoleNummer)
+                            if(selRole){
+                                changeRoleHit = selRole.changeRoleHit
+                                changeHitRoleNummer = selRole.changeHitRoleNummer
+                            }
+                        })
                     }
                 })
             })
         }
     })
-
 }
+
+
+
 
 // Specific functions
 
@@ -208,12 +238,16 @@ function addCVWizzard() {
 
 }
 
-/*
-function checkBrancheArray(branche, brancheArray) {
+function saveProfiel(roleProfiles, brancheProfiles, id) {
 
-
-    brancheArray.forEach(function (r) {
-        if()
+    $.ajax({
+        url: '/admin/updateCVProfile',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, id : id }),
+        success: function (response) {
+            console.info(response)
+            //getSearchResults(user)
+        }
     })
-
-}*/
+}

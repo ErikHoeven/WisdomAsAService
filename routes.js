@@ -118,6 +118,8 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/saveCVPeronalia', require('./views/admin/CV/saveCVPeronalia').saveCVPeronalia);
     app.post('/admin/getPeronalia', require('./views/admin/CV/saveCVPeronalia').getPeronalia);
     app.post('/admin/updateCVPeronalia', require('./views/admin/CV/saveCVPeronalia').updateCVPeronalia);
+    app.post('/admin/updateCVProfile', require('./views/admin/CV/saveCVPeronalia').updateCVProfile);
+
 
 
 
