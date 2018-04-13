@@ -80,8 +80,21 @@ exports.updateCVPeronalia = function(req, res, next) {
 exports.updateCVProfile = function (req, res, next) {
      var roleProfiles =  req.body.roleProfiles
      var brancheProfiles = req.body.brancheProfiles
+     var id = req.body.id
 
-    dbCV.update({_id: id}, {$set: {roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, lastUpdateDate: Date()}}, false, true)
-    res.status(200).json({message: 'Succesvol bijgewerkt'});
+    if(id)
+    {
+        dbCV.update({_id: id}, {
+            $set: {
+                roleProfiles: roleProfiles,
+                brancheProfiles: brancheProfiles,
+                lastUpdateDate: Date()
+            }
+        }, false, true)
+        res.status(200).json({message: 'Succesvol bijgewerkt'});
+    }
+    else {
+        res.status(200).json({message: 'Velden ontbreken'});
+    }
 
 }

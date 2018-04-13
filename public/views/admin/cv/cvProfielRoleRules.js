@@ -32,7 +32,8 @@ function formProfielRole(cv) {
                 '</div> ' +
             '</div>'
 
-        var addRole =  '<li class="next"><a href="#" class="btn btn-default" id="saveRole">Opslaan Rol <i class="fa fa-long-arrow-right"></i></a></li>'
+        var addRole =  '<div class="row"><div class="col-md-6"><a href="#" class="btn btn-default" id="saveRole">Opslaan Rol <i class="fa fa-long-arrow-right"></i></a></div>'
+        var addProfile = '<div class="col-md-6" align="right"><a href="#" class="btn btn-default" id="saveProfile">Volgende<i class="fa fa-long-arrow-right"></i></a></div></div>'
 
     }
     else {
@@ -65,11 +66,12 @@ function formProfielRole(cv) {
             '</div>'
 
         var addRole =  '<li class="next"><a href="#" class="btn btn-default" id="saveRole">Opslaan Rol <i class="fa fa-long-arrow-right"></i></a></li>'
+        var addProfile = '<li class="next"><a href="#" class="btn btn-default" id="saveProfile">Volgende<i class="fa fa-long-arrow-right"></i></a></li>'
 
 
     }
 
-    return formProfielRole + addRole
+    return formProfielRole + addRole + addProfile
 }
 
 function buildRoleArray(newRole, currentArray, roleObject) {

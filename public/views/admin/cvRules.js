@@ -115,14 +115,20 @@ function updateField(id) {
                 var achternaam = $('#txtAchternaam').val()
                 var titel =  $('#txtTitel').val()
                 var woonplaats =  $('#txtWoonplaats').val()
+
                 var brancheArray = []
                 var roleArray = []
+
                 var changeBrancheHit = 0
                 var changeRoleHit = 0
+
                 var brancheArrayCount = 0
                 var roleArrayCount = 0
+
                 var changeHitBracheNummer
                 var changeHitRoleNummer
+
+
 
                 $.ajax({
                     url: '/admin/updateCVPeronalia',
@@ -134,10 +140,26 @@ function updateField(id) {
                         //Profiel form
                         var profielBranche = formProfielBranche()
                         var profielRole = formProfielRole()
+
                         $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
 
                         $('#Personalia').removeClass()
                         $('#Profiel').addClass('active')
+                        console.info('CV voor 149')
+                        console.info(cv)
+
+                        if( cv.roleProfiles ){
+                            roleArray = cv.roleProfiles
+                            var tableRole = tblRole(roleArray)
+                            $('#tblRolErvaring').html(tableRole)
+
+
+                        }
+                        if( cv.brancheProfiles ){
+                            brancheArray = cv.brancheProfiles
+                            var tableBranche = tblBranche(brancheArray)
+                            $('#tblBrancheErvaring').html(tableBranche)
+                        }
 
 
                         CKEDITOR.replace('txtProfielBranche')
@@ -160,7 +182,6 @@ function updateField(id) {
                                 changeBrancheHit = selBranche.changeBrancheHit
                                 changeHitBracheNummer = selBranche.changeHitBracheNummer
                             }
-
                         })
 
                         //Profiel - Role (change Role )
@@ -171,6 +192,11 @@ function updateField(id) {
                                 changeHitRoleNummer = selRole.changeHitRoleNummer
                             }
                         })
+
+                        //Save profile and next section
+                        $('#saveProfile').click(function () {
+                            saveProfiel(roleArray,brancheArray,id)
+                        })
                     }
                 })
             })
@@ -179,10 +205,7 @@ function updateField(id) {
 }
 
 
-
-
 // Specific functions
-
 function addCVWizzard() {
     var header = '<h5 class="head-style-1"><span class="head-text-green"><strong>CV aanmaken</strong></span></h5>'
 
@@ -205,10 +228,10 @@ function addCVWizzard() {
         '</i> Werkervaring' +
         '</a> ' +
         '</li> ' +
-        '<li id="Vaardigheden" role="presentation"> ' +
+        '<li id="Opleiding" role="presentation"> ' +
         '<a href="#tab4" data-toggle="tab"> ' +
         '<i class="fa fa-cc-visa m-r-xs">' +
-        '</i> Vaardigheden' +
+        '</i> Opleiding' +
         '</a> ' +
         '</li> ' +
         '<li id="domeinkennis" role="domein kennis"> ' +
@@ -247,7 +270,8 @@ function saveProfiel(roleProfiles, brancheProfiles, id) {
         data: JSON.stringify({roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, id : id }),
         success: function (response) {
             console.info(response)
-            //getSearchResults(user)
+            startCVWerkervaring(id)
+
         }
     })
 }

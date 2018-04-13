@@ -114,7 +114,6 @@ function tblBranche(bracheArray,editnr) {
                 '</tr>'
         }
     }
-
     return table = table + tblHeader + tblBody
 }
 
