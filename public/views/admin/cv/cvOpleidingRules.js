@@ -17,7 +17,7 @@ function startCVOpleiding(id) {
             var cvWizzard = addCVWizzard()
 
             if(opleidingen){
-                console.info(id)
+                console.info('opleiding bestaat')
                 var opleiding = response.cv.opleiding[0]
                 var frmaddCVOpleiding = addCVOpleiding(opleiding)
                 var opleidingArray = opleidingen
@@ -37,7 +37,10 @@ function startCVOpleiding(id) {
 
             $('#addOpleiding').click(function () {
                 console.info('ID: ' + id )
-                opleidingArray = addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHitOpleidingNummer, id)
+                console.info(opleidingArray)
+                opleidingArray = addOpleiding(opleidingArrayCount, opleidingHit, opleidingArray, changeHitOpleidingNummer, id)
+                console.info('After click Add')
+                console.info(opleidingArray)
             })
         }
     })
@@ -102,7 +105,7 @@ function addCVOpleiding(opleiding) {
             '</div> ' +
             '<div class="col-md-6"> ' +
             '<h3>Opleiding</h3> ' +
-            '<p><div id="tblWerkErvaring"></div></p> </div> </div> </div>'
+            '<p><div id="tblOpleiding"></div></p> </div> </div> </div>'
 
         var next =  '<div class="col-md-4"><a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a></div>' +
                     '<div class="col-md-4" align="right"><a href="#" class="btn btn-default" id="addOpleiding">Toevoegen Opleiding <i class="fa fa-long-arrow-right"></i></a></div>' +
@@ -114,24 +117,33 @@ function addCVOpleiding(opleiding) {
 
 
 function buildOpleidingArray(opleiding, currentArray, opleidingObject) {
+    console.info('buildOpleidingArray')
     var newOpleidingArray = [], roleHit = 0
 
-    //Check if value exist in Array
-    currentArray.forEach(function (r) {
-        if(opleiding == r.opleiding){
-            roleHit = 1
-        }
-        if(opleiding != r.opleiding){
-            roleHit = 0
-        }
-    })
+
+    //Check if Array exist
+    if(currentArray){
+        console.info('currentArray Exist')
+        //Check if value exist in Array
+        currentArray.forEach(function (r) {
+            if(opleiding == r.opleiding){
+                roleHit = 1
+            }
+            if(opleiding != r.opleiding){
+                roleHit = 0
+            }
+        })
+    }
+    else {
+        console.info('currentArray does not exist')
+        currentArray = []
+    }
 
     //If value not exist then add object to the array
     if(roleHit == 0){
         newOpleidingArray = currentArray
         newOpleidingArray.push(opleidingObject)
     }
-
     // Else keep the array the same
     else{
         newOpleidingArray = currentArray
@@ -163,6 +175,8 @@ function tblOpleiding(opleidingArray, id) {
 
 function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHitOpleidingNummer, id) {
     console.info('saveOpleiding: ' + opleidingArrayCount + ' :  ' + opleidingHit )
+    console.info('opleidingsArray:')
+    console.info(opleidingArray)
     if(opleidingHit == 0 ){
         opleidingArrayCount++
 
@@ -172,12 +186,11 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
             ,tot =          $('#txtDatumTot').val()
             ,opleidingObject = {nr:  opleidingArrayCount, opleiding:opleiding, instituut:instituut, van: van, tot: tot}
 
-
+        console.info(opleidingArray)
 
         opleidingArray = buildOpleidingArray(opleiding,opleidingArray,opleidingObject)
         var opleidingTBL = tblOpleiding(opleidingArray, id)
         $('#tblOpleiding').html(opleidingTBL)
-
 
     }
     else{
@@ -209,16 +222,15 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
         data: JSON.stringify({opleiding: opleidingArray, id : id }),
         success: function (response) {
             console.info(response)
-
-            return opleidingArray
         }
     })
+
+    return opleidingArray
 }
 
 
 
 //Specific functions
-
 function updateFieldOpleiding(id, rowid) {
     console.info('updateOpleiding')
     console.info(id)
@@ -231,25 +243,25 @@ function updateFieldOpleiding(id, rowid) {
             var opleiding = response.cv.opleiding[rowid]
             var opleidingen = response.cv.opleiding
 
-            $('#txtFunctienaam').val(opleiding.functienaam)
-            $('#txtBedrijf').val(opleiding.bedrijf)
-            $('#txtdateDatumVan').val(opleiding.van)
-            $('#txtDatumTot').val(opleiding.tot)
+            var  opleiding =  $('#txtOpeiding').val()
+                ,instituut =  $('#txtInstituut').val()
+                ,van =        $('#txtdateDatumVan').val()
+                ,tot =        $('#txtDatumTot').val()
 
             $('#cmdOpleiding').html('')
             $('#cmdOpleiding').html('<a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a>')
 
             $('#updatedOpleiding').click(function () {
 
-                var  functienaam =  $('#txtFunctienaam').val()
-                    ,bedrijf =      $('#txtBedrijf').val()
-                    ,van =          $('#txtdateDatumVan').val()
-                    ,tot =          $('#txtDatumTot').val()
+                var  opleiding =  $('#txtOpeiding').val()
+                    ,instituut =  $('#txtInstituut').val()
+                    ,van =        $('#txtdateDatumVan').val()
+                    ,tot =        $('#txtDatumTot').val()
 
-                opleidingen[rowid].functienaam = functienaam
-                opleidingen[rowid].bedrijf = bedrijf
+                opleidingen[rowid].opleiding = opleiding
+                opleidingen[rowid].instituut = instituut
                 opleidingen[rowid].van = van
-                opleidingen[rowid].tot = tot
+                opleidingen[rowid].van = tot
 
                 $.ajax({
                     url: '/admin/saveOpleiding',
@@ -265,8 +277,8 @@ function updateFieldOpleiding(id, rowid) {
                             contentType: 'application/json',
                             data: JSON.stringify({id : id }),
                             success: function (response) {
-                                var tblWerkErv = tblOpleiding(response.cv.opleiding, id)
-                                $('#tblWerkErvaring').html(tblWerkErv)
+                                var opleidingTBL = tblOpleiding(response.cv.opleiding, id)
+                                $('#tblOpleiding').html(opleidingTBL)
 
 
                             }
