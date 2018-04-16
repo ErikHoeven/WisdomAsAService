@@ -42,6 +42,11 @@ function startCVOpleiding(id) {
                 console.info('After click Add')
                 console.info(opleidingArray)
             })
+
+            $('#saveOpleiding').click(function () {
+                console.info('saveWerkervaring: ' + id)
+                startCVVaardigheden(id)
+            })
         }
     })
 }
@@ -81,6 +86,9 @@ function addCVOpleiding(opleiding) {
         return formOpleiding + next
     }
     else{
+
+        var strOpleiding = opleiding.opleiding
+
         var formOpleiding =
             '<div class="tab-pane active fade in" id="tab3"> ' +
             '<div class="row margin-bottom-10" id="frmOpleiding"> ' +
@@ -88,7 +96,7 @@ function addCVOpleiding(opleiding) {
             '<div class="row"> ' +
             '<div class="form-group col-md-6"> ' +
             '<label for="Functienaam">Opleiding</label> ' +
-            '<input type="text" class="form-control" name="txtOpleiding" id="txtOpleiding" value="' + opleiding.opeiding+'"> ' +
+            '<input type="text" class="form-control" name="txtOpleiding" id="txtOpleiding" value="' + strOpleiding +'"> ' +
             '</div> ' +
             '<div class="form-group col-md-6"> ' +
             '<label for="Bedrijf">Instituut</label> ' +
@@ -199,9 +207,9 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
         console.info(changeHitOpleidingNummer)
 
         var  opleiding =  $('#txtOpeiding').val()
-            ,instituut =      $('#txtInstituut').val()
-            ,van =          $('#txtdateDatumVan').val()
-            ,tot =          $('#txtDatumTot').val()
+            ,instituut =  $('#txtInstituut').val()
+            ,van =        $('#txtdateDatumVan').val()
+            ,tot =        $('#txtDatumTot').val()
 
         opleidingArray[changeHitOpleidingNummer].opleiding = opleiding
         opleidingArray[changeHitOpleidingNummer].instituut = instituut
@@ -234,6 +242,7 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
 function updateFieldOpleiding(id, rowid) {
     console.info('updateOpleiding')
     console.info(id)
+    console.info(rowid)
     $.ajax({
         url: '/admin/getOpleiding',
         type: 'POST',
@@ -243,10 +252,14 @@ function updateFieldOpleiding(id, rowid) {
             var opleiding = response.cv.opleiding[rowid]
             var opleidingen = response.cv.opleiding
 
-            var  opleiding =  $('#txtOpeiding').val()
-                ,instituut =  $('#txtInstituut').val()
-                ,van =        $('#txtdateDatumVan').val()
-                ,tot =        $('#txtDatumTot').val()
+            console.info(opleiding)
+            var strOpleiding = opleiding.opleiding
+            console.info(strOpleiding)
+
+            $('#txtOpleiding').val(strOpleiding)
+            $('#txtInstituut').val(opleiding.instituut)
+            $('#txtdateDatumVan').val(opleiding.van)
+            $('#txtDatumTot').val(opleiding.tot)
 
             $('#cmdOpleiding').html('')
             $('#cmdOpleiding').html('<a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a>')
@@ -279,7 +292,6 @@ function updateFieldOpleiding(id, rowid) {
                             success: function (response) {
                                 var opleidingTBL = tblOpleiding(response.cv.opleiding, id)
                                 $('#tblOpleiding').html(opleidingTBL)
-
 
                             }
                         })

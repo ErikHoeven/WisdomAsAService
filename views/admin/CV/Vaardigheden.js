@@ -11,8 +11,8 @@ var async = require('async'),
     mongo = require('mongodb'),
     underscore = require('underscore')
 
-exports.getOpleiding = function (req, res, next) {
-    console.info('--------------------- getPeronalia -----------------------------------')
+exports.getVaardigheden = function (req, res, next) {
+    console.info('--------------------- getVaardigheden -----------------------------------')
     var id = req.body.id
     var o_id = new mongo.ObjectId(id)
     console.info(o_id)
@@ -40,16 +40,16 @@ exports.getOpleiding = function (req, res, next) {
     })
 }
 
-exports.saveOpleiding = function (req, res, next) {
+exports.saveVaardigheden = function (req, res, next) {
     var id = req.body.id
-    var opleiding = req.body.opleiding
-    console.info(opleiding)
+    var vaardigheden = req.body.vaardigheden
+    console.info(vaardigheden)
 
     if(id)
     {
         dbCV.update({_id: id}, {
             $set: {
-                opleiding: opleiding,
+                vaardigheden: vaardigheden,
                 lastUpdateDate: Date()
             }
         }, false, true)

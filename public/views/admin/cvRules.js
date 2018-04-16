@@ -234,7 +234,7 @@ function addCVWizzard() {
         '</i> Opleiding' +
         '</a> ' +
         '</li> ' +
-        '<li id="domeinkennis" role="domein kennis"> ' +
+        '<li id="Vaardigheden" role="Vaardigheden"> ' +
         '<a href="#tab5" data-toggle="tab"> ' +
         '<i class="fa fa-cc-visa m-r-xs">' +
         '</i> Vaardigheden' +
