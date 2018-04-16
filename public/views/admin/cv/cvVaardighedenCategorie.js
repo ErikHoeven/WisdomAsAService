@@ -2,13 +2,13 @@
  * Created by erik on 4/16/18.
  */
 // B. Change title and subtitle
-function setCVCategoryTitle() {
+function setCVCategoryVaardighedenTitle() {
     $('#title').html('Cattegorie instellingen voor Vaardigheden')
     $('#subtitle').html('Stel hier de Categorie voor de vaardigheden die u heeft')
 }
 
 // C. Get Search results from MongoDB if no results are available show form
-function getCVCategoryResults(user, id) {
+function getCVCategoryVaardighedenResults(user, id) {
 
         //1. Form search for word
     $('#contentElement').html(
@@ -36,7 +36,7 @@ function getCVCategoryResults(user, id) {
     $("#txtSearchWord").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: '/admin/getCVCattegoryResults',
+                url: '/admin/getCVCattegoryVaardighedenResults',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({term: request.term}),
@@ -118,16 +118,16 @@ function getCVCategoryResults(user, id) {
             var category = $('#Categorie').val()
                 ,categoryColor = $('#txtKleur').val()
 
-            addCategoryResults(category,categoryColor, catValueList)
+            addCategoryVaardigehedenResults(category, catValueList)
         })
     })
 }
-function addCategoryResults(category, color, catValues) {
+function addCategoryVaardigehedenResults(category, catValues) {
     $.ajax({
         url: '/admin/addCategoryResults',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({category: category, color: color, catValues:catValues }),
+        data: JSON.stringify({category: category, catValues:catValues }),
         success: function (response) {
             console.info(response)
             getCategoryResults(user)
@@ -136,7 +136,7 @@ function addCategoryResults(category, color, catValues) {
 }
 
 // 2.A. Update row to editable fields
-function updateCategoryField(tagCattegory) {
+function updateCategoryVaardigehedenField(tagCattegory) {
     var clickCount = 0
 
     $.ajax({
@@ -165,12 +165,12 @@ function updateCategoryField(tagCattegory) {
     })
 }
 
-function updateCategoryValueField(nr, oldValue, catValue) {
+function updateCategoryVaardigehedenValueField(nr, oldValue, catValue) {
     $('#' + nr).html('<input type="text" id="editedCatValue'+ nr +'" value="'+ oldValue  +'">')
     $('#edit' + nr).html('<td id="save' + nr + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + nr + '\')"><span id="span"' + nr + ' class="glyphicon glyphicon-save"></span> save</button></td>')
 }
 
-function updateCategoryValue(pos ) {
+function updateCategoryVaardigehedenValue(pos ) {
     var newValue = $('#editedCatValue' + pos).val()
         ,cat = $('#Categorie').val()
         ,color = $('#txtkleur').val()
@@ -188,7 +188,7 @@ function updateCategoryValue(pos ) {
     })
 }
 
-function addCatValue(clickCount){
+function addCatVaardigehedenValue(clickCount){
 
     var cat =  $('#Categorie').val()
 
@@ -204,7 +204,7 @@ function addCatValue(clickCount){
         }
     })
 }
-function removeCategoryValue(pos) {
+function removeCategoryVaardigehedenValue(pos) {
     var cat =  $('#Categorie').val()
 
     $.ajax({
@@ -222,12 +222,8 @@ function removeCategoryValue(pos) {
 
 }
 
-
-
-
-
 //  SPECIFIC FUNCTIONS
-function addCVCatForm () {
+function addCVCatVaardigehedenForm () {
     var catform =
         '<div class=\"col-lg-6\">' +
         '<div class="form-group">' +
@@ -242,14 +238,12 @@ function addCVCatForm () {
         '<button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
         '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
         '</div>' +
-        '<div class="form-group"><label>Kleur</label>' +
-        '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control">' +
         '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
 
     return catform
 }
 
-function addCatValueForm(catValueList,editNr) {
+function addCatVaardigehedenValueForm(catValueList,editNr) {
 
     var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
         ,tblBody = '<tbody>'
@@ -270,7 +264,7 @@ function addCatValueForm(catValueList,editNr) {
     }
     else{
 
-        var catValueLength = catValueList.length + editNr
+        var catVaardigehedenValueLength = catValueList.length + editNr
 
         for (var i = 0; i < catValueLength; i++) {
 
