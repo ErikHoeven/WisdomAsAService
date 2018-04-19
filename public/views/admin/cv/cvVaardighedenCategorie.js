@@ -58,7 +58,7 @@ function getCVCategoryVaardighedenResults(user, id) {
     $('#addCVCategorieVaardigeheden').click(function () {
         console.info('addCVCategorieVaardigeheden')
 
-        $('#contentElement').html(addCatForm ())
+        $('#contentElement').html(addCVCatVaardigehedenForm ())
         var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
             ,tblBody = '<tbody>'
             ,clear = 0
@@ -67,7 +67,7 @@ function getCVCategoryVaardighedenResults(user, id) {
             ,table
 
         //3.A Add category value
-        $('#addCatValue').click(function () {
+        $('#addCattegoryVaardigheden').click(function () {
             if($('#CatValue').val().length > 0){
                 catValueList.push($('#CatValue').val())
                 console.info(catValueList)
@@ -87,7 +87,7 @@ function getCVCategoryVaardighedenResults(user, id) {
         })
 
         //3.B Clear category value
-        $('#clearCatValue').click(function () {
+        $('#clearCatVaardighedenValue').click(function () {
             console.info(catValueList)
             //clear = 1
             catValueList = []
@@ -100,31 +100,21 @@ function getCVCategoryVaardighedenResults(user, id) {
             console.info(catValueList.length)
         })
 
-        //3.C Colour Control
-        $(".pick-a-color").pickAColor({
-            showSpectrum            : true,
-            showSavedColors         : true,
-            saveColorsPerElement    : true,
-            fadeMenuToggle          : true,
-            showAdvanced			: true,
-            showBasicColors         : true,
-            showHexInput            : true,
-            allowBlank				: true,
-            inlineDropdown			: true
-        });
+
 
         //3.D Submit
-        $('#addCattegory').click(function () {
+        $('#saveCattegoryVaardigheden').click(function () {
             var category = $('#Categorie').val()
-                ,categoryColor = $('#txtKleur').val()
 
             addCategoryVaardigehedenResults(category, catValueList)
+            startCVVaardigheden(id)
+
         })
     })
 }
 function addCategoryVaardigehedenResults(category, catValues) {
     $.ajax({
-        url: '/admin/addCategoryResults',
+        url: '/admin/addCategoryVaardighedenResults',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({category: category, catValues:catValues }),
@@ -140,7 +130,7 @@ function updateCategoryVaardigehedenField(tagCattegory) {
     var clickCount = 0
 
     $.ajax({
-        url: '/admin/getCategoryResultsForm',
+        url: '/admin/getCategoryVaardighedenResultsForm',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({tagCattegory: tagCattegory}),
@@ -173,7 +163,6 @@ function updateCategoryVaardigehedenValueField(nr, oldValue, catValue) {
 function updateCategoryVaardigehedenValue(pos ) {
     var newValue = $('#editedCatValue' + pos).val()
         ,cat = $('#Categorie').val()
-        ,color = $('#txtkleur').val()
 
     $.ajax({
         url: '/admin/saveCatValue',
@@ -199,7 +188,7 @@ function addCatVaardigehedenValue(clickCount){
         data: JSON.stringify({tagCattegory: cat }),
         success: function (response) {
             console.info(response)
-            $('#CatValueTable').html(addCatValueForm(response.catValues,clickCount))
+            $('#CatValueTable').html(addCatVaardigehedenValueForm(response.catValues,clickCount))
 
         }
     })
@@ -209,13 +198,13 @@ function removeCategoryVaardigehedenValue(pos) {
 
     $.ajax({
         url:
-            '/admin/removeCatValue',
+            '/admin/removeCatVaardighedenValue',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({tagCattegory: cat, pos: pos }),
         success: function (response) {
             console.info(response)
-            $('#CatValueTable').html(addCatValueForm(response.cattegoryValue))
+            $('#CatValueTable').html(addCatVaardigehedenValueForm(response.cattegoryValue))
 
         }
     })
@@ -235,10 +224,10 @@ function addCVCatVaardigehedenForm () {
         '<label>Cattegoie waarde</label>' +
         '<div class="input-group">' +
         '<input type="email" class="form-control" id="CatValue" name="CatValue" placeholder="Categorie waarde">' +
-        '<button class="btn btn-primary" type="submit" id="addCatValue">Toevoegen</button>' +
-        '<button class="btn btn-primary" type="submit" id="clearCatValue">Wissen</button>' +
+        '<button class="btn btn-primary" type="submit" id="addCattegoryVaardigheden">Toevoegen</button>' +
+        '<button class="btn btn-primary" type="submit" id="clearCatVaardighedenValue">Wissen</button>' +
         '</div>' +
-        '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
+        '</div><div id="CatValueTable"></div><input type="submit" name="saveCattegoryVaardigheden" id="saveCattegoryVaardigheden" value="Opslaan" class="btn btn-info pull-left">'
 
     return catform
 }
@@ -292,4 +281,19 @@ function addCatVaardigehedenValueForm(catValueList,editNr) {
     return table = table + tblHeader + tblBody
 }
 
+function removeCategoryVaardigehedenResults(id) {
+
+    $.ajax({
+        url:
+            '/admin/removeCatVaardighedenResults',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id }),
+        success: function (response) {
+            console.info(response)
+            //$('#CatValueTable').html(addCatVaardigehedenValueForm(response.cattegoryValue))
+        }
+    })
+
+}
 

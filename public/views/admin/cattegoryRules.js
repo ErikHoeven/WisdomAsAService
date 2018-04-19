@@ -29,7 +29,7 @@ function getCategoryResults(user) {
         '</div>' +
         '<div class="row">' +
         '<div class="col-md-5">' +
-        '<input type="text" class="form-control" id="txtSearchWord" name="txtSearchWord" placeholder="zoekterm">' +
+        '<input type="text" class="form-control" id="txtCatWord" name="txtCatWord" placeholder="zoekterm">' +
         '</div>' +
         '<div class="col-md-5">' +
         '<button type="button" class="btn btn-primary btn-flat btn-raised btn-float" id="cmdEmployeeForm"><span class="fa fa-plus"></span></button>' +
@@ -43,7 +43,7 @@ function getCategoryResults(user) {
     )
 
     // 2. Search on term
-    $("#txtSearchWord").autocomplete({
+    $("#txtCatWord").autocomplete({
         source: function (request, response) {
             $.ajax({
                 url: '/admin/getCattegoryResults',
@@ -127,7 +127,6 @@ function getCategoryResults(user) {
         $('#addCattegory').click(function () {
             var category = $('#Categorie').val()
                 ,categoryColor = $('#txtKleur').val()
-
             addCategoryResults(category,categoryColor, catValueList)
         })
     })

@@ -24,10 +24,48 @@ function startCVVaardigheden(id) {
                 var vaardighedenTBL = tblVaardigheden(vaardighedenArray, id)
             }
             else {
-                var frmaddCVVaardigheden = addCVVaardigheden()
+                console.info('Geen vaardigheden toegevoegd')
+                $.ajax({
+                    url: '/admin/getCatVaardigheden',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({id : id }),
+                    success: function (response) {
+
+                        var catValues = response.catValues
+                        var frmaddCVVaardigheden = addCVVaardigheden(vaardigheden,catValues)
+                        $('#contentElement').html(cvWizzard + frmaddCVVaardigheden )
+
+                    }})
             }
 
-            $('#contentElement').html(cvWizzard + frmaddCVVaardigheden )
+
+
+            $('#Personalia').click(function () {
+                console.info('Personalia')
+                addCVPeronaliaForm(cv)
+            })
+
+            $('#Profiel').click(function () {
+                console.info('Profiel')
+                startCVProfiel(id,cv)
+            })
+
+            $('#Werkervaring').click(function () {
+                console.info('Werkervaring')
+                startCVWerkervaring(id)
+            })
+
+            $('#Opleiding').click(function () {
+                console.info('Opleiding')
+                startCVOpleiding(id)
+            })
+
+            $('#Vaardigheden').click(function () {
+                console.info('Vaardigheden')
+                startCVVaardigheden(id)
+            })
+
             $('#txtdateDatumVan').datepicker()
             $('#txtDatumTot').datepicker()
             $('#tblVaardigheden').html(vaardighedenTBL)
@@ -50,14 +88,15 @@ function startCVVaardigheden(id) {
 
             $('#addCategory').click(function () {
                 console.info('Category: ' + id)
-                getCVCategoryResults(user,id)
+                setCVCategoryVaardighedenTitle()
+                getCVCategoryVaardighedenResults(user,id)
             })
         }
     })
 }
 
 
-function addCVVaardigheden(vaardigheden) {
+function addCVVaardigheden(vaardigheden, catValues) {
 
     if(!vaardigheden){
         var formVaardigheden =
@@ -92,6 +131,18 @@ function addCVVaardigheden(vaardigheden) {
         return addCategory + formVaardigheden + next
     }
     else{
+        console.info('Geen vaardigheden')
+        console.info(catValues)
+        var optCatValues = '<select id="selCatVaardigheden">'
+
+        catValues.forEach(function (r) {
+            console.info(r.tagCattegory)
+            optCatValues = optCatValues + '<option value="'+ r.tagCattegory + '">' + r.tagCattegory + '</option>'
+        })
+
+        optCatValues = optCatValues + '</select>'
+        console.info(optCatValues)
+
 
         var strVaardigheden = vaardigheden.vaardigheden
 
@@ -101,8 +152,8 @@ function addCVVaardigheden(vaardigheden) {
             '<div class="col-md-6"> ' +
             '<div class="row"> ' +
             '<div class="form-group col-md-6"> ' +
-            '<label for="Functienaam">Vaardigheden</label> ' +
-            '<input type="text" class="form-control" name="txtVaardigheden" id="txtVaardigheden" value="' + strVaardigheden +'"> ' +
+            '<label for="Functienaam">Vaardigheden Categorie</label> ' +
+            + optCatValues +
             '</div> ' +
             '<div class="form-group col-md-6"> ' +
             '<label for="Bedrijf">Instituut</label> ' +

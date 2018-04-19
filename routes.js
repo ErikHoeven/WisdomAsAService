@@ -115,20 +115,27 @@ exports = module.exports = function(app, passport) {
 
     //Admin CV
     app.post('/admin/getCVS', require('./views/admin/getCVS').getCVS);
+    //Admin CV-Personalia
     app.post('/admin/saveCVPeronalia', require('./views/admin/CV/saveCVPeronalia').saveCVPeronalia);
     app.post('/admin/getPeronalia', require('./views/admin/CV/saveCVPeronalia').getPeronalia);
     app.post('/admin/updateCVPeronalia', require('./views/admin/CV/saveCVPeronalia').updateCVPeronalia);
     app.post('/admin/updateCVProfile', require('./views/admin/CV/saveCVPeronalia').updateCVProfile);
+    //Admin CV-Werkervaring
     app.post('/admin/getWerkervaring', require('./views/admin/CV/Werkervaring').getWerkervaring);
     app.post('/admin/saveWerkervaring', require('./views/admin/CV/Werkervaring').saveWerkervaring);
+    //Admin CV-Opleiding
     app.post('/admin/getOpleiding', require('./views/admin/CV/Opleiding').getOpleiding);
     app.post('/admin/saveOpleiding', require('./views/admin/CV/Opleiding').saveOpleiding);
+    //Admin CV-Vaardigheden
     app.post('/admin/getVaardigheden', require('./views/admin/CV/Vaardigheden').getVaardigheden);
 
-
-
-
-
+    //Admin CV-Vaardigheden-Categorie
+    app.post('/admin/getCVCattegoryVaardighedenResults', require('./views/admin/CV/CategorieVaardigheden').getCattegoryVaardighedenResults);
+    app.post('/admin/addCategoryVaardighedenResults', require('./views/admin/CV/addCategoryVaardighedenResults').addCategoryVaardighedenResults);
+    app.post('/admin/getCategoryVaardighedenResultsForm', require('./views/admin/CV/CategorieVaardigheden').getCategoryVaardighedenResultsForm);
+    app.post('/admin/removeCatVaardighedenValue', require('./views/admin/CV/editCategoryVaardighedenResults').removeCatVaardighedenValue);
+    app.post('/admin/removeCatVaardighedenResults', require('./views/admin/CV/editCategoryVaardighedenResults').removeCategoryVaardighedenResults);
+    app.post('/admin/getCatVaardigheden', require('./views/admin/CV/CategorieVaardigheden').getCatVaardigheden);
 
 
 

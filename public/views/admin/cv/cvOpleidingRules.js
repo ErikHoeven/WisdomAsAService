@@ -28,6 +28,32 @@ function startCVOpleiding(id) {
             }
 
             $('#contentElement').html(cvWizzard + frmaddCVOpleiding )
+
+            $('#Personalia').click(function () {
+                console.info('Personalia')
+                addCVPeronaliaForm(cv)
+            })
+
+            $('#Profiel').click(function () {
+                console.info('Profiel')
+                startCVProfiel(id,cv)
+            })
+
+            $('#Werkervaring').click(function () {
+                console.info('Werkervaring')
+                startCVWerkervaring(id)
+            })
+
+            $('#Opleiding').click(function () {
+                console.info('Opleiding')
+                startCVOpleiding(id)
+            })
+
+            $('#Vaardigheden').click(function () {
+                console.info('Vaardigheden')
+                startCVVaardigheden(id)
+            })
+
             $('#txtdateDatumVan').datepicker()
             $('#txtDatumTot').datepicker()
             $('#tblOpleiding').html(opleidingTBL)

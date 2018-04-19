@@ -68,13 +68,15 @@ function getCVS(user) {
         }
     })
 
-    //3. add Search Criteria form results when press + button
+    //3. add Personalia when press + button
     $('#cmdSearchForm').click(function () {
         console.info('cmdSearchForm')
         var cvWizzard =  addCVWizzard()
         var formPersonalia = addCVPeronaliaForm()
 
+
         $('#contentElement').html(cvWizzard + formPersonalia)
+
 
         $('#savePersonalia').click(function () {
             var voornaam  = $('#txtVoornaam').val()
@@ -90,12 +92,19 @@ function getCVS(user) {
                 success: function (response) {
                     console.info(response)
                     getSearchResults(user)
+                    var cv = response.cv[0]
+
                 }
             })
         })
+        //3.A. Navigate to profile
+
     })
+
+
 }
 
+//4. Update field for personalia
 function updateField(id) {
     $.ajax({
         url: '/admin/getPeronalia',
@@ -110,25 +119,39 @@ function updateField(id) {
 
             $('#contentElement').html(cvWizzard + formPersonalia)
 
+
+            $('#Personalia').click(function () {
+                console.info('Personalia')
+                addCVPeronaliaForm(cv)
+            })
+
+            $('#Profiel').click(function () {
+                console.info('Profiel')
+                startCVProfiel(id,cv)
+            })
+
+            $('#Werkervaring').click(function () {
+                console.info('Werkervaring')
+                startCVWerkervaring(id)
+            })
+
+            $('#Opleiding').click(function () {
+                console.info('Opleiding')
+                startCVOpleiding(id)
+            })
+
+            $('#Vaardigheden').click(function () {
+                console.info('Vaardigheden')
+                startCVVaardigheden(id)
+            })
+
+
+
             $('#updatePersonalia').click(function () {
                 var voornaam  = $('#txtVoornaam').val()
                 var achternaam = $('#txtAchternaam').val()
                 var titel =  $('#txtTitel').val()
                 var woonplaats =  $('#txtWoonplaats').val()
-
-                var brancheArray = []
-                var roleArray = []
-
-                var changeBrancheHit = 0
-                var changeRoleHit = 0
-
-                var brancheArrayCount = 0
-                var roleArrayCount = 0
-
-                var changeHitBracheNummer
-                var changeHitRoleNummer
-
-
 
                 $.ajax({
                     url: '/admin/updateCVPeronalia',
@@ -136,74 +159,11 @@ function updateField(id) {
                     contentType: 'application/json',
                     data: JSON.stringify({voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats, id:id }),
                     success: function (response) {
-
-                        //Profiel form
-                        var profielBranche = formProfielBranche()
-                        var profielRole = formProfielRole()
-
-                        $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
-
-                        $('#Personalia').removeClass()
-                        $('#Profiel').addClass('active')
-                        console.info('CV voor 149')
-                        console.info(cv)
-
-                        if( cv.roleProfiles ){
-                            roleArray = cv.roleProfiles
-                            var tableRole = tblRole(roleArray)
-                            $('#tblRolErvaring').html(tableRole)
-
-
-                        }
-                        if( cv.brancheProfiles ){
-                            brancheArray = cv.brancheProfiles
-                            var tableBranche = tblBranche(brancheArray)
-                            $('#tblBrancheErvaring').html(tableBranche)
-                        }
-
-
-                        CKEDITOR.replace('txtProfielBranche')
-                        CKEDITOR.replace('txtRole')
-
-                        //Profiel - Branche (add Branche )
-                        $('#saveBrance').click(function () {
-                            brancheArray = addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer)
-                        })
-
-                        //Profiel - Role (add Role )
-                        $('#saveRole').click(function () {
-                            roleArray = addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer)
-                        })
-
-                        //Profiel - Branche (change Branche )
-                        $('#selBranche').change(function () {
-                            var selBranche =  changeBrange(brancheArray, changeHitBracheNummer)
-                            if(selBranche){
-                                changeBrancheHit = selBranche.changeBrancheHit
-                                changeHitBracheNummer = selBranche.changeHitBracheNummer
-                            }
-                        })
-
-                        //Profiel - Role (change Role )
-                        $('#selRole').change(function () {
-                            var selRole = changeRole(roleArray,changeHitRoleNummer)
-                            if(selRole){
-                                changeRoleHit = selRole.changeRoleHit
-                                changeHitRoleNummer = selRole.changeHitRoleNummer
-                            }
-                        })
-
-                        //Save profile and next section
-                        $('#saveProfile').click(function () {
-                            saveProfiel(roleArray,brancheArray,id)
-                        })
-                    }
-                })
-            })
-        }
-    })
+                        startCVProfiel(id, cv)
+                }})
+        })
+    }})
 }
-
 
 // Specific functions
 function addCVWizzard() {
@@ -214,36 +174,32 @@ function addCVWizzard() {
         '<ul class="nav nav-tabs" role="tablist">' +
         '<li id="Personalia" role="presentation" class="active"> ' +
         '<a href="#tab1" data-toggle="tab"> ' +
-        '<i class="fa fa-user m-r-xs"></i> Personal Info ' +
+        'Persoons gegevens ' +
         '</a> ' +
         '</li> ' +
-        '<li id="Profiel" role="presentation"> ' +
-        '<a href="#tab2" data-toggle="tab"> ' +
-        '<i class="fa fa-shopping-cart m-r-xs"></i> Profiel ' +
+        '<li id="Profiel1" role="presentation"> ' +
+        '<a  id="Profiel" href="#tab2" data-toggle="tab"> ' +
+        ' Profiel ' +
         '</a> ' +
         '</li> ' +
         '<li id="Werkervaring" role="presentation"> ' +
         '<a href="#tab3" data-toggle="tab"> ' +
-        '<i class="fa fa-cc-visa m-r-xs">' +
-        '</i> Werkervaring' +
+        'Werkervaring' +
         '</a> ' +
         '</li> ' +
         '<li id="Opleiding" role="presentation"> ' +
         '<a href="#tab4" data-toggle="tab"> ' +
-        '<i class="fa fa-cc-visa m-r-xs">' +
-        '</i> Opleiding' +
+        'Opleiding' +
         '</a> ' +
         '</li> ' +
         '<li id="Vaardigheden" role="Vaardigheden"> ' +
         '<a href="#tab5" data-toggle="tab"> ' +
-        '<i class="fa fa-cc-visa m-r-xs">' +
-        '</i> Vaardigheden' +
+        'Vaardigheden' +
         '</a> ' +
         '</li> ' +
         '<li id="Finish" role="presentation"> ' +
         '<a href="#tab6" data-toggle="tab"> ' +
-        '<i class="fa fa-check m-r-xs">' +
-        '</i> Finish </a> ' +
+        'Finish </a> ' +
         '</li> ' +
         '</ul>'
 
@@ -259,19 +215,4 @@ function addCVWizzard() {
 
     return menu + form + progressbar
 
-}
-
-function saveProfiel(roleProfiles, brancheProfiles, id) {
-
-    $.ajax({
-        url: '/admin/updateCVProfile',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, id : id }),
-        success: function (response) {
-            console.info(response)
-            startCVWerkervaring(id)
-
-        }
-    })
 }

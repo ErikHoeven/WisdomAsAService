@@ -1,8 +1,6 @@
 /**
- * Created by erik on 12/2/17.
+ * Created by erik on 4/16/18.
  */
-'use strict';
-
 var async = require('async'),
     db = require('monk')('localhost/commevents'),
     moment = require('moment'),
@@ -13,13 +11,13 @@ var async = require('async'),
 
 
 
-exports.getCattegoryResults = function(req, res, next) {
-        console.info('------------------------- getCattegoryResults -------------------------')
-        mongo.connect(uri, function (err, db) {
+exports.getCattegoryVaardighedenResults = function(req, res, next) {
+    console.info('------------------------- getCattegoryVaardighedenResults -------------------------')
+    mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = [], lookupterm = req.body.term
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('businessrules').find({$and: [{"tagCattegory": {$regex: ".*" + lookupterm + ".*"}}]}).toArray(function (err, businessrules) {
+                db.collection('businessrules').find({$and: [{"tagCattegory": {$regex: ".*" + lookupterm + ".*"}},{typeBusinessRule: "CV_Vaardigheden"}]}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
                     locals.businessrules = businessrules;
                     callback();
@@ -36,7 +34,7 @@ exports.getCattegoryResults = function(req, res, next) {
                 , tbody = ''
                 , optionlist = ''
                 , table = ''
-                , columns = ['Categorie groepsnaam','Categorie kleur','Cattegorie waarden']
+                , columns = ['Categorie groepsnaam','Cattegorie waarden']
                 , body = setBody(locals.businessrules)
                 , header = setHeader(columns)
 
@@ -46,8 +44,8 @@ exports.getCattegoryResults = function(req, res, next) {
     })
 }
 
-exports.getCategoryResultsForm = function(req, res, next) {
-    console.info('----------- getBlogResultsForm -----------------------')
+exports.getCategoryVaardighedenResultsForm = function(req, res, next) {
+    console.info('----------- getCategoryVaardighedenResultsForm -----------------------')
 
     var tagCattegory = req.body.tagCattegory
     console.info(tagCattegory)
@@ -67,14 +65,14 @@ exports.getCategoryResultsForm = function(req, res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
-            res.status(200).json({form: addCategoryForm(locals.businessrules), message: 'succes'});
+            res.status(200).json({form: addCategoryVaardighedenForm(locals.businessrules), message: 'succes'});
         })
     })
 }
 
 
-exports.addCatValue = function(req, res, next) {
-    console.info('----------- addCatValue -----------------------')
+exports.addCatVaardighedenValue = function(req, res, next) {
+    console.info('----------- addCatVaardighedenValue -----------------------')
 
     var tagCattegory = req.body.tagCattegory
     console.info(tagCattegory)
@@ -83,7 +81,7 @@ exports.addCatValue = function(req, res, next) {
         var locals = {}, tokens = []
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('businessrules').find({tagCattegory: tagCattegory}).toArray(function (err, businessrules) {
+                db.collection('businessrules').find({tagCattegory: tagCattegory},{typeBusinessRule: "CV_Vaardigheden"}).toArray(function (err, businessrules) {
                     if (err) return callback(err);
                     locals.businessrules = businessrules;
                     callback();
@@ -101,11 +99,34 @@ exports.addCatValue = function(req, res, next) {
     })
 }
 
+exports.getCatVaardigheden = function (req,res,next) {
+    console.info('----------- getCatVaardigheden -----------------------')
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('businessrules').find({typeBusinessRule: "CV_Vaardigheden"}).toArray(function (err, catValues) {
+                    if (err) return callback(err);
+                    locals.catValues = catValues;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var catValues = locals.catValues
+
+            res.status(200).json({catValues: catValues, message: 'succes'});
+        })
+    })
+}
 
 
 //  ------------------------- Generic Functions --------------------------------------------------------------------
-function addCategoryForm (businessrules) {
-    console.info('addCategoryForm')
+function addCategoryVaardighedenForm (businessrules) {
+    console.info('addCategoryVaardighedenForm')
 
     // A initialize variable
     var  tblBody = '<tbody>'
@@ -122,9 +143,7 @@ function addCategoryForm (businessrules) {
         '<input type="text" class="form-control" name="Categorie" id="Categorie" value="'+ businessrules[0].tagCattegory  +'">' +
         '</div>' +
         '<div class="form-group">' +
-        '<\/div>' +
-        '<div class="form-group"><label>Kleur</label>' +
-        '<div class="input-group"><input type="text" name="txtkleur" id="txtKleur" class="pick-a-color form-control" value="'+ businessrules[0].cattegorycolor  +'">' +
+        '</div>' +
         '</div><div id="CatValueTable"></div><input type="submit" name="addCattegory" id="addCattegory" value="Toevoegen" class="btn btn-info pull-left">'
 
     return {form: catform, catValueList: catValueList}
@@ -150,21 +169,19 @@ function setBody(ds) {
 
     ds.forEach(function (row) {
 
-            if (!row.hide_input){
+        if (!row.hide_input){
 
-                strBody = strBody + '<tr><td id="Cattegory' + row._id +'">'+ row.tagCattegory + '</td>' +
-                    '<td id="Color' + row._id +'">'+ row.cattegorycolor + '</td>' +
-                    '<td id="Value' + row._id +'">'+ row.cattegoryValue + '</td>' +
-                    '<td id="edit'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryField(\'' + row.tagCattegory + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                    '<td id="del'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' +row._id + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
-                    '</tr>'
-            }
-            else{
-                strBody = strBody + '<tr><td id="' + row._id +'">'+ row.tagCattegory + '</td>' +
-                    '<td id="' + row._id +'">'+ row.cattegorycolor + '</td>' +
-                    '<td id="' + row._id +'">'+ row.cattegoryValue + '</td>' +
-                    '</tr>'
-            }
+            strBody = strBody + '<tr><td id="Cattegory' + row._id +'">'+ row.tagCattegory + '</td>' +
+                '<td id="Value' + row._id +'">'+ row.cattegoryValue + '</td>' +
+                '<td id="edit'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryVaardigehedenField(\'' + row.tagCattegory + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
+                '<td id="del'+ row._id + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryVaardigehedenResults(\'' +row._id + '\')"><span id="span"'+ row._id +' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '</tr>'
+        }
+        else{
+            strBody = strBody + '<tr><td id="' + row._id +'">'+ row.tagCattegory + '</td>' +
+                '<td id="' + row._id +'">'+ row.cattegoryValue + '</td>' +
+                '</tr>'
+        }
     })
 
     strBody = strBody + '</tbody>'
