@@ -80,6 +80,11 @@ function startCVOpleiding(id) {
 
 function addCVOpleiding(opleiding) {
 
+    var selTypeOpleiding = '<select id="selTypeOpleiding">' +
+        '<option value="opleiding">opleiding</option>' +
+        '<option value="Business Intelligence Cursus">Business Intelligence Cursussen</option>' +
+        '<option value="Overige Cursussen">Overige Cursussen</option></select>'
+
     if(!opleiding){
         var formOpleiding =
             '<div class="tab-pane active fade in" id="tab3"> ' +
@@ -104,7 +109,7 @@ function addCVOpleiding(opleiding) {
             '</div> ' +
             '</div> ' +
             '<div class="col-md-6"> ' +
-            '<h3>Opleiding</h3> ' +
+            '<h4>Opleiding</h4> ' +
             '<p><div id="tblOpleiding"></div></p> </div> </div> </div>'
 
         var next =  '<div id="cmdOpleiding"></div><a href="#" class="btn btn-default" id="addOpleiding">Toevoegen Opleiding <i class="fa fa-long-arrow-right"></i></a></div>'
@@ -119,27 +124,32 @@ function addCVOpleiding(opleiding) {
             '<div class="tab-pane active fade in" id="tab3"> ' +
             '<div class="row margin-bottom-10" id="frmOpleiding"> ' +
             '<div class="col-md-6"> ' +
-            '<div class="row"> ' +
-            '<div class="form-group col-md-6"> ' +
-            '<label for="Functienaam">Opleiding</label> ' +
-            '<input type="text" class="form-control" name="txtOpleiding" id="txtOpleiding" value="' + strOpleiding +'"> ' +
-            '</div> ' +
-            '<div class="form-group col-md-6"> ' +
-            '<label for="Bedrijf">Instituut</label> ' +
-            '<input type="text" class="form-control" name="txtInstituut" id="txtInstituut" value="' + opleiding.instituut+'"> ' +
-            '</div> ' +
-            '<div class="form-group col-md-12"> ' +
-            '<label for="van">Titel</label> ' +
-            '<input type="text" class="form-control" name="txtDatumVan" id="txtdateDatumVan" value="' + opleiding.van+'"> ' +
-            '</div> <div class="form-group col-md-12"> ' +
-            '<label for="tot">tot</label> ' +
-            '<input type="text" class="form-control" name="txtDatumTot" id="txtDatumTot" value="' + opleiding.tot+'"> ' +
-            '</div> ' +
-            '</div> ' +
+                '<div class="row"> ' +
+                    '<div class="form-group col-md-6"> ' +
+                        '<label for="Functienaam">Opleiding</label> ' +
+                        '<input type="text" class="form-control" name="txtOpleiding" id="txtOpleiding" value="' + strOpleiding +'"> ' +
+                    '</div> ' +
+                    '<div class="form-group col-md-6"> ' +
+                        '<label for="Bedrijf">Instituut</label> ' +
+                        '<input type="text" class="form-control" name="txtInstituut" id="txtInstituut" value="' + opleiding.instituut+'"> ' +
+                    '</div> ' +
+                    '<div class="form-group col-md-6"> ' +
+                        '<label for="van">van</label> ' +
+                        '<input type="text" class="form-control" name="txtDatumVan" id="txtdateDatumVan" value="' + opleiding.van+'"> ' +
+                    '</div> ' +
+                    '<div class="form-group col-md-6"> ' +
+                        '<label for="tot">tot</label> ' +
+                        '<input type="text" class="form-control" name="txtDatumTot" id="txtDatumTot" value="' + opleiding.tot+'"> ' +
+                    '</div> ' +
+                    '<div class="form-group col-md-6"> ' +
+                        '<label for="typeOpleiding">Type Opleiding</label> ' +
+                        selTypeOpleiding +
+                    '</div> ' +
+                '</div> ' +
             '</div> ' +
             '<div class="col-md-6"> ' +
-            '<h3>Opleiding</h3> ' +
-            '<p><div id="tblOpleiding"></div></p> </div> </div> </div>'
+            '<h4>Opleiding</h4> ' +
+            '<div id="tblOpleiding"></div></div> </div> </div>'
 
         var next =  '<div class="col-md-4"><a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a></div>' +
                     '<div class="col-md-4" align="right"><a href="#" class="btn btn-default" id="addOpleiding">Toevoegen Opleiding <i class="fa fa-long-arrow-right"></i></a></div>' +
@@ -218,7 +228,8 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
             ,instituut =    $('#txtInstituut').val()
             ,van =          $('#txtdateDatumVan').val()
             ,tot =          $('#txtDatumTot').val()
-            ,opleidingObject = {nr:  opleidingArrayCount, opleiding:opleiding, instituut:instituut, van: van, tot: tot}
+            ,typeOpleiding =  $('#selTypeOpleiding option:selected').text()
+            ,opleidingObject = {nr:  opleidingArrayCount, opleiding:opleiding, instituut:instituut, van: van, tot: tot, typeOpleiding:typeOpleiding}
 
         console.info(opleidingArray)
 
@@ -236,11 +247,13 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
             ,instituut =  $('#txtInstituut').val()
             ,van =        $('#txtdateDatumVan').val()
             ,tot =        $('#txtDatumTot').val()
+            ,typeOpleiding =  $('#selTypeOpleiding option:selected').text()
 
         opleidingArray[changeHitOpleidingNummer].opleiding = opleiding
         opleidingArray[changeHitOpleidingNummer].instituut = instituut
         opleidingArray[changeHitOpleidingNummer].van = van
         opleidingArray[changeHitOpleidingNummer].tot = tot
+        opleidingArray[changeHitOpleidingNummer].typeOpleiding = typeOpleiding
 
         console.info(opleidingArray)
 
@@ -280,12 +293,13 @@ function updateFieldOpleiding(id, rowid) {
 
             console.info(opleiding)
             var strOpleiding = opleiding.opleiding
-            console.info(strOpleiding)
+
 
             $('#txtOpleiding').val(strOpleiding)
             $('#txtInstituut').val(opleiding.instituut)
             $('#txtdateDatumVan').val(opleiding.van)
             $('#txtDatumTot').val(opleiding.tot)
+            $('#selTypeOpleiding option:contains("' + opleiding.typeOpleiding  + '")').prop("selected", true)
 
             $('#cmdOpleiding').html('')
             $('#cmdOpleiding').html('<a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a>')
@@ -296,11 +310,13 @@ function updateFieldOpleiding(id, rowid) {
                     ,instituut =  $('#txtInstituut').val()
                     ,van =        $('#txtdateDatumVan').val()
                     ,tot =        $('#txtDatumTot').val()
+                    ,typeOpleiding =  $('#selTypeOpleiding option:selected').text()
 
                 opleidingen[rowid].opleiding = opleiding
                 opleidingen[rowid].instituut = instituut
                 opleidingen[rowid].van = van
                 opleidingen[rowid].van = tot
+                opleidingArray[rowid].typeOpleiding = typeOpleiding
 
                 $.ajax({
                     url: '/admin/saveOpleiding',

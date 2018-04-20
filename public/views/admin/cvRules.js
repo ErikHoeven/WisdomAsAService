@@ -197,8 +197,18 @@ function addCVWizzard() {
         'Vaardigheden' +
         '</a> ' +
         '</li> ' +
-        '<li id="Finish" role="presentation"> ' +
+        '<li id="Talen" role="Vaardigheden"> ' +
         '<a href="#tab6" data-toggle="tab"> ' +
+        'Talen' +
+        '</a> ' +
+        '</li> ' +
+        '<li id="DetailsWerkervaring" role="DetailsWerkervaring"> ' +
+        '<a href="#tab7" data-toggle="tab"> ' +
+        'Details werkervaring' +
+        '</a> ' +
+        '</li> ' +
+        '<li id="Finish" role="presentation"> ' +
+        '<a href="#tab68 data-toggle="tab"> ' +
         'Finish </a> ' +
         '</li> ' +
         '</ul>'
