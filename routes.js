@@ -128,6 +128,7 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/saveOpleiding', require('./views/admin/CV/Opleiding').saveOpleiding);
     //Admin CV-Vaardigheden
     app.post('/admin/getVaardigheden', require('./views/admin/CV/Vaardigheden').getVaardigheden);
+    app.post('/admin/saveVaardigheden', require('./views/admin/CV/Vaardigheden').saveVaardigheden);
 
     //Admin CV-Vaardigheden-Categorie
     app.post('/admin/getCVCattegoryVaardighedenResults', require('./views/admin/CV/CategorieVaardigheden').getCattegoryVaardighedenResults);
@@ -136,6 +137,7 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/removeCatVaardighedenValue', require('./views/admin/CV/editCategoryVaardighedenResults').removeCatVaardighedenValue);
     app.post('/admin/removeCatVaardighedenResults', require('./views/admin/CV/editCategoryVaardighedenResults').removeCategoryVaardighedenResults);
     app.post('/admin/getCatVaardigheden', require('./views/admin/CV/CategorieVaardigheden').getCatVaardigheden);
+
 
 
 

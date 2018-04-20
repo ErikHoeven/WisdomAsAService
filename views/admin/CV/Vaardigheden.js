@@ -26,6 +26,13 @@ exports.getVaardigheden = function (req, res, next) {
                     locals.cv = cv;
                     callback();
                 });
+            },
+            function (callback) {
+                db.collection('businessrules').find({typeBusinessRule: "CV_Vaardigheden"}).toArray(function (err, catValues) {
+                    if (err) return callback(err);
+                    locals.catValues = catValues;
+                    callback();
+                });
             }
         ];
 
@@ -34,7 +41,7 @@ exports.getVaardigheden = function (req, res, next) {
             db.close();
             console.info(locals.cv)
 
-            res.status(200).json({cv: locals.cv[0]});
+            res.status(200).json({cv: locals.cv[0],catValues:locals.catValues});
 
         })
     })
