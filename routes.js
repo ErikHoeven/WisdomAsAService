@@ -6,6 +6,7 @@ exports = module.exports = function(app, passport) {
     app.get('/', require('./views/index').init);
     app.get('/about/', require('./views/about/index').init);
     app.get('/contact/', require('./views/contact/index').init);
+    app.get('/Consultancy/', require('./views/Consultancy/index').init);
     app.post('/home/getContentResults/', require('./views/admin/getContentResults').getSectionsContent);
 
     //event routes
@@ -115,8 +116,12 @@ exports = module.exports = function(app, passport) {
 
     //Admin CV
     app.post('/admin/getCVS', require('./views/admin/getCVS').getCVS);
+    app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);
+
+
     //Admin CV-Personalia
     app.post('/admin/saveCVPeronalia', require('./views/admin/CV/saveCVPeronalia').saveCVPeronalia);
+    app.post('/admin/getCV', require('./views/admin/CV/saveCVPeronalia').getCV);
     app.post('/admin/getPeronalia', require('./views/admin/CV/saveCVPeronalia').getPeronalia);
     app.post('/admin/updateCVPeronalia', require('./views/admin/CV/saveCVPeronalia').updateCVPeronalia);
     app.post('/admin/updateCVProfile', require('./views/admin/CV/saveCVPeronalia').updateCVProfile);

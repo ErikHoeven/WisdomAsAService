@@ -1,0 +1,313 @@
+doctype html
+html
+    head
+        title Wisdom as a Service
+        meta(charset='utf-8')
+        meta(content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no', name='viewport')
+        // css
+        link(href='https://fonts.googleapis.com/css?family=Montserrat:400,700|Open+Sans:400,300,700,800', rel='stylesheet', media='screen')
+        link(href='AllStarts/css/bootstrap.min.css', rel='stylesheet', media='screen')
+        link(href='AllStarts/css/style.css', rel='stylesheet', media='screen')
+        link(href='AllStarts/color/default.css', rel='stylesheet', media='screen')
+        //
+
+    body
+        // Navigation
+        nav.navbar.navbar-default(role='navigation')
+            .container
+                .navbar-header
+                    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-ex1-collapse')
+                        span.sr-only Toggle nav
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    // Logo text or image
+                    a.navbar-brand(href='index.html') Wisdom as a Service
+                .navigation.collapse.navbar-collapse.navbar-ex1-collapse
+                    ul.nav.navbar-nav
+                        li.current
+                            a(href='#intro') Home
+                        li
+                            a(href='#about') About
+                        li
+                            a(href='#services') Service
+                        li
+                            a(href='#portfolio') Works
+                        li
+                            a(href='#team') Team
+                        li
+                            a(href='#contact') Contact
+        // intro area
+        #intro
+            .intro-text
+                .container
+                    .col-md-12
+                        #rotator
+                            h1
+                                span.1strotate Wisdom as a Service, Transforms your data to Wisdom, Fucntionaity before technology
+    .line-spacer
+    p
+        span.2ndrotate Business Intelligence, Big Data, Data Warehousing
+    // About
+    section#about.home-section.bg-white
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 About us
+                        .heading-line
+                        p
+                            | We’ve been building BI Products, platforms, and experiences for the past 10 years.
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='images/LGWisdomSmallLettersBigImg.png', alt='', width="300" height="300")
+                .col-md-6.content
+                    h2 Lorem ipsum dolor sit amet, consectetur adipiscing elite storium paralate
+                    h3
+                        | Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+    // Parallax 1
+    section#parallax1.home-section.parallax(data-stellar-background-ratio='0.5')
+        .container
+            .row
+                .col-md-12
+                    .color-light
+                        h2.wow.bounceInDown(data-wow-delay='0.5s') Details are the key for perfection
+                        p.lead.wow.bounceInUp(data-wow-delay='1s') We mix all detailed things together
+    // Services
+    section#services.home-section.bg-white
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Services
+                        .heading-line
+                        p
+                            | We’ve been building unique digital products, platforms, and experiences for the past 6 years.
+            .row
+                .col-md-12
+                    #carousel-service.service.carousel.slide
+                        // slides
+                        .carousel-inner
+                            .item.active
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 Consultancy
+                                            p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Consultancy.jpg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 DWH Audit
+                                            p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/BI AUDIT.jpg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 BI Archtitectuur
+                                            p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Big Data Platform 02.jpg', alt='')
+                        // Indicators
+                        ol.carousel-indicators
+                            li.active(data-target='#carousel-service', data-slide-to='0')
+                            li(data-target='#carousel-service', data-slide-to='1')
+                            li(data-target='#carousel-service', data-slide-to='2')
+    // Works
+    section#portfolio.home-section.bg-gray
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Works
+                        .heading-line
+                        p
+                            | We’ve been building unique digital products, platforms, and experiences for the past 6 years.
+            .row
+                .col-lg-12
+                    ul#og-grid.og-grid
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/1.jpg', data-title='Portfolio title', data-description='Duo te dico volutpat, unum elit oblique per id. Ne duo mollis sapientem intellegebat. Per at augue vidisse percipit, pri vocibus assueverit interesset ut, no dolore luptatum incorrupte nec. In mentitum forensibus nec, nibh eripuit ut pri, tale illud voluptatum ut sea. Sed oratio repudiare ei, cum an magna labitur, eu atqui augue mei. Pri consul detracto eu, solet nusquam accusam ex vim, an movet interesset necessitatibus mea.')
+                                img(src='AllStarts/img/works/thumbs/1.jpg', alt='')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/2.jpg', data-title='Portfolio title', data-description='Mea an eros periculis dignissim, quo mollis nostrum elaboraret et. Id quem perfecto mel, no etiam perfecto qui. No nisl legere recusabo nam, ius an tale pericula evertitur, dicat phaedrum qui in. Usu numquam legendos in, voluptaria sadipscing ut vel. Eu eum mandamus volutpat gubergren, eos ad detracto nominati, ne eum idque elitr aliquam.')
+                                img(src='AllStarts/img/works/thumbs/2.jpg', alt='')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/3.jpg', data-title='Portfolio title', data-description='Vim ad persecuti appellantur. Eam ignota deterruisset eu, in omnis fierent convenire sed. Ne nulla veritus vel, liber euripidis in eos. Postea comprehensam vis in, detracto deseruisse mei ea. Ex sadipscing deterruisset concludaturque quo.')
+                                img(src='AllStarts/img/works/thumbs/3.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/4.jpg', data-title='Portfolio title', data-description='In mentitum forensibus nec, nibh eripuit ut pri, tale illud voluptatum ut sea. Sed oratio repudiare ei, cum an magna labitur, eu atqui augue mei. Pri consul detracto eu, solet nusquam accusam ex vim, an movet interesset necessitatibus mea.')
+                                img(src='AllStarts/img/works/thumbs/4.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/5.jpg', data-title='Portfolio title', data-description='Duo te dico volutpat, unum elit oblique per id. Ne duo mollis sapientem intellegebat. Per at augue vidisse percipit, pri vocibus assueverit interesset ut, no dolore luptatum incorrupte nec. In mentitum forensibus nec, nibh eripuit ut pri, tale illud voluptatum ut sea')
+                                img(src='AllStarts/img/works/thumbs/5.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/6.jpg', data-title='Portfolio title', data-description='Id elit saepe pro. In atomorum constituam definitionem quo, at torquatos sadipscing eum, ut eum wisi meis mentitum. Probo feugiat ea duo. An usu platonem instructior, qui dolores inciderint ad. Te elit essent mea, vim ne atqui legimus invenire, ad dolor vitae sea.')
+                                img(src='AllStarts/img/works/thumbs/6.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/7.jpg', data-title='Portfolio title', data-description='Duo te dico volutpat, unum elit oblique per id. Ne duo mollis sapientem intellegebat. Per at augue vidisse percipit, pri vocibus assueverit interesset ut, no dolore luptatum incorrupte nec. In mentitum forensibus nec, nibh eripuit ut pri, tale illud voluptatum ut sea. Sed oratio repudiare ei, cum an magna labitur, eu atqui augue mei.')
+                                img(src='AllStarts/img/works/thumbs/7.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/8.jpg', data-title='Portfolio title', data-description='No nisl legere recusabo nam, ius an tale pericula evertitur, dicat phaedrum qui in. Usu numquam legendos in, voluptaria sadipscing ut vel. Eu eum mandamus volutpat gubergren, eos ad detracto nominati, ne eum idque elitr aliquam.')
+                                img(src='AllStarts/img/works/thumbs/8.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/9.jpg', data-title='Portfolio title', data-description='Lorem ipsum dolor sit amet, ex pri quod ferri fastidii. Mazim philosophia eum ad, facilisis laboramus te est. Eam magna fabellas ut. Ne vis diceret accumsan salutandi, pro in impedit accusamus dissentias, ut nonumy eloquentiam ius.')
+                                img(src='AllStarts/img/works/thumbs/9.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/10.jpg', data-title='Portfolio title', data-description='Duo te dico volutpat, unum elit oblique per id. Ne duo mollis sapientem intellegebat. Per at augue vidisse percipit, pri vocibus assueverit interesset ut, no dolore luptatum incorrupte nec. In mentitum forensibus nec, nibh eripuit ut pri, tale illud voluptatum ut sea. Sed oratio repudiare ei, cum an magna labitur, eu atqui augue mei. Pri consul detracto eu, solet nusquam accusam ex vim.')
+                                img(src='AllStarts/img/works/thumbs/10.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/11.jpg', data-title='Portfolio title', data-description='Vim ad persecuti appellantur. Eam ignota deterruisset eu, in omnis fierent convenire sed. Ne nulla veritus vel, liber euripidis in eos. Postea comprehensam vis in, detracto deseruisse mei ea. Ex sadipscing deterruisset concludaturque quo.')
+                                img(src='AllStarts/img/works/thumbs/11.jpg', alt='img01')
+                        li
+                            a(href='#', data-largesrc='AllStarts/img/works/12.jpg', data-title='Portfolio title', data-description='Mea an eros periculis dignissim, quo mollis nostrum elaboraret et. Id quem perfecto mel, no etiam perfecto qui. No nisl legere recusabo nam, ius an tale pericula evertitur, dicat phaedrum qui in. Usu numquam legendos in, voluptaria sadipscing ut vel. Eu eum mandamus volutpat gubergren, eos ad detracto nominati, ne eum idque elitr aliquam.')
+                                img(src='AllStarts/img/works/thumbs/12.jpg', alt='img01')
+    // Parallax 2
+    section#parallax2.home-section.parallax(data-stellar-background-ratio='0.5')
+        .container
+            .row
+                .col-md-12
+                    ul.clients
+                        li.wow.fadeInDown(data-wow-delay='0.3s')
+                            a(href='#')
+                                img(src='images/clients/1.png', alt='')
+                        li.wow.fadeInDown(data-wow-delay='0.6s')
+                            a(href='#')
+                                img(src='AllStarts/img/clients/2.png', alt='')
+                        li.wow.fadeInDown(data-wow-delay='0.9s')
+                            a(href='#')
+                                img(src='AllStarts/img/clients/3.png', alt='')
+                        li.wow.fadeInDown(data-wow-delay='1.1s')
+                            a(href='#')
+                                img(src='AllStarts/img/clients/4.png', alt='')
+
+    // Contact
+    section#contact.home-section.bg-gray
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Contact us
+                        .heading-line
+                        p
+                            | If you have any question or just want to say 'hello' to Alstar web studio please fill out form below and we will be get in touch with you within 24 hours.
+            .row
+                .col-md-offset-2.col-md-8
+                    #sendmessage Your message has been sent. Thank you!
+                    #errormessage
+                    form.form-horizontal.contactForm(action='', method='post', role='form')
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#name.form-control(type='text', name='name', placeholder='Your Name', data-rule='minlen:4', data-msg='Please enter at least 4 chars')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#email.form-control(type='email', name='email', placeholder='Your Email', data-rule='email', data-msg='Please enter a valid email')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#subject.form-control(type='text', name='subject', placeholder='Subject', data-rule='minlen:4', data-msg='Please enter at least 8 chars of subject')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                textarea.form-control(name='message', rows='5', data-rule='required', data-msg='Please write something for us', placeholder='Message')
+                                .validation
+                        .form-group
+                            .col-md-offset-2.col-md-8
+                                button.btn.btn-theme.btn-lg.btn-block(type='submit') Send message
+    // Bottom widget
+    section#bottom-widget.home-section.bg-white
+        .container
+            .row
+                .col-md-4
+                    .contact-widget.wow.bounceInLeft
+                        i.fa.fa-map-marker.fa-4x
+                        h5 Main Office
+                        p
+                            | 109 Borough High Street,
+                            br
+                            | London SE1 1NL
+                .col-md-4
+                    .contact-widget.wow.bounceInUp
+                        i.fa.fa-phone.fa-4x
+                        h5 Call
+                        p
+                            | +1 111 9998 7774
+                            br
+                            |  +1 245 4544 6855
+                .col-md-4
+                    .contact-widget.wow.bounceInRight
+                        i.fa.fa-envelope.fa-4x
+                        h5 Email us
+                        p
+                            | hello@alstarstudio.com
+                            br
+                            | sales@alstarstudio.com
+            .row.mar-top30
+                .col-md-12
+                    h5 We're on social networks
+                    ul.social-network
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-facebook.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-dribbble.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-twitter.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-pinterest.fa-stack-1x.fa-inverse
+    // Footer
+    footer
+        .container
+            .row
+                .col-md-12
+                    p Copyright © Alstar. All rights reserved.
+                    .credits
+                        //
+                          All the links in the footer should remain intact.
+                          You can delete the links only if you purchased the pro version.
+                          Licensing information: https://bootstrapmade.com/license/
+                          Purchase the pro version with working PHP/AJAX contact form: https://bootstrapmade.com/buy/?theme=Alstar
+                        | Designed by
+                        a(href='https://bootstrapmade.com/') BootstrapMade
+    a.back-to-top(href='#')
+        i.fa.fa-chevron-up
+    // js
+    script(src='AllStarts/js/jquery.js')
+    script(src='AllStarts/js/bootstrap.min.js')
+    script(src='AllStarts/js/wow.min.js')
+    script(src='AllStarts/js/mb.bgndGallery.js')
+    script(src='AllStarts/js/mb.bgndGallery.effects.js')
+    script(src='AllStarts/js/jquery.simple-text-rotator.min.js')
+    script(src='AllStarts/js/jquery.scrollTo.min.js')
+    script(src='AllStarts/js/jquery.nav.js')
+    script(src='AllStarts/js/modernizr.custom.js')
+    script(src='AllStarts/js/grid.js')
+    script(src='AllStarts/js/stellar.js')
+    // Contact Form JavaScript File
+    script(src='AllStarts/contactform/contactform.js')
+    // Template Custom Javascript File
+    script(src='AllStarts/js/custom.js')

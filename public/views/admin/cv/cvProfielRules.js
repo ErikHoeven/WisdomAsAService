@@ -1,14 +1,19 @@
 /**
  * Created by erik on 4/16/18.
  */
-function startCVProfiel(id, cv) {
+function startCVProfiel(cv, user, id) {
     //initVars
+    console.info('startCVProfiel')
+    console.info(id)
+    console.info(cv)
+    console.info(user)
 
 
     //Profiel form
     var profielBranche = formProfielBranche()
     var profielRole = formProfielRole()
     var cvWizzard =  addCVWizzard()
+    var changeBrancheHit = 0
 
     $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
 
@@ -91,6 +96,10 @@ function startCVProfiel(id, cv) {
     $('#saveProfile').click(function () {
         saveProfiel(roleArray,brancheArray,id)
     })
+
+
+
+
 }
 
 function saveProfiel(roleProfiles, brancheProfiles, id) {

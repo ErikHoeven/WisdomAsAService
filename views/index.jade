@@ -2,157 +2,253 @@ extends ../layouts/default
 
 block head
     title Wisdom as a Service
+    link(href='AllStarts/css/bootstrap.min.css', rel='stylesheet', media='screen')
+    link(href='AllStarts/css/style.css', rel='stylesheet', media='screen')
 
 
 block neck
     link(rel='stylesheet', href='/views/index.min.css?#{cacheBreaker}')
+
+    link(href='https://fonts.googleapis.com/css?family=Montserrat:400,700|Open+Sans:400,300,700,800', rel='stylesheet', media='screen')
+
 
 block body
     // Carousel
     // =================================================
     #carousel-myCarousel.carousel.slide(data-ride='carousel')
         ol.carousel-indicators
-            li.active(data-target='#carousel-myCarousel', data-slide-to='0')
-            li(data-target='#carousel-myCarousel', data-slide-to='1')
-            li(data-target='#carousel-myCarousel', data-slide-to='2')
+            //link(href='AllStarts/color/default.css', rel='stylesheet', media='screen')
         .carousel-inner(role='listbox')
             .item.active
                 img(src='../images/Big Data 01 WebSite.jpg')
                 .carousel-caption
-                    #c1.h1 Big Data Platform advies
-                    #c1a.p
-                        | Kan uw huidige systemen het niet meer aan of voldoet het niet meer aan de behoefte van uw klanten
-                    p
-                        a.btn.btn-lg.btn-primary(href='/consultancy', role='button') Lees verder
+                    a.btn.btn-lg.btn-primary(href='/consultancy', role='button') Big Data Platform advies
             .item
-                img(src='../images/Big Data 02 WebSite.jpg')
+                img(src='../images/BigData02WebSite.jpg')
                 .carousel-caption
-                    #c2.h1 Big Data/ Hybryde Architectuur
-                    #c2a.p
-                        | Samen orchistreren we de samenwerking tussen de verschillende systemen zodat alles naadloos met elkaar kan communniceren
-                    p
-                        a.btn.btn-lg.btn-primary(href='/biaudit', role='button') Lees verder
+                    a.btn.btn-lg.btn-primary(href='/biaudit', role='button') Big Data/ Hybryde Architectuur
             .item
                 img(src='../images/Big Data 03 WebSite.jpg')
                 .carousel-caption
-                    #c3.h1 IoT Apps
-                    #c3a.p
-                        | Wij helpen u met het bedenken, ontwerpen en realiseren van inovatieve IoT data apps in uw IT landschap
-                    p
-                        a.btn.btn-lg.btn-primary(href='#', role='button') Lees verder
+                    a.btn.btn-lg.btn-primary(href='#', role='button') IoT Apps
         a.left.carousel-control(href='#carousel-myCarousel', role='button', data-slide='prev')
             span.glyphicon.glyphicon-chevron-left(aria-hidden='true')
             span.sr-only Previous
         a.right.carousel-control(href='#carousel-myCarousel', role='button', data-slide='next')
             span.glyphicon.glyphicon-chevron-right(aria-hidden='true')
             span.sr-only Next
-    // Marketing messaging and featurettes
-    // ==================================================
-    // Wrap the rest of the page in another container to center all the content.
-    .container.marketing
-        // Three columns of text below the carousel
-        .row
-            .col-lg-4
-                img.img-circle(src='../images/Consultancy.jpg', alt='Generic placeholder image', width='140', height='140')
-                h2 Consultancy
-                #consultancy.p
-                    | Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.
-                p
-                    a.btn.btn-default(href='/consultancy', role='button') Lees verder
-            .col-lg-4
-                img.img-circle(src='../images/BI AUDIT.jpg', alt='Generic placeholder image', width='140', height='140')
-                h2 Datawarehouse Audit
-                #biaudit.p
-                    | Duis mollis, est non commodo luctus, nisi erat porttitor ligula, eget lacinia odio sem nec elit. Cras mattis consectetur purus sit amet fermentum. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh.
-                p
-                    a.btn.btn-default(href='/biaudit', role='button') Lees verder
-            .col-lg-4
-                img.img-circle(src='../images/Big Data Platform 02.jpg', alt='Generic placeholder image', width='140', height='140')
-                h2  BI Hybryde Architectuur
-                #iotarchitectuur.p
-                    | Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
-                p
-                    a.btn.btn-default(href='/iotarchitectuur', role='button') Lees verder
-        // START THE FEATURETTES
-        hr.featurette-divider
-        .row.featurette
-            .col-md-7
-                h2.featurette-heading
-                    | Is uw Data Warehouse al klaar voor de toekomst?
-                #auditcheck.p.lead
-                    | Veel gebruikte technologien zijn niet geschikt voor de toekomst! Wanneer moet u over gaan om een ander Big Data Platform, of zijn aanpassingen ook voldoende...
-                p
-                    a.btn.btn-default(href='/auditcheck', role='button') Start audit pre check
-            .col-md-5
-                img.featurette-image.img-responsive.center-block(src='../images/BI AUDIT.jpg', alt='Generic placeholder image')
-        hr.featurette-divider
-        .row.featurette
-            .col-md-7.col-md-push-5
-                h2.featurette-heading
-                    | Big Data / IoT leveranciers en producten
-                #bigdatavendors.p.lead
-                    | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
-            .col-md-5.col-md-pull-7
-                img.featurette-image.img-responsive.center-block(src='../images/BigData-Platform.jpg', alt='Generic placeholder image')
-        hr.featurette-divider
-        .row.featurette
-            .col-md-7
-                h2.featurette-heading
-                    | Over ons
-                #Overmij.p.lead
-                    | Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.
-            .col-md-5
-                img.featurette-image.img-responsive.center-block(src='../images/LGWisdomSmallLettersBigImg.png' width="300" height="300")
-        hr.featurette-divider
-        // /END THE FEATURETTES
-        // FOOTER
-        footer
-            p.pull-right
-                a(href='#') Back to top
-            p
-                | © 2018 Company, Inc. ·
-                a(href='#') Privacy
-                |  ·
-                a(href='#') Terms
-        script.
-            console.info('---  READY ----')
+    // About
+    section#about.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Over ons
+                        .heading-line
+                        p
+                            | We realiseren al meer dan 5 jaar BI products.
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='images/WaaSLogo.png', alt='', width="300" height="300")
+                .col-md-6.content
+                    h2 Wisdom as a Service biedt wijsheid op gebied van Business Intelligence
+                    h3
+                        | Samen met de klant waarde uit data halen, zodat er betere besluitvormingen genomen kan worden, is wat ons drijft.
+                    #Overmij.p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+    // Services
+    section#services.home-section.bg-white
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Expertise
+                        .heading-line
+                        p
+                            | We realiseren hoogwaardige BI producten door onze ervaring en specailisme.
+            .row
+                .col-md-12
+                    #carousel-service.service.carousel.slide
+                        // slides
+                        .carousel-inner
+                            .item.active
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 BI Development
+                                            #consultancy.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdConsultancy') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Consultancy.jpg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 DWH Audit
+                                            #biaudit.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdDWHAudit') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/BI AUDIT.jpg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 BI Archtitectuur
+                                            #iotarchitectuur.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdBIArchitectuur') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Big Data Platform 02.jpg', alt='')
+                        // Indicators
+                        ol.carousel-indicators
+                            li.active(data-target='#carousel-service', data-slide-to='0')
+                            li(data-target='#carousel-service', data-slide-to='1')
+                            li(data-target='#carousel-service', data-slide-to='2')
+    // Contact
+    section#contact.home-section.bg-gray
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Contact us
+                        .heading-line
+                        p
+                            | Wil je in contact komen met ons vul dan het onderstaande formulier in wij nemen binnen 24 uur contact met je op.
+            .row
+                .col-md-offset-2.col-md-8
+                    #sendmessage Your message has been sent. Thank you!
+                    #errormessage
+                    form.form-horizontal.contactForm(action='', method='post', role='form')
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#name.form-control(type='text', name='name', placeholder='Your Name', data-rule='minlen:4', data-msg='Please enter at least 4 chars')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#email.form-control(type='email', name='email', placeholder='Your Email', data-rule='email', data-msg='Please enter a valid email')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                input#subject.form-control(type='text', name='subject', placeholder='Subject', data-rule='minlen:4', data-msg='Please enter at least 8 chars of subject')
+                                .validation
+                        .col-md-offset-2.col-md-8
+                            .form-group
+                                textarea.form-control(name='message', rows='5', data-rule='required', data-msg='Please write something for us', placeholder='Message')
+                                .validation
+                        .form-group
+                            .col-md-offset-2.col-md-8
+                                button.btn.btn-theme.btn-lg.btn-block(type='submit') Send message
+    // Bottom widget
+    section#bottom-widget.home-section.bg-white
+        .container
+            .row
+                .col-md-4
+                    .contact-widget.wow.bounceInUp
+                        i.fa.fa-phone.fa-4x
+                        h5 Bellen
+                        p
+                            | 06 43029943
+                .col-md-4
+                    .contact-widget.wow.bounceInRight
+                        i.fa.fa-envelope.fa-4x
+                        h5 Email
+                        p
+                            | wisdomasaservice@gmail.com
 
-            $.ajax({
-                url: '/home/getContentResults',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({name: 'landingPage'}),
-                    success: function (response) {
-                        var content = response.content
+            .row.mar-top30
+                .col-md-12
+                    h5 We're on social networks
+                    ul.social-network
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-facebook.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-dribbble.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-twitter.fa-stack-1x.fa-inverse
+                        li
+                            a(href='#')
+                                span.fa-stack.fa-2x
+                                    i.fa.fa-circle.fa-stack-2x
+                                    i.fa.fa-pinterest.fa-stack-1x.fa-inverse
+    // Footer
+    footer
+        .container
+            .row
+                .col-md-12
+                    p Copyright © Wisdom as a Service. All rights reserved.
+                    .credits
 
-                        content.forEach(function (r) {
-                            if (r.element == 'consultancy'){
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'biaudit') {
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'iotarchitectuur') {
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'iotarchitectuur') {
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'auditcheck') {
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'bigdatavendors') {
-                                $('#' + r.element).html(r.content)
-                            }
-                            if (r.element == 'Overmij') {
-                                $('#' + r.element).html(r.content)
-                            }
-                        })
-                }})
-                //$('#C1').removeClass()
-                $('#c1').css('color', '#75B5EA')
-                $('#c2').css('color', '#75B5EA')
-                $('#c3').css('color', '#75B5EA')
+                        | Designed by
+                        a Erik van der Hoeven
+    a.back-to-top(href='#')
+        i.fa.fa-chevron-up
+    // js
+    script(src='AllStarts/js/jquery.js')
+    script(src='AllStarts/js/bootstrap.min.js')
+    script(src='AllStarts/js/wow.min.js')
+    script(src='AllStarts/js/mb.bgndGallery.js')
+    script(src='AllStarts/js/mb.bgndGallery.effects.js')
+    script(src='AllStarts/js/jquery.simple-text-rotator.min.js')
+    script(src='AllStarts/js/jquery.scrollTo.min.js')
+    script(src='AllStarts/js/jquery.nav.js')
+    script(src='AllStarts/js/modernizr.custom.js')
+    script(src='AllStarts/js/grid.js')
+    script(src='AllStarts/js/stellar.js')
+    // Contact Form JavaScript File
+    script(src='AllStarts/contactform/contactform.js')
+    script.
+        console.info('---  READY ----')
 
+        $.ajax({
+            url: '/home/getContentResults',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({name: 'landingPage'}),
+            success: function (response) {
+                var content = response.content
 
+                content.forEach(function (r) {
+                    if (r.element == 'consultancy') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'biaudit') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'iotarchitectuur') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'iotarchitectuur') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'auditcheck') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'bigdatavendors') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'Overmij') {
+                        $('#' + r.element).html(r.content)
+                    }
+                })
 
+                $('#cmdConsultancy').click(function () {
+                    window.location.replace('/Consultancy')
+                })
+            }
+        })
+    // Template Custom Javascript File
+    //script(src='AllStarts/js/custom.js')

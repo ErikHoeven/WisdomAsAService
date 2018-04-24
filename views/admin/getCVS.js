@@ -10,6 +10,7 @@ var async = require('async'),
     d3 = require('d3'),
     uri = 'mongodb://localhost:27017/commevents',
     mongo = require('mongodb'),
+    dbCV = db.get('CV'),
     underscore = require('underscore')
 
 
@@ -49,6 +50,17 @@ exports.getCVS = function(req, res, next) {
         })
     })
 }
+
+exports.removeCV = function(req, res, next){
+        console.info('----------- removeCV --------- ')
+        console.info(req.body.nr)
+        var id = req.body.nr
+        dbCV.remove({_id: id})
+        res.status(200).json({message: 'Succesvol verwijderd'});
+}
+
+
+
 
 //  ------------------------- Generic Functions --------------------------------------------------------------------
 function setHeader(lstColumns) {

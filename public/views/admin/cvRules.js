@@ -91,8 +91,24 @@ function getCVS(user) {
                 data: JSON.stringify({voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats }),
                 success: function (response) {
                     console.info(response)
-                    getSearchResults(user)
-                    var cv = response.cv[0]
+
+                    $.ajax({
+                        url: '/admin/getCV',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({voornaam: voornaam, achternaam: achternaam}),
+                        success: function (response) {
+                            console.info(response)
+                            var cv = response.cv[0]
+                            var id = response.cv[0].id
+                            startCVProfiel(cv,user, id)
+
+
+
+                        }
+                    })
+
+
 
                 }
             })
@@ -145,8 +161,6 @@ function updateField(id) {
                 startCVVaardigheden(id)
             })
 
-
-
             $('#updatePersonalia').click(function () {
                 var voornaam  = $('#txtVoornaam').val()
                 var achternaam = $('#txtAchternaam').val()
@@ -159,7 +173,7 @@ function updateField(id) {
                     contentType: 'application/json',
                     data: JSON.stringify({voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats, id:id }),
                     success: function (response) {
-                        startCVProfiel(id, cv)
+                        startCVProfiel(id)
                 }})
         })
     }})
@@ -224,5 +238,19 @@ function addCVWizzard() {
         '<div id="content" class="tab-content"> '
 
     return menu + form + progressbar
+
+}
+
+function removeValue(id) {
+
+    console.info(id)
+    $.ajax({
+        url: '/admin/removeCV',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({nr:id }),
+        success: function (response) {
+            getCVS(user)
+        }})
 
 }

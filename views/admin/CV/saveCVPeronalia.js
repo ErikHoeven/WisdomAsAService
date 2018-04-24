@@ -13,7 +13,7 @@ var async = require('async'),
     underscore = require('underscore')
 
 exports.saveCVPeronalia = function(req, res, next) {
-
+    console.info('---------------------saveCVPeronalia --------------------------------')
     var voornaam  = req.body.voornaam
     var achternaam = req.body.achternaam
     var titel =  req.body.titel
@@ -22,10 +22,10 @@ exports.saveCVPeronalia = function(req, res, next) {
 
     user = req.user || {}
     var cvPersonaliaObject = {voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats, lastUpdateDate: Date(), user:user }
-    console.info(cvPersonaliaObject)
     dbCV.insert(cvPersonaliaObject)
 
-    res.status(200).json({message: 'Zoek Personalia succesvol toegevoegd',route:'/admin/', menu:'cvProfiel'})
+   res.status(200).json({message: 'Zoek Personalia succesvol toegevoegd',route:'/admin/', menu:'cvProfiel' })
+
 }
 
 
@@ -50,8 +50,6 @@ exports.getPeronalia = function (req, res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
-            console.info(locals.cvs)
-
             res.status(200).json({cv: locals.cvs});
 
         })
@@ -96,5 +94,34 @@ exports.updateCVProfile = function (req, res, next) {
     else {
         res.status(200).json({message: 'Velden ontbreken'});
     }
+
+}
+
+
+exports.getCV= function (req,res,next) {
+     var voornaam = req.body.voornaam
+     var achternaam = req.body.achternaam
+
+    console.info('----------- GETCV --------------')
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('CV').find({voornaam: voornaam, achternaam:achternaam}).toArray(function (err, cv) {
+                    if (err) return callback(err);
+                    locals.cv = cv;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            res.status(200).json({cv: locals.cv })
+
+        })
+    })
 
 }
