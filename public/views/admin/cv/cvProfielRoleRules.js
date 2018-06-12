@@ -112,7 +112,7 @@ function tblRole(roleArray,editnr) {
                 '<tr>' +
                 '<td id="' + i + '">' + roleArray[i].role + '</td>' +
                 '<td id="' + i + '">' + roleArray[i].roleProfiel + '</td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
     }

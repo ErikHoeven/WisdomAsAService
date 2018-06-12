@@ -79,6 +79,13 @@ exports.updateCVProfile = function (req, res, next) {
      var roleProfiles =  req.body.roleProfiles
      var brancheProfiles = req.body.brancheProfiles
      var id = req.body.id
+    console.info('------------------ updateProfiel ---------------------------------')
+    console.info('roleProfiles')
+    console.info(roleProfiles)
+    console.info('brancheProfiles')
+    console.info(brancheProfiles)
+    console.info('id')
+    console.info(id)
 
     if(id)
     {
@@ -109,6 +116,34 @@ exports.getCV= function (req,res,next) {
         var tasks = [   // Load backlog
             function (callback) {
                 db.collection('CV').find({voornaam: voornaam, achternaam:achternaam}).toArray(function (err, cv) {
+                    if (err) return callback(err);
+                    locals.cv = cv;
+                    callback();
+                });
+            }
+        ];
+
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            res.status(200).json({cv: locals.cv })
+
+        })
+    })
+
+}
+
+
+exports.getCVByID = function (req,res,next) {
+    var id = req.body.id
+
+    console.info('----------- GETCV --------------')
+
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('CV').find({_id: id}).toArray(function (err, cv) {
                     if (err) return callback(err);
                     locals.cv = cv;
                     callback();

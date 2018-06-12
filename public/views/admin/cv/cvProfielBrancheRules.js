@@ -65,14 +65,13 @@ function formProfielBranche(cv) {
             '</div>'
 
         var addBranche =  '<li class="next"><a href="#" class="btn btn-default" id="saveBrance">Opslaan Brance <i class="fa fa-long-arrow-right"></i></a></li>'
-
-
     }
 
     return formProfielBranche + addBranche
 }
 
 function buildBrancheArray(newBranche, currentArray, brancheObject) {
+    console.info('buildBrancheArray')
     var newBrancheArray = [], brancheHit = 0, brancheFind
 
     //Check if value exist in Array
@@ -87,19 +86,25 @@ function buildBrancheArray(newBranche, currentArray, brancheObject) {
 
     //If value not exist then add object to the array
     if(brancheHit == 0){
+        console.info('Branche does not exist')
         newBrancheArray = currentArray
         newBrancheArray.push(brancheObject)
     }
 
     // Else keep the array the same
     else{
+        console.info('branche Exist')
         newBrancheArray = currentArray
+        console.info(newBrancheArray)
     }
 
     return newBrancheArray
 }
 
-function tblBranche(bracheArray,editnr) {
+function tblBranche(bracheArray,editnr, id) {
+    console.info('start  tblBranche')
+    console.info(bracheArray)
+    console.info(id)
     var  tblHeader ='<theader><th>Branche</th><th>Profiel samenvatting</th></theader>'
         ,tblBody = '<tbody>'
         ,table = '<table id="brancheTable" class="table table-hover">'
@@ -110,23 +115,42 @@ function tblBranche(bracheArray,editnr) {
                 '<tr>' +
                 '<td id="' + i + '">' + bracheArray[i].branche + '</td>' +
                 '<td id="' + i + '">' + bracheArray[i].brancheProfiel + '</td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + id + '\',\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
     }
+    else{
+        console.info('Editnr Exist')
+        console.info(editnr)
+        console.info(bracheArray)
+        for (var i = 0; i < bracheArray.length; i++) {
+            tblBody = tblBody +
+                '<tr>' +
+                '<td id="' + i + '">' + bracheArray[i].branche + '</td>' +
+                '<td id="' + i + '">' + bracheArray[i].brancheProfiel + '</td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + id + '\',\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '</tr>'
+        }
+    }
+
+    console.info(tblBody)
     return table = table + tblHeader + tblBody
+
 }
 
 
-function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer){
-    console.info('saveBrance: ' + brancheArrayCount + ' :  ' + changeBrancheHit )
+function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer, id){
+    console.info('saveBrance: ' + brancheArrayCount + ' :  ' + changeBrancheHit + ' : ' + id )
+    console.info(brancheArray)
     if(changeBrancheHit == 0 ){
         var branche = $('#selBranche option:selected').text()
             ,brancheProfiel = CKEDITOR.instances['txtProfielBranche'].getData()
             ,brancheObject = {nr: brancheArrayCount, branche:branche, brancheProfiel: brancheProfiel }
 
         brancheArray = buildBrancheArray(branche,brancheArray,brancheObject)
-        var brancheTBL = tblBranche(brancheArray)
+        console.info('ID BRANCHE')
+        console.info('id addBranche: ' + id)
+        var brancheTBL = tblBranche(brancheArray, null ,id)
         $('#tblBrancheErvaring').html(brancheTBL)
 
         brancheArrayCount++
@@ -138,21 +162,22 @@ function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitB
         console.info(brancheArray)
         console.info(changeHitBracheNummer)
         brancheArray[changeHitBracheNummer].brancheProfiel = newValue
-
-        var brancheTBL = tblBranche(brancheArray)
+        console.info('ID BRANCHE')
+        console.info('id addBranche: ' + id)
+        var brancheTBL = tblBranche(brancheArray, null, id)
         $('#tblBrancheErvaring').html(brancheTBL)
-
-
     }
 
     return brancheArray
 }
 
 function changeBrange(brancheArray, changeHitBracheNummer) {
+    console.info('changeBrange')
     var updBranche = $('#selBranche option:selected').text()
     console.info(updBranche)
 
     if(_.where(brancheArray,{branche:updBranche})[0]){
+        console.info('Value Exist in Array')
 
         var updProfileNr = _.where(brancheArray,{branche:updBranche})[0].nr
         var updProfile = _.where(brancheArray,{branche:updBranche})[0].brancheProfiel

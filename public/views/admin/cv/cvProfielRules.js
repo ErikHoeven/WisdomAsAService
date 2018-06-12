@@ -5,15 +5,28 @@ function startCVProfiel(cv, user, id) {
     //initVars
     console.info('startCVProfiel')
     console.info(id)
+    if(!cv){
+       console.info('CV does not exist')
+        var cv = getCVByID(id)
+    }
+
     console.info(cv)
     console.info(user)
-
 
     //Profiel form
     var profielBranche = formProfielBranche()
     var profielRole = formProfielRole()
     var cvWizzard =  addCVWizzard()
     var changeBrancheHit = 0
+    var brancheArrayCount = 0
+    var brancheArray = []
+    var changeHitBracheNummer = 0
+    var roleArrayCount = 0
+    var changeRoleHit = 0
+    var roleArray = []
+    var changeHitRoleNummer = 0
+
+
 
     $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
 
@@ -29,7 +42,19 @@ function startCVProfiel(cv, user, id) {
 
     $('#Profiel').click(function () {
         console.info('Profiel')
-        startCVProfiel(id,cv)
+        if(id){
+            $.ajax({
+                url: '/admin/getCVByID',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({id: id}),
+                success: function (response) {
+                    console.info(response)
+                    var cv = response.cv[0]
+                    startCVProfiel(cv,user, id)
+                }
+            })
+        }
     })
 
     $('#Werkervaring').click(function () {
@@ -55,6 +80,7 @@ function startCVProfiel(cv, user, id) {
 
     }
     if( cv.brancheProfiles ){
+        console.info('brancheProfiles exist')
         brancheArray = cv.brancheProfiles
         var tableBranche = tblBranche(brancheArray)
         $('#tblBrancheErvaring').html(tableBranche)
@@ -66,20 +92,34 @@ function startCVProfiel(cv, user, id) {
 
     //Profiel - Branche (add Branche )
     $('#saveBrance').click(function () {
-        brancheArray = addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer)
+        console.info('saveBrancheArray')
+        console.info(brancheArray)
+        console.info('BrancheID:')
+        console.info(id)
+        brancheArray = addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer, id)
+        brancheArrayCount++
+        saveProfiel(roleArray,brancheArray,id)
     })
 
     //Profiel - Role (add Role )
     $('#saveRole').click(function () {
         roleArray = addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer)
+        roleArrayCount++
+        saveProfiel(roleArray,brancheArray,id)
     })
 
     //Profiel - Branche (change Branche )
     $('#selBranche').change(function () {
+        console.info('Change Branche')
+        console.info(changeHitBracheNummer)
         var selBranche =  changeBrange(brancheArray, changeHitBracheNummer)
         if(selBranche){
             changeBrancheHit = selBranche.changeBrancheHit
             changeHitBracheNummer = selBranche.changeHitBracheNummer
+
+            console.info(selBranche)
+            console.info(changeBrancheHit)
+            console.info(changeHitBracheNummer)
         }
     })
 
@@ -94,15 +134,14 @@ function startCVProfiel(cv, user, id) {
 
     //Save profile and next section
     $('#saveProfile').click(function () {
+        console.info(roleArray)
+        console.info(brancheArray)
+        console.info(id)
         saveProfiel(roleArray,brancheArray,id)
     })
-
-
-
-
 }
 
-function saveProfiel(roleProfiles, brancheProfiles, id) {
+function saveProfiel(roleProfiles, brancheProfiles, id){
 
     $.ajax({
         url: '/admin/updateCVProfile',
@@ -111,8 +150,39 @@ function saveProfiel(roleProfiles, brancheProfiles, id) {
         data: JSON.stringify({roleProfiles: roleProfiles, brancheProfiles: brancheProfiles, id : id }),
         success: function (response) {
             console.info(response)
-            startCVWerkervaring(id)
+            //startCVWerkervaring(id)
 
         }
     })
+}
+
+function  removeBranche(id,row) {
+    // (1) Get CV from Database
+    $.ajax({
+        url: '/admin/getCVByID',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id : id }),
+        success: function (response) {
+            console.info(response)
+            //startCVWerkervaring(id)
+
+        }
+    })
+    
+}
+
+function getCVByID(id) {
+    $.ajax({
+        url: '/admin/getCVByID',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id}),
+        success: function (response) {
+            console.info(response)
+            var cv = response.cv[0]
+            return cv
+        }
+    })
+
 }

@@ -102,22 +102,13 @@ function getCVS(user) {
                             var cv = response.cv[0]
                             var id = response.cv[0].id
                             startCVProfiel(cv,user, id)
-
-
-
                         }
                     })
-
-
-
                 }
             })
         })
         //3.A. Navigate to profile
-
     })
-
-
 }
 
 //4. Update field for personalia
@@ -128,6 +119,7 @@ function updateField(id) {
         contentType: 'application/json',
         data: JSON.stringify({id: id }),
         success: function (response) {
+            console.info('GET CV')
             var cv = response.cv[0]
             console.info(cv)
             var cvWizzard =  addCVWizzard()
@@ -143,7 +135,10 @@ function updateField(id) {
 
             $('#Profiel').click(function () {
                 console.info('Profiel')
-                startCVProfiel(id,cv)
+                console.info(cv)
+                console.info(user)
+                console.info(id)
+                startCVProfiel(cv, user, id)
             })
 
             $('#Werkervaring').click(function () {
