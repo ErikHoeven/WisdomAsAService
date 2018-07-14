@@ -5,13 +5,13 @@ function startCVProfiel(cv, user, id) {
     //initVars
     console.info('startCVProfiel')
     console.info(id)
+
     if(!cv){
        console.info('CV does not exist')
         var cv = getCVByID(id)
     }
 
     console.info(cv)
-    console.info(user)
 
     //Profiel form
     var profielBranche = formProfielBranche()
@@ -25,8 +25,9 @@ function startCVProfiel(cv, user, id) {
     var changeRoleHit = 0
     var roleArray = []
     var changeHitRoleNummer = 0
+    var id  = cv._id
 
-
+    console.info('ID:' + id)
 
     $('#contentElement').html(cvWizzard + profielBranche + '<p>' + profielRole )
 
@@ -37,7 +38,35 @@ function startCVProfiel(cv, user, id) {
 
     $('#Personalia').click(function () {
         console.info('Personalia')
-        addCVPeronaliaForm(cv)
+        console.info(cv)
+        var personalia = addCVPeronaliaForm(cv)
+        $('#contentElement').html(cvWizzard + personalia)
+
+        $('#Profiel').click(function () {
+            console.info('Profiel')
+            console.info('id bij Cv:' + id)
+            if(id){
+                $.ajax({
+                    url: '/admin/getCVByID',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({id: id}),
+                    success: function (response) {
+                        console.info('Found CV')
+                        console.info(response)
+                        var cv = response.cv[0]
+                        console.info(cv)
+
+                        console.info('ID:')
+                        console.info(id)
+                        startCVProfiel(cv,user, id)
+                    }
+                })
+            }
+            else{
+                console.info('Profiel bestaat niet')
+            }
+        })
     })
 
     $('#Profiel').click(function () {
@@ -55,6 +84,17 @@ function startCVProfiel(cv, user, id) {
                 }
             })
         }
+        else{
+            console.info('Profiel bestaat niet')
+        }
+    })
+
+    $('#Profiel').click(function () {
+        console.info('Profiel')
+        console.info(cv)
+        console.info(user)
+        console.info(id)
+        startCVProfiel(cv, user, id)
     })
 
     $('#Werkervaring').click(function () {
@@ -92,13 +132,22 @@ function startCVProfiel(cv, user, id) {
 
     //Profiel - Branche (add Branche )
     $('#saveBrance').click(function () {
-        console.info('saveBrancheArray')
+        console.info('saveBrancheArray Before')
         console.info(brancheArray)
         console.info('BrancheID:')
         console.info(id)
         brancheArray = addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer, id)
         brancheArrayCount++
-        saveProfiel(roleArray,brancheArray,id)
+        console.info('saveBrancheArray After')
+        console.info(brancheArray)
+        console.info(id)
+        if(id){
+            saveProfiel(roleArray,brancheArray,id)
+        }
+        else{
+            console.info('CV ID ontbreekt')
+        }
+
     })
 
     //Profiel - Role (add Role )
@@ -173,12 +222,15 @@ function  removeBranche(id,row) {
 }
 
 function getCVByID(id) {
+    console.info('Start getCVByID')
+    console.info(id)
     $.ajax({
         url: '/admin/getCVByID',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({id: id}),
         success: function (response) {
+            console.info('Response getCVByID')
             console.info(response)
             var cv = response.cv[0]
             return cv

@@ -99,7 +99,7 @@ exports.updateCVProfile = function (req, res, next) {
         res.status(200).json({message: 'Succesvol bijgewerkt'});
     }
     else {
-        res.status(200).json({message: 'Velden ontbreken'});
+        res.status(200).json({message: 'Ontbrekend CV'});
     }
 
 }
@@ -137,13 +137,16 @@ exports.getCV= function (req,res,next) {
 exports.getCVByID = function (req,res,next) {
     var id = req.body.id
 
-    console.info('----------- GETCV --------------')
 
+    console.info('----------- GETCV --------------')
+    console.info('ID: ' + id )
+    var o_id = new mongo.ObjectID(id);
+    console.info('-------------------------')
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [   // Load backlog
             function (callback) {
-                db.collection('CV').find({_id: id}).toArray(function (err, cv) {
+                db.collection('CV').find({_id: o_id}).toArray(function (err, cv) {
                     if (err) return callback(err);
                     locals.cv = cv;
                     callback();
@@ -154,6 +157,7 @@ exports.getCVByID = function (req,res,next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
+            console.info(locals.cv)
             res.status(200).json({cv: locals.cv })
 
         })

@@ -143,7 +143,7 @@ function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitB
     console.info('saveBrance: ' + brancheArrayCount + ' :  ' + changeBrancheHit + ' : ' + id )
     console.info(brancheArray)
     if(changeBrancheHit == 0 ){
-        var branche = $('#selBranche option:selected').text()
+        var  branche = $('#selBranche option:selected').text()
             ,brancheProfiel = CKEDITOR.instances['txtProfielBranche'].getData()
             ,brancheObject = {nr: brancheArrayCount, branche:branche, brancheProfiel: brancheProfiel }
 
@@ -174,7 +174,7 @@ function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitB
 function changeBrange(brancheArray, changeHitBracheNummer) {
     console.info('changeBrange')
     var updBranche = $('#selBranche option:selected').text()
-    console.info(updBranche)
+    console.info(brancheArray)
 
     if(_.where(brancheArray,{branche:updBranche})[0]){
         console.info('Value Exist in Array')
@@ -186,6 +186,11 @@ function changeBrange(brancheArray, changeHitBracheNummer) {
         CKEDITOR.instances['txtProfielBranche'].setData(updProfile)
 
         return {changeBrancheHit:  1,changeHitBracheNummer : updProfileNr}
+    }
+    else {
+        console.info('New Value in Array')
+        CKEDITOR.instances['txtProfielBranche'].setData('')
+
     }
 
 }

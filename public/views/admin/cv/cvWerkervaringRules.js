@@ -2,21 +2,26 @@
  * Created by erik on 4/13/18.
  */
 function startCVWerkervaring(id) {
+    console.info('Start werkervaring!!')
+
     $.ajax({
         url: '/admin/getWerkervaring',
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify({id : id }),
         success: function (response) {
-
+            console.info('Response Werkervaring:')
+            console.info(response)
 
             var changeHitWerkervaringNummer
+            var cv = response.cv
+            var id = response.cv._id
+            console.info(cv)
             var werkervaringArrayCount = 0
             var werkervaringRoleHit = 0
             var werkervaringArray = []
             var werkervaringen = response.cv.werkervaring
             var cvWizzard = addCVWizzard()
-
 
 
             if(werkervaringen){
@@ -25,7 +30,6 @@ function startCVWerkervaring(id) {
                 var frmaddCVWerkervaring = addCVWerkervaring(werkervaring)
                 var werkervaringArray = werkervaringen
                 var werkervaringTBL = tblWerkervaring(werkervaringArray, id)
-
 
             }
             else {
@@ -41,7 +45,7 @@ function startCVWerkervaring(id) {
 
             $('#Profiel').click(function () {
                 console.info('Profiel')
-                startCVProfiel(id,cv)
+                startCVProfiel(cv,user,id)
             })
 
             $('#Werkervaring').click(function () {

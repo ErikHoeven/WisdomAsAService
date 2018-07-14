@@ -27,7 +27,7 @@ function getCVS(user) {
     $('#contentElement').html(
         '<div class="row">' +
         '<div class="col-md-5">' +
-        '<h4 style="margin-bottom: 25px; text-align: left">Zoeken zoek cv</h4>' +
+        '<h4 style="margin-bottom: 25px; text-align: left">Zoeken CV</h4>' +
         '</div>' +
         '</div>' +
         '<div class="row">' +
@@ -168,7 +168,7 @@ function updateField(id) {
                     contentType: 'application/json',
                     data: JSON.stringify({voornaam: voornaam, achternaam: achternaam, titel:titel, woonplaats:woonplaats, id:id }),
                     success: function (response) {
-                        startCVProfiel(id)
+                        startCVProfiel(null,null,id)
                 }})
         })
     }})
