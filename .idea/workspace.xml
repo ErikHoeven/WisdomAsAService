@@ -2,20 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f3536b2e-f8fa-4ba7-b9c3-9cee88393460" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/node_modules/grunt-newer/.cache/uglify/views/timestamp" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/grunt-newer/.cache/uglify/views/timestamp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cvRules.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cvRules.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cvRules.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cvRules.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/admin/cvRules.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/admin/cvRules.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js" beforeDir="false" afterPath="$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/initDB.js" beforeDir="false" afterPath="$PROJECT_DIR$/initDB.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/index.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.jade" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -26,65 +15,68 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="cvRules.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="172" column="10" selection-start-line="172" selection-start-column="10" selection-end-line="172" selection-end-column="10" />
-              <folding>
-                <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="181">
+              <caret line="124" column="33" lean-forward="true" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cvProfielRules.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
+      <file leaf-file-name="addContentResults.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/admin/addContentResults.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="459">
-              <caret line="29" column="28" lean-forward="true" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+            <state relative-caret-position="357">
+              <caret line="21" selection-start-line="21" selection-end-line="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cvPersonaliaRules.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvPersonaliaRules.js">
+      <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="582">
-              <caret line="62" column="98" selection-start-line="62" selection-start-column="82" selection-end-line="62" selection-end-column="98" />
+            <state relative-caret-position="1734">
+              <caret line="102" column="19" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="19" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cvWerkervaringRules.js" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js">
+      <file leaf-file-name="getContentResults.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/admin/getContentResults.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="613">
-              <caret line="47" column="41" selection-start-line="47" selection-start-column="41" selection-end-line="47" selection-end-column="41" />
+            <state relative-caret-position="612">
+              <caret line="36" column="30" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="30" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="saveCVPeronalia.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js">
+      <file leaf-file-name="ContentRules.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/public/views/admin/ContentRules.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="240">
-              <caret line="134" lean-forward="true" selection-start-line="134" selection-end-line="134" />
+            <state relative-caret-position="1003">
+              <caret line="59" column="78" selection-start-line="59" selection-start-column="70" selection-end-line="59" selection-end-column="78" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="cvProfielBrancheRules.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
+      <file leaf-file-name="initDB.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/initDB.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3247">
-              <caret line="191" column="57" selection-start-line="191" selection-start-column="57" selection-end-line="191" selection-end-column="57" />
+            <state relative-caret-position="153">
+              <caret line="9" selection-start-line="9" selection-end-line="9" />
             </state>
           </provider>
         </entry>
       </file>
     </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -113,6 +105,9 @@
         <option value="$PROJECT_DIR$/public/views/admin/cvRules.js" />
         <option value="$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js" />
         <option value="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js" />
+        <option value="$PROJECT_DIR$/views/Products/index.js" />
+        <option value="$PROJECT_DIR$/initDB.js" />
+        <option value="$PROJECT_DIR$/views/index.jade" />
       </list>
     </option>
   </component>
@@ -168,6 +163,9 @@
     <option name="width" value="835" />
     <option name="height" value="780" />
   </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
@@ -180,6 +178,28 @@
             <path>
               <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
               <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
+              <item name="public" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
+              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="admin" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -228,7 +248,15 @@
       <workItem from="1529152827552" duration="988000" />
       <workItem from="1529475266937" duration="2882000" />
       <workItem from="1530771001162" duration="2690000" />
-      <workItem from="1531562858759" duration="3117000" />
+      <workItem from="1531562858759" duration="3439000" />
+      <workItem from="1531738739692" duration="598000" />
+      <workItem from="1531808608210" duration="721000" />
+      <workItem from="1531894541380" duration="603000" />
+      <workItem from="1532093534426" duration="2119000" />
+      <workItem from="1533107857015" duration="1574000" />
+      <workItem from="1533643900079" duration="1629000" />
+      <workItem from="1533646033040" duration="5901000" />
+      <workItem from="1533669328625" duration="1309000" />
     </task>
     <task id="LOCAL-00001" summary="Profiel fix 1">
       <created>1528834222306</created>
@@ -241,31 +269,31 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="51797000" />
+    <option name="totallyTimeSpent" value="66573000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" weight="0.091145836" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1484375" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
       <window_info id="Grunt " order="4" side_tool="true" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
-      <window_info anchor="bottom" id="Run" order="2" />
       <window_info anchor="bottom" id="Version Control" order="8" />
+      <window_info anchor="bottom" id="Run" order="2" />
       <window_info id="npm" order="2" side_tool="true" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32941177" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -279,80 +307,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Profiel fix 1" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvPersonaliaRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="697">
-          <caret line="41" column="50" lean-forward="true" selection-start-line="41" selection-start-column="50" selection-end-line="41" selection-end-column="50" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1785">
-          <caret line="105" lean-forward="true" selection-start-line="105" selection-end-line="105" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3247">
-          <caret line="191" column="57" selection-start-line="191" selection-start-column="57" selection-end-line="191" selection-end-column="57" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2380">
-          <caret line="140" column="43" selection-start-line="140" selection-start-column="41" selection-end-line="140" selection-end-column="43" />
-          <folding>
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3043">
-          <caret line="179" column="44" selection-start-line="179" selection-start-column="44" selection-end-line="179" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1530">
-          <caret line="90" column="31" lean-forward="true" selection-start-line="90" selection-start-column="31" selection-end-line="90" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2380">
-          <caret line="140" column="43" selection-start-line="140" selection-start-column="41" selection-end-line="140" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3043">
-          <caret line="179" column="44" selection-start-line="179" selection-start-column="44" selection-end-line="179" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1938">
-          <caret line="114" column="54" selection-start-line="114" selection-start-column="54" selection-end-line="114" selection-end-column="54" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2380">
-          <caret line="140" column="43" selection-start-line="140" selection-start-column="41" selection-end-line="140" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3043">
@@ -585,13 +539,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="127" column="36" selection-start-line="127" selection-start-column="21" selection-end-line="127" selection-end-column="36" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3247">
@@ -601,8 +548,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/admin/CV/saveCVPeronalia.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="240">
-          <caret line="134" lean-forward="true" selection-start-line="134" selection-end-line="134" />
+        <state relative-caret-position="2278">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="64" selection-start-line="64" selection-end-line="64" />
         </state>
       </provider>
     </entry>
@@ -613,28 +567,76 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="29" column="28" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="172" column="10" selection-start-line="172" selection-start-column="10" selection-end-line="172" selection-end-column="10" />
-          <folding>
-            <element signature="n#style#0;n#h4#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#div#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
+    <entry file="file://$PROJECT_DIR$/views/Products/index.js" />
+    <entry file="file://$PROJECT_DIR$/views/Products/productsD.jade">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/Products/productsDWA.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/Consultancy/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="29" column="28" lean-forward="true" selection-start-line="29" selection-start-column="28" selection-end-line="29" selection-end-column="28" />
+        <state relative-caret-position="102">
+          <caret line="6" column="42" lean-forward="true" selection-start-line="6" selection-start-column="42" selection-end-line="6" selection-end-column="42" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js">
+    <entry file="file://$PROJECT_DIR$/routes.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="613">
-          <caret line="47" column="41" selection-start-line="47" selection-start-column="41" selection-end-line="47" selection-end-column="41" />
+        <state relative-caret-position="1734">
+          <caret line="102" column="19" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/initDB.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" selection-start-line="9" selection-end-line="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/views/admin/ContentRules.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1003">
+          <caret line="59" column="78" selection-start-line="59" selection-start-column="70" selection-end-line="59" selection-end-column="78" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/admin/getContentResults.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="36" column="30" selection-start-line="36" selection-start-column="28" selection-end-line="36" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/admin/addContentResults.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="21" selection-start-line="21" selection-end-line="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/index.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="181">
+          <caret line="124" column="33" lean-forward="true" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
         </state>
       </provider>
     </entry>

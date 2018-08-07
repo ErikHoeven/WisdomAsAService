@@ -65,7 +65,7 @@ block body
                         h2 Expertise
                         .heading-line
                         p
-                            | We realiseren hoogwaardige BI producten door onze ervaring en specailisme.
+                            | We leveren uitstekende diensten die passen bij de verschillende BI / Analitische vraagstukken.
             .row
                 .col-md-12
                     #carousel-service.service.carousel.slide
@@ -109,6 +109,59 @@ block body
                             li.active(data-target='#carousel-service', data-slide-to='0')
                             li(data-target='#carousel-service', data-slide-to='1')
                             li(data-target='#carousel-service', data-slide-to='2')
+    // Products
+    section#products.home-section.bg-white
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Producten
+                        .heading-line
+                        p
+                            | We realiseren hoogwaardige BI producten door onze ervaring en specailisme.
+            .row
+                .col-md-12
+                    #carousel-product.service.carousel.slide
+                        // slides
+                        .carousel-inner
+                            .item.active
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 Data Vault Generator
+                                            #DVA.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdDVA') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Products/Accelerator.svg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 Social Analytics
+                                            #SocialAnalytics.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdDWHAudit') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/BI AUDIT.jpg', alt='')
+                            .item
+                                .row
+                                    .col-sm-12.col-md-offset-1.col-md-6
+                                        .wow.bounceInLeft
+                                            h4 BI Agile Planboard
+                                            #AgileBoard.p
+                                                | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
+                                            button.btn.btn-primary(type='button' id='cmdBIArchitectuur') Lees verder
+                                    .col-sm-12.col-md-5
+                                        .screenshot.wow.bounceInRight
+                                            img.img-responsive(src='images/Big Data Platform 02.jpg', alt='')
+                        // Indicators
+                        ol.carousel-indicators
+                            li.active(data-target='#carousel-product', data-slide-to='0')
+                            li(data-target='#carousel-product', data-slide-to='1')
+                            li(data-target='#carousel-product', data-slide-to='2')
     // Contact
     section#contact.home-section.bg-gray
         .container
@@ -250,5 +303,35 @@ block body
                 })
             }
         })
+
+        $.ajax({
+            url: '/home/getContentResults',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({name: 'Products'}),
+            success: function (response) {
+                var content = response.content
+
+                content.forEach(function (r) {
+                    if (r.element == 'DVA') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'SocialAnalytics') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'DvaVliegendeStart') {
+                        $('#' + r.element).html(r.content)
+                    }
+                    if (r.element == 'AgileBoard') {
+                        $('#' + r.element).html(r.content)
+                    }
+                })
+
+                $('#cmDVA').click(function () {
+                    window.location.replace('/Products/DVA')
+                })
+            }
+        })
+
     // Template Custom Javascript File
     //script(src='AllStarts/js/custom.js')

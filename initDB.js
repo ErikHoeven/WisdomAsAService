@@ -5,4 +5,5 @@ db.content.insert({name: "iotarchitectuur", url:"/iotarchitectuur", sections:[{e
 db.content.insert({name: "auditcheck", url:"/auditcheck", sections:[{element:"uitleg"}]})
 db.content.insert({name: "bigdatavendors", url:"/bigdatavendors", sections:[{element:"uitleg"}, {element:"comparision"}, {element:"performance"},{element:"conclusie"}]})
 db.content.insert({name: "Overmij", url:"/Overmij", sections:[{element:"motivatie"}, {element:"foto"}]})
+db.content.insert({name:"Data Vault Accelerator", url:"/products/DVA", section:[{element:"DvaInleiding"},{element:"DvaVoorspelbaar"}{element:"DvaVliegendeStart"},{element:"DvaGPDR"},{element:"DvaStandaardisatie"},{element:"DvaTemplateDevelopment"}]})
 
