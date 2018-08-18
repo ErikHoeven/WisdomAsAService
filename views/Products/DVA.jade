@@ -1,0 +1,89 @@
+extends ../../layouts/default
+
+block head
+    title Data Vault Accelerator
+
+block body
+    //Development
+    section#Voorspelbaarheid.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Data Vault Accelerator
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='../images/Products/Accelerator.svg' width="350" height="280" align="right")
+                .col-md-6.content
+                    #DvaInleiding.p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+
+    section#Vliegendestart.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Vliegende start
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='../images/Products/Accelerator Vliegende start Without Background.svg' width="350" height="200" align="right" style="background-color:#0B2242")
+                .col-md-6.content
+                    #DvaVliegendeStart".p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+    section#Standaardisatie.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Standaardisatie
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='../images/Products/Standaardisatie.svg' width="350" height="200" align="right")
+                .col-md-6.content
+                    #DvaStandaardisatie.p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+
+    section#GPDR.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 GDPR & AVG Ready
+                        .heading-line
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='../images/Products/GPDR.svg' width="350" height="200" align="right")
+                .col-md-6.content
+                    #DvaGPDR.p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+
+    section#TemplatebasedDevelopment.home-section.bg-green
+        .container
+            .row
+                .col-md-offset-2.col-md-8
+                    .section-heading
+                        h2 Template based development
+                        .heading-line
+            .row.wow.fadeInUp
+                .col-md-6.about-img
+                    img(src='images/Consultancy.jpg', alt='', width="300" height="300")
+                .col-md-6.content
+                    #DvaTemplateDevelopment.p
+                        | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
+    script.
+        $.ajax({
+            url: '/home/getContentResults',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({name: 'Data Vault Accelerator'}),
+            success: function (response) {
+                var content = response.content
+
+                content.forEach(function (r) {
+                    $('#' + r.element).html(r.content)
+                })
+            }})
+
