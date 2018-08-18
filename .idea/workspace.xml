@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f3536b2e-f8fa-4ba7-b9c3-9cee88393460" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/initDB.js" beforeDir="false" afterPath="$PROJECT_DIR$/initDB.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/Products/productsD.jade" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/views/Products/productsDWA.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/views/index.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.jade" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -15,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="index.jade" pinned="false" current-in-tab="true">
+      <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="181">
-              <caret line="124" column="33" lean-forward="true" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
+            <state relative-caret-position="2312">
+              <caret line="136" column="99" selection-start-line="136" selection-start-column="68" selection-end-line="136" selection-end-column="99" />
             </state>
           </provider>
         </entry>
@@ -36,8 +38,22 @@
       <file leaf-file-name="routes.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1734">
-              <caret line="102" column="19" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="19" />
+            <state relative-caret-position="204">
+              <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="productsDVA.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/Products/productsDVA.js">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+      <file leaf-file-name="DVA.jade" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/views/Products/DVA.jade">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="561">
+              <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
             </state>
           </provider>
         </entry>
@@ -90,6 +106,7 @@
       <find>updateP</find>
       <find>getCVByID</find>
       <find>updatePersonalia</find>
+      <find>cmdConsultancy</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -99,7 +116,6 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/public/views/admin/cv/cvProfielRoleRules.js" />
-        <option value="$PROJECT_DIR$/routes.js" />
         <option value="$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js" />
         <option value="$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js" />
         <option value="$PROJECT_DIR$/public/views/admin/cvRules.js" />
@@ -107,7 +123,11 @@
         <option value="$PROJECT_DIR$/public/views/admin/cv/cvWerkervaringRules.js" />
         <option value="$PROJECT_DIR$/views/Products/index.js" />
         <option value="$PROJECT_DIR$/initDB.js" />
+        <option value="$PROJECT_DIR$/views/Products/productsD.jade" />
         <option value="$PROJECT_DIR$/views/index.jade" />
+        <option value="$PROJECT_DIR$/views/Products/productsDWA.js" />
+        <option value="$PROJECT_DIR$/routes.js" />
+        <option value="$PROJECT_DIR$/views/Products/DVA.jade" />
       </list>
     </option>
   </component>
@@ -171,7 +191,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -182,29 +201,19 @@
             <path>
               <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
               <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
               <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="WisdomAsAService" type="b2602c69:ProjectViewProjectNode" />
-              <item name="WisdomAsAService" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="admin" type="462c0819:PsiDirectoryNode" />
+              <item name="Products" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -256,7 +265,13 @@
       <workItem from="1533107857015" duration="1574000" />
       <workItem from="1533643900079" duration="1629000" />
       <workItem from="1533646033040" duration="5901000" />
-      <workItem from="1533669328625" duration="1309000" />
+      <workItem from="1533669328625" duration="1594000" />
+      <workItem from="1533902140577" duration="1130000" />
+      <workItem from="1533903379489" duration="3854000" />
+      <workItem from="1534081645826" duration="769000" />
+      <workItem from="1534096124406" duration="1181000" />
+      <workItem from="1534323710482" duration="1431000" />
+      <workItem from="1534593768451" duration="1925000" />
     </task>
     <task id="LOCAL-00001" summary="Profiel fix 1">
       <created>1528834222306</created>
@@ -265,15 +280,28 @@
       <option name="project" value="LOCAL" />
       <updated>1528834222306</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Producten op frontpage v01">
+      <created>1533672831141</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1533672831141</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Producten op frontpage v02">
+      <created>1533672993705</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1533672993705</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="66573000" />
+    <option name="totallyTimeSpent" value="77148000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1484375" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -303,31 +331,14 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="Profiel fix 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="Profiel fix 1" />
+    <MESSAGE value="Producten op frontpage v01" />
+    <MESSAGE value="Producten op frontpage v02" />
+    <option name="LAST_COMMIT_MESSAGE" value="Producten op frontpage v02" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3043">
-          <caret line="179" column="44" selection-start-line="179" selection-start-column="44" selection-end-line="179" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1921">
-          <caret line="113" column="42" selection-start-line="113" selection-start-column="42" selection-end-line="113" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/views/admin/cvRules.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2380">
-          <caret line="140" column="43" selection-start-line="140" selection-start-column="41" selection-end-line="140" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/public/views/admin/cv/cvProfielBrancheRules.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3043">
@@ -582,23 +593,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/Products/index.js" />
-    <entry file="file://$PROJECT_DIR$/views/Products/productsD.jade">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/Products/productsDWA.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/Consultancy/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="102">
           <caret line="6" column="42" lean-forward="true" selection-start-line="6" selection-start-column="42" selection-end-line="6" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1734">
-          <caret line="102" column="19" selection-start-line="102" selection-start-column="12" selection-end-line="102" selection-end-column="19" />
         </state>
       </provider>
     </entry>
@@ -633,10 +631,30 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/views/Products/productsD.jade" />
+    <entry file="file://$PROJECT_DIR$/views/Products/products.jade" />
+    <entry file="file://$PROJECT_DIR$/views/Products/productsDWA.js" />
+    <entry file="file://$PROJECT_DIR$/routes.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="18" selection-start-line="12" selection-start-column="18" selection-end-line="12" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/Products/productsDVA.js">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="181">
-          <caret line="124" column="33" lean-forward="true" selection-start-line="124" selection-start-column="33" selection-end-line="124" selection-end-column="33" />
+        <state relative-caret-position="2312">
+          <caret line="136" column="99" selection-start-line="136" selection-start-column="68" selection-end-line="136" selection-end-column="99" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/Products/DVA.jade">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="561">
+          <caret line="53" column="30" selection-start-line="53" selection-start-column="30" selection-end-line="53" selection-end-column="30" />
         </state>
       </provider>
     </entry>

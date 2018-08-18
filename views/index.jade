@@ -131,7 +131,7 @@ block body
                                             h4 Data Vault Generator
                                             #DVA.p
                                                 | Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna.
-                                            button.btn.btn-primary(type='button' id='cmdDVA') Lees verder
+                                            button.btn.btn-primary(type='button' id='cmDVA') Lees verder
                                     .col-sm-12.col-md-5
                                         .screenshot.wow.bounceInRight
                                             img.img-responsive(src='images/Products/Accelerator.svg', alt='')
@@ -328,6 +328,7 @@ block body
                 })
 
                 $('#cmDVA').click(function () {
+                    console.info('cmDVA')
                     window.location.replace('/Products/DVA')
                 })
             }

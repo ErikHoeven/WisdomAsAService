@@ -7,6 +7,7 @@ exports = module.exports = function(app, passport) {
     app.get('/about/', require('./views/about/index').init);
     app.get('/contact/', require('./views/contact/index').init);
     app.get('/Consultancy/', require('./views/Consultancy/index').init);
+    app.get('/Products/DVA', require('./views/Products/productsDVA').init);
     app.post('/home/getContentResults/', require('./views/admin/getContentResults').getSectionsContent);
 
     //event routes
