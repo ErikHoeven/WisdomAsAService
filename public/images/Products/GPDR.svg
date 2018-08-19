@@ -6,7 +6,7 @@
 	.st0{fill:#6A7ACE;}
 	.st1{fill:#FFFFFF;}
 	.st2{font-family:'MyriadPro-Regular';}
-	.st3{font-size:36px;}
+	.st3{font-size:48px;}
 	.st4{fill:#DEC359;}
 	.st5{font-size:14px;}
 	.st6{fill:none;stroke:#00FF66;stroke-width:11.8155;stroke-miterlimit:10;}
@@ -123,10 +123,10 @@
 	<rect x="3.6" y="2.2" class="st0" width="1366" height="768"/>
 	<text transform="matrix(1 0 0 1 117.708 289.1587)" class="st1 st2 st3">Wetgeving</text>
 	<text transform="matrix(1 0 0 1 107.0058 549.0919)" class="st1 st2 st3">Requirements</text>
-	<text transform="matrix(1 0 0 1 567.0012 751.6188)" class="st1 st2 st3">Standaarden</text>
+	<text transform="matrix(1 0 0 1 545.7316 751.6185)" class="st1 st2 st3">Standaarden</text>
 	<text transform="matrix(1 0 0 1 522.0034 190.4019)" class="st1 st2 st3">Transparantie</text>
-	<text transform="matrix(1 0 0 1 1100.2073 614.4059)" class="st1 st2 st3">Beleid</text>
-	<text transform="matrix(1.1018 0 0 1 1080.062 208.1627)" class="st1 st2 st3">Regels</text>
+	<text transform="matrix(1 0 0 1 1081.0616 628.9054)" class="st1 st2 st3">Beleid</text>
+	<text transform="matrix(1.1018 0 0 1 1069.0626 225.5834)" class="st1 st2 st3">Regels</text>
 	<path class="st4" d="M717.6,388c-2.8,15.8,0.3,1.5-3.1,11.6l-2.4,8.2l-34.3,12.7c-2.2,0.4-16.5,7.6-21.5,7.8v-14.9
 		c-0.1-1.6-11.1,0.1-9.5-0.7l-6,0.6l-0.4,0c-3,0.3-5.8-0.9-5.8-2.6l-0.5-16.4c-0.4,0.3-0.8,0.6-1.1,1c0,0,0,0,0,0
 		c-3.5-0.1-6.8,1.1-6.6-5c0.2-6.2,3.2-11.1,6.7-11.3c3.1-30.3,21.4-53.6,42.5-53.6C698.8,325.4,723.5,354,717.6,388z"/>
@@ -934,14 +934,14 @@ GDqQ/RNuvK4AAAAASUVORK5CYII=" transform="matrix(1 0 0 1 188 357)">
 			<polygon class="st68" points="-5290,67.7 -5355.2,67.6 -5290,67.6 -5290,74.5 			"/>
 			<polygon class="st68" points="-5420.4,67.6 -5355.2,67.6 -5290,121.2 -5290,220 -5420.4,220 			"/>
 			<rect x="-5420.5" y="217" class="st69" width="130.5" height="60.3"/>
-			<text transform="matrix(1 0 0 1 -5400.9521 255.8791)" class="st1 st3" style="font-family:'CooperBlack';">XML</text>
-			<text transform="matrix(1 0 0 1 -5387.9521 179.7579)" style="font-family:'CooperBlack'; font-size:48px;">&lt;/&gt;</text>
+			<text transform="matrix(1 0 0 1 -5400.9521 255.8791)" class="st1" style="font-family:'CooperBlack'; font-size:36px;">XML</text>
+			<text transform="matrix(1 0 0 1 -5387.9521 179.7579)" class="st3" style="font-family:'CooperBlack';">&lt;/&gt;</text>
 			<polygon class="st70" points="-5289.5,121.6 -5290,121.7 -5355.2,121.6 -5355.2,67.6 -5290,121.2 			"/>
 			<polygon class="st70" points="-5289.5,121.6 -5290,121.2 -5290,74.5 			"/>
 			<polygon class="st68" points="-5138,74.3 -5203.2,74.3 -5138,74.3 -5138,81.2 			"/>
 			<polygon class="st68" points="-5268.4,74.3 -5203.2,74.3 -5138,127.9 -5138,226.7 -5268.4,226.7 			"/>
 			<rect x="-5268.5" y="223.7" class="st69" width="130.5" height="60.3"/>
-			<text transform="matrix(1 0 0 1 -5248.9521 262.5443)" class="st1 st3" style="font-family:'CooperBlack';">CSV</text>
+			<text transform="matrix(1 0 0 1 -5248.9521 262.5443)" class="st1" style="font-family:'CooperBlack'; font-size:36px;">CSV</text>
 			<polygon class="st70" points="-5137.5,128.3 -5138,128.3 -5203.2,128.3 -5203.2,74.3 -5138,127.9 			"/>
 			<polygon class="st70" points="-5137.5,128.3 -5138,127.9 -5138,81.2 			"/>
 			<polygon class="st68" points="-6459,56.7 -6486,56.7 -6458.9,56.7 -6458.9,59.3 			"/>
@@ -1540,7 +1540,7 @@ GDqQ/RNuvK4AAAAASUVORK5CYII=" transform="matrix(1 0 0 1 188 357)">
 	<path class="st114" d="M-1856.9,637.2c-0.7-0.3-1.3-0.7-2-1c0.4-0.2,0.9-0.4,1.3-0.6C-1857.4,636.2-1857.1,636.7-1856.9,637.2z"/>
 	<path class="st114" d="M-1519.9,709.3l-0.7,0.1c0.2-0.2,0.3-0.4,0.5-0.6C-1520,709-1520,709.1-1519.9,709.3z"/>
 	<path class="st1" d="M-2617.7,587.4c0,4-0.7,7.8-2,11.4l1.5-17C-2617.9,583.7-2617.7,585.5-2617.7,587.4z"/>
-	<text transform="matrix(1 0 0 1 -2416.1011 191.6636)" class="st1 st2" style="font-size:48px;">Data Warehouse vliegende start</text>
+	<text transform="matrix(1 0 0 1 -2416.1011 191.6636)" class="st1 st2 st3">Data Warehouse vliegende start</text>
 	<path class="st114" d="M-1094.1,641.9c-0.1,0.1-0.1,0.1-0.2,0.2c0-0.1-0.1-0.1-0.1-0.2L-1094.1,641.9z"/>
 	<path class="st114" d="M-623.9,734.5c-0.3,0.3-0.5,0.5-0.8,0.8c-0.8-0.5-1.6-1-2.4-1.6C-626,734.1-625,734.3-623.9,734.5z"/>
 	<path class="st114" d="M-623.9,734.5c-0.3,0.3-0.5,0.5-0.8,0.8c-0.8-0.5-1.6-1-2.4-1.6C-626,734.1-625,734.3-623.9,734.5z"/>
@@ -1555,6 +1555,6 @@ GDqQ/RNuvK4AAAAASUVORK5CYII=" transform="matrix(1 0 0 1 188 357)">
 	<path class="st114" d="M-470.9,638.3c-0.7-0.3-1.3-0.7-2-1c0.4-0.2,0.9-0.4,1.3-0.6C-471.4,637.2-471.1,637.8-470.9,638.3z"/>
 	<path class="st114" d="M-133.9,710.4l-0.7,0.1c0.2-0.2,0.3-0.4,0.5-0.6C-134,710-134,710.2-133.9,710.4z"/>
 	<path class="st1" d="M-1231.7,588.5c0,4-0.7,7.8-2,11.4l1.5-17C-1231.9,584.7-1231.7,586.6-1231.7,588.5z"/>
-	<text transform="matrix(1 0 0 1 -1030.1011 192.7329)" class="st1 st2" style="font-size:48px;">Data Warehouse vliegende start</text>
+	<text transform="matrix(1 0 0 1 -1030.1011 192.7329)" class="st1 st2 st3">Data Warehouse vliegende start</text>
 </g>
 </svg>
