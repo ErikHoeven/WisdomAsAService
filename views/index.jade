@@ -57,7 +57,7 @@ block body
                     #Overmij.p(align="left")
                         | Ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum Libero justo laoreet sit amet cursus sit amet dictum sit. Commodo sed egestas egestas fringilla phasellus faucibus scelerisque eleifend donec Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
     // Services
-    section#services.home-section.bg-white
+    section#services.home-section.bg-green
         .container
             .row
                 .col-md-offset-2.col-md-8
@@ -107,7 +107,7 @@ block body
                             li(data-target='#carousel-service', data-slide-to='1')
                             li(data-target='#carousel-service', data-slide-to='2')
     // Products
-    section#products.home-section.bg-white
+    section#products.home-section.bg-green
         .container
             .row
                 .col-md-offset-2.col-md-8
@@ -160,7 +160,7 @@ block body
                             li(data-target='#carousel-product', data-slide-to='1')
                             li(data-target='#carousel-product', data-slide-to='2')
     // Contact
-    section#contact.home-section.bg-gray
+    section#contact.home-section.bg-green
         .container
             .row
                 .col-md-offset-2.col-md-8
@@ -176,25 +176,25 @@ block body
                     form.form-horizontal.contactForm(action='', method='post', role='form')
                         .col-md-offset-2.col-md-8
                             .form-group
-                                input#name.form-control(type='text', name='name', placeholder='Your Name', data-rule='minlen:4', data-msg='Please enter at least 4 chars')
+                                input#name.form-control(type='text', name='name', placeholder='Naam', data-rule='minlen:4', data-msg='Please enter at least 4 chars')
                                 .validation
                         .col-md-offset-2.col-md-8
                             .form-group
-                                input#email.form-control(type='email', name='email', placeholder='Your Email', data-rule='email', data-msg='Please enter a valid email')
+                                input#email.form-control(type='email', name='email', placeholder='email', data-rule='email', data-msg='Please enter a valid email')
                                 .validation
                         .col-md-offset-2.col-md-8
                             .form-group
-                                input#subject.form-control(type='text', name='subject', placeholder='Subject', data-rule='minlen:4', data-msg='Please enter at least 8 chars of subject')
+                                input#subject.form-control(type='text', name='subject', placeholder='Onderwerp', data-rule='minlen:4', data-msg='Please enter at least 8 chars of subject')
                                 .validation
                         .col-md-offset-2.col-md-8
                             .form-group
-                                textarea.form-control(name='message', rows='5', data-rule='required', data-msg='Please write something for us', placeholder='Message')
+                                textarea.form-control(name='message', rows='5', data-rule='Bericht', data-msg='Please write something for us', placeholder='Message')
                                 .validation
                         .form-group
                             .col-md-offset-2.col-md-8
-                                button.btn.btn-theme.btn-lg.btn-block(type='submit') Send message
+                                button.btn.btn-theme.btn-lg.btn-block(type='submit') Verzenden
     // Bottom widget
-    section#bottom-widget.home-section.bg-white
+    section#bottom-widget.home-section.bg-green
         .container
             .row
                 .col-md-4
@@ -212,7 +212,7 @@ block body
 
             .row.mar-top30
                 .col-md-12
-                    h5 We're on social networks
+                    h5 Je kan ons vinden op:
                     ul.social-network
                         li
                             a(href='#')
@@ -235,7 +235,7 @@ block body
                                     i.fa.fa-circle.fa-stack-2x
                                     i.fa.fa-pinterest.fa-stack-1x.fa-inverse
     // Footer
-    footer
+    footer.bg-green
         .container
             .row
                 .col-md-12
