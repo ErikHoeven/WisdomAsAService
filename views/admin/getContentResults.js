@@ -84,7 +84,7 @@ exports.getContentResultsForm = function(req, res, next) {
 
 
 exports.getContentText = function(req, res, next) {
-    console.info('----------- getgetContentText -----------------------')
+    console.info('----------- getContentText -----------------------')
 
     var name = req.body.name, element = req.body.section
     console.info(name)

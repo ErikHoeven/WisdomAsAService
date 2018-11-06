@@ -149,6 +149,11 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/getCatVaardigheden', require('./views/admin/CV/CategorieVaardigheden').getCatVaardigheden);
 
 
+    //Smarthome Dashboard
+    app.get('/smarthome', require('./views/Smarthome').init);
+    app.get('/smarthome/getmeterstanden', require('./views/Smarthome').getMeterStanden);
+
+    //app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);
 
 
     //getContentText

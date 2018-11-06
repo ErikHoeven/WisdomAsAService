@@ -1,0 +1,132 @@
+extends ../../layouts/default
+
+block head
+    title Personal Dashboard
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    //script(src='https://www.gstatic.com/charts/loader.js')
+    script(src='../../views/jquery-2.2.3.min.js')
+    // Google Chart
+    script(type='text/javascript', src="https://www.google.com/jsapi?autoload= \
+    {'modules':[{'name':'visualization','version':'1.1','packages':\
+    ['corechart', 'bar', 'table']}]}")
+
+    // Bootstrap, D3JS, Underscore
+    script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js")
+    script(src="https://d3js.org/d3.v4.js")
+    link(rel='stylesheet', href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js')
+    script(src='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js')
+    script(src="/vendor/d3/d3.layout.cloud.js")
+    script(src="http://underscorejs.org/underscore-min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.js")
+    script(src="https://canvasjs.com/assets/script/canvasjs.min.js")
+    script(type='text/javascript', src='/bower_components/pptxgenjs/libs/jquery.min.js')
+    script(type='text/javascript', src='/bower_components/pptxgenjs/libs/jszip.min.js')
+    script(type='text/javascript', src='/bower_components/pptxgenjs/dist/pptxgen.js')
+    script(type="text/javascript", src="/bower_components/pptxgenjs/dist/pptxgen.bundle.js")
+    script(type="text/javascript", src="/bower_components/underscore/underscore.js")
+
+    // Custom styles for this template
+    link(href='/stylesheets/theme.css', rel='stylesheet')
+    link(href='/stylesheets/style-responsive.css', rel='stylesheet')
+    link(href='/stylesheets/class-helpers.css', rel='stylesheet')
+
+    // Color schemes
+    link(href='/stylesheets/colors/green.css', rel='stylesheet')
+    link(href='/stylesheets/colors/turquoise.css', rel='stylesheet')
+    link(href='/stylesheets/colors/blue.css', rel='stylesheet')
+    link(href='/stylesheets/colors/amethyst.css', rel='stylesheet')
+    link(href='/stylesheets/colors/cloud.css', rel='stylesheet')
+    link(href='/stylesheets/colors/sun-flower.css', rel='stylesheet')
+    link(href='/stylesheets/colors/carrot.css', rel='stylesheet')
+    link(href='/stylesheets/colors/alizarin.css', rel='stylesheet')
+    link(href='/stylesheets/colors/concrete.css', rel='stylesheet')
+    link(href='/stylesheets/colors/wet-asphalt.css', rel='stylesheet')
+
+    // Fonts
+    link(href='/fonts/Indie-Flower/indie-flower.css', rel='stylesheet')
+    link(href='/fonts/Open-Sans/open-sans.css?family=Open+Sans:300,400,700', rel='stylesheet')
+
+    //Custom script
+
+    script(src="/views/Smarthome/smarthomeDashboard.js")
+    style.
+        .glyphicon.glyphicon-one-fine-dot:before {
+            content: "\25cf";
+            font-size: 3.0em;
+            color: red;
+
+        }
+    script.
+
+        //var _ = require('underscore')
+        var pptx = new PptxGenJS();
+        $(document).ready(function () {
+
+            $('#TrendsAmount').click(function () {
+                $('#1a').hide()
+                $('#2a').show()
+                $('#3a').hide()
+                $('#4a').hide()
+
+                $('#blockTitle').html(user.name + ' - Trends on Service Requests and Incidents')
+                 })
+            })
+
+block body
+    .container-fluid
+        .row
+            p
+            br
+            br
+            br
+        .row
+            .col-md-12
+                #userProfile
+                    script.
+                        setUserProfile(user)
+                        getMeterstanden()
+
+
+        .row
+            .col-md-12
+                ul.nav.nav-pills
+                    li.active
+                        a(href='#1a', data-toggle='tab' id='Dashboard') Smarthome Dashboard
+
+                .tab-content
+                    #1a.fade.in.active
+                        .row
+                            .col-md-3
+                                #fltrListCattegory
+                                br
+                            .col-md-3
+                                #fltrSnapshot
+                        .row
+                            .col-md-6
+                                .widget
+                                    #ticketChart2
+                            .col-md-6
+                                .widget
+                                    #ticketChart
+
+
+                        .row
+                            .col-md-6
+                                .widget
+                                    #test
+                            .col-md-6
+                                .widget
+                                    #removeWord
+                                    #removeButton
+                            .col-md-6
+                                .widget
+                                    #clearTickets
+                        .row
+                            .col-md-12
+                                .widget
+
+
+

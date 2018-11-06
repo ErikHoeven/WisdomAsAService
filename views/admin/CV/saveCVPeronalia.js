@@ -133,12 +133,10 @@ exports.getCV= function (req,res,next) {
 
 }
 
-
 exports.getCVByID = function (req,res,next) {
     var id = req.body.id
 
-
-    console.info('----------- GETCV --------------')
+    console.info('----------- getCVByID --------------')
     console.info('ID: ' + id )
     var o_id = new mongo.ObjectID(id);
     console.info('-------------------------')

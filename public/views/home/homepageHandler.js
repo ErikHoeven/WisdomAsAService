@@ -13,8 +13,10 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/events/">Blogs </a></li>')
         $(".nav.navbar-nav").append('<li><a href="/BusinessRules/">Zoekmachine</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/Dashboard/">Agile Dashboard</a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/Smarthome/">Smarthome Dashboard</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/admin/">Admin</a></li>')
+
 
     }
 }
