@@ -48,10 +48,10 @@ function getMeterstanden() {
                     }
                     else{
                         standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
-                        standenPerDag.push( Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
+                        standenPerDag.push( Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek) - Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiek))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug) - Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiekTerug))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal)- Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
                         standPerWeekArray.push(standenPerDag)
                     }
 
