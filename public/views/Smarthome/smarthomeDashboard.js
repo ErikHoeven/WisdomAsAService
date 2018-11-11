@@ -44,8 +44,6 @@ function getMeterstanden() {
                     standenPerDag.push(Number(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandDal) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal) )
                     standenPerDag.push(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandDalTerug) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
                     standPerWeekArray.push(standenPerDag)
-
-
                 }
             }
             console.info(standPerWeekArray)
