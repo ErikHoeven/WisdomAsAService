@@ -38,11 +38,11 @@ function getMeterstanden() {
                 for (var i = 0; i < data.LaatsteStandenPerDag.length; i++){
 
                     standenPerDag = []
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
-                    standenPerDag.push( Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand) )
+                    standenPerDag.push( Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek) - Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiek))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug) - Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiekTerug))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug) - Number(data.LaatsteStandenPerDag[0].LaatsteDagStandDalTerug))
                     standPerWeekArray.push(standenPerDag)
 
                 }
@@ -74,14 +74,40 @@ function GrafiekStandenPerWeek(ds) {
         vAxis: {
             title: 'KWH',
             minValue: 0,
-            ticks: [0, 2000, 4000, 6000, 8000, 10000, 12000, 14000, 16000, 18000, 20000]
+            ticks: [0, 10, 30, 40, 50, 50, 60, 70, 80, 90, 100]
         },
-        width:500,
-        height:500,
+        width:600,
+        height:600,
     };
     var chart = new google.visualization.ColumnChart(
         document.getElementById('ticketChart2'));
 
     chart.draw(data, options);
+
+    // Add our selection handler.
+    google.visualization.events.addListener(chart, 'select', selectHandler);
+
+
+    function selectHandler() {
+        var selection = table.getSelection();
+        var message = '';
+        for (var i = 0; i < selection.length; i++) {
+            var item = selection[i];
+            if (item.row != null && item.column != null) {
+                var str = data.getFormattedValue(item.row, item.column);
+                message += '{row:' + item.row + ',column:' + item.column + '} = ' + str + '\n';
+            } else if (item.row != null) {
+                var str = data.getFormattedValue(item.row, 0);
+                message += '{row:' + item.row + ', column:none}; value (col 0) = ' + str + '\n';
+            } else if (item.column != null) {
+                var str = data.getFormattedValue(0, item.column);
+                message += '{row:none, column:' + item.column + '}; value (row 0) = ' + str + '\n';
+            }
+        }
+        if (message == '') {
+            message = 'nothing';
+        }
+        alert('You selected ' + message);
+    }
 
 }
