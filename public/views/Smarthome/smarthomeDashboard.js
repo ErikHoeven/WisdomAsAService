@@ -85,7 +85,7 @@ function GrafiekStandenPerWeek(ds) {
         vAxis: {
             title: 'KWH',
             minValue: 0,
-            ticks: [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
+            ticks: [0, 2, 2, 4, 6, 8, 10, 12, 14, 16, 18]
         },
         width:600,
         height:600,
