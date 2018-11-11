@@ -47,7 +47,7 @@ function getMeterstanden() {
                 }
             }
 
-            console.info(Number(data.LaatsteStandenPerDag[0])
+            console.info(Number(data.LaatsteStandenPerDag[0]))
             console.info(standPerWeekArray)
             GrafiekStandenPerWeek(standPerWeekArray)
         }})
