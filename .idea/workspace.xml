@@ -62,8 +62,8 @@
       <file leaf-file-name="smarthomeDashboard.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="409">
-              <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
+            <state relative-caret-position="477">
+              <caret line="93" column="18" selection-start-line="93" selection-start-column="18" selection-end-line="93" selection-end-column="18" />
             </state>
           </provider>
         </entry>
@@ -316,7 +316,9 @@
       <workItem from="1541948455282" duration="885000" />
       <workItem from="1542036831683" duration="599000" />
       <workItem from="1542046884748" duration="991000" />
-      <workItem from="1542090524628" duration="503000" />
+      <workItem from="1542090524628" duration="990000" />
+      <workItem from="1542091572812" duration="949000" />
+      <workItem from="1542095401773" duration="730000" />
     </task>
     <task id="LOCAL-00001" summary="Profiel fix 1">
       <created>1528834222306</created>
@@ -486,11 +488,18 @@
       <option name="project" value="LOCAL" />
       <updated>1542089148803</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Inlezen van Slimmemeter">
+      <created>1542091046837</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1542091046844</updated>
+    </task>
+    <option name="localTasksCounter" value="26" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121691000" />
+    <option name="totallyTimeSpent" value="123857000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
@@ -842,8 +851,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="409">
-          <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
+        <state relative-caret-position="477">
+          <caret line="93" column="18" selection-start-line="93" selection-start-column="18" selection-end-line="93" selection-end-column="18" />
         </state>
       </provider>
     </entry>

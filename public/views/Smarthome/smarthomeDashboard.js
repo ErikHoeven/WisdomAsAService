@@ -72,8 +72,7 @@ function GrafiekStandenPerWeek(ds) {
         },
         vAxis: {
             title: 'KWH',
-            minValue: 0,
-            ticks: [0, 2, 2, 4, 6, 8, 10, 12, 14, 16, 18]
+            minValue: 0
         },
         width:600,
         height:600,
@@ -90,6 +89,8 @@ function GrafiekStandenPerWeek(ds) {
     function selectHandler() {
         var selection = chart.getSelection();
         var message = '';
+
+        console.info(selection)
         for (var i = 0; i < selection.length; i++) {
             var item = selection[i];
             if (item.row != null && item.column != null) {
@@ -106,7 +107,7 @@ function GrafiekStandenPerWeek(ds) {
         if (message == '') {
             message = 'nothing';
         }
-        alert('You selected ' + message);
+        //alert('You selected ' + message);
     }
 
 }
