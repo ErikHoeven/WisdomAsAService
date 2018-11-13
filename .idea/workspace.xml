@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f3536b2e-f8fa-4ba7-b9c3-9cee88393460" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/node_modules/grunt-newer/.cache/uglify/views/timestamp" beforeDir="false" afterPath="$PROJECT_DIR$/node_modules/grunt-newer/.cache/uglify/views/timestamp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.min.js.map" beforeDir="false" afterPath="$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.min.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/Dashboard/index.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/Dashboard/index.jade" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -21,7 +17,7 @@
       <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/Smarthome/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-485">
+            <state relative-caret-position="969">
               <caret line="57" column="29" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
             </state>
           </provider>
@@ -30,8 +26,8 @@
       <file leaf-file-name="index.jade" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/Dashboard/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="187">
-              <caret line="182" column="66" lean-forward="true" selection-start-line="182" selection-start-column="66" selection-end-line="182" selection-end-column="66" />
+            <state relative-caret-position="3094">
+              <caret line="182" column="66" selection-start-line="182" selection-start-column="66" selection-end-line="182" selection-end-column="66" />
             </state>
           </provider>
         </entry>
@@ -48,7 +44,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/Smarthome/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
+            <state relative-caret-position="612">
               <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
             </state>
           </provider>
@@ -66,8 +62,8 @@
       <file leaf-file-name="smarthomeDashboard.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="41" column="35" lean-forward="true" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
+            <state relative-caret-position="409">
+              <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
             </state>
           </provider>
         </entry>
@@ -319,7 +315,8 @@
       <workItem from="1541941657834" duration="2738000" />
       <workItem from="1541948455282" duration="885000" />
       <workItem from="1542036831683" duration="599000" />
-      <workItem from="1542046884748" duration="805000" />
+      <workItem from="1542046884748" duration="991000" />
+      <workItem from="1542090524628" duration="503000" />
     </task>
     <task id="LOCAL-00001" summary="Profiel fix 1">
       <created>1528834222306</created>
@@ -482,11 +479,18 @@
       <option name="project" value="LOCAL" />
       <updated>1541946263946</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="Inlezen van Slimmemeter">
+      <created>1542089148803</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1542089148803</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="121002000" />
+    <option name="totallyTimeSpent" value="121691000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1" y="0" width="1922" height="1053" extended-state="6" />
@@ -817,29 +821,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/Dashboard/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="182" column="66" lean-forward="true" selection-start-line="182" selection-start-column="66" selection-end-line="182" selection-end-column="66" />
+        <state relative-caret-position="3094">
+          <caret line="182" column="66" selection-start-line="182" selection-start-column="66" selection-end-line="182" selection-end-column="66" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/Smarthome/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-485">
+        <state relative-caret-position="969">
           <caret line="57" column="29" selection-start-line="57" selection-start-column="29" selection-end-line="57" selection-end-column="29" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/views/Smarthome/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="426">
+        <state relative-caret-position="612">
           <caret line="36" column="31" selection-start-line="36" selection-start-column="31" selection-end-line="36" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/public/views/Smarthome/smarthomeDashboard.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="528">
-          <caret line="41" column="35" lean-forward="true" selection-start-line="41" selection-start-column="35" selection-end-line="41" selection-end-column="35" />
+        <state relative-caret-position="409">
+          <caret line="90" column="29" selection-start-line="90" selection-start-column="29" selection-end-line="90" selection-end-column="29" />
         </state>
       </provider>
     </entry>

@@ -88,7 +88,7 @@ function GrafiekStandenPerWeek(ds) {
 
 
     function selectHandler() {
-        var selection = table.getSelection();
+        var selection = chart.getSelection();
         var message = '';
         for (var i = 0; i < selection.length; i++) {
             var item = selection[i];
