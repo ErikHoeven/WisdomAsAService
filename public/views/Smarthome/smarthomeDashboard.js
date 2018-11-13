@@ -31,23 +31,21 @@ function getMeterstanden() {
             console.info(data.LaatsteStandenPerDag)
             var standPerWeekArray = []
             var standenPerDag = []
+            var standPerNewWeekArray = []
 
             if( Array.isArray(data.LaatsteStandenPerDag) == true){
-                console.info('Array')
-                console.info(data.LaatsteStandenPerDag.length)
                 for (var i = 0; i < data.LaatsteStandenPerDag.length; i++){
-
                     standenPerDag = []
                     standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiek) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandPiekTerug) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandDal) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[0].LaatsteDagStandDalTerug) - Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
                     standPerWeekArray.push(standenPerDag)
                 }
             }
 
-            console.info(Number(data.LaatsteStandenPerDag[0]))
+
             console.info(standPerWeekArray)
             GrafiekStandenPerWeek(standPerWeekArray)
         }})
