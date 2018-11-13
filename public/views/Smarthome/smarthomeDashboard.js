@@ -95,6 +95,7 @@ function GrafiekStandenPerWeek(ds) {
             var item = selection[i];
             if (item.row != null && item.column != null) {
                 var str = data.getFormattedValue(item.row, item.column);
+                var strNew = data.getFormattedValue(item.row, 0);
                 message += '{row:' + item.row + ',column:' + item.column + '} = ' + str + '\n';
             } else if (item.row != null) {
                 var str = data.getFormattedValue(item.row, 0);
@@ -107,7 +108,9 @@ function GrafiekStandenPerWeek(ds) {
         if (message == '') {
             message = 'nothing';
         }
-        //alert('You selected ' + message);
+        console.info(message)
+        console.info(strNew)
+
     }
 
 }
