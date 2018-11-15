@@ -19,12 +19,16 @@ function setUserProfile(user) {
 }
 
 
-function getMeterstanden() {
+function getMeterstanden(week, dag) {
     console.info('haal meterstanden op')
+
+    if (dag == null || !dag)
+    {
     $.ajax({
         url: '/smarthome/getMeterStanden',
-        type: 'GET',
+        type: 'POST',
         contentType: 'application/json',
+        data: JSON.stringify({weekvanjaar: week}),
         success: function (data) {
             console.info('succes getMeterStanden')
 
@@ -49,6 +53,41 @@ function getMeterstanden() {
             console.info(standPerWeekArray)
             GrafiekStandenPerWeek(standPerWeekArray)
         }})
+    }
+    else{
+        $.ajax({
+            url: '/smarthome/getMeterStandenDagVerloop',
+            type: 'GET',
+            contentType: 'application/json',
+            data: JSON.stringify({dagvanMaand: dag}),
+            success: function (data) {
+                console.info('succes getMeterStanden')
+
+                console.info(data.LaatsteStandenPerDag)
+                var standPerWeekArray = []
+                var standenPerDag = []
+                var standPerNewWeekArray = []
+
+                if( Array.isArray(data.LaatsteStandenPerDag) == true){
+                    for (var i = 0; i < data.LaatsteStandenPerDag.length; i++){
+                        standenPerDag = []
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
+                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
+                        standPerWeekArray.push(standenPerDag)
+                    }
+                }
+
+
+                console.info(standPerWeekArray)
+                GrafiekStandenPerWeek(standPerWeekArray)
+            }})
+
+
+
+    }
 }
 
 

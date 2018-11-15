@@ -86,8 +86,9 @@ block body
             .col-md-12
                 #userProfile
                     script.
+                        var weekvanjaar = moment(snapshot, 'YYYY-MM-DD').week()
                         setUserProfile(user)
-                        getMeterstanden()
+                        getMeterstanden(weekvanjaar)
 
 
         .row
