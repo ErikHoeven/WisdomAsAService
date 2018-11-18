@@ -151,7 +151,7 @@ exports = module.exports = function(app, passport) {
 
     //Smarthome Dashboard
     app.get('/smarthome', require('./views/Smarthome').init);
-    app.get('/smarthome/getmeterstanden', require('./views/Smarthome').getMeterStanden);
+    app.post('/smarthome/getmeterstanden', require('./views/Smarthome').getMeterStanden);
     app.post('/smarthome/getMeterStandenDagVerloop', require('./views/Smarthome').getMeterStandenDagVerloop);
 
     //app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);

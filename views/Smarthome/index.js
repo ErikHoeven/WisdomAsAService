@@ -51,19 +51,20 @@ exports.getMeterStanden = function (req, res, next) {
 
 exports.getMeterStandenDagVerloop = function (req,res, next) {
     console.info('---------------- getMeterStandenDagVerloop ------------------ ')
-    var dagvanMaand =  req.body.dagvanmaand
-
+    var dagvanMaand =  req.body.dagvanMaand
+    console.info('Dag van de maand')
+    console.info(dagvanMaand)
     mongo.connect(uri, function (err, db) {
         console.info('MONGODB START CHECK COLLECTIONS')
         var locals = {}, tasks = [
             // Load de laatste stand van de dag
             function (callback) {
-                db.collection('slimmemeter').aggregate([{ $match: {DagNummerVanMaand:dagvanMaand }}
-                    , { $group: {_id: {DagNummerVanMaand: "$DagNummerVanMaand", UurvanDag: "$UurvanDag"}
+                db.collection('slimmemeter').aggregate([{ $match: {DagNummerVanMaand:15 }}
+                    , { $group: {_id: {UurvanDag: "$UurvanDag"}
                             ,LaatsteUurStandPiek: { $max: "$PiekDag"  },LaatsteUurStandDal: {$max: "$DalDag"}
                             , LaatsteUurStabndPiekTerug:{$max: "$PiekTerug"}, LaatsteUurStandDalTerug:{$max: "$DalTerug"}} }]).toArray(function (err, LaatsteUurStand) {
                     if (err) return callback(err);
-                    locals.LaatsteDagStand = LaatsteUurStand;
+                    locals.LaatsteUurStand = LaatsteUurStand;
                     callback();
                 });
             }
@@ -73,7 +74,8 @@ exports.getMeterStandenDagVerloop = function (req,res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close()
-            res.status(200).json({LaatsteStandenPerDag: locals.LaatsteDagStand})
+            console.info(locals.LaatsteUurStand)
+            res.status(200).json({LaatsteUurStand: locals.LaatsteUurStand})
         })
     })
 

@@ -57,36 +57,14 @@ function getMeterstanden(week, dag) {
     else{
         $.ajax({
             url: '/smarthome/getMeterStandenDagVerloop',
-            type: 'GET',
+            type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({dagvanMaand: dag}),
             success: function (data) {
-                console.info('succes getMeterStanden')
+                console.info('succes getMeterStandenPerUur')
+                console.info(data)
 
-                console.info(data.LaatsteStandenPerDag)
-                var standPerWeekArray = []
-                var standenPerDag = []
-                var standPerNewWeekArray = []
-
-                if( Array.isArray(data.LaatsteStandenPerDag) == true){
-                    for (var i = 0; i < data.LaatsteStandenPerDag.length; i++){
-                        standenPerDag = []
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
-                        standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
-                        standPerWeekArray.push(standenPerDag)
-                    }
-                }
-
-
-                console.info(standPerWeekArray)
-                GrafiekStandenPerWeek(standPerWeekArray)
             }})
-
-
-
     }
 }
 
@@ -149,7 +127,41 @@ function GrafiekStandenPerWeek(ds) {
         }
         console.info(message)
         console.info(strNew)
-
+        getMeterstanden(null,strNew)
     }
-
 }
+
+function GrafiekStandenPerUur(ds) {
+
+    var data = new google.visualization.DataTable()
+    data.addColumn('number', 'Uur');
+    data.addColumn('number', 'Piek');
+    data.addColumn('number', 'PiekTerug');
+    data.addColumn('number', 'Dal');
+    data.addColumn('number', 'DalTerug');
+
+
+    data.addRows(ds)
+
+    var options = {
+        title: 'Stroomverbruik per Uur',
+        hAxis: {
+            title: 'Uur',
+            ticks: data.getDistinctValues(0)
+        },
+        vAxis: {
+            title: 'KWH',
+            minValue: 0
+        },
+        width:600,
+        height:600,
+    };
+    var chart = new google.visualization.ColumnChart(
+        document.getElementById('ticketChart2'));
+
+    chart.draw(data, options);
+
+    // Add our selection handler.
+    google.visualization.events.addListener(chart, 'select', selectHandler);
+}
+
