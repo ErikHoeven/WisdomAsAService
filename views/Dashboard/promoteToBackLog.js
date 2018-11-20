@@ -34,6 +34,7 @@ exports.promoteToBackLog = function (req, res, next) {
 
 
 exports.getBackLogList = function (req,res,next) {
+    console.info(' -----  getBackLogList -----')
     var theader = ''
         , tbody = ''
         , optionlist = ''
@@ -46,7 +47,7 @@ exports.getBackLogList = function (req,res,next) {
         sprints.push(moment().week() + ' - ' + (moment().week()+ 1) +  ' : ' + moment().year())
         sprints.push((moment().week() + 1) + ' - ' + (moment().week()+ 2) +  ' : ' + moment().year())
 
-
+    console.info(' -----  Setup MongoDB connection -----')
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [   // Load backlog

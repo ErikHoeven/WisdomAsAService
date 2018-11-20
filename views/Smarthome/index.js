@@ -68,13 +68,11 @@ exports.getMeterStandenDagVerloop = function (req,res, next) {
                     callback();
                 });
             }
-
         ];
         console.info('--------------- START ASYNC ------------------------')
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close()
-            console.info(locals.LaatsteUurStand)
             res.status(200).json({LaatsteUurStand: locals.LaatsteUurStand})
         })
     })

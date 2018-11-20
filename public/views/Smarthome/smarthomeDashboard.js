@@ -19,7 +19,7 @@ function setUserProfile(user) {
 }
 
 
-function getMeterstanden(week, dag) {
+function getMeterstanden(week, dag, col) {
     console.info('haal meterstanden op')
 
     if (dag == null || !dag)
@@ -28,7 +28,7 @@ function getMeterstanden(week, dag) {
         url: '/smarthome/getMeterStanden',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({weekvanjaar: week}),
+        data: JSON.stringify({weekvanjaar: week-1}),
         success: function (data) {
             console.info('succes getMeterStanden')
 
@@ -41,10 +41,10 @@ function getMeterstanden(week, dag) {
                 for (var i = 0; i < data.LaatsteStandenPerDag.length; i++){
                     standenPerDag = []
                     standenPerDag.push(Number(data.LaatsteStandenPerDag[i]._id.DagNummerVanMaand))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal))
-                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug))
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiek) / 1000)
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandPiekTerug) / 1000)
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDal) / 1000)
+                    standenPerDag.push(Number(data.LaatsteStandenPerDag[i].LaatsteDagStandDalTerug) / 1000)
                     standPerWeekArray.push(standenPerDag)
                 }
             }
@@ -63,6 +63,7 @@ function getMeterstanden(week, dag) {
             success: function (data) {
                 console.info('succes getMeterStandenPerUur')
                 console.info(data)
+                GrafiekStandenPerUur(data,col)
 
             }})
     }
@@ -88,7 +89,7 @@ function GrafiekStandenPerWeek(ds) {
             ticks: data.getDistinctValues(0)
         },
         vAxis: {
-            title: 'KWH',
+            title: 'KWH * 1000',
             minValue: 0
         },
         width:600,
@@ -127,41 +128,96 @@ function GrafiekStandenPerWeek(ds) {
         }
         console.info(message)
         console.info(strNew)
-        getMeterstanden(null,strNew)
+        console.info(item.column)
+        getMeterstanden(null,strNew,item.column)
     }
 }
 
-function GrafiekStandenPerUur(ds) {
-
+function GrafiekStandenPerUur(ds,col) {
+    console.info('GrafiekStandenPerUur')
+    console.info('ColumnNr: ' + col)
     var data = new google.visualization.DataTable()
-    data.addColumn('number', 'Uur');
-    data.addColumn('number', 'Piek');
-    data.addColumn('number', 'PiekTerug');
-    data.addColumn('number', 'Dal');
-    data.addColumn('number', 'DalTerug');
+    var dataset =  ds.LaatsteUurStand
+    var standPerUurArray = []
+    var standenPerUur = []
 
+    if(col == 4) {
+        data.addColumn('number', 'Uur');
+        data.addColumn('number', 'DalTerug');
 
-    data.addRows(ds)
+        if (Array.isArray(dataset) == true) {
+            for (var i = 0; i < dataset.length; i++) {
+                standenPerUur = []
+                standenPerUur.push(Number(dataset[i]._id.UurvanDag))
+                standenPerUur.push(Number(dataset[i].LaatsteUurStandDalTerug) / 1000)
+                standPerUurArray.push(standenPerUur)
+            }
+        }
+    }
+
+    if(col == 3) {
+        data.addColumn('number', 'Uur');
+        data.addColumn('number', 'Dal');
+
+        if (Array.isArray(dataset) == true) {
+            for (var i = 0; i < dataset.length; i++) {
+                standenPerUur = []
+                standenPerUur.push(Number(dataset[i]._id.UurvanDag))
+                standenPerUur.push(Number(dataset[i].LaatsteUurStandDal)/ 1000)
+                standPerUurArray.push(standenPerUur)
+            }
+        }
+    }
+
+    if(col == 2) {
+        data.addColumn('number', 'Uur');
+        data.addColumn('number', 'PiekTerug');
+        var yas = [0,2, 4, 6, 8, 10, 12]
+        var yasTitle = 'KWH +  5380'
+        if (Array.isArray(dataset) == true) {
+            for (var i = 0; i < dataset.length; i++) {
+                standenPerUur = []
+                standenPerUur.push(Number(dataset[i]._id.UurvanDag))
+                standenPerUur.push(Number(dataset[i].LaatsteUurStabndPiekTerug) - 5380)
+                standPerUurArray.push(standenPerUur)
+            }
+        }
+    }
+    if(col == 1) {
+
+        data.addColumn('number', 'Uur');
+        data.addColumn('number', 'Piek');
+        var yas = [0,2, 4, 6, 8, 10, 12]
+        var yasTitle = 'KWH +  9670'
+        if (Array.isArray(dataset) == true) {
+            for (var i = 0; i < dataset.length; i++) {
+                standenPerUur = []
+                standenPerUur.push(Number(dataset[i]._id.UurvanDag))
+                standenPerUur.push(Number(dataset[i].LaatsteUurStandPiek)-9670)
+                standPerUurArray.push(standenPerUur)
+            }
+        }
+    }
+    console.info(standPerUurArray)
+    data.addRows(standPerUurArray)
 
     var options = {
         title: 'Stroomverbruik per Uur',
         hAxis: {
-            title: 'Uur',
+            title: 'Uur in de dag',
             ticks: data.getDistinctValues(0)
         },
         vAxis: {
-            title: 'KWH',
-            minValue: 0
+            title: yasTitle,
+            minValue: 0,
+            ticks: yas
         },
         width:600,
         height:600,
     };
-    var chart = new google.visualization.ColumnChart(
-        document.getElementById('ticketChart2'));
+    var GraphStroomGebruikPerUur = new google.visualization.ColumnChart(
+        document.getElementById('ticketChart'));
 
-    chart.draw(data, options);
-
-    // Add our selection handler.
-    google.visualization.events.addListener(chart, 'select', selectHandler);
+    GraphStroomGebruikPerUur.draw(data, options);
 }
 
