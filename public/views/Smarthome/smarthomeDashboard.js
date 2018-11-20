@@ -144,12 +144,14 @@ function GrafiekStandenPerUur(ds,col) {
     if(col == 4) {
         data.addColumn('number', 'Uur');
         data.addColumn('number', 'DalTerug');
-
+        var yasTitle = 'KWH +  2208'
+        var colour = []
+        colour.push('green')
         if (Array.isArray(dataset) == true) {
             for (var i = 0; i < dataset.length; i++) {
                 standenPerUur = []
                 standenPerUur.push(Number(dataset[i]._id.UurvanDag))
-                standenPerUur.push(Number(dataset[i].LaatsteUurStandDalTerug) / 1000)
+                standenPerUur.push(Number(dataset[i].LaatsteUurStandDalTerug) - 2208)
                 standPerUurArray.push(standenPerUur)
             }
         }
@@ -158,12 +160,14 @@ function GrafiekStandenPerUur(ds,col) {
     if(col == 3) {
         data.addColumn('number', 'Uur');
         data.addColumn('number', 'Dal');
-
+        var yasTitle = 'KWH +  14173'
+        var colour = []
+        colour.push('orange')
         if (Array.isArray(dataset) == true) {
             for (var i = 0; i < dataset.length; i++) {
                 standenPerUur = []
                 standenPerUur.push(Number(dataset[i]._id.UurvanDag))
-                standenPerUur.push(Number(dataset[i].LaatsteUurStandDal)/ 1000)
+                standenPerUur.push(Number(dataset[i].LaatsteUurStandDal) - 14173)
                 standPerUurArray.push(standenPerUur)
             }
         }
@@ -174,6 +178,8 @@ function GrafiekStandenPerUur(ds,col) {
         data.addColumn('number', 'PiekTerug');
         var yas = [0,2, 4, 6, 8, 10, 12]
         var yasTitle = 'KWH +  5380'
+        var colour = []
+        colour.push('#DC3912')
         if (Array.isArray(dataset) == true) {
             for (var i = 0; i < dataset.length; i++) {
                 standenPerUur = []
@@ -189,6 +195,8 @@ function GrafiekStandenPerUur(ds,col) {
         data.addColumn('number', 'Piek');
         var yas = [0,2, 4, 6, 8, 10, 12]
         var yasTitle = 'KWH +  9670'
+        var colour = []
+        colour.push('Red')
         if (Array.isArray(dataset) == true) {
             for (var i = 0; i < dataset.length; i++) {
                 standenPerUur = []
@@ -203,6 +211,7 @@ function GrafiekStandenPerUur(ds,col) {
 
     var options = {
         title: 'Stroomverbruik per Uur',
+        colors: colour,
         hAxis: {
             title: 'Uur in de dag',
             ticks: data.getDistinctValues(0)
