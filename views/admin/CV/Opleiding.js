@@ -61,3 +61,43 @@ exports.saveOpleiding = function (req, res, next) {
 
 
 }
+
+exports.removeOpleiding = function(req,res,next){
+    console.info('----------------- remove roleOpleiding ---------------------')
+    var id = req.body.id
+    var row = req.body.row
+    console.info(id)
+    console.info(row)
+    var o_id = new mongo.ObjectID(id)
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('CV').find({_id: o_id}).toArray(function (err, cv) {
+                    if (err) return callback(err);
+                    locals.cv = cv;
+                    callback();
+                });
+            }
+        ];
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var cv = locals.cv
+            var Opleidingen = cv[0].opleiding
+            var newOpleidingen = []
+
+            for( var i = 0; i < Opleidingen.length;i++){
+                if (i != row){
+                    console.info(i + ' !== ' + row)
+                    newOpleidingen.push(Opleidingen[i])
+                }
+            }
+            console.info('NewOpleiding:')
+
+            cv[0].opleiding = newOpleidingen
+            dbCV.update({_id: id}, {$set: {opleiding: newOpleidingen}}, false, true)
+            res.status(200).json({cv: cv })
+        })
+    })
+}

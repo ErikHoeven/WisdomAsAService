@@ -127,14 +127,19 @@ exports = module.exports = function(app, passport) {
     app.post('/admin/getPeronalia', require('./views/admin/CV/saveCVPeronalia').getPeronalia);
     app.post('/admin/updateCVPeronalia', require('./views/admin/CV/saveCVPeronalia').updateCVPeronalia);
     app.post('/admin/updateCVProfile', require('./views/admin/CV/saveCVPeronalia').updateCVProfile);
+    app.post('/admin/removeBranche', require('./views/admin/CV/saveCVPeronalia').removeBranche);
+    app.post('/admin/removeRole', require('./views/admin/CV/saveCVPeronalia').removeRole);
 
     //Admin CV-Werkervaring
     app.post('/admin/getWerkervaring', require('./views/admin/CV/Werkervaring').getWerkervaring);
     app.post('/admin/saveWerkervaring', require('./views/admin/CV/Werkervaring').saveWerkervaring);
+    app.post('/admin/removeWerkervaring', require('./views/admin/CV/Werkervaring').removeWerkervaring);
+
 
     //Admin CV-Opleiding
     app.post('/admin/getOpleiding', require('./views/admin/CV/Opleiding').getOpleiding);
     app.post('/admin/saveOpleiding', require('./views/admin/CV/Opleiding').saveOpleiding);
+    app.post('/admin/removeOpleiding', require('./views/admin/CV/Opleiding').removeOpleiding);
 
     //Admin CV-Vaardigheden
     app.post('/admin/getVaardigheden', require('./views/admin/CV/Vaardigheden').getVaardigheden);

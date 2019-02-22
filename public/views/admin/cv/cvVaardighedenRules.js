@@ -11,163 +11,140 @@ function startCVVaardigheden(id) {
         data: JSON.stringify({id : id }),
         success: function (respCV) {
 
+            console.info(respCV)
+            var response = respCV.returnObject
             var changeHitVaardighedenNummer
             var vaardighedenArrayCount = 0
             var vaardighedenHit = 0
             var vaardighedenArray = []
-            var vaardighedenen = respCV.cv.vaardigheden
             var cvWizzard = addCVWizzard()
+            var catValues = response.vaardighedenCategorie
+            var vaardigheden = response.cv.vaardigheden
+            var cv = response.cv
+            var id = response.cv._id
+            var vaardighedenTabel
 
-            if(vaardighedenen){
+            if (vaardigheden) {
                 console.info('vaardigheden bestaat')
-                var vaardigheden = respCV.cv.vaardigheden[0]
-                var vaardighedenArray = respCV.cv.vaardigheden
-                var vaardighedenTabel = tblVaardigheden(vaardighedenArray, id)
+                //console.info('Code nog te programeren')
 
+                console.info(vaardigheden)
+                vaardighedenArray = vaardigheden
+                var tabelVaardigheden = tblVaardigheden(vaardigheden,id)
             }
-            else {
-                console.info('Geen vaardigheden toegevoegd')
+            if (catValues){
+                console.info('vaardigheden niet gevonden. CatValues wel gevonden')
+
                 var frmaddCVVaardigheden = addCVVaardigheden(vaardigheden,catValues)
+
+                $('#contentElement').html(cvWizzard + frmaddCVVaardigheden )
+                // Navigation Menu through the CV
+                $('#Personalia').click(function () {
+                    console.info('Personalia')
+                    addCVPeronaliaForm(cv)
+                })
+
+                $('#Profiel').click(function () {
+                    console.info('Profiel')
+                    startCVProfiel(id,cv)
+                })
+
+                $('#Werkervaring').click(function () {
+                    console.info('Werkervaring')
+                    startCVWerkervaring(id)
+                })
+
+                $('#Opleiding').click(function () {
+                    console.info('Opleiding')
+                    startCVOpleiding(id)
+                })
+
+                $('#Vaardigheden').click(function () {
+                    console.info('Vaardigheden')
+                    startCVVaardigheden(id)
+                })
+
+                // From elements scenarios
+                $('#txtdateDatumVan').datepicker()
+                $('#tblVaardigheden').html(tblVaardigheden)
+                $('#txtDatumTot').datepicker()
+                if(tabelVaardigheden){
+                    $('#tblVaardigheden').html(tabelVaardigheden)
+                }
+
+                $('#Personalia').removeClass()
+                $('#Vaardigheden').addClass('active')
+                $('#addVaardigheden').click(function () {
+                    console.info('ID: ' + id )
+                    console.info(vaardighedenArray)
+                    if(vaardighedenArray){
+                        vaardighedenArrayCount = vaardighedenArray.length
+                        console.info(vaardighedenArrayCount)
+                    }
+                    vaardighedenArray = addVaardigheden(vaardighedenArrayCount, vaardighedenHit, vaardighedenArray, changeHitVaardighedenNummer, id)
+
+                    console.info('After click Add')
+                    console.info(vaardighedenArray)
+                    startCVVaardigheden(id)
+
+                })
+
+                $('#saveVaardigheden').click(function () {
+                    console.info('saveWerkervaring: ' + id)
+                    startCVVaardigheden(id)
+                })
+
+                $('#addCategory').click(function () {
+                    console.info('Category: ' + id)
+                    setCVCategoryVaardighedenTitle()
+                    getCVCategoryVaardighedenResults(user,id)
+                })
+
+                $('#selCatVaardigheden').change(function () {
+
+                    var selectedCat = $('#selCatVaardigheden option:selected').text()
+                    getSkill(selectedCat,id)
+                })
             }
-
-            $.ajax({
-                url: '/admin/getCatVaardigheden',
-                type: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({id : id }),
-                success: function (response) {
-
-                    //Build form an values
-                    var catValues = response.catValues
-                    var frmaddCVVaardigheden = addCVVaardigheden(vaardigheden,catValues)
-
-                    $('#contentElement').html(cvWizzard + frmaddCVVaardigheden )
-
-                    // Navigation Menu through the CV
-                    $('#Personalia').click(function () {
-                        console.info('Personalia')
-                        addCVPeronaliaForm(cv)
-                    })
-
-                    $('#Profiel').click(function () {
-                        console.info('Profiel')
-                        startCVProfiel(id,cv)
-                    })
-
-                    $('#Werkervaring').click(function () {
-                        console.info('Werkervaring')
-                        startCVWerkervaring(id)
-                    })
-
-                    $('#Opleiding').click(function () {
-                        console.info('Opleiding')
-                        startCVOpleiding(id)
-                    })
-
-                    $('#Vaardigheden').click(function () {
-                        console.info('Vaardigheden')
-                        startCVVaardigheden(id)
-                    })
-
-                    // From elements scenarios
-                    $('#txtdateDatumVan').datepicker()
-                    $('#txtDatumTot').datepicker()
-                    $('#tblVaardigheden').html(vaardighedenTabel)
-                    $('#Personalia').removeClass()
-                    $('#Vaardigheden').addClass('active')
-
-
-                    $('#addVaardigheden').click(function () {
-                        console.info('ID: ' + id )
-                        console.info(vaardighedenArray)
-                        vaardighedenArray = addVaardigheden(vaardighedenArrayCount, vaardighedenHit, vaardighedenArray, changeHitVaardighedenNummer, id)
-
-                        console.info('After click Add')
-                        console.info(vaardighedenArray)
-                    })
-
-                    $('#saveVaardigheden').click(function () {
-                        console.info('saveWerkervaring: ' + id)
-                        startCVVaardigheden(id)
-                    })
-
-                    $('#addCategory').click(function () {
-                        console.info('Category: ' + id)
-                        setCVCategoryVaardighedenTitle()
-                        getCVCategoryVaardighedenResults(user,id)
-                    })
-
-                    $('#selCatVaardigheden').change(function () {
-                        var selectedCat = $('#selCatVaardigheden option:selected').text()
-                        var lstVaardigheden = _.where(catValues,{tagCattegory: selectedCat})[0].cattegoryValue
-                        var inpVaardigheden = ''
-
-                        inpVaardigheden = '<select id="selVaardigheden">'
-                        lstVaardigheden.forEach(function (r) {
-                            inpVaardigheden = inpVaardigheden + '<option value="'+ r + '">' + r + '</option>'
-                        })
-                        inpVaardigheden = inpVaardigheden + '</select>'
-
-                        $('#vaardigheden').html(inpVaardigheden)
-                    })
-
-                }})
-            }
-        })
+        }})
     }
-
-
 
 function addCVVaardigheden(vaardigheden, catValues) {
 
-    var inpVaardighedenCategorie = '<input type="text" class="form-control" name="txtCatVaardigheden" id="txtCatVaardigheden" placeholder="Vaardigheden"> '
-
-    if(catValues){
-        console.info('catValues')
-        inpVaardighedenCategorie = '<select id="selCatVaardigheden">'
-        catValues.forEach(function (r) {
-            inpVaardighedenCategorie = inpVaardighedenCategorie + '<option value="'+ r.tagCattegory + '">' + r.tagCattegory + '</option>'
-        })
-        inpVaardighedenCategorie = inpVaardighedenCategorie + '</select>'
-
-        var selectedCat = catValues[0].tagCattegory
-        var lstVaardigheden = _.where(catValues,{tagCattegory: selectedCat})[0].cattegoryValue
-        var inpVaardigheden = ''
-
-        inpVaardigheden = '<select id="selVaardigheden">'
-        lstVaardigheden.forEach(function (r) {
-            inpVaardigheden = inpVaardigheden + '<option value="'+ r + '">' + r + '</option>'
-        })
-        inpVaardigheden = inpVaardigheden + '</select>'
-    }
-
     if(!vaardigheden){
-        console.info('Vaardigheden niet gevonden')
-        console.info(inpVaardighedenCategorie)
+        console.info('addCVVaardigheden bestaat niet')
+        var inpVaardigheden = '<select id="selVaardigheden"><option value=""></option></select>'
 
+
+        console.info('(2) Vaardigheden niet gevonden')
         var formVaardigheden =
             '<p><div class="tab-pane active fade in" id="tab3"> ' +
                 '<div class="row margin-bottom-10" id="frmVaardigheden"> ' +
-                    '<div class="col-md-6"> ' +
-                        '<div class="form-group col-md-4"> ' +
-                            '<label for="Categorie">Categorie</label> ' +
-                            inpVaardighedenCategorie +
+                    '<div class="row"> ' +
+                        '<div class="col-md-4"> ' +
+                            '<div class="form-group col-md-4"> ' +
+                                '<label for="Categorie">Categorie</label> ' +
+                                catValues +
+                            '</div> ' +
                         '</div> ' +
-                        '<div class="form-group col-md-4"> ' +
-                            '<label for="Vaardigheid">Vaardigheid</label> ' +
-                            '<div id="vaardigheden">' + inpVaardigheden + '</div>' +
-                        '</div> ' +
-                        '<div class="form-group col-md-8"> ' +
-                            '<label for="van">Aantal jaren ervaring</label> ' +
-                            '<input type="text" class="form-control" name="txtAantalJaren" id="txtAantalJaren" placeholder="AantalJaren"> ' +
+                    '</div>' +
+                    '<div class="row"> ' +
+                        '<div class="col-md-4"> ' +
+                            '<div class="form-group col-md-4"> ' +
+                                '<label for="Vaardigheid">Vaardigheid</label> ' +
+                                '<div id="vaardigheden">' + inpVaardigheden + '</div>' +
+                            '</div> ' +
                         '</div> ' +
                     '</div> ' +
-                    '<div class="col-md-6"> ' +
-                        '<h4>Vaardigheden</h4> ' +
-                        '<div id="tblVaardigheden"></div>' +
-                    ' </div>' +
-                ' </div> ' +
-            '</div>'
+                    '<div class="row"> ' +
+                        '<div class="col-md-6"> ' +
+                            '<div class="form-group col-md-6"> ' +
+                                '<label for="van">Aantal jaren </label> ' +
+                                '<input type="text" class="form-control" name="txtAantalJaren" id="txtAantalJaren" placeholder="AantalJaren"> ' +
+                        '</div> ' +
+                    '</div> ' +
+                '</div>' +
+            '</div></p>'
         var next =  '<div id="cmdVaardigheden"></div><a href="#" class="btn btn-default" id="addVaardigheden">Toevoegen Vaardigheden <i class="fa fa-long-arrow-right"></i></a></div>'
         var addCategory =  '<div class="row"><div class="col-md-4"><button type="button" id="addCategory" class="btn btn-primary">Toevoegen Categorie</button></div></div>'
         var next =  '<div id="cmdVaardigheden"></div><a href="#" class="btn btn-default" id="addVaardigheden">Toevoegen Vaardigheden <i class="fa fa-long-arrow-right"></i></a></div>'
@@ -176,28 +153,36 @@ function addCVVaardigheden(vaardigheden, catValues) {
     }
     else{
         var formVaardigheden =
-            '<p><div class="tab-pane active fade in" id="tab3"> ' +
-            '<div class="row margin-bottom-10" id="frmVaardigheden"> ' +
-            '<div class="col-md-6"> ' +
-            '<div class="form-group col-md-4"> ' +
-            '<label for="Categorie">Categorie</label> ' +
-            inpVaardighedenCategorie +
-            '</div> ' +
-            '<div class="form-group col-md-4"> ' +
-            '<label for="Vaardigheid">Vaardigheid</label> ' +
-            '<div id="vaardigheden">' + inpVaardigheden + '</div>' +
-            '</div> ' +
-            '<div class="form-group col-md-8"> ' +
-            '<label for="van">Aantal jaren ervaring</label> ' +
-            '<input type="text" class="form-control" name="txtAantalJaren" id="txtAantalJaren" placeholder="AantalJaren" value="'+ vaardigheden.aantaljaar +'"> '  +
-            '</div> ' +
-            '</div> ' +
-            '<div class="col-md-6"> ' +
-            '<h4>Vaardigheden</h4> ' +
-            '<div id="tblVaardigheden"></div>' +
-            ' </div>' +
-            ' </div> ' +
-            '</div>'
+            '<p>' +
+                '<div class="tab-pane active fade in" id="tab3"> ' +
+                    '<div class="row margin-bottom-10" id="frmVaardigheden"> ' +
+                        '<div class="row"> ' +
+                            '<div class="col-md-4"> ' +
+                                '<div class="form-group col-md-4"> ' +
+                                    '<label for="Categorie">Categorie</label> ' +
+                                    catValues +
+                                '</div> ' +
+                            '</div> ' +
+                        '</div>' +
+                        '<div class="row"> ' +
+                            '<div class="col-md-4"> ' +
+                                 '<div class="form-group col-md-4"> ' +
+                                    '<label for="Vaardigheid">Vaardigheid</label> ' +
+                                    '<div id="vaardigheden">' + inpVaardigheden + '</div>' +
+                            '</div> ' +
+                        '</div> ' +
+                    '</div> ' +
+                    '<div class="row"> ' +
+                        '<div class="col-md-6"> ' +
+                            '<div class="form-group col-md-6"> ' +
+                                '<label for="van">Aantal jaren </label> ' +
+                                '<input type="text" class="form-control" name="txtAantalJaren" id="txtAantalJaren" placeholder="AantalJaren"> ' +
+                        '</div> ' +
+                    '</div> ' +
+                '</div>' +
+            '</p>' +
+            '<h4>Opleiding</h4>' +
+                '<p><div id="tblVaardigheden"></div>'
         var next =  '<div id="cmdVaardigheden"></div><a href="#" class="btn btn-default" id="addVaardigheden">Toevoegen Vaardigheden <i class="fa fa-long-arrow-right"></i></a></div>'
         var addCategory =  '<div class="row"><div class="col-md-4"><button type="button" id="addCategory" class="btn btn-primary">Toevoegen Categorie</button></div></div>'
         var next =  '<div id="cmdVaardigheden"></div><a href="#" class="btn btn-default" id="addVaardigheden">Toevoegen Vaardigheden <i class="fa fa-long-arrow-right"></i></a></div>'
@@ -215,6 +200,7 @@ function buildVaardighedenArray(vaardigheden, currentArray, vaardighedenObject) 
     //Check if Array exist
     if(currentArray){
         console.info('currentArray Exist')
+        console.info(currentArray)
         //Check if value exist in Array
         currentArray.forEach(function (r) {
             if(vaardigheden == r.vaardigheden){
@@ -264,10 +250,12 @@ function tblVaardigheden(vaardighedenArray, id) {
 }
 
 function addVaardigheden(vaardighedenArrayCount,vaardighedenHit, vaardighedenArray, changeHitVaardighedenNummer, id) {
+    console.info('------> addVaardigheden <----------------' )
     console.info('saveVaardigheden: ' + vaardighedenArrayCount + ' :  ' + vaardighedenHit )
     console.info('vaardighedensArray:')
     console.info(vaardighedenArray)
     if(vaardighedenHit == 0 ){
+        console.info('vaardighedenHit == 0')
         vaardighedenArrayCount++
 
         var  categorie =            $('#selCatVaardigheden option:selected').text()
@@ -328,15 +316,23 @@ function updateFieldVaardigheden(id, rowid) {
         contentType: 'application/json',
         data: JSON.stringify({id : id }),
         success: function (response) {
+            console.info('Response:')
+            console.info(response)
+            var vaardigheden = response.returnObject.cv.vaardigheden
+            console.info(vaardigheden)
+            console.info(vaardigheden.length)
+            if (vaardigheden) {
+                console.info('------------  BUILD OPTION LIST VAARDIGHEDEN -----------------')
+                var vaardigheid = vaardigheden[rowid]
+                console.info(vaardigheid)
 
-            if (response.cv.vaardigheden) {
-                var vaardigheden = response.cv.vaardigheden[rowid]
-                var vaardighedenen = response.cv.vaardigheden
-                var catValues = response.catValues
+                var catValues = response.returnObject.catValues
+                console.info(catValues)
 
                 $('#selCatVaardigheden option:contains("' + vaardigheden.categorie  + '") ').prop("selected", true)
-
-                var lstVaardigheden = _.where(catValues,{tagCattegory: vaardigheden.categorie})[0].cattegoryValue
+                console.info(vaardigheid.categorie)
+                console.info(_.where(catValues,{tagCattegory: vaardigheden.categorie}))
+                var lstVaardigheden = _.where(catValues,{tagCattegory: vaardigheid.categorie})[0].cattegoryValue
                 var inpVaardigheden = ''
 
                 inpVaardigheden = '<select id="selVaardigheden">'
@@ -394,4 +390,25 @@ function updateFieldVaardigheden(id, rowid) {
     }
     })
 }
+function getSkill(Skill,id) {
+    console.info('FUNCTION GET SKILL')
+    $.ajax({
+        url: '/admin/getVaardigheden',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id}),
+        success: function (response) {
+           var catList = response.returnObject.catValues
+           var skill_list = _.where(catList,{'tagCattegory':Skill })[0].cattegoryValue
+           var skillOptionList  = ' <select id="selVaardigheden">'
+            skill_list.forEach(function (r) {
+                skillOptionList = skillOptionList + '<option values="'+ r +'">' + r + '</option>'
+            })
+            skillOptionList = skillOptionList + '</select>'
+            $('#vaardigheden').html(skillOptionList)
+        }
+    })
+
+}
+
 

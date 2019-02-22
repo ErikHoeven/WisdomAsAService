@@ -122,6 +122,7 @@ function tblBranche(bracheArray,editnr, id) {
     else{
         console.info('Editnr Exist')
         console.info(editnr)
+        console.info(id)
         console.info(bracheArray)
         for (var i = 0; i < bracheArray.length; i++) {
             tblBody = tblBody +
@@ -140,6 +141,7 @@ function tblBranche(bracheArray,editnr, id) {
 
 
 function addBranche(brancheArrayCount,changeBrancheHit, brancheArray, changeHitBracheNummer, id){
+    console.info('addBranche')
     console.info('saveBrance: ' + brancheArrayCount + ' :  ' + changeBrancheHit + ' : ' + id )
     console.info(brancheArray)
     if(changeBrancheHit == 0 ){

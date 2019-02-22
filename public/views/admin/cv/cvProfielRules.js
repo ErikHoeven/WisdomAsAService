@@ -70,7 +70,8 @@ function startCVProfiel(cv, user, id) {
 
             $('#Profiel').click(function () {
                 console.info('Profiel')
-                console.info('id bij Cv:' + id)
+                console.info('id bij Cv:')
+                console.info(id)
                 if (id) {
                     $.ajax({
                         url: '/admin/getCVByID',
@@ -140,16 +141,17 @@ function startCVProfiel(cv, user, id) {
 
         if (cv.roleProfiles) {
             roleArray = cv.roleProfiles
-            var tableRole = tblRole(roleArray)
+            var tableRole = tblRole(roleArray,null,id)
             $('#tblRolErvaring').html(tableRole)
 
 
         }
         if (cv.brancheProfiles) {
             console.info('brancheProfiles exist')
+            console.info(id)
             brancheArray = cv.brancheProfiles
             console.info(brancheArray)
-            var tableBranche = tblBranche(brancheArray)
+            var tableBranche = tblBranche(brancheArray,null,id)
             $('#tblBrancheErvaring').html(tableBranche)
         }
 
@@ -179,7 +181,7 @@ function startCVProfiel(cv, user, id) {
 
         //Profiel - Role (add Role )
         $('#saveRole').click(function () {
-            roleArray = addRole(roleArrayCount, changeRoleHit, roleArray, changeHitRoleNummer)
+            roleArray = addRole(roleArrayCount, changeRoleHit, roleArray, changeHitRoleNummer, id)
             roleArrayCount++
             saveProfiel(roleArray, brancheArray, id)
         })
@@ -234,18 +236,33 @@ function saveProfiel(roleProfiles, brancheProfiles, id){
 }
 
 function  removeBranche(id,row) {
-    // (1) Get CV from Database
     $.ajax({
-        url: '/admin/getCVByID',
+        url: '/admin/removeBranche',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({id : id }),
+        data: JSON.stringify({id: id, row: row}),
         success: function (response) {
-            console.info(response)
-            //startCVWerkervaring(id)
+            console.info(response.cv[0])
+            startCVProfiel(response.cv[0], null, response.cv[0]._id)
 
         }
     })
-    
 }
+
+function  removeRole(id,row) {
+    console.info('RemoveRole:')
+    console.info(id)
+    console.info(row)
+    $.ajax({
+        url: '/admin/removeRole',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id : id, row: row }),
+        success: function (response) {
+            console.info(response.cv[0])
+            startCVProfiel(response.cv[0],null,response.cv[0]._id)
+        }
+    })
+}
+
 

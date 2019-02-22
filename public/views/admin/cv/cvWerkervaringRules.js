@@ -1,6 +1,4 @@
-/**
- * Created by erik on 4/13/18.
- */
+
 function startCVWerkervaring(id) {
     console.info('Start werkervaring!!')
 
@@ -62,7 +60,6 @@ function startCVWerkervaring(id) {
                 console.info('Vaardigheden')
             })
 
-
             $('#txtdateDatumVan').datepicker()
             $('#txtDatumTot').datepicker()
             $('#tblWerkErvaring').html(werkervaringTBL)
@@ -71,12 +68,41 @@ function startCVWerkervaring(id) {
 
 
             $('#addWerkervaring').click(function () {
-                werkervaringArray = addWerkervaring(werkervaringArrayCount,werkervaringRoleHit, werkervaringArray, changeHitWerkervaringNummer, id)
+                console.info('addWerkervaring')
+                // Werkervaring bestaat in de sessie
+                if(werkervaringArray){
+                    werkervaringArrayCount = werkervaringArray.length
+                    werkervaringArray = addWerkervaring(werkervaringArrayCount,werkervaringRoleHit, werkervaringArray, changeHitWerkervaringNummer, id)
+                }
+                // Werkervaring bestaat niet in de sessie
+                else{
+                    console.info('Werkervaring onbekend')
+                    console.info(id)
+                    // Haal CV op in de database
+                    $.ajax({
+                        url: '/admin/getWerkervaring',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id : id }),
+                        success: function (response) {
+                            console.info('Response Werkervaring:')
+                            // Bestaat werkervaring in de CV
+                            if (response.cv.werkervaring) {
+                                werkervaringArray = response.cv.werkervaring
+                                werkervaringArrayCount = werkervaringArray.length
+                                werkervaringArray = addWerkervaring(werkervaringArrayCount, werkervaringRoleHit, werkervaringArray, changeHitWerkervaringNummer, id)
+                            }
+                            else {
+                                // Bestaat niet in de CV
+                            }
+                        }})
+                }
             })
 
             $('#saveWerkervaring').click(function () {
                 console.info('saveWerkervaring: ' + id)
-                startCVOpleiding(id)
+                startCVWerkervaring(id)
+
             })
         }
     })
@@ -193,7 +219,7 @@ function tblWerkervaring(werkervaringArray, id) {
                 '<td id="' + i + '">' + werkervaringArray[i].van + '</td>' +
                 '<td id="' + i + '">' + werkervaringArray[i].tot + '</td>' +
                 '<td id="cmd'+ i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateFieldWerkervaring(\'' + id + '\',\'' + i +'\')"><span id="span"'+ i +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeWerkervaring(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeWerkervaring(\'' + id + '\',\'' + i +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
 
@@ -202,62 +228,47 @@ function tblWerkervaring(werkervaringArray, id) {
 
 function addWerkervaring(werkervaringArrayCount,werkervaringHit, werkervaringArray, changeHitWerkervaringNummer, id) {
     console.info('saveWerkervaring: ' + werkervaringArrayCount + ' :  ' + werkervaringHit )
-    if(werkervaringHit == 0 ){
-        werkervaringArrayCount++
-
+    // Er bestaat werkervaring
+    if(werkervaringArrayCount > 0 ){
+        for(var i = 0;  i < werkervaringArrayCount;i++){
+            werkervaringArray[i].nr = i
+        }
         var  functienaam =  $('#txtFunctienaam').val()
             ,bedrijf =      $('#txtBedrijf').val()
             ,van =          $('#txtdateDatumVan').val()
             ,tot =          $('#txtDatumTot').val()
-            ,werkervaringObject = {nr:  werkervaringArrayCount, functienaam:functienaam, bedrijf:bedrijf, van: van, tot: tot}
+            ,werkervaringObject = {nr:  werkervaringArrayCount -1 , functienaam:functienaam, bedrijf:bedrijf, van: van, tot: tot}
+    }
+    // Er bestaat geen werkervaring
+    else{
+        var  functienaam =  $('#txtFunctienaam').val()
+            ,bedrijf =      $('#txtBedrijf').val()
+            ,van =          $('#txtdateDatumVan').val()
+            ,tot =          $('#txtDatumTot').val()
+            ,werkervaringObject = {nr:  1 , functienaam:functienaam, bedrijf:bedrijf, van: van, tot: tot}
+    }
 
-        console.info(werkervaringArray)
+        werkervaringArray.push(werkervaringObject)
+        //werkervaringArray = buildWerkErvaringArray(bedrijf,werkervaringArray,werkervaringObject)
+        //console.info(werkervaringArray)
 
-        werkervaringArray = buildWerkErvaringArray(bedrijf,werkervaringArray,werkervaringObject)
         var werkervaringTBL = tblWerkervaring(werkervaringArray, id)
         $('#tblWerkErvaring').html(werkervaringTBL)
 
+        $.ajax({
+            url: '/admin/saveWerkervaring',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({werkervaring: werkervaringArray, id : id }),
+            success: function (response) {
+                console.info(response)
 
-    }
-    else{
-        console.info('ELSE WERKERVARING')
-        console.info(werkervaringArray[changeHitWerkervaringNummer].functienaam)
-        console.info(changeHitWerkervaringNummer)
-
-        var  functienaam =  $('#txtFunctienaam').val()
-            ,bedrijf =      $('#txtBedrijf').val()
-            ,van =          $('#txtdateDatumVan').val()
-            ,tot =          $('#txtDatumTot').val()
-
-        werkervaringArray[changeHitWerkervaringNummer].functienaam = functienaam
-        werkervaringArray[changeHitWerkervaringNummer].bedrijf = bedrijf
-        werkervaringArray[changeHitWerkervaringNummer].van = van
-        werkervaringArray[changeHitWerkervaringNummer].functienaam = tot
-
-        console.info(werkervaringArray)
-
-
-        var werkervaringTBL = tblRole(werkervaringArray)
-        $('#tblRolErvaring').html(werkervaringTBL)
-    }
-
-    $.ajax({
-        url: '/admin/saveWerkervaring',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({werkervaring: werkervaringArray, id : id }),
-        success: function (response) {
-            console.info(response)
-
-            return werkervaringArray
-        }
-    })
+                return werkervaringArray
+            }
+        })
 }
 
-
-
 //Specific functions
-
 function updateFieldWerkervaring(id, rowid) {
     console.info('updateWerkervaring')
     console.info(id)
@@ -312,6 +323,22 @@ function updateFieldWerkervaring(id, rowid) {
                     }
                 })
             })
+        }
+    })
+}
+function  removeWerkervaring(id,row) {
+    console.info('removeWerkervaring')
+    console.info(id)
+    console.info(row)
+    $.ajax({
+        url: '/admin/removeWerkervaring',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id, row: row}),
+        success: function (response) {
+            console.info(response.cv[0])
+            console.info(response.cv[0]._id)
+            startCVWerkervaring(response.cv[0]._id)
         }
     })
 }

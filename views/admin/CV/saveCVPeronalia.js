@@ -162,3 +162,81 @@ exports.getCVByID = function (req,res,next) {
     })
 
 }
+
+exports.removeBranche = function(req,res,next){
+    console.info('----------------- removeBranche ---------------------')
+    var id = req.body.id
+    var row = req.body.row
+    var o_id = new mongo.ObjectID(id)
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('CV').find({_id: o_id}).toArray(function (err, cv) {
+                    if (err) return callback(err);
+                    locals.cv = cv;
+                    callback();
+                });
+            }
+        ];
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var cv = locals.cv
+            var branche = cv[0].brancheProfiles
+            var newBranche = []
+
+            for( var i = 0; i < branche.length;i++){
+                if (i != row){
+                    console.info(i + ' !== ' + row)
+                    newBranche.push(branche[i])
+                }
+            }
+            console.info('NewBranche:')
+
+            cv[0].brancheProfiles = newBranche
+            dbCV.update({_id: id}, {$set: {brancheProfiles: newBranche}}, false, true)
+            res.status(200).json({cv: cv })
+        })
+    })
+}
+
+exports.removeRole = function(req,res,next){
+    console.info('----------------- remove roleProfiles ---------------------')
+    var id = req.body.id
+    var row = req.body.row
+    var o_id = new mongo.ObjectID(id)
+    mongo.connect(uri, function (err, db) {
+        var locals = {}, tokens = []
+        var tasks = [   // Load backlog
+            function (callback) {
+                db.collection('CV').find({_id: o_id}).toArray(function (err, cv) {
+                    if (err) return callback(err);
+                    locals.cv = cv;
+                    callback();
+                });
+            }
+        ];
+        async.parallel(tasks, function (err) {
+            if (err) return next(err);
+            db.close();
+            var cv = locals.cv
+            var Roles = cv[0].roleProfiles
+            var newRoles = []
+
+            for( var i = 0; i < Roles.length;i++){
+                if (i != row){
+                    console.info(i + ' !== ' + row)
+                    newRoles.push(Roles[i])
+                }
+            }
+            console.info('NewRole:')
+
+            cv[0].roleProfiles = newRoles
+            dbCV.update({_id: id}, {$set: {roleProfiles: newRoles}}, false, true)
+            res.status(200).json({cv: cv })
+        })
+    })
+}
+
+

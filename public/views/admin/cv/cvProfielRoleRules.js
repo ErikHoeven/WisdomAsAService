@@ -101,7 +101,9 @@ function buildRoleArray(newRole, currentArray, roleObject) {
     return newRoleArray
 }
 
-function tblRole(roleArray,editnr) {
+function tblRole(roleArray,editnr, id) {
+    console.info('tblRole')
+    console.info(id)
     var  tblHeader ='<theader><th>Role</th><th>Rol samenvatting</th></theader>'
         ,tblBody = '<tbody>'
         ,table = '<table id="roleTable" class="table table-hover">'
@@ -112,7 +114,7 @@ function tblRole(roleArray,editnr) {
                 '<tr>' +
                 '<td id="' + i + '">' + roleArray[i].role + '</td>' +
                 '<td id="' + i + '">' + roleArray[i].roleProfiel + '</td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeRole(\'' + id + '\',\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
     }
@@ -124,7 +126,7 @@ function tblRole(roleArray,editnr) {
 
 
 
-function addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer) {
+function addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer, id) {
     console.info('saveRole: ' + roleArrayCount + ' :  ' + changeRoleHit )
     if(changeRoleHit == 0 ){
         var  role = $('#selRole option:selected').text()
@@ -132,7 +134,9 @@ function addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer) {
             ,roleObject = {nr: roleArrayCount, role:role, roleProfiel: roleProfiel }
 
         roleArray = buildRoleArray(role,roleArray,roleObject)
-        var roleTBL = tblRole(roleArray)
+        console.info('addRole -> tblRole')
+        console.info(id)
+        var roleTBL = tblRole(roleArray, null, id)
         $('#tblRolErvaring').html(roleTBL)
 
         roleArrayCount++
@@ -147,9 +151,9 @@ function addRole(roleArrayCount,changeRoleHit, roleArray, changeHitRoleNummer) {
         roleArray[changeHitRoleNummer].roleProfiel = newRoleValue
 
         console.info(roleArray)
-
-
-        var roleTBL = tblRole(roleArray)
+        console.info('addRole -> tblRole')
+        console.info(id)
+        var roleTBL = tblRole(roleArray,null,id)
         $('#tblRolErvaring').html(roleTBL)
     }
 

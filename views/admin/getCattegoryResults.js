@@ -94,8 +94,10 @@ exports.addCatValue = function(req, res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
+            console.info('============================= Cattegorie============================')
             var catValues = locals.businessrules[0].cattegoryValue
 
+            console.info(catValues)
             res.status(200).json({catValues: catValues, message: 'succes'});
         })
     })

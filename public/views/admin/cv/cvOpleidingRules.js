@@ -210,7 +210,7 @@ function tblOpleiding(opleidingArray, id) {
                 '<td id="' + i + '">' + opleidingArray[i].van + '</td>' +
                 '<td id="' + i + '">' + opleidingArray[i].tot + '</td>' +
                 '<td id="cmd'+ i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateFieldOpleiding(\'' + id + '\',\'' + i +'\')"><span id="span"'+ i +' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeOpleiding(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
+                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeOpleiding(\'' + id + '\',\'' + i +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
 
@@ -274,8 +274,6 @@ function addOpleiding(opleidingArrayCount,opleidingHit, opleidingArray, changeHi
 
     return opleidingArray
 }
-
-
 
 //Specific functions
 function updateFieldOpleiding(id, rowid) {
@@ -341,6 +339,23 @@ function updateFieldOpleiding(id, rowid) {
                     }
                 })
             })
+        }
+    })
+}
+
+function  removeOpleiding(id,row) {
+    console.info('RemoveOpleiding:')
+    console.info(id)
+    console.info(row)
+    $.ajax({
+        url: '/admin/removeOpleiding',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({id: id, row: row}),
+        success: function (response) {
+            console.info(response.cv[0])
+            startCVOpleiding(response.cv[0], null, response.cv[0]._id)
+
         }
     })
 }

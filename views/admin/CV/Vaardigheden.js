@@ -16,6 +16,8 @@ exports.getVaardigheden = function (req, res, next) {
     var id = req.body.id
     var o_id = new mongo.ObjectId(id)
     console.info(o_id)
+    var inpVaardighedenCategorie = '<select id="selCatVaardigheden">'
+    var returnObject = {}
 
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
@@ -32,17 +34,53 @@ exports.getVaardigheden = function (req, res, next) {
                     if (err) return callback(err);
                     locals.catValues = catValues;
                     callback();
-                });
+                })
             }
         ];
 
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
+            console.info('-------------- LOCALS.CV -----------------------------')
             console.info(locals.cv)
+            console.info('------------------------------------------------------')
+            console.info('------------------------CV_Vaardigheden-----------------')
+            console.info(locals.catValues)
+            console.info('------------------------------------------------------')
 
-            res.status(200).json({cv: locals.cv[0],catValues:locals.catValues});
 
+            locals.catValues.forEach(function (r) {
+                inpVaardighedenCategorie = inpVaardighedenCategorie + '<option value="'+ r.tagCattegory + '">' + r.tagCattegory + '</option>'
+            })
+            inpVaardighedenCategorie = inpVaardighedenCategorie + '</select>'
+            console.info(' BEFORE ERROR (1)')
+            console.info(locals.cv[0])
+            console.info('---> BEFORE ERROR (2)  <----')
+            console.info(' ')
+
+            if(!locals.cv[0].catValues && inpVaardighedenCategorie ) {
+                console.info('Geen CV vaardigheden gevonden')
+                returnObject.vaardighedenCategorie = inpVaardighedenCategorie
+                returnObject.cvCattegorie = 'Geen CV vaardigheden gevonden'
+                returnObject.cv = locals.cv[0];
+            }
+
+            if(locals.cv[0].catValues){
+                console.info('Vaardigheden bestaat')
+                returnObject.vaardighedenCategorie = inpVaardighedenCategorie
+                returnObject.cvCattegorie = locals.cv[0].catValues
+                returnObject.cv = locals.cv[0]
+            }
+
+            else{
+                console.info('Geen CV vaardigheden gevonden en geen vaardigheden categogie gevonden')
+                returnObject.CV_VaardighedenCategorie = inpVaardighedenCategorie
+                returnObject.cvCattegorie = 'Geen CV vaardigheden gevonden'
+                returnObject.cv = locals.cv[0]
+                returnObject.catValues = locals.catValues
+            }
+
+            res.status(200).json({returnObject});
         })
     })
 }
@@ -65,6 +103,5 @@ exports.saveVaardigheden = function (req, res, next) {
     else {
         res.status(200).json({message: 'Velden ontbreken'});
     }
-
-
 }
+
