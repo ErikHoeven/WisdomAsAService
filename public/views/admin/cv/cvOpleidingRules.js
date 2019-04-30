@@ -303,19 +303,36 @@ function updateFieldOpleiding(id, rowid) {
             $('#cmdOpleiding').html('<a href="#" class="btn btn-default" id="updatedOpleiding">Wijzigen Opleiding <i class="fa fa-long-arrow-right"></i></a>')
 
             $('#updatedOpleiding').click(function () {
-
-                var  opleiding =  $('#txtOpeiding').val()
+                if(opleidingen){
+                var  opleiding =  $('#txtOpleiding').val()
                     ,instituut =  $('#txtInstituut').val()
                     ,van =        $('#txtdateDatumVan').val()
                     ,tot =        $('#txtDatumTot').val()
                     ,typeOpleiding =  $('#selTypeOpleiding option:selected').text()
 
+                console.info(opleiding)
+
                 opleidingen[rowid].opleiding = opleiding
                 opleidingen[rowid].instituut = instituut
                 opleidingen[rowid].van = van
                 opleidingen[rowid].van = tot
-                opleidingArray[rowid].typeOpleiding = typeOpleiding
+                opleidingen[rowid].typeOpleiding = typeOpleiding
+                }
+                else{
+                    // Opleiding bestaat niet. Haal deze op uit MongoDB
+                    $.ajax({
+                        url: '/admin/getOpleiding',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({id : id }),
+                        success: function (response) {
+                            opleidingArray = response.cv[0].opleiding
+                            console.info(opleidingArray)
 
+                        }
+                    })
+
+                }
                 $.ajax({
                     url: '/admin/saveOpleiding',
                     type: 'POST',
@@ -354,7 +371,7 @@ function  removeOpleiding(id,row) {
         data: JSON.stringify({id: id, row: row}),
         success: function (response) {
             console.info(response.cv[0])
-            startCVOpleiding(response.cv[0], null, response.cv[0]._id)
+            startCVOpleiding( response.cv[0]._id)
 
         }
     })

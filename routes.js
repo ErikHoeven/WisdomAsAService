@@ -159,6 +159,10 @@ exports = module.exports = function(app, passport) {
     app.post('/smarthome/getmeterstanden', require('./views/Smarthome').getMeterStanden);
     app.post('/smarthome/getMeterStandenDagVerloop', require('./views/Smarthome').getMeterStandenDagVerloop);
 
+
+    //Power BI
+    app.get('/PowerBI', require('./views/PowerBI').init);
+
     //app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);
 
 

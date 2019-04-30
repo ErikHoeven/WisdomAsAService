@@ -6,6 +6,7 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/signup/">Registreren</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/contact/">Contact</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/events/">Blogs </a></li>')
+        $(".nav.navbar-nav").append('<li><a href="/PowerBI/">PowerBI </a></li>')
     }
     else{
         console.info('user found')
