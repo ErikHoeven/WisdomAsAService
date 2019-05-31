@@ -17,8 +17,6 @@ function menuHandler(user){
         $(".nav.navbar-nav").append('<li><a href="/Smarthome/">Smarthome Dashboard</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/upload/">upload</a></li>')
         $(".nav.navbar-nav").append('<li><a href="/admin/">Admin</a></li>')
-
-
     }
 }
 
