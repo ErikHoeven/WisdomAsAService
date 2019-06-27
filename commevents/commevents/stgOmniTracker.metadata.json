@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"commevents.stgOmniTracker"},{"v":2,"unique":true,"key":{"Number":1,"State":1},"name":"Number_1_State_1","ns":"commevents.stgOmniTracker"}],"uuid":"9faffa9d410a45e4992eb95bd1209b24"}
