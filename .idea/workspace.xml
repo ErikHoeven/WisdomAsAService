@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f3536b2e-f8fa-4ba7-b9c3-9cee88393460" name="Default" comment="-Plaatjes Development gelijk getrokken met met elkaar.">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/Consultancy/Consultancy.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/Consultancy/Consultancy.jade" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/index.jade" beforeDir="false" afterPath="$PROJECT_DIR$/views/index.jade" afterDir="false" />
-    </list>
+    <list default="true" id="f3536b2e-f8fa-4ba7-b9c3-9cee88393460" name="Default" comment="-Plaatjes Development gelijk getrokken met met elkaar." />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -23,11 +19,20 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/views/index.jade">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="64" column="16" lean-forward="true" selection-start-line="64" selection-start-column="16" selection-end-line="64" selection-end-column="16" />
+            <state relative-caret-position="-575">
+              <caret line="83" column="56" lean-forward="true" selection-start-line="83" selection-start-column="56" selection-end-line="83" selection-end-column="56" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="115">
+              <caret line="5" column="2" lean-forward="true" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -135,7 +140,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -152,6 +156,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -284,6 +289,7 @@
       <workItem from="1559336558934" duration="1772000" />
       <workItem from="1561011595522" duration="1355000" />
       <workItem from="1561099775959" duration="1352000" />
+      <workItem from="1561391618661" duration="3058000" />
     </task>
     <task id="LOCAL-00001" summary="Profiel fix 1">
       <created>1528834222306</created>
@@ -506,10 +512,11 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="260541000" />
+    <option name="totallyTimeSpent" value="263599000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="-1" width="1680" height="1023" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.2063971" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -551,13 +558,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="-Plaatjes Development gelijk getrokken met met elkaar." />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/admin/addContentResults.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="21" selection-start-line="21" selection-end-line="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/Products/productsD.jade" />
     <entry file="file://$PROJECT_DIR$/views/Products/products.jade" />
     <entry file="file://$PROJECT_DIR$/views/Products/productsDWA.js" />
@@ -874,8 +874,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/views/index.jade">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="92">
-          <caret line="64" column="16" lean-forward="true" selection-start-line="64" selection-start-column="16" selection-end-line="64" selection-end-column="16" />
+        <state relative-caret-position="-575">
+          <caret line="83" column="56" lean-forward="true" selection-start-line="83" selection-start-column="56" selection-end-line="83" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="115">
+          <caret line="5" column="2" lean-forward="true" selection-start-line="5" selection-start-column="2" selection-end-line="5" selection-end-column="2" />
         </state>
       </provider>
     </entry>
