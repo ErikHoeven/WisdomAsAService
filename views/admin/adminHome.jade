@@ -4,6 +4,7 @@ block head
     meta(name='viewport', content='width=device-width, initial-scale=1.0')
     title Admin Dashboard
     link(href='/stylesheets/bootstrap.css', rel='stylesheet')
+    link(href='/stylesheets/erik.css', rel='stylesheet')
     link(href='/vendor/font-awesome/css/font-awesome.css', rel='stylesheet')
     script(defer='', src='https://use.fontawesome.com/releases/v5.0.9/js/all.js', integrity='sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl', crossorigin='anonymous')
     link(href='/stylesheets/custom-admin.css', rel='stylesheet')
@@ -41,6 +42,9 @@ block head
     script(src="/views/admin/cv/cvOpleidingRules.js")
     script(src="/views/admin/cv/cvVaardighedenRules.js")
     script(src="/views/admin/cv/cvVaardighedenCategorie.js")
+
+    //Custom Scripts Inkomsten belasting
+    script(src="/views/admin/businessRules.js")
 
 
 block body
@@ -88,6 +92,10 @@ block body
                                 a(id='cvBuilder')
                                     img(src="/images/cv2.png" )
                                     | Beheren CV
+                            li
+                                a(id='businessRules')
+                                    img(src="/images/cv2.png" )
+                                    | Beheren Business rules
 
                         br
                 #page-wrapper
@@ -97,6 +105,7 @@ block body
                             h5(id="subtitle") Hier kunt uw persoonlijke dashboard configureren.
                     // /. ROW
                     hr
+                    .row
                     .row(id='contentElement')
                         .col-md-3.col-sm-6.col-xs-6
                             .panel.panel-back.noti-box
@@ -127,6 +136,7 @@ block body
                                     #employees.p.main-text
                                     p.text-muted Medewerkers
                         .col-md-3.col-sm-6.col-xs-6
+                    .row(id='contentElementDetails')
                             //input.pick-a-color.form-control(type='text', value='222', name='border-color')
 
         script.
@@ -184,6 +194,11 @@ block body
                         selectCVMenu()
                         setCVitle()
                         getCVS(user)
+                    })
+                    $('#businessRules').click(function () {
+                        selectBusinessRuleMenu()
+                        setBusinessRuleTitle()
+                        getBusinessResults(user)
                     })
                 }
             });

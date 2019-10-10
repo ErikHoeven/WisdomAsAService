@@ -114,7 +114,7 @@ function tblBranche(bracheArray,editnr, id) {
             tblBody = tblBody +
                 '<tr>' +
                 '<td id="' + i + '">' + bracheArray[i].branche + '</td>' +
-                '<td id="' + i + '">' + bracheArray[i].brancheProfiel + '</td>' +
+                '<td id="' + i + '">' + bracheArray[i].brancheProfiel.substring(0,125) + ' .....</td>' +
                 '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + id + '\',\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }
@@ -128,7 +128,7 @@ function tblBranche(bracheArray,editnr, id) {
             tblBody = tblBody +
                 '<tr>' +
                 '<td id="' + i + '">' + bracheArray[i].branche + '</td>' +
-                '<td id="' + i + '">' + bracheArray[i].brancheProfiel + '</td>' +
+                '<td id="' + i + '">' + bracheArray[i].brancheProfiel.substring(0,125) + '.....</td>' +
                 '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeBranche(\'' + id + '\',\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
                 '</tr>'
         }

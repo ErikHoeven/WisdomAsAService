@@ -159,9 +159,14 @@ exports = module.exports = function(app, passport) {
     app.post('/smarthome/getmeterstanden', require('./views/Smarthome').getMeterStanden);
     app.post('/smarthome/getMeterStandenDagVerloop', require('./views/Smarthome').getMeterStandenDagVerloop);
 
-
     //Power BI
     app.get('/PowerBI', require('./views/PowerBI').init);
+
+    //DataVault Generator
+    app.get('./DataVaultGenerator', require('./views/DVG').RawVault);
+
+    //Inkomsten belasting
+    app.post('/admin/getBusinessRulesCattegories', require('./views/admin/getBusinessResults').getBusinesgetBusinessRulesCattegoriesRules);
 
     //app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);
 

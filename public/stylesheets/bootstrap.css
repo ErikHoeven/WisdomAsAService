@@ -244,6 +244,8 @@ th {
   .btn > .caret,
   .dropup > .btn > .caret {
     border-top-color: #000 !important;
+    padding-left: 4px;
+    padding-right: 4px;
   }
   .label {
     border: 1px solid #000;
@@ -3020,6 +3022,8 @@ select[multiple].input-lg {
   background-image: none;
   border: 1px solid transparent;
   border-radius: 4px;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .btn:focus,
 .btn:active:focus,
@@ -3117,6 +3121,7 @@ fieldset[disabled] .btn-default.focus {
   color: #fff;
   background-color: #337ab7;
   border-color: #2e6da4;
+  margin-right: 14px;
 }
 .btn-primary:focus,
 .btn-primary.focus {
@@ -3169,6 +3174,8 @@ fieldset[disabled] .btn-primary.focus {
 .btn-primary .badge {
   color: #337ab7;
   background-color: #fff;
+  padding-left: 4px;
+  padding-right: 4px;
 }
 .btn-success {
   color: #fff;
