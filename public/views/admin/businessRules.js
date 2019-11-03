@@ -70,298 +70,195 @@ function getBusinessResults(user) {
     $('#addBusinessRule').click(function () {
         console.info('start addBusinessRule')
         addBusinessRuleForm()
-        console.info(' einde addBusinessRule')
 
-
-        $('#cmdAddExpresion').click(function () {
-            console.info('start add ExpresionRules')
-
-            console.info('end add ExpresionRules')
-        })
-
-        var  tblHeader ='<theader><th>BusinessRules Values</th></theader>'
-            ,tblBody = '<tbody>'
-            ,clear = 0
-            ,brValueList = []
-            ,brValueStr
-            ,brTable
-
-        //3.A Add category value
-        $('#addCBRValue').click(function () {
-            if($('#CatValue').val().length > 0){
-                catValueList.push($('#CatValue').val())
-                console.info(catValueList)
-                catValueStr = ''
-                tblBody = '<tbody>'
-                catValueList.forEach(function (r) {
-                    catValueStr = catValueStr + '<tr><td>'+ r +'</td></tr>'
-                })
-
-                tblBody = tblBody + catValueStr + '</tbody>'
-                table = '<table class="table table-hover">' + tblHeader + tblBody + '</table>'
-                $('#CatValueTable').html(table)
-
-
-                $('#CatValue').val('')
-            }
-        })
-
-        //3.B Clear category value
-        $('#clearCatValue').click(function () {
-            console.info(catValueList)
-            //clear = 1
-            catValueList = []
-            table = ''
-            tblBody = ''
-            tblHeader = ''
-            $('#CatValueTable').html('')
-            $('#CatValue').val('')
-
-            console.info(catValueList.length)
-        })
-
-
-        //3.D Submit
-        $('#addCattegory').click(function () {
-            var category = $('#Categorie').val()
-                ,categoryColor = $('#txtKleur').val()
-            addCategoryResults(category,categoryColor, catValueList)
-        })
     })
-}
-function addCategoryResults(category, color, catValues) {
-    $.ajax({
-        url: '/admin/addCategoryResults',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({category: category, color: color, catValues:catValues }),
-        success: function (response) {
-            console.info(response)
-            getCategoryResults(user)
-        }
-    })
-}
-
-// 2.A. Update row to editable fields
-function updateCategoryField(tagCattegory) {
-    var clickCount = 0
-
-    $.ajax({
-        url: '/admin/getCategoryResultsForm',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({tagCattegory: tagCattegory}),
-        success: function (response) {
-            console.info('getContentResultsForm')
-            console.info(response)
-
-            //3 Show results
-            $('#contentElement').html('')
-            $('#contentElement').html(response.form.form)
-            var catValueList = response.form.catValueList
-
-            $('#CatValueTable').html(addCatValueForm(catValueList))
-
-            $('#addCattegory').click(function () {
-                clickCount++
-                console.info(clickCount)
-                addCatValue(clickCount)
-            })
-
-        }
-    })
-}
-
-function updateCategoryValueField(nr, oldValue, catValue) {
-    $('#' + nr).html('<input type="text" id="editedCatValue'+ nr +'" value="'+ oldValue  +'">')
-    $('#edit' + nr).html('<td id="save' + nr + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + nr + '\')"><span id="span"' + nr + ' class="glyphicon glyphicon-save"></span> save</button></td>')
-}
-
-function updateCategoryValue(pos ) {
-    var newValue = $('#editedCatValue' + pos).val()
-        ,cat = $('#Categorie').val()
-        ,color = $('#txtkleur').val()
-
-    $.ajax({
-        url: '/admin/saveCatValue',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({category: cat ,pos: pos, value: newValue, color: color}),
-        success: function (response) {
-            console.info(response)
-            updateCategoryField(response.cat)
-
-        }
-    })
-}
-
-function addCatValue(clickCount){
-
-    var cat =  $('#Categorie').val()
-
-    $.ajax({
-        url: '/admin/addCatValue',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({tagCattegory: cat }),
-        success: function (response) {
-            console.info(response)
-            $('#CatValueTable').html(addCatValueForm(response.catValues,clickCount))
-
-        }
-    })
-}
-function removeCategoryValue(pos) {
-    var cat =  $('#Categorie').val()
-
-    $.ajax({
-        url:
-            '/admin/removeCatValue',
-        type: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({tagCattegory: cat, pos: pos }),
-        success: function (response) {
-            console.info(response)
-            $('#CatValueTable').html(addCatValueForm(response.cattegoryValue))
-
-        }
-    })
-
 }
 
 //  SPECIFIC FUNCTIONS
 function addBusinessRuleForm () {
 
     var tagCattegory = ''
-        $.ajax({
-            url:
-                '/admin/getBusinessRulesCattegories',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify({tagCattegory: tagCattegory }),
-            success: function (response) {
-                $('#contentElement').html(response.businessRuleform)
+    $.ajax({
+        url:
+            '/admin/getBusinessRulesCattegories',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({tagCattegory: tagCattegory}),
+        success: function (response) {
+            $('#contentElement').html(response.businessRuleform)
 
-                $('#cmdAddExpresion').click(function () {
-                    console.info('start add ExpresionRules')
-                    $('#contentElementDetails').html(addExpresionRuleForm())
-                    console.info('end add ExpresionRules')
+            $('#cmdAddExpresion').click(function () {
+                console.info('start add ExpresionRules')
+                var brNAme = $('#BrName').val()
+                var brCattegoryName = $('#selectBrCattegory option:selected').text()
+                console.info(brNAme)
+                console.info(brCattegoryName)
+                addExpresionRuleForm(brNAme, brCattegoryName)
+                console.info('end add ExpresionRules')
+            })
+        }
+    })
+}
+        
 
+function addExpresionRuleForm (brNAme,brCattegoryName) {
+    $.ajax({
+        url:
+            '/admin/getExpresionsForm',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({brNAme: brNAme, brCattegoryName: brCattegoryName}),
+        success: function (response) {
+            console.info(response)
+            //$('#contentElement').html(response.businessRuleform)
+            $('#contentElementDetails').html(response.expresionRuleForm)
+
+            formGetVairable()
+
+
+            $('#saveExpresion').click(function () {
+
+                console.info('save')
+                var expresionName = $('#ExprName').val()
+                var expresionValue = $('#expresionValue').val()
+                var expresionCattegory = $('#expresionCattegory option:selected').text()
+                var expresionPosition =  $('#expresionPosition').val()
+                var expresionValue = $('#expresionValue').val()
+                var brNAme = $('#BrName').val()
+                var brCattegoryName = $('#selectBrCattegory option:selected').text()
+                var expresionOperator = $('#expresionOperator option:selected').text()
+
+                var businessRuleObject = {  BusinessRule: brNAme,
+                                            businessruleCattegory: brCattegoryName,
+                                            expresions: [{  expresionName: expresionName,
+                                                            expresionCattegory: expresionCattegory,
+                                                            expresionValue: expresionValue,
+                                                            expresionPosition: expresionPosition,
+                                                            expresionOperator: expresionOperator}]}
+                console.info('--> saveExpr<--')
+                console.info(brNAme)
+                saveExpresion(businessRuleObject,brNAme)
+
+
+            })
+        }
+    })
+}
+
+function saveExpresion(businessRuleObject,brNAme) {
+ console.info('----> saveExpresion')
+ console.info(businessRuleObject)
+    console.info(brNAme)
+    console.info(businessRuleObject.BusinessRule)
+
+
+
+    $.ajax({
+        url:
+            '/admin/saveExpresions',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({object: businessRuleObject, brNAme: businessRuleObject.BusinessRule}),
+        success: function (response) {
+            console.info('Loaded')
+            var businessrule = $('#BrName').val()
+            console.info(businessrule)
+            getBusinessRuleResults(businessrule)
+        }})
+}
+
+function getBusinessRuleResults(businessrule) {
+    console.info('Get Results from database')
+    console.info('parameter:' + businessrule)
+    $.ajax({
+        url:
+            '/admin/getBusinessRule',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({srgBusinessRules: businessrule}),
+        success: function (response) {
+            $('#contentElementDetails').html(response.message)
+
+            $('#saveExpresion').click(function () {
+
+                console.info('save')
+                var expresionName = $('#ExprName').val()
+                var expresionValue = $('#expresionValue').val()
+                var expresionCattegory = $('#expresionCattegory option:selected').text()
+                var expresionPosition = $('#expresionPosition').val()
+                var expresionValue = $('#expresionValue').val()
+                var brNAme = $('#BrName').val()
+                var brCattegoryName = $('#selectBrCattegory option:selected').text()
+                var expresionOperator = $('#expresionOperator option:selected').text()
+
+                var businessRuleObject = {
+                    BusinessRule: brNAme,
+                    businessruleCattegory: brCattegoryName,
+                    expresions: [{
+                        expresionName: expresionName,
+                        expresionCattegory: expresionCattegory,
+                        expresionValue: expresionValue,
+                        expresionPosition: expresionPosition,
+                        expresionOperator: expresionOperator
+                    }]
+                }
+                saveExpresion(businessRuleObject)
+            })
+
+            $('#cmdClcExpresion').click(function () {
+                console.info('cmdClcExpresion')
+                brNAme = $('#BrName').val()
+                calculateExpresion(brNAme)
+
+                $('#saveCalculation').click(function () {
+                    console.info('saveCalculation')
+                    var calResult = saveCaculationResult(brNAme,brResult)
+                    console.info('calcResult:')
+                    console.info(calResult)
                 })
-            }
-        })
+            })
 
-
-}
-
-function addExpresionRuleForm () {
-
-    var expresionRuleForm =
-        '<div class=\"col-lg-6\">'
-        + '<div class="expresionrules-form">'
-        + '<form>'
-        + '<div class="form-group">'
-        + '<div class="input-group">'
-        + '<label class="col-form-label">Expresion Name:</label>'
-        + '</div>'
-        + '<div class="input-group">'
-        + '<input type="text" id="ExprName"></input>'
-        + '</div>'
-        + '</div>'
-
-        + '<div class="form-group">'
-        + '<div class="input-group">'
-        + ' <label class="col-form-label">Expresion Waarde:</label>'
-        + '</div>'
-        + '<div class="input-group">'
-        + '<input type="text"  id="brCattegory"></input>'
-        + '</div>'
-        + '</div>'
-
-        + '<div class="form-group">'
-        + '<div class="input-group">'
-        + ' <label class="col-form-label">Expresion Rule:</label>'
-        + '</div>'
-        + '<div class="input-group">'
-        + '<select id="ExprCattegory"><option value="Value">Value</option><option value="Variable">Variable</option><option value="Operator">Operator</option> +</select>'
-        + '</div>'
-        + '</div>'
-
-        + '<div class="form-group">'
-        + '<div class="input-group">'
-        + ' <label class="col-form-label">Position:</label>'
-        + '</div>'
-        + '<div class="input-group">'
-        + '<input type="text"  id="IdPosition"></input>'
-        + '</div>'
-        + '</div>'
-
-
-        + '<div class="form-group">'
-        + '<div class="input-group">'
-        + '<button class="btn btn-primary" id="addExpression">Add Expresion</button>'
-        + '<button class="btn btn-primary" id="clearExpresion">Delete Expresion</button>'
-        + '</div>'
-        + '</div>'
-        + '</form>'
-        + '</div>'
-        + '</div>'
-
-    // -----
-
-    return expresionRuleForm
-}
-
-
-
-
-function addCatValueForm(catValueList,editNr) {
-
-    var  tblHeader ='<theader><th>Categorie Waarden</th></theader>'
-        ,tblBody = '<tbody>'
-        ,clear = 0
-        ,catValueStr
-        ,table = '<table id="catValueTable" class="table table-hover">'
-
-    if(!editNr) {
-        for (var i = 0; i < catValueList.length; i++) {
-            tblBody = tblBody +
-                '<tr>' +
-                '<td id="' + i + '">' + catValueList[i] + '</td>' +
-                '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
-                '</tr>'
-
+            $('#saveCalculation').click(function () {
+                console.info('saveCalculation')
+                var calResult = saveCaculationResult(brNAme,brResult)
+                console.info('calcResult:')
+                console.info(calResult)
+            })
         }
-    }
-    else{
-
-        var catValueLength = catValueList.length + editNr
-
-        for (var i = 0; i < catValueLength; i++) {
-
-            if ( i <  catValueLength - 1){
-
-                tblBody = tblBody +
-                    '<tr>' +
-                    '<td id="' + i + '">' + catValueList[i] + '</td>' +
-                    '<td id="edit' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValueField(\'' + i + '\',\'' + catValueList[i] +'\')"><span id="span"' + i + ' class="glyphicon glyphicon-edit"></span> Edit</button></td>' +
-                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
-                    '</tr>'
-            }
-            if(i >= catValueLength -1 ) {
-                console.info('else: '   +i)
-                tblBody = tblBody +
-                    '<tr>' +
-                    '<td id="' + i + '"><input type="text" id="editedCatValue'+ i +'"></td>' +
-                    '<td id="save' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="updateCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-save"></span> save</button></td>' +
-                    '<td id="del' + i + '"><button type="button" class="btn btn-default btn-sm" onclick="removeCategoryValue(\'' + i + '\')"><span id="span"' + i + ' class="glyphicon glyphicon-remove"></span> Remove</button></td>' +
-                    '</tr>'
-            }
-
-        }
-    }
-    return table = table + tblHeader + tblBody
+    })
 }
 
+function saveCaculationResult(brName, brResult) {
+    console.info('saveCaculationResult')
+    $.ajax({
+        url:
+            '/admin/saveCalculation',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({srgBusinessRules: brNAme, brResult: brResult}),
+        success: function (response) {
+            location.reload()
+            addBusinessRuleForm()
+        }
+    })
+}
 
+function calculateExpresion(brName) {
+
+    $.ajax({
+        url:
+            '/admin/calcExpresion',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({srgBusinessRules: brNAme}),
+        success: function (response) {
+            $('#contentElementResults').html(response.message)
+
+            $('#saveCalculation').click(function () {
+                console.info('saveCalculation')
+                console.info(response.result)
+                saveCaculationResult(brName,response.result)
+            })
+        }
+    })
+}

@@ -11,7 +11,6 @@ var config = require('./config'),
     path = require('path'),
     multer  =   require('multer'),
     passport = require('passport'),
-    mongoose = require('mongoose'),
     helmet = require('helmet'),
     flash = require('connect-flash'),
     expressValidator = require('express-validator');
@@ -38,14 +37,6 @@ app.config = config;
 //setup the web server
 app.server = http.createServer(app);
 
-//setup mongoose
-app.db = mongoose.createConnection(config.mongodb.uri);
-app.db.on('error', console.error.bind(console, 'mongoose connection error: '));
-app.db.once('open', function () {
-});
-
-//config data models
-require('./models')(app, mongoose);
 
 //settings
 app.disable('x-powered-by');
@@ -101,24 +92,6 @@ require('./passport')(app, passport);
 
 //setup routes
 require('./routes')(app, passport);
-
-// Express Validator
-app.use(expressValidator({
-    errorFormatter: function(param, msg, value) {
-        var namespace = param.split('.')
-            , root    = namespace.shift()
-            , formParam = root;
-
-        while(namespace.length) {
-            formParam += '[' + namespace.shift() + ']';
-        }
-        return {
-            param : formParam,
-            msg   : msg,
-            value : value
-        };
-    }
-}));
 
 //custom (friendly) error handler
 app.use(require('./views/http/index').http500);

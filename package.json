@@ -35,8 +35,7 @@
     "jade": "*",
     "method-override": "^2.x.x",
     "moment": "*",
-    "mongodb": "*",
-    "mongoose": "*",
+    "mongodb": "^2.2.33",
     "mongoskin": "~0.6.0",
     "monk": "*",
     "morgan": "^1.x.x",
@@ -52,7 +51,7 @@
     "properties-reader": "*",
     "serve-static": "^1.9.x",
     "translate": "*",
-    "underscore": "^1.x.x",
+    "underscore": "^1.9.1",
     "xls-to-json": "*",
     "xlsx-to-json": "*",
     "xlsx2json": "^1.0.0"

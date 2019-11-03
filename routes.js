@@ -166,8 +166,14 @@ exports = module.exports = function(app, passport) {
     app.get('./DataVaultGenerator', require('./views/DVG').RawVault);
 
     //Inkomsten belasting
-    app.post('/admin/getBusinessRulesCattegories', require('./views/admin/getBusinessResults').getBusinesgetBusinessRulesCattegoriesRules);
-
+    app.post('/admin/getBusinessRulesCattegories', require('./views/admin/businessrules/getBusinessResults').getBusinesgetBusinessRulesCattegoriesRules);
+    app.post('/admin/getExpresionsForm', require('./views/admin/businessrules/expressions/getExpresionsForm').getExpresionForm);
+    app.post('/admin/saveExpresions', require('./views/admin/businessrules/expressions/saveExpresion').saveExpresion);
+    app.post('/admin/getBusinessRule', require('./views/admin/businessrules/expressions/getExpresionsForm').getMultiRowExpresionForm);
+    app.post('/admin/calcExpresion', require('./views/admin/businessrules/expressions/calcExpresion').getBusinessRule);
+    app.post('/admin/saveCalculation', require('./views/admin/businessrules/expressions/saveExpresion').saveCalculation);
+    app.post('/admin/getBrVariable', require('./views/admin/businessrules/expressions/expresionVariabele').getBusinessRule);
+    app.post('/admin/getBrResult', require('./views/admin/businessrules/expressions/expresionVariabele').getBusinessRuleResult);
     //app.post('/admin/removeCV', require('./views/admin/getCVS').removeCV);
 
 
