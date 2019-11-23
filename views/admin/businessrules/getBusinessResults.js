@@ -33,7 +33,7 @@ exports.getBusinesgetBusinessRulesCattegoriesRules = function(req, res, next) {
             console.info(locals.businessrules[0].cattegoryValue)
 
             var brCatList = locals.businessrules[0].cattegoryValue
-            var optionList = '<SELECT id="selectBrCattegory">'
+            var optionList = '<SELECT id="InkomstenbelastingOnderdeel">'
             brCatList.forEach(function (r) {
                 optionList = optionList + '<option value="' + r + '">' + r + '</option>'
             })
@@ -45,16 +45,16 @@ exports.getBusinesgetBusinessRulesCattegoriesRules = function(req, res, next) {
                 + '<form>'
                 + '<div class="form-group">'
                 + '<div class="input-group">'
-                + '<label class="col-form-label">Business Rule:</label>'
+                + '<label class="col-form-label">Scenario:</label>'
                 + '</div>'
                 + '<div class="input-group">'
-                + '<input type="text"  id="BrName"></input>'
+                + '<input type="text"  id="ScenarioName"></input>'
                 + '</div>'
                 + '</div>'
 
                 + '<div class="form-group">'
                 + '<div class="input-group">'
-                + ' <label class="col-form-label">Business Rule Category:</label>'
+                + ' <label class="col-form-label">Inkomstenbelasting onderdeel:</label>'
                 + '</div>'
                 + '<div class="input-group">'
                 + optionList
@@ -62,13 +62,18 @@ exports.getBusinesgetBusinessRulesCattegoriesRules = function(req, res, next) {
                 + '</div>'
 
                 + '<div class="form-group">'
-                    + '<div class="input-group">'
-                + '<button type="button" class="btn btn-primary" id="cmdAddExpresion">Expresion</button>'
-                + '</div>'
-                + '<div class="form-group">'
                 + '<div class="input-group">'
-                + '<button type="button" class="btn btn-primary" id="cmdClcExpresion">Calulate Expresion</button>'
+                + '<label class="col-form-label">Onderdeel positie:</label>'
                 + '</div>'
+                + '<div class="input-group">'
+                + '<input type="text"  id="OnderdeelPositie" size="4"></input>'
+                + '</div>'
+                + '</div>'
+
+                + '<div class="form-group">'
+                    + '<div class="input-group">'
+                            + '<button type="button" class="btn btn-primary" id="cmdAddExpresion">Expresion</button>'
+                    + '</div>'
                 + '</div>'
             res.status(200).json({businessRuleform});
         })

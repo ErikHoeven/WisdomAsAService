@@ -7,22 +7,22 @@ var async = require('async'),
     _ = require('underscore')
 
 exports.getExpresionForm = function(req, res, next) {
-    console.info('getExpresionForm')
+    console.info('------------  getExpresionForm------------------------')
+    console.info('')
     var expresionRuleForm = expresionFormStructure('complete')
 
     res.status(200).json({expresionRuleForm});
 }
 
 exports.getMultiRowExpresionForm = function(req, res, next) {
-    console.info('------------------------- getInkomstenBelastingResults -------------------------')
-    var srgBusinessRules = req.body.srgBusinessRules
-    console.info('parameter: ' + srgBusinessRules)
-
+    console.info('------------------------- getMultiRowExpresionForm -------------------------')
+    console.info('')
+    var ScenarioName = req.body.ScenarioName
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [
             function (callback) {
-                db.collection('inkomstenbelasting').find({BusinessRule:srgBusinessRules}).toArray(function (err, Businessrules) {
+                db.collection('inkomstenbelasting').find({ScenarioName:ScenarioName}).toArray(function (err, Businessrules) {
                     if (err) return callback(err);
                     locals.Businessrules = Businessrules;
                     callback();
@@ -33,21 +33,23 @@ exports.getMultiRowExpresionForm = function(req, res, next) {
            if (err) return next(err);
             db.close();
 
-            console.info(locals.Businessrules)
             var form = buildform(locals.Businessrules)
 
             console.info('---->  result form')
             console.info(form)
-            res.status(200).json({message: form});
+            res.status(200).json({message: form, ExpresionDefinition: locals.Businessrules[0].Expresions[0].ExpresionDefinition});
         })
     })
 }
 
 function buildform(businessrulesobject) {
     console.info('buildform')
-    console.info(businessrulesobject[0].expresions)
+    console.info(businessrulesobject[0].Expresions[0])
     var header = expresionFormStructure('header') + expresionFormStructure('')
-    var expresionItems = businessrulesobject[0].expresions
+
+    console.info('                  -------------------------- buildform -------------------------------')
+    var expresionItems = businessrulesobject[0].Expresions[0].ExpresionLines
+    var ExpresionDefinitionValue = businessrulesobject[0].Expresions[0].ExpresionDefinition
     var body = ''
     console.info('expresionItems.length: '+ expresionItems.length)
 
@@ -55,17 +57,39 @@ function buildform(businessrulesobject) {
     if(expresionItems.length > 1) {
         console.info('Business Rule bestaat, voeg expresie toe')
         for (i = 0; i < expresionItems.length; i++) {
-            console.info('Loop par')
-            console.info(expresionItems[i])
-            body = body + expresionFormStructure('edit',expresionItems[i].expresionName,expresionItems[i].expresionValue,expresionItems[i].expresionCattegory,expresionItems[i].expresionOperator,expresionItems[i].expresionPosition,i)
-            console.info('Einde loop par')
+            console.info('          -------------------------------------')
+            console.info('          Start Loop Iteration: ' + i)
+            console.info('          ' +ExpresionDefinitionValue)
+            console.info('          parameters:')
+            console.info(expresionItems[i].expresionItemOperator)
+            console.info(expresionItems[i].expresionItemValue)
+            console.info('          -------------------------------------')
+
+
+            body = body + expresionFormStructure('edit',ExpresionDefinitionValue
+                                                    ,expresionItems[i].expresionItemName
+                                                    ,expresionItems[i].expresionItemValue
+                                                    ,expresionItems[i].expresionItemCattegory
+                                                    ,expresionItems[i].expresionItemOperator
+                                                    ,expresionItems[i].expresionItemPosition
+                                                    ,i
+                                                    )
+            console.info('')
+            console.info('Einde Loop ')
         }
+
+        header =  expresionFormStructure('header-edit',ExpresionDefinitionValue) + expresionFormStructure('')
     }
     else {
+
+        console.info('-----------------------------------------------')
         console.info('Business Rule bestaat niet, voeg business rule toe')
-        console.info(expresionItems)
-        body = body + expresionFormStructure('edit',expresionItems[0].expresionName,expresionItems[0].expresionValue,expresionItems[0].expresionCattegory,expresionItems[0].expresionOperator,expresionItems[0].expresionPosition,0)
-        //body = body + expresionFormStructure('edit',expresionItems[i].expresionName,expresionItems[i].expresionValue,expresionItems[i].expresionCattegory,expresionItems[i].expresionOperator,expresionItems[i].expresionPosition,i)
+        console.info(expresionItems[0])
+        console.info('-----------------------------------------------')
+        //console.info(expresionItems)
+        body = body + expresionFormStructure('edit', ExpresionDefinitionValue, expresionItems[0].expresionItemName,expresionItems[0].expresionItemValue,expresionItems[0].expresionItemCattegory,expresionItems[0].expresionItemOperator,expresionItems[0].expresionItemPosition,0)
+        header =  expresionFormStructure('header-edit',ExpresionDefinitionValue) + expresionFormStructure('')
+
     }
 
     //console.info(header + body)
@@ -76,9 +100,12 @@ function buildform(businessrulesobject) {
 
 
 
-function expresionFormStructure(option, ExprName, expresionValue, expresionCattegory,expresionOperator,expresionPosition,iteration) {
-    console.info('----------------------------- expresionFormStructure ---------------------------- ')
+function expresionFormStructure(option, ExpresionDefinitionValue, ExprName, expresionValue, expresionCattegory,expresionOperator,expresionPosition,iteration) {
+    console.info('----------------------------- expresionFormStructure: ' +  option    + '--------------'  +  iteration +'-------------- ')
     console.info(option)
+    console.info(expresionOperator)
+    console.info(expresionCattegory)
+
     console.info('---------------------------------------------------------------------------------- ')
 
     var result = ''
@@ -86,6 +113,18 @@ function expresionFormStructure(option, ExprName, expresionValue, expresionCatte
         + '<div class="expresionrules-form">'
         + '<table>'
     var expresionClosing = '</table>'
+
+    var ExpresionDefinition = '<tr>'
+        + '<td class="table-expresion">'
+        + '<label class="col-form-label">Expresion Definition:</label>'
+        + '</td>'
+        + '</tr>'
+
+        +'<tr>'
+        + '<td class="table-expresion">'
+        + '<input type="text" id="ExprDefinition" size="10"></input>'
+        + '</td>'
+        +'</tr>'
 
 
     var expresionRuleHeaders = '<tr>'
@@ -125,6 +164,11 @@ function expresionFormStructure(option, ExprName, expresionValue, expresionCatte
         + '<td class="table-expresion">'
         + '<button type="button" class="btn btn-primary" id="saveExpresion">Add</button>'
         + '</td>'
+         + '</td>'
+         + '<td class="table-expresion">'
+         + '<button type="button" class="btn btn-primary" id="cmdClcExpresion">Calulate Expresion</button>'
+         + '</td>'
+         + '</div>'
         + '</tr>'
 
         var expresionRuleFormEdited = '<tr>'
@@ -147,18 +191,37 @@ function expresionFormStructure(option, ExprName, expresionValue, expresionCatte
             + '</td>'
             + '</tr>'
 
+    var ExpresionDefinitionEdit = '<tr>'
+        + '<td class="table-expresion">'
+        + '<label class="col-form-label">Expresion Definition:</label>'
+        + '</td>'
+        + '</tr>'
+
+        +'<tr>'
+        + '<td class="table-expresion">'
+        + '<input type="text" id="ExprDefinition" value='+ ExpresionDefinitionValue  +' size="15" disabled></input>'
+        + '</td>'
+        +'</tr>'
+
+
     if (option == 'edit') {
         console.info('iteration edited: ' + iteration)
         console.info(expresionOperator)
-        result = expresionRuleFormEdited
+        console.info(ExpresionDefinitionValue)
         console.info(expresionRuleFormEdited)
+        result = expresionRuleFormEdited
     }
     if (option == 'header') {
-        result = expresionPlaceholder + expresionRuleHeaders + expresionRuleForm
+        result = expresionPlaceholder + ExpresionDefinition + expresionRuleHeaders + expresionRuleForm
     }
 
     if (option == 'complete'){
-        result = expresionPlaceholder + expresionRuleHeaders +  expresionRuleForm +  expresionClosing
+        result = expresionPlaceholder + ExpresionDefinition + expresionRuleHeaders +  expresionRuleForm +  expresionClosing
+    }
+
+    if (option == 'header-edit') {
+        console.info('header-edit')
+        result = expresionPlaceholder + ExpresionDefinitionEdit + expresionRuleHeaders + expresionRuleForm
     }
 
     return result

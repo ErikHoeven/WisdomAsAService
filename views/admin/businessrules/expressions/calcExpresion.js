@@ -11,14 +11,14 @@ var async = require('async'),
 
 exports.getBusinessRule = function(req, res, next) {
     console.info('------------------------- getExpresionLines -------------------------')
-    var srgBusinessRules = req.body.srgBusinessRules
-    console.info('parameter: ' + srgBusinessRules)
+    var ScenarioName = req.body.ScenarioName
+    console.info('parameter: ' + ScenarioName)
 
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
         var tasks = [
             function (callback) {
-                db.collection('inkomstenbelasting').find({BusinessRule:srgBusinessRules}).toArray(function (err, Businessrules) {
+                db.collection('inkomstenbelasting').find({ScenarioName:ScenarioName}).toArray(function (err, Businessrules) {
                     if (err) return callback(err);
                     locals.Businessrules = Businessrules;
                     callback();
@@ -37,10 +37,11 @@ exports.getBusinessRule = function(req, res, next) {
 
 function getExpresionLines(businessrules)
 {
-     console.info('getExpresionLines')
+    console.info('getExpresionLines')
     var EpresionCalcDescription = ''
     var ExpresionCalc = 0
-    var expresionLines = businessrules[0].expresions
+    var expresionLines = businessrules[0].Expresions[0].ExpresionLines
+    console.info(expresionLines)
     var lastValuePostition = 0
     var lastOperator = ''
     var calculationObject = {}
@@ -48,45 +49,45 @@ function getExpresionLines(businessrules)
         // (1) Start building expresion
         console.info('')
         console.info('----- iteration: ' + i + '--------')
-        console.info('expresionLines[i].expresionCattegory: ' + expresionLines[i].expresionCattegory )
+        console.info('expresionLines[i].expresionCattegory: ' + expresionLines[i].expresionItemCattegory )
         console.info('lastValuePostition: ' + lastValuePostition)
         console.info('lastOperator: ' + lastOperator)
         console.info('ExpresionCalcDescription: ' + EpresionCalcDescription)
         console.info('ExpresionCalc: ' + ExpresionCalc)
-        console.info('expresionLines[i].expresionPosition: ' + expresionLines[i].expresionPosition)
+        console.info('expresionLines[i].expresionPosition: ' + expresionLines[i].expresionItemPosition)
         console.info('----- iteration: ' + i + '--------')
 
-        if (expresionLines[i].expresionCattegory == 'Value' || expresionLines[i].expresionCattegory == 'Variable' && expresionLines[i].expresionPosition == 0 ){
+        if ((expresionLines[i].expresionItemCattegory == 'Value' || expresionLines[i].expresionItemCattegory == 'Variable') && expresionLines[i].expresionItemPosition == 0 ){
             console.info('   -----first value ---')
-            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionValue
-            ExpresionCalc = expresionLines[i].expresionValue
+            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionItemValue
+            ExpresionCalc = expresionLines[i].expresionItemValue
             lastValuePostition = lastValuePostition + 2
             }
-        if (expresionLines[i].expresionPosition < lastValuePostition && expresionLines[i].expresionCattegory == 'Operator' ){
+        if (expresionLines[i].expresionItemPosition < lastValuePostition && expresionLines[i].expresionItemCattegory == 'Operator' ){
             console.info('-----  operator -----')
-            console.info(expresionLines[i].expresionOperator)
+            console.info(expresionLines[i].expresionItemOperator)
 
-            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionOperator
-            lastOperator = expresionLines[i].expresionOperator
+            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionItemOperator
+            lastOperator = expresionLines[i].expresionItemOperator
 
         }
-        if (expresionLines[i].expresionPosition == lastValuePostition && expresionLines[i].expresionCattegory == 'Value' || expresionLines[i].expresionCattegory == 'Variable'&& lastOperator == '*' ){
+        if (expresionLines[i].expresionItemPosition == lastValuePostition && expresionLines[i].expresionItemCattegory == 'Value' || expresionLines[i].expresionItemCattegory == 'Variable'&& lastOperator == '*' ){
             console.info('calculation(*)')
-            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionValue
-            ExpresionCalc = ExpresionCalc  * expresionLines[i].expresionValue
+            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionItemValue
+            ExpresionCalc = +ExpresionCalc  * +expresionLines[i].expresionItemValue
             lastValuePostition = lastValuePostition + 2
         }
-        if (expresionLines[i].expresionPosition == lastValuePostition && expresionLines[i].expresionCattegory == 'Value' || expresionLines[i].expresionCattegory == 'Variable' && lastOperator == '+' ){
+        if (expresionLines[i].expresionItemPosition == lastValuePostition && expresionLines[i].expresionItemCattegory == 'Value' || expresionLines[i].expresionItemCattegory == 'Variable' && lastOperator == '+' ){
             console.info('calculation(+)')
-            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionValue
-            ExpresionCalc = +ExpresionCalc  +  +expresionLines[i].expresionValue
+            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionItemValue
+            ExpresionCalc = +ExpresionCalc  +  +expresionLines[i].expresionItemValue
             lastValuePostition = lastValuePostition + 2
             console.info(ExpresionCalc)
         }
-        if (expresionLines[i].expresionPosition == lastValuePostition && expresionLines[i].expresionCattegory == 'Value' || expresionLines[i].expresionCattegory == 'Variable' && lastOperator == '-' ){
+        if (expresionLines[i].expresionItemPosition == lastValuePostition && expresionLines[i].expresionItemCattegory == 'Value' || expresionLines[i].expresionItemCattegory == 'Variable' && lastOperator == '-' ){
             console.info('calculation(-)')
-            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionValue
-            ExpresionCalc = +ExpresionCalc  -  +expresionLines[i].expresionValue
+            EpresionCalcDescription = EpresionCalcDescription + expresionLines[i].expresionItemValue
+            ExpresionCalc = +ExpresionCalc  -  +expresionLines[i].expresionItemValue
             lastValuePostition = lastValuePostition + 2
         }
 

@@ -12,10 +12,12 @@ var async = require('async'),
 
 exports.saveExpresion = function(req, res, next) {
     console.info('------------------------- saveExpresion ------------------------------------------------')
-    var brNAme = req.body.brNAme
+    console.info('req.body.ScenarioName')
+    console.info(req.body.ScenarioName)
+    var ScenarioName = req.body.ScenarioName
     var brObject = req.body.object
 
-    console.info('brNAme: ' + brNAme)
+    console.info('ScenarioName: ' + ScenarioName)
     console.info('-- new Object --')
     console.info(brObject)
 
@@ -25,7 +27,7 @@ exports.saveExpresion = function(req, res, next) {
         var locals = {}, tokens = []
         var tasks = [
             function (callback) {
-                db.collection('inkomstenbelasting').find({BusinessRule:brNAme}).toArray(function (err, Businessrules) {
+                db.collection('inkomstenbelasting').find({ScenarioName:ScenarioName}).toArray(function (err, Businessrules) {
                     if (err) return callback(err);
                     locals.Businessrules = Businessrules;
                     callback();
@@ -40,13 +42,13 @@ exports.saveExpresion = function(req, res, next) {
 
             if(locals.Businessrules.length > 0){
                 console.info('business rule does exist. Add element to expresion list')
-                var exprList = locals.Businessrules[0].expresions
-                exprList.push(brObject.expresions[0])
+                var exprList = locals.Businessrules[0].Expresions[0].ExpresionLines
+                exprList.push(brObject.Expresions[0].ExpresionLines[0])
                 console.info(exprList)
 
                 brObject.expresions = exprList
-                console.info('brName:' + brNAme)
-                inkomstenbelasting.update({BusinessRule: brNAme}, {$set: {expresions : exprList}}, false, true)
+                console.info('ScenarioName:' + ScenarioName)
+                inkomstenbelasting.update({ScenarioName: ScenarioName}, {$set: {"Expresions.0.ExpresionLines" : exprList}}, false, true)
                 res.status(200).json({object:brObject});
 
 
@@ -54,8 +56,12 @@ exports.saveExpresion = function(req, res, next) {
             else{
                 console.info('business rule does not exist.')
                 console.info('Insert Object')
+                var object = req.body.object
+                console.info('-----------(D)------------')
+                console.info(object.Expresions[0].ExpresionDefinition)
+                console.info('------------(D)-----------')
                 inkomstenbelasting.insert(req.body.object)
-                res.status(200).json({message:'saved succesfully'});
+                res.status(200).json({message:'saved succesfully,', ExpresionDefinition: object.Expresions[0].ExpresionDefinition});
                 console.info('------------------------- end saveExpresion ------------------------------------------------')
             }
 
@@ -67,11 +73,11 @@ exports.saveExpresion = function(req, res, next) {
 
 exports.saveCalculation = function(req, res, next) {
     console.info('------------------------- saveCalculation (A) ------------------------------------------------')
-    var brNAme = req.body.srgBusinessRules
+    var ScenarioName = req.body.ScenarioName
     var brObject = req.body.brResult
     console.info('')
     console.info('------------------------- saveCalculation (PROPERTIES) ------------------------------------------------')
-    console.info('brNAme: ' + brNAme)
+    console.info('ScenarioName: ' + ScenarioName)
     console.info('-- new Object --')
     console.info(brObject)
     console.info('')
@@ -80,7 +86,7 @@ exports.saveCalculation = function(req, res, next) {
         var locals = {}, tokens = []
         var tasks = [
             function (callback) {
-                db.collection('inkomstenbelasting').find({BusinessRule:brNAme}).toArray(function (err, Businessrules) {
+                db.collection('inkomstenbelasting').find({ScenarioName:ScenarioName}).toArray(function (err, Businessrules) {
                     if (err) return callback(err);
                     locals.Businessrules = Businessrules;
                     callback();
@@ -91,8 +97,8 @@ exports.saveCalculation = function(req, res, next) {
             if (err) return next(err);
             db.close();
             console.info('(2) GetBusinessRules:')
-            inkomstenbelasting.update({BusinessRule: brNAme}, {$set: {results : brObject}}, false, true)
-            res.status(200).json({object:brObject});
+            inkomstenbelasting.update({ScenarioName: ScenarioName}, {$set: {"Expresions.0.Results" : brObject}}, false, true)
+            res.status(200).json({object:brObject, });
         })
     })
 }

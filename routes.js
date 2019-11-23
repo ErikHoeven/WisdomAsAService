@@ -166,6 +166,7 @@ exports = module.exports = function(app, passport) {
     app.get('./DataVaultGenerator', require('./views/DVG').RawVault);
 
     //Inkomsten belasting
+    app.post('/admin/zoekenRekenregels', require('./views/admin/businessrules/expressions/zoekenRekenRegels').zoekenScenario);
     app.post('/admin/getBusinessRulesCattegories', require('./views/admin/businessrules/getBusinessResults').getBusinesgetBusinessRulesCattegoriesRules);
     app.post('/admin/getExpresionsForm', require('./views/admin/businessrules/expressions/getExpresionsForm').getExpresionForm);
     app.post('/admin/saveExpresions', require('./views/admin/businessrules/expressions/saveExpresion').saveExpresion);

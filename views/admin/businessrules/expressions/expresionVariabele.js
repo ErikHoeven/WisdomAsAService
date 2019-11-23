@@ -11,7 +11,8 @@ var async = require('async'),
 
 exports.getBusinessRule = function(req, res, next) {
     console.info('-----------------------   (B)getBusinessRule(B)  -------------------------------------')
-    var brName = req.body.brName
+    //var brName = req.body.brName
+
 
     mongo.connect(uri, function (err, db) {
         var locals = {}, tokens = []
@@ -27,11 +28,15 @@ exports.getBusinessRule = function(req, res, next) {
         async.parallel(tasks, function (err) {
             if (err) return next(err);
             db.close();
+            console.info('locals.Businessrules')
             console.info(locals.Businessrules)
             var optionSelect = '<select id="ExprName" onchange="formGetResult()" onselect="formGetResult()" onfocus="formGetResult()">'
             var optionList = ''
 
             locals.Businessrules.forEach(function (r) {
+                console.info('Loop')
+                console.info(r.results.ExpresionCalc)
+                console.info(r)
                 optionList = optionList + '<option value=' + r.BusinessRule + '>' + r.BusinessRule + '</option>'
             })
 

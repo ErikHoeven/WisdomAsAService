@@ -15,8 +15,8 @@ function selectBusinessRuleMenu() {
 
 // B. Change title and subtitle
 function setBusinessRuleTitle() {
-    $('#title').html('Business Rules instellingen')
-    $('#subtitle').html('Stel hier de waarde in waarop gegroepeerd op de gevonden resultaten van uw social media kanalen')
+    $('#title').html('Inkomsten belasting ondernemers:')
+    $('#subtitle').html('Stel hier zelf de Scenarios, forumles en rekenregels samen')
 }
 
 // C. Get Search results from MongoDB if no results are available show form
@@ -26,12 +26,12 @@ function getBusinessResults(user) {
     $('#contentElement').html(
         '<div class="row">' +
         '<div class="col-md-5">' +
-        '<h4 style="margin-bottom: 25px; text-align: left">Zoeken Business Rules</h4>' +
+        '<h4 style="margin-bottom: 25px; text-align: left">Zoeken Scenario inkomstenbelasting ondernemers:</h4>' +
         '</div>' +
         '</div>' +
         '<div class="row">' +
         '<div class="col-md-5">' +
-        '<input type="text" class="form-control" id="txtBusinessRuleWord" name="txtBusinessRuleWord" placeholder="zoekterm">' +
+        '<input type="text" class="form-control" id="txtRekenregel" name="txtRekenregel" placeholder="zoekterm">' +
         '</div>' +
         '<div class="col-md-5">' +
         '<button type="button" class="btn btn-primary btn-flat btn-raised btn-float" id="addBusinessRule"><span class="fa fa-plus"></span></button>' +
@@ -45,13 +45,13 @@ function getBusinessResults(user) {
     )
 
     // 2. Search on term
-    $("#txtBusinessRuleWord").autocomplete({
+    $("#txtRekenregel").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: '/admin/startbusinessrules',
+                url: '/admin/zoekenRekenregels',
                 type: 'POST',
                 contentType: 'application/json',
-                data: JSON.stringify({term: request.term}),
+                data: JSON.stringify({Scenario: request.term}),
                 success: function (response) {
                     console.info(response)
                     //3 Show results
@@ -89,11 +89,11 @@ function addBusinessRuleForm () {
 
             $('#cmdAddExpresion').click(function () {
                 console.info('start add ExpresionRules')
-                var brNAme = $('#BrName').val()
-                var brCattegoryName = $('#selectBrCattegory option:selected').text()
-                console.info(brNAme)
-                console.info(brCattegoryName)
-                addExpresionRuleForm(brNAme, brCattegoryName)
+                var ScenarioName = $('#ScenarioName').val()
+                var InkomstenbelastingOnderdeel = $('#InkomstenbelastingOnderdeel option:selected').text()
+                console.info(ScenarioName)
+                console.info(InkomstenbelastingOnderdeel)
+                addExpresionRuleForm(ScenarioName, InkomstenbelastingOnderdeel)
                 console.info('end add ExpresionRules')
             })
         }
@@ -101,13 +101,13 @@ function addBusinessRuleForm () {
 }
         
 
-function addExpresionRuleForm (brNAme,brCattegoryName) {
+function addExpresionRuleForm (ScenarioName,InkomstenbelastingOnderdeel) {
     $.ajax({
         url:
             '/admin/getExpresionsForm',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({brNAme: brNAme, brCattegoryName: brCattegoryName}),
+        data: JSON.stringify({ScenarioName: ScenarioName, InkomstenbelastingOnderdeel: InkomstenbelastingOnderdeel}),
         success: function (response) {
             console.info(response)
             //$('#contentElement').html(response.businessRuleform)
@@ -118,26 +118,24 @@ function addExpresionRuleForm (brNAme,brCattegoryName) {
 
             $('#saveExpresion').click(function () {
 
-                console.info('save')
-                var expresionName = $('#ExprName').val()
-                var expresionValue = $('#expresionValue').val()
-                var expresionCattegory = $('#expresionCattegory option:selected').text()
-                var expresionPosition =  $('#expresionPosition').val()
-                var expresionValue = $('#expresionValue').val()
-                var brNAme = $('#BrName').val()
-                var brCattegoryName = $('#selectBrCattegory option:selected').text()
-                var expresionOperator = $('#expresionOperator option:selected').text()
+                console.info(' save expresion')
 
-                var businessRuleObject = {  BusinessRule: brNAme,
-                                            businessruleCattegory: brCattegoryName,
-                                            expresions: [{  expresionName: expresionName,
-                                                            expresionCattegory: expresionCattegory,
-                                                            expresionValue: expresionValue,
-                                                            expresionPosition: expresionPosition,
-                                                            expresionOperator: expresionOperator}]}
+                var businessRuleObject = {  ScenarioName: $('#ScenarioName').val(),
+                                            InkomstenbelastingOnderdeel: $('#InkomstenbelastingOnderdeel option:selected').text(),
+                                            OnderdeelPositie: $('#OnderdeelPositie').val(),
+                                            Expresions: [{  ExpresionDefinition: $('#ExprDefinition').val(),
+                                                            ExpresionLines:[{
+                                                                expresionItemName: $('#ExprName').val(),
+                                                                expresionItemCattegory: $('#expresionCattegory').val(),
+                                                                expresionItemValue: $('#expresionValue').val(),
+                                                                expresionItemPosition: $('#expresionPosition').val(),
+                                                                expresionItemOperator: $('#expresionOperator option:selected').text()
+                                                             }]
+                                                        }]
+                                            }
                 console.info('--> saveExpr<--')
-                console.info(brNAme)
-                saveExpresion(businessRuleObject,brNAme)
+                console.info(ScenarioName)
+                saveExpresion(businessRuleObject,$('#ScenarioName').val())
 
 
             })
@@ -145,11 +143,11 @@ function addExpresionRuleForm (brNAme,brCattegoryName) {
     })
 }
 
-function saveExpresion(businessRuleObject,brNAme) {
+function saveExpresion(businessRuleObject,ScenarioName) {
  console.info('----> saveExpresion')
  console.info(businessRuleObject)
-    console.info(brNAme)
-    console.info(businessRuleObject.BusinessRule)
+    console.info(ScenarioName)
+    console.info(businessRuleObject.ScenarioName)
 
 
 
@@ -158,57 +156,54 @@ function saveExpresion(businessRuleObject,brNAme) {
             '/admin/saveExpresions',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({object: businessRuleObject, brNAme: businessRuleObject.BusinessRule}),
+        data: JSON.stringify({object: businessRuleObject, ScenarioName: businessRuleObject.ScenarioName}),
         success: function (response) {
             console.info('Loaded')
-            var businessrule = $('#BrName').val()
-            console.info(businessrule)
-            getBusinessRuleResults(businessrule)
+            console.info(response)
+            var ScenarioName = $('#ScenarioName').val()
+            // set the value of ExpresionDefinition
+            console.info(ScenarioName)
+            getBusinessRuleResults(ScenarioName, response.ExpresionDefinition)
+
         }})
 }
 
-function getBusinessRuleResults(businessrule) {
+function getBusinessRuleResults(ScenarioName, ExpresionDefinition) {
     console.info('Get Results from database')
-    console.info('parameter:' + businessrule)
+    console.info('parameter:' + ScenarioName)
+
     $.ajax({
         url:
             '/admin/getBusinessRule',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({srgBusinessRules: businessrule}),
+        data: JSON.stringify({ScenarioName: ScenarioName}),
         success: function (response) {
             $('#contentElementDetails').html(response.message)
 
+
             $('#saveExpresion').click(function () {
-
-                console.info('save')
-                var expresionName = $('#ExprName').val()
-                var expresionValue = $('#expresionValue').val()
-                var expresionCattegory = $('#expresionCattegory option:selected').text()
-                var expresionPosition = $('#expresionPosition').val()
-                var expresionValue = $('#expresionValue').val()
-                var brNAme = $('#BrName').val()
-                var brCattegoryName = $('#selectBrCattegory option:selected').text()
-                var expresionOperator = $('#expresionOperator option:selected').text()
-
-                var businessRuleObject = {
-                    BusinessRule: brNAme,
-                    businessruleCattegory: brCattegoryName,
-                    expresions: [{
-                        expresionName: expresionName,
-                        expresionCattegory: expresionCattegory,
-                        expresionValue: expresionValue,
-                        expresionPosition: expresionPosition,
-                        expresionOperator: expresionOperator
+                console.info('Click Add -> Save Expresion to DB')
+                var businessRuleObject = {  ScenarioName: $('#ScenarioName').val(),
+                    InkomstenbelastingOnderdeel: $('#InkomstenbelastingOnderdeel option:selected').text(),
+                    OnderdeelPositie: $('#OnderdeelPositie').val(),
+                    Expresions: [{  ExpresionDefinition: $('#ExprDefinition').val(),
+                        ExpresionLines:[{
+                            expresionItemName: $('#ExprName').val(),
+                            expresionItemCattegory: $('#expresionCattegory').val(),
+                            expresionItemValue: $('#expresionValue').val(),
+                            expresionItemPosition: $('#expresionPosition').val(),
+                            expresionItemOperator: $('#expresionOperator option:selected').text()
+                        }]
                     }]
                 }
-                saveExpresion(businessRuleObject)
+                sendExpresionToDB(businessRuleObject, $('#ScenarioName').val())
             })
 
             $('#cmdClcExpresion').click(function () {
                 console.info('cmdClcExpresion')
-                brNAme = $('#BrName').val()
-                calculateExpresion(brNAme)
+                ScenarioName = $('#ScenarioName').val()
+                calculateExpresion(ScenarioName)
 
                 $('#saveCalculation').click(function () {
                     console.info('saveCalculation')
@@ -228,14 +223,14 @@ function getBusinessRuleResults(businessrule) {
     })
 }
 
-function saveCaculationResult(brName, brResult) {
+function saveCaculationResult(ScenarioName, brResult) {
     console.info('saveCaculationResult')
     $.ajax({
         url:
             '/admin/saveCalculation',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({srgBusinessRules: brNAme, brResult: brResult}),
+        data: JSON.stringify({ScenarioName: ScenarioName, brResult: brResult}),
         success: function (response) {
             location.reload()
             addBusinessRuleForm()
@@ -243,22 +238,28 @@ function saveCaculationResult(brName, brResult) {
     })
 }
 
-function calculateExpresion(brName) {
+function calculateExpresion(ScenarioName) {
 
     $.ajax({
         url:
             '/admin/calcExpresion',
         type: 'POST',
         contentType: 'application/json',
-        data: JSON.stringify({srgBusinessRules: brNAme}),
+        data: JSON.stringify({ScenarioName: ScenarioName}),
         success: function (response) {
             $('#contentElementResults').html(response.message)
 
             $('#saveCalculation').click(function () {
                 console.info('saveCalculation')
                 console.info(response.result)
-                saveCaculationResult(brName,response.result)
+                saveCaculationResult(ScenarioName,response.result)
             })
         }
     })
+}
+
+function sendExpresionToDB(businessRuleObject,ScenarioName) {
+    console.info('sendExpresionToDB')
+    saveExpresion(businessRuleObject,ScenarioName)
+
 }

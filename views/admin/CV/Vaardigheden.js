@@ -52,6 +52,8 @@ exports.getVaardigheden = function (req, res, next) {
             locals.catValues.forEach(function (r) {
                 inpVaardighedenCategorie = inpVaardighedenCategorie + '<option value="'+ r.tagCattegory + '">' + r.tagCattegory + '</option>'
             })
+
+
             inpVaardighedenCategorie = inpVaardighedenCategorie + '</select>'
             console.info(' BEFORE ERROR (1)')
             console.info(locals.cv[0])
